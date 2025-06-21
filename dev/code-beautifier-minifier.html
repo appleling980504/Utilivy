@@ -43,25 +43,30 @@
   <script>
     function preprocessCode(input) {
       return input
-        .replace(/(\w)\n+(\w)/g, '$1$2') // Merge broken words (e.g., getElementByI\nd → getElementById)
-        .replace(/[ \t]+\n/g, '\n')     // Remove trailing whitespace
-        .replace(/\n{2,}/g, '\n')       // Collapse multiple empty lines
-        .replace(/[ \t]{2,}/g, ' ')     // Collapse multiple spaces
-        .replace(/^\s+/, '')            // Trim leading
-        .replace(/\s+$/, '');           // Trim trailing
+        .replace(/(\w)\n+(\w)/g, '$1$2') // merge broken words
+        .replace(/[ \t]+\n/g, '\n') // trim line-end space
+        .replace(/\n{2,}/g, '\n') // collapse multiple newlines
+        .replace(/[ \t]{2,}/g, ' ') // collapse multiple spaces
+        .replace(/^\s+/, '') // trim leading
+        .replace(/\s+$/, '') // trim trailing
+        .replace(/getElementById\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `getElementById("${p1.trim()}")`)
+        .replace(/querySelector\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `querySelector("${p1.trim()}")`)
+        .replace(/getElementsBy(ClassName|Name)\(["']\s*(.*?)\s*["']\)/g, (_, t, p1) => `getElementsBy${t}("${p1.trim()}")`);
     }
 
     function beautifyCode() {
       const lang = document.getElementById("language").value;
-      let input = document.getElementById("inputCode").value;
-      input = preprocessCode(input); // Clean before beautify
+      const input = document.getElementById("inputCode").value;
       let output = "";
+
+      const cleaned = preprocessCode(input);
+
       if (lang === "js") {
-        output = js_beautify(input);
+        output = js_beautify(cleaned);
       } else if (lang === "css") {
-        output = css_beautify(input);
+        output = css_beautify(cleaned);
       } else if (lang === "html") {
-        output = html_beautify(input);
+        output = html_beautify(cleaned);
       }
       document.getElementById("outputCode").value = output;
     }
@@ -70,6 +75,7 @@
       const lang = document.getElementById("language").value;
       const input = document.getElementById("inputCode").value;
       let output = "";
+
       try {
         if (lang === "js") {
           output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
