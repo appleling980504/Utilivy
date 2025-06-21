@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Encoder / Decoder - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🔗 URL Encoder / Decoder</h1>
+    <p class="mb-4 text-gray-700">Easily encode or decode URLs for safe transmission.</p>
+
+    <textarea id="urlInput" class="w-full border rounded p-3 h-40 mb-4" placeholder="Enter text or URL here..."></textarea>
+
+    <div class="flex flex-wrap gap-4 mb-4">
+      <button onclick="encodeURL()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Encode</button>
+      <button onclick="decodeURL()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Decode</button>
+      <button onclick="copyResult()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded">Copy</button>
+      <button onclick="clearText()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Clear</button>
+    </div>
+
+    <label for="urlOutput" class="block text-sm font-medium text-gray-700 mb-1">Result:</label>
+    <textarea id="urlOutput" class="w-full border rounded p-3 h-40" readonly></textarea>
+  </div>
+
+  <script>
+    function encodeURL() {
+      const input = document.getElementById("urlInput").value;
+      document.getElementById("urlOutput").value = encodeURIComponent(input);
+    }
+
+    function decodeURL() {
+      const input = document.getElementById("urlInput").value;
+      try {
+        document.getElementById("urlOutput").value = decodeURIComponent(input);
+      } catch (e) {
+        document.getElementById("urlOutput").value = "Invalid encoded URL.";
+      }
+    }
+
+    function copyResult() {
+      const output = document.getElementById("urlOutput");
+      output.select();
+      document.execCommand("copy");
+      alert("✅ Copied to clipboard!");
+    }
+
+    function clearText() {
+      document.getElementById("urlInput").value = "";
+      document.getElementById("urlOutput").value = "";
+    }
+  </script>
+</body>
+</html>
