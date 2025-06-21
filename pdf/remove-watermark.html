@@ -1,32 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Remove PDF Watermark - ToolNest</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-  <script type="module">
-    window.pdfjsLib = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
-  </script>
-  <script type="module" id="pdf-lib-loader">
-    window.pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
-  </script>
   <style>
-    canvas {
-      border: 1px solid #ccc;
-      margin-top: 10px;
-      display: block;
-    }
-    .select-box {
-      position: absolute;
-      border: 2px dashed red;
-      pointer-events: none;
-    }
-    #canvasContainer {
-      position: relative;
-      display: inline-block;
-    }
+    canvas { border: 1px solid #ccc; margin-top: 10px; display: block; }
+    .select-box { position: absolute; border: 2px dashed red; pointer-events: none; }
+    #canvasContainer { position: relative; display: inline-block; }
     body {
       font-family: sans-serif;
       background: #f3f4f6;
@@ -40,28 +21,30 @@
     <h1 style="font-size: 1.5rem; font-weight: bold;">❌ Remove Watermark from PDF</h1>
     <input type="file" id="fileInput" accept="application/pdf" class="mb-4" />
     <div style="margin: 1rem 0;">
-      <button onclick="prevPage()">⬅️ Prev</button>
-      <button onclick="nextPage()">Next ➡️</button>
-      <button onclick="clearSelections()">🧹 Clear Selections</button>
-      <button onclick="downloadCleanPDF()">📥 Download</button>
+      <button id="prevBtn">⬅️ Prev</button>
+      <button id="nextBtn">Next ➡️</button>
+      <button id="clearBtn">🧹 Clear Selections</button>
+      <button id="downloadBtn">📥 Download</button>
     </div>
-    <div id="canvasContainer">
-      <canvas id="pdfCanvas"></canvas>
-    </div>
+    <div id="canvasContainer"><canvas id="pdfCanvas"></canvas></div>
     <p>Page: <span id="page_num"></span> / <span id="page_count"></span></p>
   </div>
 
-  <script>
+  <script type="module">
+    const pdfjsLib = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
+    const pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+
     let pdfDoc = null,
         pageNum = 1,
         pageCount = 0,
-        rotation = 0,
         originalFile = null;
 
     const canvas = document.getElementById('pdfCanvas');
     const ctx = canvas.getContext('2d');
-    const selections = {}; // 
+    const selections = {};
     let selectBox = null, startX = 0, startY = 0;
+
+    const container = document.getElementById('canvasContainer');
 
     document.getElementById('fileInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -83,15 +66,14 @@
 
     function renderPage(num) {
       pdfDoc.getPage(num).then(function(page) {
-        const viewport = page.getViewport({ scale: 1.5, rotation });
-        canvas.height = viewport.height;
+        const viewport = page.getViewport({ scale: 1.5 });
         canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
         const renderContext = { canvasContext: ctx, viewport };
         page.render(renderContext);
         document.getElementById('page_num').textContent = num;
 
-        const container = document.getElementById('canvasContainer');
         container.querySelectorAll('.select-box').forEach(box => box.remove());
         if (selections[pageNum]) {
           selections[pageNum].forEach(sel => {
@@ -108,15 +90,17 @@
     }
 
     function nextPage() {
-      if (pageNum >= pageCount) return;
-      pageNum++;
-      renderPage(pageNum);
+      if (pageNum < pageCount) {
+        pageNum++;
+        renderPage(pageNum);
+      }
     }
 
     function prevPage() {
-      if (pageNum <= 1) return;
-      pageNum--;
-      renderPage(pageNum);
+      if (pageNum > 1) {
+        pageNum--;
+        renderPage(pageNum);
+      }
     }
 
     function clearSelections() {
@@ -124,8 +108,6 @@
       renderPage(pageNum);
     }
 
-
-    const container = document.getElementById('canvasContainer');
     container.addEventListener('mousedown', function(e) {
       startX = e.offsetX;
       startY = e.offsetY;
@@ -169,8 +151,8 @@
 
     async function downloadCleanPDF() {
       const arrayBuffer = await originalFile.arrayBuffer();
-      const pdfDoc = await pdfLib.PDFDocument.load(arrayBuffer);
-      const pages = pdfDoc.getPages();
+      const doc = await pdfLib.PDFDocument.load(arrayBuffer);
+      const pages = doc.getPages();
 
       Object.keys(selections).forEach(pageIdxStr => {
         const idx = parseInt(pageIdxStr) - 1;
@@ -190,7 +172,7 @@
         });
       });
 
-      const pdfBytes = await pdfDoc.save();
+      const pdfBytes = await doc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -198,6 +180,12 @@
       a.download = 'cleaned.pdf';
       a.click();
     }
+
+    // Bind buttons
+    document.getElementById('nextBtn').onclick = nextPage;
+    document.getElementById('prevBtn').onclick = prevPage;
+    document.getElementById('clearBtn').onclick = clearSelections;
+    document.getElementById('downloadBtn').onclick = downloadCleanPDF;
   </script>
 </body>
 </html>
