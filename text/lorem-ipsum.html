@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lorem Ipsum Generator - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🧠 Lorem Ipsum Generator</h1>
+    <p class="mb-4 text-gray-700">Generate placeholder text for your designs or projects.</p>
+
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">Paragraphs</label>
+        <input type="number" id="paraCount" value="3" min="1" max="10" class="border px-3 py-2 rounded w-full">
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">Sentences/Paragraph</label>
+        <input type="number" id="sentCount" value="5" min="1" max="20" class="border px-3 py-2 rounded w-full">
+      </div>
+    </div>
+
+    <button onclick="generateLorem()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate</button>
+    <button onclick="copyText()" class="bg-gray-600 text-white px-4 py-2 rounded ml-2 hover:bg-gray-700">Copy All</button>
+
+    <div id="output" class="mt-6 whitespace-pre-wrap text-gray-800"></div>
+  </div>
+
+  <script>
+    const loremWords = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua"];
+
+    function generateLorem() {
+      const paras = parseInt(document.getElementById("paraCount").value);
+      const sents = parseInt(document.getElementById("sentCount").value);
+      let result = "";
+
+      for (let i = 0; i < paras; i++) {
+        let paragraph = "";
+        for (let j = 0; j < sents; j++) {
+          let sentence = [];
+          const wordCount = Math.floor(Math.random() * 6) + 6; // 6–11 words
+          for (let k = 0; k < wordCount; k++) {
+            const word = loremWords[Math.floor(Math.random() * loremWords.length)];
+            sentence.push(word);
+          }
+          let sentenceStr = sentence.join(" ");
+          sentenceStr = sentenceStr.charAt(0).toUpperCase() + sentenceStr.slice(1) + ".";
+          paragraph += sentenceStr + " ";
+        }
+        result += paragraph.trim() + "\n\n";
+      }
+
+      document.getElementById("output").textContent = result.trim();
+    }
+
+    function copyText() {
+      const output = document.getElementById("output").textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("Copied to clipboard!");
+      });
+    }
+  </script>
+</body>
+</html>
