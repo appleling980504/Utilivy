@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Reorder PDF Pages - ToolNest</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body class="bg-gray-100">
   <main class="container mx-auto px-4 py-8">
@@ -18,19 +20,20 @@
     <div id="output" class="mt-6"></div>
   </main>
 
-  <script type="module">
-    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.mjs';
-    import { jsPDF } from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm';
+  <script>
+    const { jsPDF } = window.jspdf;
 
-    async function reorderPages() {
+    document.getElementById('reorderBtn').addEventListener('click', async () => {
       const fileInput = document.getElementById('pdfFile');
       const orderInput = document.getElementById('order').value;
       const file = fileInput.files[0];
+
       if (!file || !orderInput) return alert('Please select a file and enter a page order.');
 
       const order = orderInput.split(',').map(num => parseInt(num.trim()));
       const buffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+
       const outputPDF = new jsPDF();
       let first = true;
 
@@ -42,21 +45,20 @@
         const context = canvas.getContext('2d');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
-        await page.render({ canvasContext: context, viewport }).promise;
 
+        await page.render({ canvasContext: context, viewport }).promise;
         const imgData = canvas.toDataURL('image/jpeg');
+
         if (!first) outputPDF.addPage();
         first = false;
-        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297); // A4 size in mm
+        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297); // A4 in mm
       }
 
       const blob = outputPDF.output('blob');
       const url = URL.createObjectURL(blob);
       const output = document.getElementById('output');
       output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
-    }
-
-    document.getElementById('reorderBtn').addEventListener('click', reorderPages);
+    });
   </script>
 </body>
 </html>
