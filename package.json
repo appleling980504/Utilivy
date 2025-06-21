@@ -3,6 +3,7 @@
     "cloudconvert": "^3.0.0",
     "dotenv": "^16.5.0",
     "form-data": "^4.0.3",
-    "formidable": "^3.5.4"
+    "formidable": "^3.5.4",
+    "node-fetch": "^3.3.2"
   }
 }
