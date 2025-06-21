@@ -9,15 +9,29 @@
 <body class="bg-gray-100 text-gray-900 p-6">
   <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
     <h1 class="text-3xl font-bold mb-4">📆 Age Calculator</h1>
-    <p class="mb-4 text-gray-700">Enter your birth date to calculate your age.</p>
+    <p class="mb-4 text-gray-700">Enter your birth date to calculate your age, life days, and get inspired!</p>
 
     <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Select Date of Birth</label>
     <input type="date" id="birthdate" class="border px-3 py-2 rounded w-full mb-4" onchange="calculateAge()" />
 
     <div id="result" class="mt-4 text-gray-800 text-lg font-medium"></div>
+    <div id="quote" class="mt-6 text-green-700 italic text-base"></div>
   </div>
 
   <script>
+    const quotes = [
+      "🌟 You are stronger than you think.",
+      "💡 Every day is a second chance.",
+      "🌈 Keep going, your future self will thank you.",
+      "☀️ Believe in yourself and all that you are.",
+      "🌻 One day or day one — you decide.",
+      "🔥 Great things never come from comfort zones.",
+      "🦋 Your time is limited, don’t waste it living someone else’s life.",
+      "🎯 Stay positive, work hard, make it happen.",
+      "🌿 Small steps every day lead to big results.",
+      "💖 You’ve already survived 100% of your worst days."
+    ];
+
     function calculateAge() {
       const input = document.getElementById("birthdate").value;
       if (!input) return;
@@ -40,18 +54,24 @@
         months += 12;
       }
 
+      // 计算总共活了多少天
+      const totalDays = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24));
+
+      // 下一个生日倒计时
       const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
-      if (nextBirthday < today) {
-        nextBirthday.setFullYear(today.getFullYear() + 1);
-      }
-      const diffTime = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+      if (nextBirthday < today) nextBirthday.setFullYear(today.getFullYear() + 1);
+      const diffDays = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
 
       document.getElementById("result").innerHTML = `
-        🎂 You are <span class="text-blue-600">${years}</span> years, 
-        <span class="text-blue-600">${months}</span> months, 
+        🎂 You are <span class="text-blue-600">${years}</span> years,
+        <span class="text-blue-600">${months}</span> months,
         and <span class="text-blue-600">${days}</span> days old.<br/>
-        🗓️ Next birthday is in <span class="text-green-600">${diffTime}</span> days!
+        📅 You've lived for <span class="text-purple-600">${totalDays}</span> days.<br/>
+        🗓️ Your next birthday is in <span class="text-green-600">${diffDays}</span> days.
       `;
+
+      const quote = quotes[Math.floor(Math.random() * quotes.length)];
+      document.getElementById("quote").textContent = quote;
     }
   </script>
 </body>
