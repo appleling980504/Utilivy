@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Age Calculator - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">📆 Age Calculator</h1>
+    <p class="mb-4 text-gray-700">Enter your birth date to calculate your age.</p>
+
+    <label for="birthdate" class="block text-sm font-medium text-gray-700 mb-1">Select Date of Birth</label>
+    <input type="date" id="birthdate" class="border px-3 py-2 rounded w-full mb-4" onchange="calculateAge()" />
+
+    <div id="result" class="mt-4 text-gray-800 text-lg font-medium"></div>
+  </div>
+
+  <script>
+    function calculateAge() {
+      const input = document.getElementById("birthdate").value;
+      if (!input) return;
+
+      const birthDate = new Date(input);
+      const today = new Date();
+
+      let years = today.getFullYear() - birthDate.getFullYear();
+      let months = today.getMonth() - birthDate.getMonth();
+      let days = today.getDate() - birthDate.getDate();
+
+      if (days < 0) {
+        months -= 1;
+        const prevMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+        days += prevMonth.getDate();
+      }
+
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+
+      const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+      if (nextBirthday < today) {
+        nextBirthday.setFullYear(today.getFullYear() + 1);
+      }
+      const diffTime = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+
+      document.getElementById("result").innerHTML = `
+        🎂 You are <span class="text-blue-600">${years}</span> years, 
+        <span class="text-blue-600">${months}</span> months, 
+        and <span class="text-blue-600">${days}</span> days old.<br/>
+        🗓️ Next birthday is in <span class="text-green-600">${diffTime}</span> days!
+      `;
+    }
+  </script>
+</body>
+</html>
