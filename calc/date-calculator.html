@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Date Shifter - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold" id="title">📅 Date Shifter</h1>
+      <select id="lang" onchange="switchLang()" class="p-2 border rounded">
+        <option value="en">EN</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <label class="block mb-2" id="label-date">Select Base Date:</label>
+    <input type="date" id="baseDate" class="w-full mb-4 p-2 border rounded"/>
+
+    <div class="grid grid-cols-3 gap-2 mb-4">
+      <div>
+        <label id="label-years" class="block text-sm mb-1">Years:</label>
+        <input type="number" id="years" value="0" class="w-full p-2 border rounded"/>
+      </div>
+      <div>
+        <label id="label-months" class="block text-sm mb-1">Months:</label>
+        <input type="number" id="months" value="0" class="w-full p-2 border rounded"/>
+      </div>
+      <div>
+        <label id="label-days" class="block text-sm mb-1">Days:</label>
+        <input type="number" id="days" value="0" class="w-full p-2 border rounded"/>
+      </div>
+    </div>
+
+    <label class="block mb-2" id="label-format">Date Format:</label>
+    <select id="format" class="w-full p-2 border rounded mb-4">
+      <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+      <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+      <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+    </select>
+
+    <button onclick="calculateDate()" class="bg-blue-600 text-white px-4 py-2 rounded w-full">🔍 Calculate</button>
+
+    <div id="result" class="mt-4 text-lg font-medium text-green-700"></div>
+  </div>
+
+  <script>
+    const texts = {
+      en: {
+        title: "📅 Date Shifter",
+        "label-date": "Select Base Date:",
+        "label-years": "Years:",
+        "label-months": "Months:",
+        "label-days": "Days:",
+        "label-format": "Date Format:",
+        result: (dateStr, weekday) => `Resulting date: <strong>${dateStr}</strong> (${weekday})`
+      },
+      zh: {
+        title: "📅 日期偏移工具",
+        "label-date": "选择起始日期：",
+        "label-years": "年数：",
+        "label-months": "月数：",
+        "label-days": "天数：",
+        "label-format": "日期格式：",
+        result: (dateStr, weekday) => `结果日期：<strong>${dateStr}</strong>（${weekday}）`
+      }
+    };
+
+    let lang = "en";
+    const weekdays = {
+      en: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      zh: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
+    };
+
+    function switchLang() {
+      lang = document.getElementById("lang").value;
+      const dict = texts[lang];
+      for (const key in dict) {
+        if (key !== "result") {
+          document.getElementById(key).textContent = dict[key];
+        }
+      }
+    }
+
+    function formatDate(date, format) {
+      const yyyy = date.getFullYear();
+      const mm = String(date.getMonth() + 1).padStart(2, '0');
+      const dd = String(date.getDate()).padStart(2, '0');
+
+      if (format === "DD/MM/YYYY") return `${dd}/${mm}/${yyyy}`;
+      if (format === "MM/DD/YYYY") return `${mm}/${dd}/${yyyy}`;
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function calculateDate() {
+      const baseDateStr = document.getElementById("baseDate").value;
+      if (!baseDateStr) return alert(lang === "zh" ? "请选择起始日期" : "Please select a base date");
+
+      let date = new Date(baseDateStr);
+      const years = parseInt(document.getElementById("years").value) || 0;
+      const months = parseInt(document.getElementById("months").value) || 0;
+      const days = parseInt(document.getElementById("days").value) || 0;
+
+      date.setFullYear(date.getFullYear() + years);
+      date.setMonth(date.getMonth() + months);
+      date.setDate(date.getDate() + days);
+
+      const format = document.getElementById("format").value;
+      const dateStr = formatDate(date, format);
+      const weekday = weekdays[lang][date.getDay()];
+
+      document.getElementById("result").innerHTML = texts[lang].result(dateStr, weekday);
+    }
+  </script>
+</body>
+</html>
