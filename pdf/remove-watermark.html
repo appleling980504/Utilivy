@@ -43,12 +43,16 @@
     <p>Page: <span id="page_num"></span> / <span id="page_count"></span></p>
   </div>
 
-  <script type="module">
-    const pdfjsLib = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
-    const pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+  <!-- ✅ 使用非模块的 pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
 
-    // Set worker source for PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
+  <!-- ✅ 加载 pdf-lib -->
+  <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+
+  <script>
+    // 设置 workerSrc
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
     let pdfDoc = null,
         pageNum = 1,
@@ -166,7 +170,7 @@
 
     async function downloadCleanPDF() {
       const arrayBuffer = await originalFile.arrayBuffer();
-      const cleanPdf = await pdfLib.PDFDocument.load(arrayBuffer);
+      const cleanPdf = await PDFLib.PDFDocument.load(arrayBuffer);
       const pages = cleanPdf.getPages();
 
       Object.keys(selections).forEach(pageIdxStr => {
@@ -182,7 +186,7 @@
 
           page.drawRectangle({
             x, y, width: w, height: h,
-            color: pdfLib.rgb(1, 1, 1)
+            color: PDFLib.rgb(1, 1, 1)
           });
         });
       });
