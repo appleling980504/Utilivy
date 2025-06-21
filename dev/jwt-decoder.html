@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JWT Decoder - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🔐 JWT Decoder</h1>
+    <p class="mb-4 text-gray-600">Decode and inspect JSON Web Tokens (JWT) instantly.</p>
+
+    <textarea id="jwtInput" class="w-full h-32 p-3 border rounded font-mono text-sm mb-4" placeholder="Paste your JWT token here..."></textarea>
+
+    <div class="flex gap-3 mb-4">
+      <button onclick="decodeJWT()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">🔍 Decode</button>
+      <button onclick="clearAll()" class="bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded">🧹 Clear</button>
+    </div>
+
+    <div id="result" class="space-y-4 hidden">
+      <div>
+        <h2 class="text-xl font-semibold text-blue-700">📄 Header</h2>
+        <pre id="headerOutput" class="bg-gray-100 p-3 rounded overflow-x-auto text-sm text-gray-800 font-mono whitespace-pre-wrap"></pre>
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold text-green-700">📦 Payload</h2>
+        <pre id="payloadOutput" class="bg-gray-100 p-3 rounded overflow-x-auto text-sm text-gray-800 font-mono whitespace-pre-wrap"></pre>
+      </div>
+    </div>
+
+    <div id="error" class="text-red-600 font-medium mt-2 hidden"></div>
+  </div>
+
+  <script>
+    function decodeBase64Url(base64Url) {
+      base64Url = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = base64Url.length % 4;
+      if (pad === 2) base64Url += '==';
+      else if (pad === 3) base64Url += '=';
+      else if (pad !== 0) throw new Error("Invalid base64url padding.");
+      const decoded = atob(base64Url);
+      try {
+        return JSON.stringify(JSON.parse(decoded), null, 2);
+      } catch {
+        return decoded;
+      }
+    }
+
+    function decodeJWT() {
+      const input = document.getElementById("jwtInput").value.trim();
+      const result = document.getElementById("result");
+      const errorBox = document.getElementById("error");
+
+      if (!input || input.split('.').length !== 3) {
+        errorBox.textContent = "❌ Invalid JWT format. Must contain 3 parts separated by '.'";
+        errorBox.classList.remove("hidden");
+        result.classList.add("hidden");
+        return;
+      }
+
+      try {
+        const [header, payload] = input.split('.');
+        const decodedHeader = decodeBase64Url(header);
+        const decodedPayload = decodeBase64Url(payload);
+
+        document.getElementById("headerOutput").textContent = decodedHeader;
+        document.getElementById("payloadOutput").textContent = decodedPayload;
+
+        errorBox.classList.add("hidden");
+        result.classList.remove("hidden");
+      } catch (err) {
+        errorBox.textContent = "❌ Decode error: " + err.message;
+        errorBox.classList.remove("hidden");
+        result.classList.add("hidden");
+      }
+    }
+
+    function clearAll() {
+      document.getElementById("jwtInput").value = "";
+      document.getElementById("headerOutput").textContent = "";
+      document.getElementById("payloadOutput").textContent = "";
+      document.getElementById("error").classList.add("hidden");
+      document.getElementById("result").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
