@@ -1,114 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mortgage Calculator</title>
+  <meta charset="UTF-8">
+  <title>Mortgage Calculator - ToolNest</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f4f8;
-      padding: 2rem;
-      color: #333;
-    }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: #fff;
-      padding: 2rem;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.05);
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 1.6rem;
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: bold;
-    }
-    input {
-      width: 100%;
-      padding: 0.6rem;
-      margin-top: 0.3rem;
-      font-size: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-    }
-    button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.8rem;
-      font-size: 1rem;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .result {
-      margin-top: 2rem;
-      background: #e6f0ff;
-      padding: 1rem;
-      border-radius: 8px;
-    }
-    .result p {
-      margin: 0.5rem 0;
-    }
+    body { font-family: sans-serif; background: #f9f9f9; padding: 2rem; color: #333; }
+    .container { max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    input, select { padding: 0.5rem; margin: 0.5rem 0; width: 100%; box-sizing: border-box; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: right; }
+    th { background: #f0f0f0; }
+    canvas { margin-top: 2rem; }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Mortgage Calculator</h1>
-    <label for="loanAmount">Loan Amount ($)</label>
-    <input type="number" id="loanAmount" placeholder="e.g. 300000" />
+<div class="container">
+  <h2>🏠 Mortgage Calculator</h2>
 
-    <label for="interestRate">Annual Interest Rate (%)</label>
-    <input type="number" id="interestRate" placeholder="e.g. 4.5" step="0.01" />
+  <label>Loan Amount:</label>
+  <input type="number" id="loan" value="500000">
 
-    <label for="loanTerm">Loan Term (Years)</label>
-    <input type="number" id="loanTerm" placeholder="e.g. 30" />
+  <label>Annual Interest Rate (%):</label>
+  <input type="number" id="rate" value="4">
 
-    <button onclick="calculateMortgage()">Calculate</button>
+  <label>Loan Term (Years):</label>
+  <input type="number" id="years" value="30">
 
-    <div class="result" id="result" style="display:none;">
-      <p><strong>Monthly Payment:</strong> $<span id="monthlyPayment"></span></p>
-      <p><strong>Total Payment:</strong> $<span id="totalPayment"></span></p>
-      <p><strong>Total Interest:</strong> $<span id="totalInterest"></span></p>
-    </div>
-  </div>
+  <label>Monthly Extra Payment (optional):</label>
+  <input type="number" id="extra" value="0">
 
-  <script>
-    function calculateMortgage() {
-      const principal = parseFloat(document.getElementById('loanAmount').value);
-      const annualInterest = parseFloat(document.getElementById('interestRate').value);
-      const years = parseInt(document.getElementById('loanTerm').value);
+  <label>MRTA / MLTA Cost (optional):</label>
+  <input type="number" id="insurance" value="0">
 
-      if (isNaN(principal) || isNaN(annualInterest) || isNaN(years)) {
-        alert("Please enter valid numbers in all fields.");
-        return;
-      }
+  <label>Compare with Alternative Interest Rate (%):</label>
+  <input type="number" id="altRate" value="3.5">
 
-      const monthlyInterest = annualInterest / 100 / 12;
-      const numberOfPayments = years * 12;
+  <label>Graph Type:</label>
+  <select id="chartType">
+    <option value="line">📈 Line Chart</option>
+    <option value="bar">📊 Bar Chart</option>
+  </select>
 
-      const x = Math.pow(1 + monthlyInterest, numberOfPayments);
-      const monthlyPayment = (principal * monthlyInterest * x) / (x - 1);
+  <button onclick="calculate()">Calculate</button>
 
-      const totalPayment = monthlyPayment * numberOfPayments;
-      const totalInterest = totalPayment - principal;
+  <div id="summary"></div>
+  <canvas id="chart" height="120"></canvas>
+  <table id="scheduleTable"></table>
+</div>
 
-      document.getElementById('monthlyPayment').textContent = monthlyPayment.toFixed(2);
-      document.getElementById('totalPayment').textContent = totalPayment.toFixed(2);
-      document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+<script>
+  function formatCurrency(num) {
+    return "$" + Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
 
-      document.getElementById('result').style.display = 'block';
+  function calculate() {
+    const loan = parseFloat(document.getElementById('loan').value);
+    const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+    const years = parseInt(document.getElementById('years').value);
+    const extra = parseFloat(document.getElementById('extra').value || 0);
+    const insurance = parseFloat(document.getElementById('insurance').value || 0);
+    const altRate = parseFloat(document.getElementById('altRate').value) / 100 / 12;
+    const months = years * 12;
+
+    let balance = loan;
+    const monthly = loan * rate / (1 - Math.pow(1 + rate, -months));
+    const altMonthly = loan * altRate / (1 - Math.pow(1 + altRate, -months));
+
+    let totalInterest = 0, schedule = [], month = 1;
+    while (balance > 0 && month <= months) {
+      const interest = balance * rate;
+      let principal = monthly - interest + extra;
+      if (principal > balance) principal = balance;
+      schedule.push({ month, principal, interest, payment: principal + interest });
+      totalInterest += interest;
+      balance -= principal;
+      month++;
     }
-  </script>
+
+    const totalPaid = schedule.reduce((sum, p) => sum + p.payment, 0) + insurance;
+    const altTotal = altMonthly * months + insurance;
+    const interestSaved = altTotal - totalPaid;
+
+    document.getElementById('summary').innerHTML = `
+      <p>🧾 Monthly Payment: <strong>${formatCurrency(monthly)}</strong> (without extra)</p>
+      <p>📅 Total Months: <strong>${schedule.length}</strong></p>
+      <p>💰 Total Interest Paid: <strong>${formatCurrency(totalInterest)}</strong></p>
+      <p>🏁 Total Paid with Insurance: <strong>${formatCurrency(totalPaid)}</strong></p>
+      <p>💡 Compared to ${document.getElementById('altRate').value}%: Saved <strong>${formatCurrency(interestSaved)}</strong></p>
+    `;
+
+    drawChart(schedule, document.getElementById('chartType').value);
+    renderTable(schedule);
+  }
+
+  function drawChart(schedule, type = "line") {
+    const months = schedule.map(p => p.month);
+    const principal = schedule.map(p => p.principal);
+    const interest = schedule.map(p => p.interest);
+
+    if (window.chartInstance) window.chartInstance.destroy();
+    window.chartInstance = new Chart(document.getElementById('chart'), {
+      type,
+      data: {
+        labels: months,
+        datasets: [
+          { label: 'Principal', data: principal, backgroundColor: 'green', borderColor: 'green', fill: false },
+          { label: 'Interest', data: interest, backgroundColor: 'red', borderColor: 'red', fill: false }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: { y: { beginAtZero: true } },
+        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Breakdown' } }
+      }
+    });
+  }
+
+  function renderTable(schedule) {
+    let html = `
+      <thead><tr><th>Month</th><th>Principal</th><th>Interest</th><th>Total Payment</th></tr></thead>
+      <tbody>
+    `;
+    schedule.forEach(p => {
+      html += `<tr>
+        <td>${p.month}</td>
+        <td>${formatCurrency(p.principal)}</td>
+        <td>${formatCurrency(p.interest)}</td>
+        <td>${formatCurrency(p.payment)}</td>
+      </tr>`;
+    });
+    html += '</tbody>';
+    document.getElementById('scheduleTable').innerHTML = html;
+  }
+
+  // Initial calculate
+  window.onload = () => calculate();
+</script>
 </body>
 </html>
