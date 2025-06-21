@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Add Page Numbers - ToolNest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🔢 Add Page Numbers to PDF</h1>
+
+    <div class="bg-white p-6 rounded shadow-md space-y-4">
+      <input type="file" id="pdfFile" accept="application/pdf" />
+      <button onclick="addPageNumbers()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Page Numbers</button>
+    </div>
+
+    <div id="output" class="mt-6"></div>
+  </main>
+
+  <script type="module">
+    import { PDFDocument, rgb, StandardFonts } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+
+    async function addPageNumbers() {
+      const fileInput = document.getElementById('pdfFile');
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      if (!fileInput.files.length) return alert("Please upload a PDF.");
+
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pages = pdfDoc.getPages();
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
+
+      pages.forEach((page, i) => {
+        const { width, height } = page.getSize();
+        const text = `Page ${i + 1}`;
+        page.drawText(text, {
+          x: width / 2 - font.widthOfTextAtSize(text, 12) / 2,
+          y: 20,
+          size: 12,
+          font,
+          color: rgb(0.3, 0.3, 0.3),
+        });
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      output.innerHTML = `<a href="${url}" download="numbered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Numbered PDF</a>`;
+    }
+  </script>
+</body>
+</html>

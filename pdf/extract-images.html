@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Extract Images from PDF - ToolNest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🖼️ Extract Images from PDF</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
+      <button onclick="extractImages()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Extract Images</button>
+    </div>
+    <div id="output" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
+  </main>
+
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.mjs';
+
+    async function extractImages() {
+      const input = document.getElementById('pdfFile');
+      const file = input.files[0];
+      if (!file) {
+        alert('Please select a PDF file.');
+        return;
+      }
+
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+      const output = document.getElementById('output');
+      output.innerHTML = '';
+
+      for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+        const page = await pdf.getPage(pageNum);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const imgURL = canvas.toDataURL('image/png');
+        const link = document.createElement('a');
+        link.href = imgURL;
+        link.download = `page-${pageNum}.png`;
+        link.innerHTML = `<img src="${imgURL}" class="w-full border rounded" />`;
+
+        output.appendChild(link);
+      }
+    }
+  </script>
+</body>
+</html>

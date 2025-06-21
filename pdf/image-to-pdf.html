@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Image to PDF - ToolNest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🖼️ Image to PDF</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <input type="file" id="imageFiles" accept="image/*" multiple class="mb-4" />
+      <button onclick="convertToPDF()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Convert to PDF</button>
+    </div>
+    <div id="output" class="mt-6"></div>
+  </main>
+
+  <script type="module">
+    import { jsPDF } from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm';
+
+    async function convertToPDF() {
+      const input = document.getElementById('imageFiles');
+      const files = Array.from(input.files);
+      if (files.length === 0) {
+        alert('Please select one or more image files.');
+        return;
+      }
+
+      const pdf = new jsPDF();
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const imgData = await readImageFile(file);
+        const img = new Image();
+
+        await new Promise(resolve => {
+          img.onload = () => {
+            const ratio = img.width / img.height;
+            const width = 210;
+            const height = 210 / ratio;
+            if (i > 0) pdf.addPage();
+            pdf.addImage(img, 'JPEG', 0, 0, width, height);
+            resolve();
+          };
+          img.src = imgData;
+        });
+      }
+
+      const output = document.getElementById('output');
+      const pdfBlob = pdf.output('blob');
+      const blobUrl = URL.createObjectURL(pdfBlob);
+      output.innerHTML = `<a href="${blobUrl}" download="images.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download PDF</a>`;
+    }
+
+    function readImageFile(file) {
+      return new Promise(resolve => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Remove Watermark - ToolNest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🚫 Remove Watermark from PDF</h1>
+
+    <div class="bg-white p-6 rounded shadow-md space-y-4">
+      <input type="file" id="pdfFile" accept="application/pdf" />
+      <input type="number" id="pageNum" placeholder="Page number (e.g. 1)" class="block w-full border px-2 py-1 rounded" />
+      <input type="number" id="x" placeholder="X position (e.g. 100)" class="block w-full border px-2 py-1 rounded" />
+      <input type="number" id="y" placeholder="Y position (e.g. 300)" class="block w-full border px-2 py-1 rounded" />
+      <input type="number" id="width" placeholder="Width (e.g. 200)" class="block w-full border px-2 py-1 rounded" />
+      <input type="number" id="height" placeholder="Height (e.g. 50)" class="block w-full border px-2 py-1 rounded" />
+      <button onclick="removeWatermark()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Remove (Cover) Watermark</button>
+    </div>
+
+    <div id="output" class="mt-6"></div>
+  </main>
+
+  <script type="module">
+    import { PDFDocument, rgb } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+
+    async function removeWatermark() {
+      const fileInput = document.getElementById('pdfFile');
+      const pageNum = parseInt(document.getElementById('pageNum').value) - 1;
+      const x = parseInt(document.getElementById('x').value);
+      const y = parseInt(document.getElementById('y').value);
+      const width = parseInt(document.getElementById('width').value);
+      const height = parseInt(document.getElementById('height').value);
+      const output = document.getElementById('output');
+
+      if (!fileInput.files.length) return alert("Please upload a PDF.");
+      if (isNaN(pageNum) || isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) return alert("Please fill all fields with numbers.");
+
+      const file = fileInput.files[0];
+      const arrayBuffer = await file.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pages = pdfDoc.getPages();
+
+      if (pageNum >= pages.length) return alert("Page number exceeds total pages.");
+
+      const page = pages[pageNum];
+      page.drawRectangle({
+        x,
+        y,
+        width,
+        height,
+        color: rgb(1, 1, 1),
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      output.innerHTML = `<a href="${url}" download="cleaned.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Cleaned PDF</a>`;
+    }
+  </script>
+</body>
+</html>

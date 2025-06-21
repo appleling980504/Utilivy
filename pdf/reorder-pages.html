@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reorder PDF Pages - ToolNest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🔀 Reorder PDF Pages</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
+      <label for="order" class="block mb-2">Enter page order (comma-separated, e.g. 3,1,2):</label>
+      <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
+      <button onclick="reorderPages()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
+    </div>
+    <div id="output" class="mt-6"></div>
+  </main>
+
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.mjs';
+    import { jsPDF } from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm';
+
+    async function reorderPages() {
+      const fileInput = document.getElementById('pdfFile');
+      const orderInput = document.getElementById('order').value;
+      const file = fileInput.files[0];
+      if (!file || !orderInput) return alert('Please select a file and enter a page order.');
+
+      const order = orderInput.split(',').map(num => parseInt(num.trim()));
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const outputPDF = new jsPDF();
+      let first = true;
+
+      for (let idx of order) {
+        if (idx < 1 || idx > pdf.numPages) continue;
+        const page = await pdf.getPage(idx);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const imgData = canvas.toDataURL('image/jpeg');
+        if (!first) outputPDF.addPage();
+        first = false;
+        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+      }
+
+      const blob = outputPDF.output('blob');
+      const url = URL.createObjectURL(blob);
+      const output = document.getElementById('output');
+      output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
+    }
+  </script>
+</body>
+</html>
