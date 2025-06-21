@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HTML Entities Encoder / Decoder - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">🔣 HTML Entities Encoder / Decoder</h1>
+    <p class="mb-4 text-gray-600">Convert between plain text and HTML-encoded entities.</p>
+
+    <label for="inputText" class="block font-medium mb-1">Input</label>
+    <textarea id="inputText" rows="6" class="w-full border px-3 py-2 rounded mb-4" placeholder="Enter HTML or text..."></textarea>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="encodeHtml()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Encode to Entities</button>
+      <button onclick="decodeHtml()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Decode to Text</button>
+      <button onclick="clearFields()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear</button>
+    </div>
+
+    <label for="outputText" class="block font-medium mb-1">Output</label>
+    <textarea id="outputText" rows="6" class="w-full border px-3 py-2 rounded" readonly></textarea>
+  </div>
+
+  <script>
+    function encodeHtml() {
+      const div = document.createElement('div');
+      div.textContent = document.getElementById('inputText').value;
+      document.getElementById('outputText').value = div.innerHTML;
+    }
+
+    function decodeHtml() {
+      const div = document.createElement('div');
+      div.innerHTML = document.getElementById('inputText').value;
+      document.getElementById('outputText').value = div.textContent || div.innerText || '';
+    }
+
+    function clearFields() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputText').value = '';
+    }
+  </script>
+</body>
+</html>
