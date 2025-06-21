@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DOCX to TXT - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/mammoth/mammoth.browser.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-6">📝 DOCX to TXT</h1>
+    <p class="mb-4 text-gray-600">Upload a Word (.docx) file and extract the plain text content.</p>
+
+    <input id="upload-docx" type="file" accept=".docx" class="mb-4" />
+
+    <div id="output" class="bg-white p-4 rounded shadow whitespace-pre-wrap min-h-[200px] text-sm overflow-auto"></div>
+  </div>
+
+  <script>
+    document.getElementById("upload-docx").addEventListener("change", function(event) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        const arrayBuffer = reader.result;
+        mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+          .then(function(result) {
+            document.getElementById("output").textContent = result.value;
+          })
+          .catch(function(err) {
+            document.getElementById("output").textContent = "Error: " + err.message;
+          });
+      };
+      reader.readAsArrayBuffer(event.target.files[0]);
+    });
+  </script>
+</body>
+</html>
