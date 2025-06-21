@@ -6,20 +6,132 @@
   <title>Word to PDF - Toolnest</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-2xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">📄 Word to PDF</h1>
-    <p class="mb-4 text-gray-700">
-      This simple tool helps you convert Word documents (.doc, .docx) to PDF files quickly. Click the button below to use a trusted free converter.
-    </p>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">📄 Word to PDF Converter</h1>
+    <p class="mb-4 text-gray-700">Upload your .doc or .docx file to convert it to PDF.</p>
 
-    <a href="https://www.ilovepdf.com/word_to_pdf" target="_blank" class="bg-red-600 text-white px-6 py-3 rounded hover:bg-red-700 inline-block">
-      Go to Word to PDF Tool
-    </a>
+    <input type="file" id="fileInput" accept=".doc,.docx" class="mb-4 block"/>
+    <button onclick="convertFile()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Convert</button>
 
-    <div class="mt-8 text-sm text-gray-500">
-      * External link provided for convenience. Toolnest does not own the linked service.
-    </div>
+    <p id="status" class="mt-4 text-sm text-gray-600"></p>
+    <a id="downloadLink" href="#" target="_blank" class="mt-4 text-blue-600 font-medium hidden">Download PDF</a>
   </div>
+
+  <script>
+    async function convertFile() {
+      const fileInput = document.getElementById("fileInput");
+      const statusEl = document.getElementById("status");
+      const downloadLink = document.getElementById("downloadLink");
+      downloadLink.classList.add("hidden");
+
+      if (fileInput.files.length === 0) {
+        statusEl.textContent = "Please select a Word document.";
+        return;
+      }
+
+      const file = fileInput.files[0];
+      statusEl.textContent = "Uploading and converting...";
+
+      const apiKey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiM2FiOGE0NzRlMzFhMWIwNjAwZGZiMGQyMDRhZGZkNjQ2YThkYTNiMmM1MTI5NDM2OGVlMzU4MTMzNDgwZDBiMDZlMWM2OTkxMmM0NGQ4NmYiLCJpYXQiOjE3NTA0NzkzNjkuNTYwNzksIm5iZiI6MTc1MDQ3OTM2OS41NjA3OTEsImV4cCI6NDkwNjE1Mjk2OS41NTU3MTksInN1YiI6IjcyMjU4NDEwIiwic2NvcGVzIjpbXX0.FSLRSWd2lBGrknoi_eqTilixZenmJJmJ0I7YrO0YZ-ohyGnIq9nJxAkVH0rcVeU0Sv7w1pejku23OZacImJdsQgIjr1ELfL2aUCjdfnaqWGJezW_Z5sj9nP9hpkvh2lUVha2V_fuAAdX1_ct2vG93kZxLhZYLB04XRWqbE9O0Mp8oat19Q0m84CNlAD74KeAUy3lLETFdzydLQq1UV-J0Uce9uNrkj6YYzJDdrDduXakvlvo1VFzMiX_3pKD3aj7PxEtE6za3xXnANbVtfsUQy3YhEVR0YsSp_zQJ8jl8FUU-koaMo9Hyr-1HxvSWuwKlm26wAoktF9NFlOwUAgFy47GrvWG24Dmd2fN8TMy9pSLdvOE8WqT66eNRg2rdulzWJ4ZXZsiEH25bI8DIrEgWa_fGq_JecQ2ZXnxkL8ZsxATjokwK8K7y9qlvjYRK9ELxHqGTvS9l-cwYUvG-oyN_9INkt4U-uRrG1W4BzgMVwP7MJsIuc5eyinnJhZKLJdqkqC_Obq5HIda3FEkvtbVt__wyJ4P80Lg1au1VVG0G3qv6C7bI0VcqN477f-IuUIN7Mc-QoOkAQFiDDfSAeZw2NGAGmQyfI-xPyRfQUNqZnloqGgkrnsx1dQTcR7Ru5g1CSmilNph9GZ1hXZn13EsSAohnse6a2L4YVsbv_Tci_s"; 
+
+      try {
+        const form = new FormData();
+        form.append("file", file);
+
+        // Step 1: Get upload URL
+        const importRes = await fetch("https://api.cloudconvert.com/v2/import/upload", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "file_name": file.name
+          })
+        });
+
+        const importData = await importRes.json();
+        const uploadURL = importData.data.result.form.url;
+        const uploadParams = importData.data.result.form.parameters;
+
+        // Step 2: Upload to S3
+        const uploadForm = new FormData();
+        for (const key in uploadParams) {
+          uploadForm.append(key, uploadParams[key]);
+        }
+        uploadForm.append("file", file);
+
+        await fetch(uploadURL, {
+          method: "POST",
+          body: uploadForm
+        });
+
+        const importId = importData.data.id;
+
+        // Step 3: Convert
+        const convertRes = await fetch("https://api.cloudconvert.com/v2/jobs", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            "tasks": {
+              "import-my-file": {
+                "operation": "import/upload"
+              },
+              "convert-my-file": {
+                "operation": "convert",
+                "input": "import-my-file",
+                "input_format": "docx",
+                "output_format": "pdf"
+              },
+              "export-my-file": {
+                "operation": "export/url",
+                "input": "convert-my-file"
+              }
+            }
+          })
+        });
+
+        const jobData = await convertRes.json();
+        const jobId = jobData.data.id;
+
+        // Step 4: Poll for job completion
+        let downloadUrl = null;
+        for (let i = 0; i < 20; i++) {
+          const checkRes = await fetch(`https://api.cloudconvert.com/v2/jobs/${jobId}`, {
+            headers: {
+              "Authorization": `Bearer ${apiKey}`
+            }
+          });
+          const checkData = await checkRes.json();
+          const exportTask = checkData.data.tasks.find(t => t.name === "export-my-file");
+
+          if (exportTask.status === "finished") {
+            downloadUrl = exportTask.result.files[0].url;
+            break;
+          }
+
+          await new Promise(resolve => setTimeout(resolve, 1500));
+        }
+
+        if (downloadUrl) {
+          statusEl.textContent = "Conversion complete!";
+          downloadLink.href = downloadUrl;
+          downloadLink.classList.remove("hidden");
+          downloadLink.textContent = "Download PDF";
+        } else {
+          statusEl.textContent = "Conversion failed or timed out.";
+        }
+
+      } catch (error) {
+        console.error(error);
+        statusEl.textContent = "An error occurred during conversion.";
+      }
+    }
+  </script>
 </body>
 </html>
+
