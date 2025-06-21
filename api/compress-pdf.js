@@ -1,7 +1,12 @@
-import { IncomingForm } from 'formidable';
+import formidable from 'formidable';
 import fs from 'fs';
-import CloudConvert from 'cloudconvert';
-import FormData from 'form-data';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { Readable } from 'stream';
+import pkg from 'cloudconvert';
+
+const CloudConvert = pkg.default;
+const cloudConvert = new CloudConvert(process.env.CLOUDCONVERT_API_KEY);
 
 export const config = {
   api: {
@@ -9,66 +14,74 @@ export const config = {
   },
 };
 
-const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
-const cloudConvert = new CloudConvert(process.env.CLOUDCONVERT_API_KEY);
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Only POST allowed');
 
-  const form = new IncomingForm({ uploadDir: '/tmp', keepExtensions: true });
+  const form = formidable({ multiples: false });
 
   form.parse(req, async (err, fields, files) => {
     if (err) {
       console.error('Form parse error:', err);
-      return res.status(500).json({ error: 'Form parse failed' });
+      return res.status(500).json({ error: 'Error parsing form' });
     }
 
     const file = files.file;
-    if (!file || !file.filepath) {
-      return res.status(400).json({ error: 'No file uploaded' });
+    if (!file || !file.filepath || file.size === 0) {
+      console.error('Invalid file uploaded:', file);
+      return res.status(400).json({ error: 'Invalid or empty file uploaded' });
     }
+
+    console.log('✅ Uploaded file:', {
+      filepath: file.filepath,
+      size: file.size,
+      mimetype: file.mimetype,
+    });
 
     try {
       const job = await cloudConvert.jobs.create({
         tasks: {
-          importFile: {
+          upload: {
             operation: 'import/upload',
           },
-          compressFile: {
+          compress: {
             operation: 'optimize',
-            input: 'importFile',
+            input: 'upload',
             output_format: 'pdf',
           },
-          exportFile: {
+          export: {
             operation: 'export/url',
-            input: 'compressFile',
+            input: 'compress',
           },
         },
       });
 
-      const uploadTask = job.tasks.find(t => t.name === 'importFile');
-      const uploadUrl = uploadTask.result.form.url;
-      const uploadParams = uploadTask.result.form.parameters;
+      console.log('📦 Job created:', JSON.stringify(job, null, 2));
 
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(uploadParams)) {
-        formData.append(key, value);
+      const uploadTask = job.tasks.find((t) => t.name === 'upload');
+
+      const inputFileStream = fs.createReadStream(file.filepath);
+
+      await cloudConvert.tasks.upload(uploadTask, inputFileStream, path.basename(file.filepath));
+
+      const finishedJob = await cloudConvert.jobs.wait(job.id); // Wait for job to finish
+
+      console.log('✅ Job finished:', JSON.stringify(finishedJob, null, 2));
+
+      const exportTask = finishedJob.tasks.find((t) => t.name === 'export');
+
+      if (!exportTask || !exportTask.result || !exportTask.result.files) {
+        console.error('Export task failed or missing:', exportTask);
+        return res.status(500).json({ error: 'Export failed' });
       }
-      formData.append('file', fs.createReadStream(file.filepath));
 
-      await fetch(uploadUrl, {
-        method: 'POST',
-        body: formData,
-      });
-
-      const finishedJob = await cloudConvert.jobs.wait(job.id);
-      const exportTask = finishedJob.tasks.find(t => t.name === 'exportFile');
       const fileUrl = exportTask.result.files[0].url;
 
-      return res.status(200).json({ fileUrl });
+      console.log('🔗 Compressed file URL:', fileUrl);
+
+      return res.status(200).json({ url: fileUrl });
     } catch (error) {
-      console.error('Compression error:', error);
-      return res.status(500).json({ error: 'Compression failed' });
+      console.error('❌ Compression failed:', error);
+      return res.status(500).json({ error: 'Compression failed', detail: error.message });
     }
   });
 }
