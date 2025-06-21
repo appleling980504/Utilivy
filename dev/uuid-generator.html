@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>UUID Generator - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🔑 UUID Generator</h1>
+    <p class="mb-4 text-gray-600">Generate universally unique identifiers (UUID v4).</p>
+
+    <div class="flex items-center mb-4">
+      <input id="uuidOutput" type="text" readonly class="flex-1 border px-3 py-2 rounded bg-gray-50 text-gray-800 font-mono mr-2"/>
+      <button onclick="copyUUID()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">📋 Copy</button>
+    </div>
+
+    <button onclick="generateUUID()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">🔄 Generate New UUID</button>
+  </div>
+
+  <script>
+    function generateUUID() {
+      const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+      );
+      document.getElementById('uuidOutput').value = uuid;
+    }
+
+    function copyUUID() {
+      const uuidField = document.getElementById('uuidOutput');
+      uuidField.select();
+      uuidField.setSelectionRange(0, 99999); // Mobile support
+      document.execCommand("copy");
+    }
+
+    // Generate one on load
+    window.onload = generateUUID;
+  </script>
+</body>
+</html>
