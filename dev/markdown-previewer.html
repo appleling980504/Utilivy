@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Markdown Previewer - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">📝 Markdown Previewer</h1>
+    <p class="mb-4 text-gray-600">Write and preview Markdown in real time.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="markdownInput" class="block text-sm font-medium mb-1">Markdown Input</label>
+        <textarea id="markdownInput" rows="16" class="w-full border p-3 rounded" placeholder="# Hello World!"># Welcome to Markdown Previewer
+
+Type your **Markdown** here and see the preview on the right.
+
+- Supports *italic*, **bold**, `code`, and more!
+- Render tables, lists, blockquotes, etc.
+
+[Toolnest](https://toolnest.vercel.app)</textarea>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-1">Preview</label>
+        <div id="preview" class="prose prose-sm max-w-none bg-gray-50 border p-3 rounded overflow-auto h-full"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById("markdownInput");
+    const preview = document.getElementById("preview");
+
+    function updatePreview() {
+      const rawMarkdown = input.value;
+      preview.innerHTML = marked.parse(rawMarkdown, { breaks: true });
+    }
+
+    input.addEventListener("input", updatePreview);
+    updatePreview(); // initialize on page load
+  </script>
+
+  <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.5.9/dist/typography.min.css" rel="stylesheet" />
+</body>
+</html>
