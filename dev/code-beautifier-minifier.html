@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Code Minifier / Beautifier - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.17.4/uglify-js.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">🛠️ Code Minifier / Beautifier</h1>
+
+    <div class="mb-4">
+      <label class="block font-medium mb-1">Select Language:</label>
+      <select id="language" class="border p-2 rounded w-full">
+        <option value="js">JavaScript</option>
+        <option value="css">CSS</option>
+        <option value="html">HTML</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-medium mb-1">Input Code:</label>
+      <textarea id="inputCode" rows="10" class="w-full p-3 border rounded font-mono" placeholder="Paste your code here..."></textarea>
+    </div>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button onclick="beautifyCode()" class="bg-green-600 text-white px-4 py-2 rounded">✨ Beautify</button>
+      <button onclick="minifyCode()" class="bg-blue-600 text-white px-4 py-2 rounded">🔧 Minify</button>
+      <button onclick="copyOutput()" class="bg-gray-800 text-white px-4 py-2 rounded">📋 Copy Output</button>
+    </div>
+
+    <div>
+      <label class="block font-medium mb-1">Output Code:</label>
+      <textarea id="outputCode" rows="10" class="w-full p-3 border rounded font-mono" readonly></textarea>
+    </div>
+  </div>
+
+  <script>
+    function beautifyCode() {
+      const lang = document.getElementById("language").value;
+      const input = document.getElementById("inputCode").value;
+      let output = "";
+      if (lang === "js") {
+        output = js_beautify(input);
+      } else if (lang === "css") {
+        output = css_beautify(input);
+      } else if (lang === "html") {
+        output = html_beautify(input);
+      }
+      document.getElementById("outputCode").value = output;
+    }
+
+    function minifyCode() {
+      const lang = document.getElementById("language").value;
+      const input = document.getElementById("inputCode").value;
+      let output = "";
+      try {
+        if (lang === "js") {
+          output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
+        } else if (lang === "css") {
+          output = input.replace(/\s+/g, " ").replace(/\s*([{};:,])\s*/g, "$1");
+        } else if (lang === "html") {
+          output = input.replace(/\n+/g, "").replace(/\s{2,}/g, " ");
+        }
+      } catch (e) {
+        output = "❌ Error: " + e.message;
+      }
+      document.getElementById("outputCode").value = output;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById("outputCode");
+      output.select();
+      document.execCommand("copy");
+      alert("✅ Copied to clipboard!");
+    }
+  </script>
+</body>
+</html>
