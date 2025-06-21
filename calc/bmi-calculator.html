@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BMI Calculator - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-4">
+  <div class="max-w-lg mx-auto">
+    <h1 class="text-3xl font-bold mb-6">🧮 BMI Calculator</h1>
+
+    <div class="mb-4">
+      <label class="block mb-1">Height (cm):</label>
+      <input id="height" type="number" class="w-full p-2 border rounded" placeholder="e.g. 170" />
+    </div>
+    <div class="mb-4">
+      <label class="block mb-1">Weight (kg):</label>
+      <input id="weight" type="number" class="w-full p-2 border rounded" placeholder="e.g. 65" />
+    </div>
+
+    <button onclick="calculateBMI()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Calculate</button>
+
+    <div id="result" class="mt-6 text-lg font-semibold"></div>
+  </div>
+
+  <script>
+    function calculateBMI() {
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+
+      if (!height || !weight || height <= 0 || weight <= 0) {
+        document.getElementById('result').textContent = 'Please enter valid height and weight.';
+        return;
+      }
+
+      const bmi = weight / ((height / 100) ** 2);
+      let category = '';
+
+      if (bmi < 18.5) category = 'Underweight';
+      else if (bmi < 24.9) category = 'Normal weight';
+      else if (bmi < 29.9) category = 'Overweight';
+      else category = 'Obese';
+
+      document.getElementById('result').textContent = `Your BMI is ${bmi.toFixed(1)} (${category})`;
+    }
+  </script>
+</body>
+</html>
