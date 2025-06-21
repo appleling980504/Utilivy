@@ -9,26 +9,43 @@
 <body class="bg-gray-100 text-gray-900 p-6">
   <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
     <h1 class="text-3xl font-bold mb-4">🎨 Color Picker</h1>
-    <p class="mb-4 text-gray-600">Pick a color and get its HEX, RGB, and HSL values instantly.</p>
+    <p class="mb-4 text-gray-600">Pick a color and click to copy its HEX, RGB, or HSL value.</p>
 
     <input type="color" id="colorInput" class="w-24 h-12 p-0 border rounded mb-4" onchange="updateColor()" />
 
-    <div class="space-y-2 mt-4">
-      <div><strong>HEX:</strong> <span id="hexValue" class="font-mono text-blue-600"></span></div>
-      <div><strong>RGB:</strong> <span id="rgbValue" class="font-mono text-green-600"></span></div>
-      <div><strong>HSL:</strong> <span id="hslValue" class="font-mono text-purple-600"></span></div>
+    <div class="space-y-4 mt-6">
+      <div>
+        <strong>HEX:</strong>
+        <button onclick="copyToClipboard(hexText)" class="text-blue-600 hover:underline" id="hexText"></button>
+      </div>
+      <div>
+        <strong>RGB:</strong>
+        <button onclick="copyToClipboard(rgbText)" class="text-green-600 hover:underline" id="rgbText"></button>
+      </div>
+      <div>
+        <strong>HSL:</strong>
+        <button onclick="copyToClipboard(hslText)" class="text-purple-600 hover:underline" id="hslText"></button>
+      </div>
     </div>
+
+    <p id="copyMsg" class="text-sm text-gray-500 mt-4"></p>
   </div>
 
   <script>
+    const hexText = document.getElementById("hexText");
+    const rgbText = document.getElementById("rgbText");
+    const hslText = document.getElementById("hslText");
+    const copyMsg = document.getElementById("copyMsg");
+
     function updateColor() {
       const color = document.getElementById("colorInput").value;
-      document.getElementById("hexValue").textContent = color.toUpperCase();
+      hexText.textContent = color.toUpperCase();
+
       const rgb = hexToRgb(color);
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
-      document.getElementById("rgbValue").textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-      document.getElementById("hslValue").textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      rgbText.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+      hslText.textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
     }
 
     function hexToRgb(hex) {
@@ -66,6 +83,16 @@
         s: Math.round(s * 100),
         l: Math.round(l * 100)
       };
+    }
+
+    function copyToClipboard(element) {
+      const text = element.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        copyMsg.textContent = `✅ Copied: ${text}`;
+        setTimeout(() => copyMsg.textContent = '', 2000);
+      }).catch(() => {
+        copyMsg.textContent = '❌ Failed to copy!';
+      });
     }
 
     window.onload = updateColor;
