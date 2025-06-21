@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hash Generator - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">🔐 Hash Generator</h1>
+    <p class="mb-4 text-gray-600">Generate MD5, SHA-1, SHA-256 hashes for any input text.</p>
+
+    <label class="block font-medium mb-1" for="inputText">Input Text</label>
+    <textarea id="inputText" rows="4" class="w-full border px-3 py-2 rounded mb-4"></textarea>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="generateMD5()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate MD5</button>
+      <button onclick="generateHash('SHA-1')" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Generate SHA-1</button>
+      <button onclick="generateHash('SHA-256')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Generate SHA-256</button>
+      <button onclick="clearFields()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Clear</button>
+    </div>
+
+    <label class="block font-medium mb-1" for="outputHash">Hash Result</label>
+    <textarea id="outputHash" rows="3" class="w-full border px-3 py-2 rounded" readonly></textarea>
+  </div>
+
+  <script>
+    function generateMD5() {
+      const text = document.getElementById('inputText').value;
+      if (!text) return;
+
+      const md5hex = SparkMD5.hash(text);
+      document.getElementById('outputHash').value = md5hex;
+    }
+
+    async function generateHash(algo) {
+      const text = document.getElementById('inputText').value;
+      if (!text) return;
+
+      const buf = new TextEncoder().encode(text);
+      const hash = await crypto.subtle.digest(algo, buf);
+      const hex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+      document.getElementById('outputHash').value = hex;
+    }
+
+    function clearFields() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputHash').value = '';
+    }
+  </script>
+</body>
+</html>
