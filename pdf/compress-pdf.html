@@ -6,11 +6,44 @@
   <title>Compress PDF - Toolnest</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6">📄 Compress PDF</h1>
-    <p class="mb-4 text-gray-600">Reduce the file size of your PDF document online for free.</p>
-    <iframe src="https://cloudconvert.com/compress-pdf/embed" width="100%" height="600" frameborder="0" allowfullscreen></iframe>
+<body class="bg-gray-100">
+  <div class="container mx-auto p-4 max-w-xl">
+    <h1 class="text-2xl font-bold mb-4">📉 Compress PDF</h1>
+
+    <input type="file" id="fileInput" accept=".pdf" class="mb-4 w-full p-2 border rounded" />
+    <button id="compressBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Compress</button>
+
+    <div id="status" class="mt-4 text-gray-700"></div>
+    <a id="downloadLink" class="mt-2 inline-block text-blue-600 underline hidden" target="_blank">Download Compressed PDF</a>
   </div>
+
+  <script>
+    document.getElementById('compressBtn').addEventListener('click', async () => {
+      const file = document.getElementById('fileInput').files[0];
+      if (!file) return alert('Please select a PDF file.');
+
+      const status = document.getElementById('status');
+      const link = document.getElementById('downloadLink');
+      link.classList.add('hidden');
+      status.textContent = 'Uploading and compressing...';
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const res = await fetch('/api/compress-pdf', {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await res.json();
+      if (data.url) {
+        status.textContent = 'Compression complete!';
+        link.href = data.url;
+        link.classList.remove('hidden');
+      } else {
+        status.textContent = 'Compression failed.';
+      }
+    });
+  </script>
 </body>
 </html>
