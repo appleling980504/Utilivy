@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regex Tester - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .match { background-color: #d1fae5; font-weight: bold; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🧪 Regex Tester</h1>
+    <p class="text-gray-700 mb-4">Test your regular expressions on the fly with instant match highlighting.</p>
+
+    <label class="block font-medium mb-1">Regular Expression</label>
+    <input type="text" id="regex" placeholder="/your-regex/" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()" />
+
+    <label class="block font-medium mb-1">Flags (e.g. g, i, m)</label>
+    <input type="text" id="flags" placeholder="gim" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()" />
+
+    <label class="block font-medium mb-1">Test String</label>
+    <textarea id="testString" rows="6" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()"></textarea>
+
+    <h2 class="text-xl font-semibold mb-2">🔍 Matches</h2>
+    <pre id="output" class="bg-gray-100 p-4 rounded text-sm whitespace-pre-wrap break-words"></pre>
+  </div>
+
+  <script>
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, tag =>
+        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[tag] || tag)
+      );
+    }
+
+    function testRegex() {
+      const pattern = document.getElementById("regex").value;
+      const flags = document.getElementById("flags").value;
+      const inputText = document.getElementById("testString").value;
+      const output = document.getElementById("output");
+
+      try {
+        const regex = new RegExp(pattern, flags);
+        const matches = [...inputText.matchAll(regex)];
+        if (matches.length === 0) {
+          output.innerHTML = "❌ No matches found.";
+        } else {
+          let highlighted = inputText;
+          matches.reverse().forEach(match => {
+            const start = match.index;
+            const end = start + match[0].length;
+            highlighted = highlighted.slice(0, start) + `<span class="match">${escapeHTML(match[0])}</span>` + highlighted.slice(end);
+          });
+          output.innerHTML = highlighted;
+        }
+      } catch (err) {
+        output.innerHTML = `⚠️ Invalid regex: ${err.message}`;
+      }
+    }
+  </script>
+</body>
+</html>
