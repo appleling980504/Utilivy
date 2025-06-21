@@ -41,34 +41,64 @@
   </div>
 
   <script>
+    function preprocessCode(input) {
+      return input
+        .replace(/[ \t]+\n/g, '\n')      // remove trailing spaces
+        .replace(/\n{2,}/g, '\n')        // collapse multiple newlines
+        .replace(/^\s+/, '')             // trim start
+        .replace(/\s+$/, '');            // trim end
+    }
+
     function beautifyCode() {
       const lang = document.getElementById("language").value;
-      const input = document.getElementById("inputCode").value;
+      let input = document.getElementById("inputCode").value;
+      input = preprocessCode(input);
       let output = "";
-      if (lang === "js") {
-        output = js_beautify(input);
-      } else if (lang === "css") {
-        output = css_beautify(input);
-      } else if (lang === "html") {
-        output = html_beautify(input);
+      try {
+        if (lang === "js") {
+          output = js_beautify(input, {
+            indent_size: 2,
+            space_in_empty_paren: true,
+            preserve_newlines: true
+          });
+        } else if (lang === "css") {
+          output = css_beautify(input, {
+            indent_size: 2
+          });
+        } else if (lang === "html") {
+          output = html_beautify(input, {
+            indent_size: 2,
+            preserve_newlines: true
+          });
+        }
+      } catch (err) {
+        output = "❌ Beautify Error: " + err.message;
       }
       document.getElementById("outputCode").value = output;
     }
 
     function minifyCode() {
       const lang = document.getElementById("language").value;
-      const input = document.getElementById("inputCode").value;
+      let input = document.getElementById("inputCode").value;
+      input = preprocessCode(input);
       let output = "";
       try {
         if (lang === "js") {
-          output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
+          const result = UglifyJS.minify(input);
+          output = result.code || "⚠️ Minify failed.";
         } else if (lang === "css") {
-          output = input.replace(/\s+/g, " ").replace(/\s*([{};:,])\s*/g, "$1");
+          output = input
+            .replace(/\s+/g, " ")
+            .replace(/\s*([{};:,])\s*/g, "$1")
+            .trim();
         } else if (lang === "html") {
-          output = input.replace(/\n+/g, "").replace(/\s{2,}/g, " ");
+          output = input
+            .replace(/\n+/g, "")
+            .replace(/\s{2,}/g, " ")
+            .trim();
         }
       } catch (e) {
-        output = "❌ Error: " + e.message;
+        output = "❌ Minify Error: " + e.message;
       }
       document.getElementById("outputCode").value = output;
     }
