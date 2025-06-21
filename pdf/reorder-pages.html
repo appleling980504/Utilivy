@@ -2,43 +2,55 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reorder PDF Pages - ToolNest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🔀 Reorder PDF Pages - ToolNest</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.6.347/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">🔀 Reorder PDF Pages</h1>
-    <div class="bg-white p-6 rounded shadow-md">
-      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
-      <label for="order" class="block mb-2">Enter page order (comma-separated, e.g. 3,1,2):</label>
-      <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
-      <button id="reorderBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
-    </div>
-    <div id="output" class="mt-6"></div>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <main class="w-full max-w-xl p-6 bg-white rounded shadow-md">
+    <h1 class="text-2xl font-bold mb-4">🔀 Reorder PDF Pages</h1>
+    <input type="file" id="pdfFile" accept="application/pdf" class="mb-4 w-full" />
+    
+    <label for="order" class="block mb-2 font-medium">Enter page order (e.g. 3,1,2):</label>
+    <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
+    
+    <button id="reorderBtn" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">Reorder and Download</button>
+    
+    <div id="output" class="mt-4"></div>
   </main>
 
-  <script>
-    const { jsPDF } = window.jspdf;
+  <script type="module">
+    import * as pdfjsLib from 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.mjs';
+    import { jsPDF } from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm';
 
-    document.getElementById('reorderBtn').addEventListener('click', async () => {
+    document.getElementById('reorderBtn').addEventListener('click', reorderPages);
+
+    async function reorderPages() {
       const fileInput = document.getElementById('pdfFile');
-      const orderInput = document.getElementById('order').value;
+      const orderInput = document.getElementById('order').value.trim();
       const file = fileInput.files[0];
 
-      if (!file || !orderInput) return alert('Please select a file and enter a page order.');
+      if (!file || !orderInput) {
+        alert("Please select a PDF file and enter a valid page order.");
+        return;
+      }
 
-      const order = orderInput.split(',').map(num => parseInt(num.trim()));
+      const order = orderInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+      if (order.length === 0) {
+        alert("Invalid page order format.");
+        return;
+      }
+
       const buffer = await file.arrayBuffer();
       const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const outputPDF = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-      const outputPDF = new jsPDF();
-      let first = true;
+      const pxToMm = px => (px * 25.4) / 96;
+      let firstPage = true;
 
       for (let idx of order) {
         if (idx < 1 || idx > pdf.numPages) continue;
+
         const page = await pdf.getPage(idx);
         const viewport = page.getViewport({ scale: 2 });
         const canvas = document.createElement('canvas');
@@ -49,16 +61,31 @@
         await page.render({ canvasContext: context, viewport }).promise;
         const imgData = canvas.toDataURL('image/jpeg');
 
-        if (!first) outputPDF.addPage();
-        first = false;
-        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297); // A4 in mm
+        if (!firstPage) outputPDF.addPage();
+        else firstPage = false;
+
+        outputPDF.setPage(outputPDF.getNumberOfPages());
+
+        const w = pxToMm(canvas.width);
+        const h = pxToMm(canvas.height);
+
+        // Fit the image into A4 page size (210x297 mm) while preserving aspect ratio
+        const maxWidth = 210;
+        const maxHeight = 297;
+        const scale = Math.min(maxWidth / w, maxHeight / h);
+        const finalW = w * scale;
+        const finalH = h * scale;
+        const x = (210 - finalW) / 2;
+        const y = (297 - finalH) / 2;
+
+        outputPDF.addImage(imgData, 'JPEG', x, y, finalW, finalH);
       }
 
       const blob = outputPDF.output('blob');
       const url = URL.createObjectURL(blob);
       const output = document.getElementById('output');
-      output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
-    });
+      output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block bg-green-600 text-white mt-2 px-4 py-2 rounded hover:bg-green-700">⬇️ Download Reordered PDF</a>`;
+    }
   </script>
 </body>
 </html>
