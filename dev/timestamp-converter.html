@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Timestamp Converter - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🕒 Timestamp Converter</h1>
+    <p class="mb-4 text-gray-600">Convert between Unix timestamps and human-readable date formats.</p>
+
+    <div class="mb-6">
+      <label for="timestampInput" class="block text-sm font-medium mb-1">Unix Timestamp</label>
+      <input type="number" id="timestampInput" class="w-full border rounded p-2 mb-2" placeholder="e.g. 1718947200" />
+      <button onclick="convertToDate()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Convert to Date</button>
+      <p id="dateOutput" class="mt-2 text-green-700"></p>
+    </div>
+
+    <hr class="my-6" />
+
+    <div>
+      <label for="dateInput" class="block text-sm font-medium mb-1">Human-readable Date</label>
+      <input type="datetime-local" id="dateInput" class="w-full border rounded p-2 mb-2" />
+      <button onclick="convertToTimestamp()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Convert to Timestamp</button>
+      <p id="timestampOutput" class="mt-2 text-green-700"></p>
+    </div>
+  </div>
+
+  <script>
+    function convertToDate() {
+      const input = document.getElementById("timestampInput").value;
+      if (!input) return;
+
+      const date = new Date(parseInt(input) * 1000);
+      if (isNaN(date.getTime())) {
+        document.getElementById("dateOutput").textContent = "❌ Invalid timestamp.";
+        return;
+      }
+
+      document.getElementById("dateOutput").textContent = `📅 ${date.toUTCString()}`;
+    }
+
+    function convertToTimestamp() {
+      const input = document.getElementById("dateInput").value;
+      if (!input) return;
+
+      const date = new Date(input);
+      const timestamp = Math.floor(date.getTime() / 1000);
+
+      if (isNaN(timestamp)) {
+        document.getElementById("timestampOutput").textContent = "❌ Invalid date.";
+        return;
+      }
+
+      document.getElementById("timestampOutput").textContent = `🕓 Unix Timestamp: ${timestamp}`;
+    }
+  </script>
+</body>
+</html>
