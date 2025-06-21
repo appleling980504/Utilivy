@@ -12,7 +12,7 @@
 
     <div class="bg-white p-6 rounded shadow-md space-y-4">
       <input type="file" id="pdfFile" accept="application/pdf" />
-      <button onclick="addPageNumbers()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Page Numbers</button>
+      <button id="addPageBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Page Numbers</button>
     </div>
 
     <div id="output" class="mt-6"></div>
@@ -52,6 +52,8 @@
 
       output.innerHTML = `<a href="${url}" download="numbered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Numbered PDF</a>`;
     }
+
+    document.getElementById('addPageBtn').addEventListener('click', addPageNumbers);
   </script>
 </body>
 </html>

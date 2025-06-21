@@ -1,64 +1,202 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Remove Watermark - ToolNest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">🚫 Remove Watermark from PDF</h1>
-
-    <div class="bg-white p-6 rounded shadow-md space-y-4">
-      <input type="file" id="pdfFile" accept="application/pdf" />
-      <input type="number" id="pageNum" placeholder="Page number (e.g. 1)" class="block w-full border px-2 py-1 rounded" />
-      <input type="number" id="x" placeholder="X position (e.g. 100)" class="block w-full border px-2 py-1 rounded" />
-      <input type="number" id="y" placeholder="Y position (e.g. 300)" class="block w-full border px-2 py-1 rounded" />
-      <input type="number" id="width" placeholder="Width (e.g. 200)" class="block w-full border px-2 py-1 rounded" />
-      <input type="number" id="height" placeholder="Height (e.g. 50)" class="block w-full border px-2 py-1 rounded" />
-      <button onclick="removeWatermark()" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Remove (Cover) Watermark</button>
-    </div>
-
-    <div id="output" class="mt-6"></div>
-  </main>
-
+  <title>Remove PDF Watermark - ToolNest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
   <script type="module">
-    import { PDFDocument, rgb } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+    window.pdfjsLib = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
+  </script>
+  <script type="module" id="pdf-lib-loader">
+    window.pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+  </script>
+  <style>
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      display: block;
+    }
+    .select-box {
+      position: absolute;
+      border: 2px dashed red;
+      pointer-events: none;
+    }
+    #canvasContainer {
+      position: relative;
+      display: inline-block;
+    }
+    body {
+      font-family: sans-serif;
+      background: #f3f4f6;
+      padding: 1.5rem;
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 style="font-size: 1.5rem; font-weight: bold;">❌ Remove Watermark from PDF</h1>
+    <input type="file" id="fileInput" accept="application/pdf" class="mb-4" />
+    <div style="margin: 1rem 0;">
+      <button onclick="prevPage()">⬅️ Prev</button>
+      <button onclick="nextPage()">Next ➡️</button>
+      <button onclick="clearSelections()">🧹 Clear Selections</button>
+      <button onclick="downloadCleanPDF()">📥 Download</button>
+    </div>
+    <div id="canvasContainer">
+      <canvas id="pdfCanvas"></canvas>
+    </div>
+    <p>Page: <span id="page_num"></span> / <span id="page_count"></span></p>
+  </div>
 
-    async function removeWatermark() {
-      const fileInput = document.getElementById('pdfFile');
-      const pageNum = parseInt(document.getElementById('pageNum').value) - 1;
-      const x = parseInt(document.getElementById('x').value);
-      const y = parseInt(document.getElementById('y').value);
-      const width = parseInt(document.getElementById('width').value);
-      const height = parseInt(document.getElementById('height').value);
-      const output = document.getElementById('output');
+  <script>
+    let pdfDoc = null,
+        pageNum = 1,
+        pageCount = 0,
+        rotation = 0,
+        originalFile = null;
 
-      if (!fileInput.files.length) return alert("Please upload a PDF.");
-      if (isNaN(pageNum) || isNaN(x) || isNaN(y) || isNaN(width) || isNaN(height)) return alert("Please fill all fields with numbers.");
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+    const selections = {}; // 
+    let selectBox = null, startX = 0, startY = 0;
 
-      const file = fileInput.files[0];
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      originalFile = file;
+      const reader = new FileReader();
+      reader.onload = function() {
+        const typedArray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+          pdfDoc = pdf;
+          pageCount = pdf.numPages;
+          pageNum = 1;
+          document.getElementById('page_count').textContent = pageCount;
+          renderPage(pageNum);
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(function(page) {
+        const viewport = page.getViewport({ scale: 1.5, rotation });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = { canvasContext: ctx, viewport };
+        page.render(renderContext);
+        document.getElementById('page_num').textContent = num;
+
+        const container = document.getElementById('canvasContainer');
+        container.querySelectorAll('.select-box').forEach(box => box.remove());
+        if (selections[pageNum]) {
+          selections[pageNum].forEach(sel => {
+            const box = document.createElement('div');
+            box.className = 'select-box';
+            box.style.left = `${sel.x}px`;
+            box.style.top = `${sel.y}px`;
+            box.style.width = `${sel.w}px`;
+            box.style.height = `${sel.h}px`;
+            container.appendChild(box);
+          });
+        }
+      });
+    }
+
+    function nextPage() {
+      if (pageNum >= pageCount) return;
+      pageNum++;
+      renderPage(pageNum);
+    }
+
+    function prevPage() {
+      if (pageNum <= 1) return;
+      pageNum--;
+      renderPage(pageNum);
+    }
+
+    function clearSelections() {
+      selections[pageNum] = [];
+      renderPage(pageNum);
+    }
+
+
+    const container = document.getElementById('canvasContainer');
+    container.addEventListener('mousedown', function(e) {
+      startX = e.offsetX;
+      startY = e.offsetY;
+
+      selectBox = document.createElement('div');
+      selectBox.className = 'select-box';
+      selectBox.style.left = `${startX}px`;
+      selectBox.style.top = `${startY}px`;
+      container.appendChild(selectBox);
+
+      function mouseMove(ev) {
+        const x = Math.min(ev.offsetX, startX);
+        const y = Math.min(ev.offsetY, startY);
+        const w = Math.abs(ev.offsetX - startX);
+        const h = Math.abs(ev.offsetY - startY);
+        selectBox.style.left = `${x}px`;
+        selectBox.style.top = `${y}px`;
+        selectBox.style.width = `${w}px`;
+        selectBox.style.height = `${h}px`;
+      }
+
+      function mouseUp(ev) {
+        container.removeEventListener('mousemove', mouseMove);
+        container.removeEventListener('mouseup', mouseUp);
+
+        const rect = selectBox.getBoundingClientRect();
+        const canvasRect = canvas.getBoundingClientRect();
+        const relative = {
+          x: rect.left - canvasRect.left,
+          y: rect.top - canvasRect.top,
+          w: rect.width,
+          h: rect.height
+        };
+        if (!selections[pageNum]) selections[pageNum] = [];
+        selections[pageNum].push(relative);
+      }
+
+      container.addEventListener('mousemove', mouseMove);
+      container.addEventListener('mouseup', mouseUp);
+    });
+
+    async function downloadCleanPDF() {
+      const arrayBuffer = await originalFile.arrayBuffer();
+      const pdfDoc = await pdfLib.PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
 
-      if (pageNum >= pages.length) return alert("Page number exceeds total pages.");
+      Object.keys(selections).forEach(pageIdxStr => {
+        const idx = parseInt(pageIdxStr) - 1;
+        const page = pages[idx];
+        const { width, height } = page.getSize();
 
-      const page = pages[pageNum];
-      page.drawRectangle({
-        x,
-        y,
-        width,
-        height,
-        color: rgb(1, 1, 1),
+        selections[pageIdxStr].forEach(sel => {
+          const x = sel.x * (width / canvas.width);
+          const y = height - (sel.y + sel.h) * (height / canvas.height);
+          const w = sel.w * (width / canvas.width);
+          const h = sel.h * (height / canvas.height);
+
+          page.drawRectangle({
+            x, y, width: w, height: h,
+            color: pdfLib.rgb(1, 1, 1)
+          });
+        });
       });
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
-
-      output.innerHTML = `<a href="${url}" download="cleaned.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Cleaned PDF</a>`;
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'cleaned.pdf';
+      a.click();
     }
   </script>
 </body>

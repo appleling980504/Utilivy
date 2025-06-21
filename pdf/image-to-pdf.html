@@ -11,7 +11,7 @@
     <h1 class="text-2xl font-semibold mb-6">🖼️ Image to PDF</h1>
     <div class="bg-white p-6 rounded shadow-md">
       <input type="file" id="imageFiles" accept="image/*" multiple class="mb-4" />
-      <button onclick="convertToPDF()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Convert to PDF</button>
+      <button id="convertBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Convert to PDF</button>
     </div>
     <div id="output" class="mt-6"></div>
   </main>
@@ -28,6 +28,7 @@
       }
 
       const pdf = new jsPDF();
+
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
         const imgData = await readImageFile(file);
@@ -36,10 +37,11 @@
         await new Promise(resolve => {
           img.onload = () => {
             const ratio = img.width / img.height;
-            const width = 210;
-            const height = 210 / ratio;
+            const pageWidth = 210; // A4 width in mm
+            const pageHeight = pageWidth / ratio;
+
             if (i > 0) pdf.addPage();
-            pdf.addImage(img, 'JPEG', 0, 0, width, height);
+            pdf.addImage(img, 'JPEG', 0, 0, pageWidth, pageHeight);
             resolve();
           };
           img.src = imgData;
@@ -59,6 +61,8 @@
         reader.readAsDataURL(file);
       });
     }
+
+    document.getElementById('convertBtn').addEventListener('click', convertToPDF);
   </script>
 </body>
 </html>

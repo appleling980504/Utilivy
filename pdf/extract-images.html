@@ -11,7 +11,7 @@
     <h1 class="text-2xl font-semibold mb-6">🖼️ Extract Images from PDF</h1>
     <div class="bg-white p-6 rounded shadow-md">
       <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
-      <button onclick="extractImages()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Extract Images</button>
+      <button id="extractBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Extract Images</button>
     </div>
     <div id="output" class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4"></div>
   </main>
@@ -52,6 +52,8 @@
         output.appendChild(link);
       }
     }
+
+    document.getElementById('extractBtn').addEventListener('click', extractImages);
   </script>
 </body>
 </html>

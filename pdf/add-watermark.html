@@ -13,14 +13,14 @@
     <div class="bg-white p-6 rounded shadow-md">
       <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
       <input type="text" id="watermarkText" placeholder="Enter watermark text" class="mb-4 block w-full border px-2 py-1 rounded" />
-      <button onclick="addWatermark()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Watermark</button>
+      <button id="addWatermarkBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Watermark</button>
     </div>
 
     <div id="output" class="mt-6"></div>
   </main>
 
   <script type="module">
-    import { PDFDocument, rgb, degrees } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+    import { PDFDocument, rgb, degrees, StandardFonts } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
 
     async function addWatermark() {
       const fileInput = document.getElementById('pdfFile');
@@ -37,14 +37,15 @@
       const pdfDoc = await PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
 
-      const font = await pdfDoc.embedFont(PDFDocument.PDFName.of('Helvetica'));
-      
+      const font = await pdfDoc.embedFont(StandardFonts.Helvetica); // 修正这里的字体加载
+
       pages.forEach(page => {
         const { width, height } = page.getSize();
         page.drawText(watermarkText, {
           x: width / 4,
           y: height / 2,
           size: 40,
+          font,
           rotate: degrees(-45),
           color: rgb(0.75, 0.75, 0.75),
           opacity: 0.5,
@@ -57,6 +58,8 @@
 
       output.innerHTML = `<a href="${url}" download="watermarked.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download PDF</a>`;
     }
+
+    document.getElementById('addWatermarkBtn').addEventListener('click', addWatermark);
   </script>
 </body>
 </html>

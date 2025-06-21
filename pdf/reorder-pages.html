@@ -13,7 +13,7 @@
       <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
       <label for="order" class="block mb-2">Enter page order (comma-separated, e.g. 3,1,2):</label>
       <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
-      <button onclick="reorderPages()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
+      <button id="reorderBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
     </div>
     <div id="output" class="mt-6"></div>
   </main>
@@ -47,7 +47,7 @@
         const imgData = canvas.toDataURL('image/jpeg');
         if (!first) outputPDF.addPage();
         first = false;
-        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297);
+        outputPDF.addImage(imgData, 'JPEG', 0, 0, 210, 297); // A4 size in mm
       }
 
       const blob = outputPDF.output('blob');
@@ -55,6 +55,8 @@
       const output = document.getElementById('output');
       output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
     }
+
+    document.getElementById('reorderBtn').addEventListener('click', reorderPages);
   </script>
 </body>
 </html>

@@ -1,10 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>View or Rotate PDF - Toolnest</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script type="module">
+    import { PDFDocument, degrees } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+
+    let pageRotations = [];
+
+    window.setRotationForPage = function(value) {
+      const angle = parseInt(value);
+      pageRotations[pageNum - 1] = angle;
+      renderPage(pageNum);
+    };
+
+    window.rotateCurrentPage = function () {
+      pageRotations[pageNum - 1] = (pageRotations[pageNum - 1] + 90) % 360;
+      renderPage(pageNum);
+    };
+
+    window.downloadRotatedPDF = async function () {
+      if (!pdfDocOriginal) return alert("Please upload a PDF first.");
+      const arrayBuffer = await fileBuffer.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pages = pdfDoc.getPages();
+
+      pages.forEach((page, idx) => {
+        const rotation = pageRotations[idx] || 0;
+        page.setRotation(degrees(rotation));
+      });
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'rotated-all.pdf';
+      link.click();
+    };
+
+    window.downloadCurrentPagePDF = async function () {
+      if (!pdfDocOriginal) return alert("Please upload a PDF first.");
+      const arrayBuffer = await fileBuffer.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const newPdf = await PDFDocument.create();
+
+      const [copiedPage] = await newPdf.copyPages(pdfDoc, [pageNum - 1]);
+      const rotation = pageRotations[pageNum - 1] || 0;
+      copiedPage.setRotation(degrees(rotation));
+      newPdf.addPage(copiedPage);
+
+      const newBytes = await newPdf.save();
+      const blob = new Blob([newBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `page-${pageNum}.pdf`;
+      link.click();
+    };
+  </script>
   <style>
     canvas {
       border: 1px solid #ccc;
@@ -16,35 +74,52 @@
   <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
     <h1 class="text-2xl font-bold mb-4">🔄 View or Rotate PDF</h1>
     <input type="file" id="fileInput" accept="application/pdf" class="mb-4"/>
-    <div class="flex gap-2 mb-4">
+    
+    <div class="flex gap-2 mb-4 flex-wrap items-center">
       <button onclick="prevPage()" class="bg-gray-700 text-white px-4 py-2 rounded">⬅️ Prev</button>
       <button onclick="nextPage()" class="bg-gray-700 text-white px-4 py-2 rounded">Next ➡️</button>
-      <button onclick="rotatePDF()" class="bg-blue-600 text-white px-4 py-2 rounded">🔁 Rotate</button>
+      <button onclick="rotateCurrentPage()" class="bg-blue-600 text-white px-4 py-2 rounded">🔁 Rotate</button>
+      <label class="flex items-center gap-2">
+        Angle:
+        <select onchange="setRotationForPage(this.value)" id="rotateSelect" class="border px-2 py-1 rounded">
+          <option value="0">0°</option>
+          <option value="90">90°</option>
+          <option value="180">180°</option>
+          <option value="270">270°</option>
+        </select>
+      </label>
+      <button onclick="downloadRotatedPDF()" class="bg-green-600 text-white px-4 py-2 rounded">⬇️ Download All</button>
+      <button onclick="downloadCurrentPagePDF()" class="bg-purple-600 text-white px-4 py-2 rounded">📄 Download Current Page</button>
     </div>
+
     <canvas id="pdfCanvas"></canvas>
     <p class="mt-2">Page: <span id="page_num"></span> / <span id="page_count"></span></p>
   </div>
 
   <script>
-    let pdfDoc = null,
+    let pdfDocOriginal = null,
         pageNum = 1,
         pageCount = 0,
-        rotation = 0;
+        s_pageRotations = [],
+        fileBuffer = null;
 
     const canvas = document.getElementById('pdfCanvas');
     const ctx = canvas.getContext('2d');
+    const rotateSelect = document.getElementById('rotateSelect');
 
     document.getElementById('fileInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
       if (!file) return;
+      fileBuffer = file;
 
       const reader = new FileReader();
       reader.onload = function() {
         const typedArray = new Uint8Array(this.result);
         pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
-          pdfDoc = pdf;
+          pdfDocOriginal = pdf;
           pageCount = pdf.numPages;
           pageNum = 1;
+          s_pageRotations = Array(pageCount).fill(0);
           document.getElementById('page_count').textContent = pageCount;
           renderPage(pageNum);
         });
@@ -53,7 +128,8 @@
     });
 
     function renderPage(num) {
-      pdfDoc.getPage(num).then(function(page) {
+      const rotation = s_pageRotations[num - 1] || 0;
+      pdfDocOriginal.getPage(num).then(function(page) {
         const viewport = page.getViewport({ scale: 1.5, rotation });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
@@ -64,6 +140,7 @@
         };
         page.render(renderContext);
         document.getElementById('page_num').textContent = num;
+        rotateSelect.value = rotation;
       });
     }
 
@@ -76,11 +153,6 @@
     function prevPage() {
       if (pageNum <= 1) return;
       pageNum--;
-      renderPage(pageNum);
-    }
-
-    function rotatePDF() {
-      rotation = (rotation + 90) % 360;
       renderPage(pageNum);
     }
   </script>
