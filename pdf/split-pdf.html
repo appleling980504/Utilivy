@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Split PDF by Pages - Toolnest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">📄 Split PDF by Pages</h1>
+    <input type="file" id="pdfFile" accept="application/pdf" class="mb-4"/>
+    <div id="pageCountInfo" class="mb-4"></div>
+
+    <label class="block mb-2">Enter page range (e.g., 1-3):</label>
+    <input type="text" id="pageRange" class="border p-2 w-full mb-4" placeholder="1-3" />
+
+    <button onclick="splitPDF()" class="bg-blue-600 text-white px-4 py-2 rounded">Split PDF</button>
+  </div>
+
+  <script>
+    let originalPdfBytes;
+
+    document.getElementById('pdfFile').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      originalPdfBytes = await file.arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
+      const totalPages = pdfDoc.getPageCount();
+
+      document.getElementById('pageCountInfo').textContent = `Total pages: ${totalPages}`;
+    });
+
+    async function splitPDF() {
+      const range = document.getElementById('pageRange').value.trim();
+      if (!range || !originalPdfBytes) {
+        alert("Please select a PDF and enter page range.");
+        return;
+      }
+
+      const [startStr, endStr] = range.split('-');
+      const start = parseInt(startStr, 10) - 1;
+      const end = parseInt(endStr, 10) - 1;
+
+      const sourcePdf = await PDFLib.PDFDocument.load(originalPdfBytes);
+      const newPdf = await PDFLib.PDFDocument.create();
+
+      for (let i = start; i <= end; i++) {
+        const [copiedPage] = await newPdf.copyPages(sourcePdf, [i]);
+        newPdf.addPage(copiedPage);
+      }
+
+      const newPdfBytes = await newPdf.save();
+      const blob = new Blob([newPdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "split.pdf";
+      link.click();
+    }
+  </script>
+</body>
+</html>

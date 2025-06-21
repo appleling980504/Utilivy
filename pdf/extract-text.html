@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Extract Text from PDF - Toolnest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">📝 Extract Text from PDF</h1>
+    <input type="file" id="pdfInput" accept="application/pdf" class="mb-4"/>
+    <button onclick="extractText()" class="bg-blue-600 text-white px-4 py-2 rounded">Extract Text</button>
+    <pre id="output" class="whitespace-pre-wrap mt-4 p-4 bg-gray-50 border border-gray-300 rounded h-[400px] overflow-y-scroll"></pre>
+  </div>
+
+  <script>
+    async function extractText() {
+      const fileInput = document.getElementById("pdfInput");
+      const output = document.getElementById("output");
+      if (!fileInput.files.length) {
+        alert("Please select a PDF file.");
+        return;
+      }
+
+      const file = fileInput.files[0];
+      const fileReader = new FileReader();
+
+      fileReader.onload = async function () {
+        const typedarray = new Uint8Array(this.result);
+
+        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+        let fullText = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(" ");
+          fullText += `--- Page ${i} ---\n${pageText}\n\n`;
+        }
+
+        output.textContent = fullText || "No text found in this PDF.";
+      };
+
+      fileReader.readAsArrayBuffer(file);
+    }
+  </script>
+</body>
+</html>

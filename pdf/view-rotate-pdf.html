@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>View or Rotate PDF - Toolnest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <style>
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">🔄 View or Rotate PDF</h1>
+    <input type="file" id="fileInput" accept="application/pdf" class="mb-4"/>
+    <div class="flex gap-2 mb-4">
+      <button onclick="prevPage()" class="bg-gray-700 text-white px-4 py-2 rounded">⬅️ Prev</button>
+      <button onclick="nextPage()" class="bg-gray-700 text-white px-4 py-2 rounded">Next ➡️</button>
+      <button onclick="rotatePDF()" class="bg-blue-600 text-white px-4 py-2 rounded">🔁 Rotate</button>
+    </div>
+    <canvas id="pdfCanvas"></canvas>
+    <p class="mt-2">Page: <span id="page_num"></span> / <span id="page_count"></span></p>
+  </div>
+
+  <script>
+    let pdfDoc = null,
+        pageNum = 1,
+        pageCount = 0,
+        rotation = 0;
+
+    const canvas = document.getElementById('pdfCanvas');
+    const ctx = canvas.getContext('2d');
+
+    document.getElementById('fileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function() {
+        const typedArray = new Uint8Array(this.result);
+        pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+          pdfDoc = pdf;
+          pageCount = pdf.numPages;
+          pageNum = 1;
+          document.getElementById('page_count').textContent = pageCount;
+          renderPage(pageNum);
+        });
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    function renderPage(num) {
+      pdfDoc.getPage(num).then(function(page) {
+        const viewport = page.getViewport({ scale: 1.5, rotation });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        page.render(renderContext);
+        document.getElementById('page_num').textContent = num;
+      });
+    }
+
+    function nextPage() {
+      if (pageNum >= pageCount) return;
+      pageNum++;
+      renderPage(pageNum);
+    }
+
+    function prevPage() {
+      if (pageNum <= 1) return;
+      pageNum--;
+      renderPage(pageNum);
+    }
+
+    function rotatePDF() {
+      rotation = (rotation + 90) % 360;
+      renderPage(pageNum);
+    }
+  </script>
+</body>
+</html>

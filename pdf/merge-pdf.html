@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Merge PDFs - Toolnest</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+</head>
+<body class="bg-gray-100 text-gray-800 font-sans p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">📎 Merge PDF Files</h1>
+    <input type="file" id="pdfFiles" accept="application/pdf" multiple class="mb-4"/>
+
+    <button onclick="mergePDFs()" class="bg-green-600 text-white px-4 py-2 rounded">Merge PDFs</button>
+  </div>
+
+  <script>
+    async function mergePDFs() {
+      const input = document.getElementById("pdfFiles");
+      const files = input.files;
+      if (!files.length) {
+        alert("Please select at least two PDF files.");
+        return;
+      }
+
+      const mergedPdf = await PDFLib.PDFDocument.create();
+
+      for (let file of files) {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(arrayBuffer);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+
+        copiedPages.forEach((page) => {
+          mergedPdf.addPage(page);
+        });
+      }
+
+      const pdfBytes = await mergedPdf.save();
+      const blob = new Blob([pdfBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "merged.pdf";
+      a.click();
+    }
+  </script>
+</body>
+</html>
