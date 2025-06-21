@@ -43,62 +43,43 @@
   <script>
     function preprocessCode(input) {
       return input
-        .replace(/[ \t]+\n/g, '\n')      // remove trailing spaces
-        .replace(/\n{2,}/g, '\n')        // collapse multiple newlines
-        .replace(/^\s+/, '')             // trim start
-        .replace(/\s+$/, '');            // trim end
+        .replace(/(\w)\n+(\w)/g, '$1$2') // Merge broken words (e.g., getElementByI\nd → getElementById)
+        .replace(/[ \t]+\n/g, '\n')     // Remove trailing whitespace
+        .replace(/\n{2,}/g, '\n')       // Collapse multiple empty lines
+        .replace(/[ \t]{2,}/g, ' ')     // Collapse multiple spaces
+        .replace(/^\s+/, '')            // Trim leading
+        .replace(/\s+$/, '');           // Trim trailing
     }
 
     function beautifyCode() {
       const lang = document.getElementById("language").value;
       let input = document.getElementById("inputCode").value;
-      input = preprocessCode(input);
+      input = preprocessCode(input); // Clean before beautify
       let output = "";
-      try {
-        if (lang === "js") {
-          output = js_beautify(input, {
-            indent_size: 2,
-            space_in_empty_paren: true,
-            preserve_newlines: true
-          });
-        } else if (lang === "css") {
-          output = css_beautify(input, {
-            indent_size: 2
-          });
-        } else if (lang === "html") {
-          output = html_beautify(input, {
-            indent_size: 2,
-            preserve_newlines: true
-          });
-        }
-      } catch (err) {
-        output = "❌ Beautify Error: " + err.message;
+      if (lang === "js") {
+        output = js_beautify(input);
+      } else if (lang === "css") {
+        output = css_beautify(input);
+      } else if (lang === "html") {
+        output = html_beautify(input);
       }
       document.getElementById("outputCode").value = output;
     }
 
     function minifyCode() {
       const lang = document.getElementById("language").value;
-      let input = document.getElementById("inputCode").value;
-      input = preprocessCode(input);
+      const input = document.getElementById("inputCode").value;
       let output = "";
       try {
         if (lang === "js") {
-          const result = UglifyJS.minify(input);
-          output = result.code || "⚠️ Minify failed.";
+          output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
         } else if (lang === "css") {
-          output = input
-            .replace(/\s+/g, " ")
-            .replace(/\s*([{};:,])\s*/g, "$1")
-            .trim();
+          output = input.replace(/\s+/g, " ").replace(/\s*([{};:,])\s*/g, "$1");
         } else if (lang === "html") {
-          output = input
-            .replace(/\n+/g, "")
-            .replace(/\s{2,}/g, " ")
-            .trim();
+          output = input.replace(/\n+/g, "").replace(/\s{2,}/g, " ");
         }
       } catch (e) {
-        output = "❌ Minify Error: " + e.message;
+        output = "❌ Error: " + e.message;
       }
       document.getElementById("outputCode").value = output;
     }
