@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Base64 Encoder / Decoder - Toolnest</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-6">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-3xl font-bold mb-4">🔤 Base64 Encoder / Decoder</h1>
+    <p class="mb-4 text-gray-600">Quickly encode or decode text using Base64.</p>
+
+    <label for="inputText" class="block text-sm font-medium text-gray-700 mb-1">Input Text</label>
+    <textarea id="inputText" class="w-full h-32 p-3 border rounded font-mono text-sm mb-4" placeholder="Enter your text or base64 string here..."></textarea>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button onclick="encodeBase64()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">🔐 Encode</button>
+      <button onclick="decodeBase64()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">🔓 Decode</button>
+      <button onclick="clearAll()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">🧹 Clear</button>
+    </div>
+
+    <label for="outputText" class="block text-sm font-medium text-gray-700 mb-1">Output</label>
+    <textarea id="outputText" class="w-full h-32 p-3 border rounded font-mono text-sm bg-gray-50" readonly></textarea>
+
+    <div id="error" class="text-red-600 font-medium mt-3 hidden"></div>
+  </div>
+
+  <script>
+    function encodeBase64() {
+      const input = document.getElementById("inputText").value;
+      const errorBox = document.getElementById("error");
+      try {
+        const encoded = btoa(unescape(encodeURIComponent(input)));
+        document.getElementById("outputText").value = encoded;
+        errorBox.classList.add("hidden");
+      } catch (e) {
+        errorBox.textContent = "❌ Encode error: " + e.message;
+        errorBox.classList.remove("hidden");
+      }
+    }
+
+    function decodeBase64() {
+      const input = document.getElementById("inputText").value;
+      const errorBox = document.getElementById("error");
+      try {
+        const decoded = decodeURIComponent(escape(atob(input)));
+        document.getElementById("outputText").value = decoded;
+        errorBox.classList.add("hidden");
+      } catch (e) {
+        errorBox.textContent = "❌ Decode error: " + e.message;
+        errorBox.classList.remove("hidden");
+      }
+    }
+
+    function clearAll() {
+      document.getElementById("inputText").value = "";
+      document.getElementById("outputText").value = "";
+      document.getElementById("error").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>
