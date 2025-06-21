@@ -3,139 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🔄 View & Rotate PDF - ToolNest</title>
+  <title>🔀 Reorder PDF Pages - ToolNest</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <!-- 使用 PDF.js UMD 构建 -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.13.216/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">🔄 View or Rotate PDF</h1>
-    <input type="file" id="fileInput" accept="application/pdf" class="mb-4 w-full"/>
-
-    <div class="flex gap-2 mb-4 flex-wrap items-center">
-      <button onclick="prevPage()" class="bg-gray-700 text-white px-4 py-2 rounded">⬅️ Prev</button>
-      <button onclick="nextPage()" class="bg-gray-700 text-white px-4 py-2 rounded">Next ➡️</button>
-      <button onclick="rotateCurrentPage()" class="bg-blue-600 text-white px-4 py-2 rounded">🔁 Rotate</button>
-      <label class="flex items-center gap-2">
-        Angle:
-        <select onchange="setRotationForPage(this.value)" id="rotateSelect" class="border px-2 py-1 rounded">
-          <option value="0">0°</option>
-          <option value="90">90°</option>
-          <option value="180">180°</option>
-          <option value="270">270°</option>
-        </select>
-      </label>
-      <button onclick="downloadRotatedPDF()" class="bg-green-600 text-white px-4 py-2 rounded">⬇️ Download All</button>
-      <button onclick="downloadCurrentPagePDF()" class="bg-purple-600 text-white px-4 py-2 rounded">📄 Download Current Page</button>
+<body class="bg-gray-100">
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="text-2xl font-semibold mb-6">🔀 Reorder PDF Pages</h1>
+    <div class="bg-white p-6 rounded shadow-md">
+      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
+      <label for="order" class="block mb-2">Enter page order (comma-separated, e.g. 3,1,2):</label>
+      <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
+      <button id="reorderBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
     </div>
+    <div id="output" class="mt-6"></div>
+  </main>
 
-    <canvas id="pdfCanvas"></canvas>
-    <p class="mt-2">Page: <span id="page_num"></span> / <span id="page_count"></span></p>
-  </div>
-
-  <!-- 全局变量 -->
-  <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
   <script>
-    let pdfDocOriginal = null;
-    let pageNum = 1;
-    let pageCount = 0;
-    let pageRotations = [];
-    let fileBuffer = null;
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
 
-    const canvas = document.getElementById('pdfCanvas');
-    const ctx = canvas.getContext('2d');
-    const rotateSelect = document.getElementById('rotateSelect');
+    document.getElementById('reorderBtn').addEventListener('click', async () => {
+      const fileInput = document.getElementById('pdfFile');
+      const orderInput = document.getElementById('order').value.trim();
+      const output = document.getElementById('output');
+      output.innerHTML = '';
 
-    document.getElementById('fileInput').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      fileBuffer = file;
+      if (!fileInput.files[0] || !orderInput) {
+        alert('Please select a file and enter a page order.');
+        return;
+      }
 
-      const reader = new FileReader();
-      reader.onload = function() {
-        const typedArray = new Uint8Array(this.result);
-        pdfjsLib.getDocument(typedArray).promise.then(pdf => {
-          pdfDocOriginal = pdf;
-          pageCount = pdf.numPages;
-          pageNum = 1;
-          pageRotations = Array(pageCount).fill(0);
-          document.getElementById('page_count').textContent = pageCount;
-          renderPage(pageNum);
-        });
-      };
-      reader.readAsArrayBuffer(file);
-    });
+      const file = fileInput.files[0];
+      const order = orderInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
+      const buffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
+      const { jsPDF } = window.jspdf;
+      const outputPDF = new jsPDF({ unit: 'pt', format: 'a4' });
 
-    function renderPage(num) {
-      const rotation = pageRotations[num - 1] || 0;
-      pdfDocOriginal.getPage(num).then(page => {
-        const viewport = page.getViewport({ scale: 1.5, rotation });
-        canvas.height = viewport.height;
+      for (let i = 0; i < order.length; i++) {
+        const pageNumber = order[i];
+        if (pageNumber < 1 || pageNumber > pdf.numPages) continue;
+
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 2 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
         canvas.width = viewport.width;
-        page.render({ canvasContext: ctx, viewport });
-        document.getElementById('page_num').textContent = num;
-        rotateSelect.value = rotation;
-      });
-    }
+        canvas.height = viewport.height;
 
-    function nextPage() {
-      if (pageNum < pageCount) pageNum++;
-      renderPage(pageNum);
-    }
+        await page.render({ canvasContext: context, viewport }).promise;
 
-    function prevPage() {
-      if (pageNum > 1) pageNum--;
-      renderPage(pageNum);
-    }
+        const imgData = canvas.toDataURL('image/jpeg');
 
-    function setRotationForPage(value) {
-      pageRotations[pageNum - 1] = parseInt(value);
-      renderPage(pageNum);
-    }
+        if (i > 0) outputPDF.addPage();
+        outputPDF.addImage(imgData, 'JPEG', 0, 0, outputPDF.internal.pageSize.getWidth(), outputPDF.internal.pageSize.getHeight());
+      }
 
-    function rotateCurrentPage() {
-      const idx = pageNum - 1;
-      pageRotations[idx] = (pageRotations[idx] + 90) % 360;
-      renderPage(pageNum);
-    }
-
-    async function downloadRotatedPDF() {
-      if (!pdfDocOriginal) return alert("Upload a PDF first");
-      const arrayBuffer = await fileBuffer.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const pages = pdfDoc.getPages();
-
-      pages.forEach((page, idx) => {
-        const angle = pageRotations[idx] || 0;
-        page.setRotation(PDFLib.degrees(angle));
-      });
-
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const blob = outputPDF.output('blob');
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'rotated-all.pdf';
-      a.click();
-    }
-
-    async function downloadCurrentPagePDF() {
-      if (!pdfDocOriginal) return alert("Upload a PDF first");
-      const arrayBuffer = await fileBuffer.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const newPdf = await PDFLib.PDFDocument.create();
-      const [copied] = await newPdf.copyPages(pdfDoc, [pageNum - 1]);
-      copied.setRotation(PDFLib.degrees(pageRotations[pageNum - 1] || 0));
-      newPdf.addPage(copied);
-      const newBytes = await newPdf.save();
-      const blob = new Blob([newBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `page-${pageNum}.pdf`;
-      a.click();
-    }
+      output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
+    });
   </script>
 </body>
 </html>
