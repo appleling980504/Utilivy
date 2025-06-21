@@ -5,9 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Remove PDF Watermark - ToolNest</title>
   <style>
-    canvas { border: 1px solid #ccc; margin-top: 10px; display: block; }
-    .select-box { position: absolute; border: 2px dashed red; pointer-events: none; }
-    #canvasContainer { position: relative; display: inline-block; }
+    canvas {
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      display: block;
+    }
+    .select-box {
+      position: absolute;
+      border: 2px dashed red;
+      pointer-events: none;
+    }
+    #canvasContainer {
+      position: relative;
+      display: inline-block;
+    }
     body {
       font-family: sans-serif;
       background: #f3f4f6;
@@ -21,22 +32,27 @@
     <h1 style="font-size: 1.5rem; font-weight: bold;">❌ Remove Watermark from PDF</h1>
     <input type="file" id="fileInput" accept="application/pdf" class="mb-4" />
     <div style="margin: 1rem 0;">
-      <button id="prevBtn">⬅️ Prev</button>
-      <button id="nextBtn">Next ➡️</button>
-      <button id="clearBtn">🧹 Clear Selections</button>
-      <button id="downloadBtn">📥 Download</button>
+      <button onclick="prevPage()">⬅️ Prev</button>
+      <button onclick="nextPage()">Next ➡️</button>
+      <button onclick="clearSelections()">🧹 Clear Selections</button>
+      <button onclick="downloadCleanPDF()">📥 Download</button>
     </div>
-    <div id="canvasContainer"><canvas id="pdfCanvas"></canvas></div>
+    <div id="canvasContainer">
+      <canvas id="pdfCanvas"></canvas>
+    </div>
     <p>Page: <span id="page_num"></span> / <span id="page_count"></span></p>
   </div>
 
   <script type="module">
-    const pdfjsLib = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
-    const pdfLib = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+    // 动态导入 pdf-lib 和 pdfjs
+    const { PDFDocument, rgb } = await import('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm');
+    const { getDocument, GlobalWorkerOptions } = await import('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/+esm');
+    GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.4.120/build/pdf.worker.min.js';
 
     let pdfDoc = null,
         pageNum = 1,
         pageCount = 0,
+        rotation = 0,
         originalFile = null;
 
     const canvas = document.getElementById('pdfCanvas');
@@ -44,7 +60,7 @@
     const selections = {};
     let selectBox = null, startX = 0, startY = 0;
 
-    const container = document.getElementById('canvasContainer');
+    const canvasContainer = document.getElementById('canvasContainer');
 
     document.getElementById('fileInput').addEventListener('change', function(e) {
       const file = e.target.files[0];
@@ -53,7 +69,7 @@
       const reader = new FileReader();
       reader.onload = function() {
         const typedArray = new Uint8Array(this.result);
-        pdfjsLib.getDocument(typedArray).promise.then(function(pdf) {
+        getDocument(typedArray).promise.then(function(pdf) {
           pdfDoc = pdf;
           pageCount = pdf.numPages;
           pageNum = 1;
@@ -66,15 +82,16 @@
 
     function renderPage(num) {
       pdfDoc.getPage(num).then(function(page) {
-        const viewport = page.getViewport({ scale: 1.5 });
-        canvas.width = viewport.width;
+        const viewport = page.getViewport({ scale: 1.5, rotation });
         canvas.height = viewport.height;
+        canvas.width = viewport.width;
 
         const renderContext = { canvasContext: ctx, viewport };
         page.render(renderContext);
         document.getElementById('page_num').textContent = num;
 
-        container.querySelectorAll('.select-box').forEach(box => box.remove());
+        // 渲染选择框
+        canvasContainer.querySelectorAll('.select-box').forEach(box => box.remove());
         if (selections[pageNum]) {
           selections[pageNum].forEach(sel => {
             const box = document.createElement('div');
@@ -83,24 +100,22 @@
             box.style.top = `${sel.y}px`;
             box.style.width = `${sel.w}px`;
             box.style.height = `${sel.h}px`;
-            container.appendChild(box);
+            canvasContainer.appendChild(box);
           });
         }
       });
     }
 
     function nextPage() {
-      if (pageNum < pageCount) {
-        pageNum++;
-        renderPage(pageNum);
-      }
+      if (pageNum >= pageCount) return;
+      pageNum++;
+      renderPage(pageNum);
     }
 
     function prevPage() {
-      if (pageNum > 1) {
-        pageNum--;
-        renderPage(pageNum);
-      }
+      if (pageNum <= 1) return;
+      pageNum--;
+      renderPage(pageNum);
     }
 
     function clearSelections() {
@@ -108,7 +123,8 @@
       renderPage(pageNum);
     }
 
-    container.addEventListener('mousedown', function(e) {
+    // 选择框绘制逻辑
+    canvasContainer.addEventListener('mousedown', function(e) {
       startX = e.offsetX;
       startY = e.offsetY;
 
@@ -116,7 +132,7 @@
       selectBox.className = 'select-box';
       selectBox.style.left = `${startX}px`;
       selectBox.style.top = `${startY}px`;
-      container.appendChild(selectBox);
+      canvasContainer.appendChild(selectBox);
 
       function mouseMove(ev) {
         const x = Math.min(ev.offsetX, startX);
@@ -130,8 +146,8 @@
       }
 
       function mouseUp(ev) {
-        container.removeEventListener('mousemove', mouseMove);
-        container.removeEventListener('mouseup', mouseUp);
+        canvasContainer.removeEventListener('mousemove', mouseMove);
+        canvasContainer.removeEventListener('mouseup', mouseUp);
 
         const rect = selectBox.getBoundingClientRect();
         const canvasRect = canvas.getBoundingClientRect();
@@ -145,14 +161,14 @@
         selections[pageNum].push(relative);
       }
 
-      container.addEventListener('mousemove', mouseMove);
-      container.addEventListener('mouseup', mouseUp);
+      canvasContainer.addEventListener('mousemove', mouseMove);
+      canvasContainer.addEventListener('mouseup', mouseUp);
     });
 
     async function downloadCleanPDF() {
       const arrayBuffer = await originalFile.arrayBuffer();
-      const doc = await pdfLib.PDFDocument.load(arrayBuffer);
-      const pages = doc.getPages();
+      const pdfDocMod = await PDFDocument.load(arrayBuffer);
+      const pages = pdfDocMod.getPages();
 
       Object.keys(selections).forEach(pageIdxStr => {
         const idx = parseInt(pageIdxStr) - 1;
@@ -167,12 +183,12 @@
 
           page.drawRectangle({
             x, y, width: w, height: h,
-            color: pdfLib.rgb(1, 1, 1)
+            color: rgb(1, 1, 1)
           });
         });
       });
 
-      const pdfBytes = await doc.save();
+      const pdfBytes = await pdfDocMod.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -180,12 +196,6 @@
       a.download = 'cleaned.pdf';
       a.click();
     }
-
-    // Bind buttons
-    document.getElementById('nextBtn').onclick = nextPage;
-    document.getElementById('prevBtn').onclick = prevPage;
-    document.getElementById('clearBtn').onclick = clearSelections;
-    document.getElementById('downloadBtn').onclick = downloadCleanPDF;
   </script>
 </body>
 </html>
