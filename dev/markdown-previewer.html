@@ -39,6 +39,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.5rem;
+      align-items: center;
     }
     button {
       padding: 0.5rem 1rem;
@@ -58,6 +59,9 @@
       background: white;
       overflow: auto;
     }
+    label {
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -74,6 +78,11 @@
     <button onclick="copyHTML()">📋 Copy HTML</button>
     <button onclick="toggleTheme()">🌓 Toggle Theme</button>
     <button onclick="clearEditor()">🧹 Clear</button>
+
+    <label style="margin-left: 1rem;">
+      <input type="checkbox" id="breaksCheckbox" onchange="updatePreview()" />
+      Convert line breaks to &lt;br&gt;
+    </label>
   </div>
 
   <div class="markdown-body" id="preview"></div>
@@ -81,10 +90,16 @@
   <script>
     const input = document.getElementById('markdownInput');
     const preview = document.getElementById('preview');
+    const breaksCheckbox = document.getElementById('breaksCheckbox');
 
     const updatePreview = () => {
       const markdownText = input.value;
+      const useBreaks = breaksCheckbox.checked;
+
+      marked.setOptions({ breaks: useBreaks });
       localStorage.setItem('markdownCache', markdownText);
+      localStorage.setItem('markdownBreaks', useBreaks ? '1' : '0');
+
       preview.innerHTML = marked.parse(markdownText);
     };
 
@@ -133,13 +148,13 @@
       }
     };
 
-    // Load cache
+    // Load cache on start
     window.onload = () => {
       const cache = localStorage.getItem('markdownCache');
-      if (cache) {
-        input.value = cache;
-        updatePreview();
-      }
+      const breaks = localStorage.getItem('markdownBreaks') === '1';
+      if (cache !== null) input.value = cache;
+      if (breaks) breaksCheckbox.checked = true;
+      updatePreview();
     };
   </script>
 </body>
