@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mortgage Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      padding: 2rem;
+      color: #333;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.6rem;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    input {
+      width: 100%;
+      padding: 0.6rem;
+      margin-top: 0.3rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      margin-top: 1.5rem;
+      width: 100%;
+      padding: 0.8rem;
+      font-size: 1rem;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 2rem;
+      background: #e6f0ff;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .result p {
+      margin: 0.5rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Mortgage Calculator</h1>
+    <label for="loanAmount">Loan Amount ($)</label>
+    <input type="number" id="loanAmount" placeholder="e.g. 300000" />
+
+    <label for="interestRate">Annual Interest Rate (%)</label>
+    <input type="number" id="interestRate" placeholder="e.g. 4.5" step="0.01" />
+
+    <label for="loanTerm">Loan Term (Years)</label>
+    <input type="number" id="loanTerm" placeholder="e.g. 30" />
+
+    <button onclick="calculateMortgage()">Calculate</button>
+
+    <div class="result" id="result" style="display:none;">
+      <p><strong>Monthly Payment:</strong> $<span id="monthlyPayment"></span></p>
+      <p><strong>Total Payment:</strong> $<span id="totalPayment"></span></p>
+      <p><strong>Total Interest:</strong> $<span id="totalInterest"></span></p>
+    </div>
+  </div>
+
+  <script>
+    function calculateMortgage() {
+      const principal = parseFloat(document.getElementById('loanAmount').value);
+      const annualInterest = parseFloat(document.getElementById('interestRate').value);
+      const years = parseInt(document.getElementById('loanTerm').value);
+
+      if (isNaN(principal) || isNaN(annualInterest) || isNaN(years)) {
+        alert("Please enter valid numbers in all fields.");
+        return;
+      }
+
+      const monthlyInterest = annualInterest / 100 / 12;
+      const numberOfPayments = years * 12;
+
+      const x = Math.pow(1 + monthlyInterest, numberOfPayments);
+      const monthlyPayment = (principal * monthlyInterest * x) / (x - 1);
+
+      const totalPayment = monthlyPayment * numberOfPayments;
+      const totalInterest = totalPayment - principal;
+
+      document.getElementById('monthlyPayment').textContent = monthlyPayment.toFixed(2);
+      document.getElementById('totalPayment').textContent = totalPayment.toFixed(2);
+      document.getElementById('totalInterest').textContent = totalInterest.toFixed(2);
+
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
