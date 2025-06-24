@@ -17,20 +17,21 @@
       color: #333;
     }
     .category-buttons {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 10px;
       justify-content: center;
       margin: 20px 0;
     }
     .category-buttons button {
-      padding: 10px 20px;
+      padding: 12px 8px;
       border: none;
-      border-radius: 5px;
+      border-radius: 8px;
       background-color: #007bff;
       color: white;
-      font-size: 14px;
+      font-size: 15px;
       cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
     }
     .category-buttons button.active,
     .category-buttons button:hover {
