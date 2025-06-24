@@ -16,24 +16,43 @@
       text-align: center;
       color: #333;
     }
-    select, input {
+    .category-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .category-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .category-buttons button.active,
+    .category-buttons button:hover {
+      background-color: #0056b3;
+    }
+    .converter-section {
+      display: none;
+      flex-direction: column;
+    }
+    .converter-section.active {
+      display: flex;
+    }
+    select, input, button {
       padding: 10px;
       margin: 10px 0;
       width: 100%;
       box-sizing: border-box;
       font-size: 16px;
     }
-    button {
-      padding: 12px;
-      background-color: #007bff;
+    button.convert-btn {
+      background-color: #28a745;
       color: white;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      width: 100%;
-    }
-    button:hover {
-      background-color: #0056b3;
     }
     #result {
       margin-top: 20px;
@@ -47,132 +66,71 @@
 <body>
   <h1>Unit Converter</h1>
 
-  <label for="value">Enter value:</label>
-  <input type="number" id="value" placeholder="e.g., 100" />
+  <div class="category-buttons" id="categoryButtons"></div>
 
-  <label for="category">Category:</label>
-  <select id="category" onchange="populateUnits()">
-    <option value="length">Length</option>
-    <option value="weight">Weight</option>
-    <option value="volume">Volume</option>
-    <option value="temperature">Temperature</option>
-    <option value="time">Time</option>
-    <option value="area">Area</option>
-    <option value="speed">Speed</option>
-    <option value="pressure">Pressure</option>
-    <option value="energy">Energy</option>
-    <option value="power">Power</option>
-    <option value="data">Data</option>
-  </select>
+  <div class="converter-section" id="converterSection">
+    <label for="value">Enter value:</label>
+    <input type="number" id="value" placeholder="e.g., 100" />
 
-  <label for="fromUnit">From:</label>
-  <select id="fromUnit"></select>
+    <label for="fromUnit">From:</label>
+    <select id="fromUnit"></select>
 
-  <label for="toUnit">To:</label>
-  <select id="toUnit"></select>
+    <label for="toUnit">To:</label>
+    <select id="toUnit"></select>
 
-  <button onclick="convert()">Convert</button>
-
-  <div id="result"></div>
+    <button class="convert-btn" onclick="convert()">Convert</button>
+    <div id="result"></div>
+  </div>
 
   <script>
     const units = {
-      length: {
-        mm: 1,
-        cm: 10,
-        m: 1000,
-        km: 1000000
-      },
-      weight: {
-        mg: 1,
-        g: 1000,
-        kg: 1000000,
-        ton: 1000000000
-      },
-      volume: {
-        ml: 1,
-        l: 1000,
-        m3: 1000000
-      },
-      temperature: {
-        C: 'Celsius',
-        F: 'Fahrenheit',
-        K: 'Kelvin'
-      },
-      time: {
-        sec: 1,
-        min: 60,
-        hr: 3600,
-        day: 86400
-      },
-      area: {
-        mm2: 1,
-        cm2: 100,
-        m2: 1000000,
-        ha: 10000000000,
-        km2: 1000000000000
-      },
-      speed: {
-        'm/s': 1,
-        'km/h': 0.277778,
-        'mph': 0.44704,
-        'knot': 0.514444
-      },
-      pressure: {
-        Pa: 1,
-        kPa: 1000,
-        bar: 100000,
-        atm: 101325,
-        psi: 6894.76
-      },
-      energy: {
-        J: 1,
-        kJ: 1000,
-        Wh: 3600,
-        kWh: 3600000,
-        cal: 4.184,
-        kcal: 4184
-      },
-      power: {
-        W: 1,
-        kW: 1000,
-        hp: 745.7,
-        MW: 1000000
-      },
-      data: {
-        B: 1,
-        KB: 1024,
-        MB: 1048576,
-        GB: 1073741824,
-        TB: 1099511627776
-      }
+      length: { mm: 1, cm: 10, m: 1000, km: 1000000 },
+      weight: { mg: 1, g: 1000, kg: 1000000, ton: 1000000000 },
+      volume: { ml: 1, l: 1000, m3: 1000000 },
+      temperature: { C: 'Celsius', F: 'Fahrenheit', K: 'Kelvin' },
+      time: { sec: 1, min: 60, hr: 3600, day: 86400 },
+      area: { mm2: 1, cm2: 100, m2: 1000000, ha: 10000000000, km2: 1000000000000 },
+      speed: { 'm/s': 1, 'km/h': 0.277778, 'mph': 0.44704, 'knot': 0.514444 },
+      pressure: { Pa: 1, kPa: 1000, bar: 100000, atm: 101325, psi: 6894.76 },
+      energy: { J: 1, kJ: 1000, Wh: 3600, kWh: 3600000, cal: 4.184, kcal: 4184 },
+      power: { W: 1, kW: 1000, hp: 745.7, MW: 1000000 },
+      data: { B: 1, KB: 1024, MB: 1048576, GB: 1073741824, TB: 1099511627776 }
     };
 
-    function populateUnits() {
-      const category = document.getElementById('category').value;
-      const fromUnit = document.getElementById('fromUnit');
-      const toUnit = document.getElementById('toUnit');
+    const categoryButtons = document.getElementById('categoryButtons');
+    const converterSection = document.getElementById('converterSection');
+    const fromUnit = document.getElementById('fromUnit');
+    const toUnit = document.getElementById('toUnit');
+    let currentCategory = '';
+
+    for (const category in units) {
+      const btn = document.createElement('button');
+      btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      btn.onclick = () => {
+        document.querySelectorAll('.category-buttons button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = category;
+        populateUnits(category);
+        converterSection.classList.add('active');
+      };
+      categoryButtons.appendChild(btn);
+    }
+
+    function populateUnits(category) {
       fromUnit.innerHTML = '';
       toUnit.innerHTML = '';
-
       for (const key in units[category]) {
-        const optionFrom = document.createElement('option');
-        optionFrom.value = key;
-        optionFrom.text = key;
-        fromUnit.add(optionFrom);
-
-        const optionTo = document.createElement('option');
-        optionTo.value = key;
-        optionTo.text = key;
-        toUnit.add(optionTo);
+        const optionFrom = new Option(key, key);
+        const optionTo = new Option(key, key);
+        fromUnit.appendChild(optionFrom);
+        toUnit.appendChild(optionTo);
       }
     }
 
     function convert() {
-      const category = document.getElementById('category').value;
       const value = parseFloat(document.getElementById('value').value);
-      const from = document.getElementById('fromUnit').value;
-      const to = document.getElementById('toUnit').value;
+      const from = fromUnit.value;
+      const to = toUnit.value;
 
       if (isNaN(value)) {
         document.getElementById('result').innerText = 'Please enter a valid number.';
@@ -180,12 +138,11 @@
       }
 
       let result;
-
-      if (category === 'temperature') {
+      if (currentCategory === 'temperature') {
         result = convertTemperature(value, from, to);
       } else {
-        const base = value * units[category][from];
-        result = base / units[category][to];
+        const base = value * units[currentCategory][from];
+        result = base / units[currentCategory][to];
       }
 
       document.getElementById('result').innerText = `${value} ${from} = ${result} ${to}`;
@@ -194,17 +151,13 @@
     function convertTemperature(value, from, to) {
       if (from === to) return value;
       let celsius;
-
       if (from === 'C') celsius = value;
       else if (from === 'F') celsius = (value - 32) * 5 / 9;
       else if (from === 'K') celsius = value - 273.15;
-
       if (to === 'C') return celsius;
       else if (to === 'F') return celsius * 9 / 5 + 32;
       else if (to === 'K') return celsius + 273.15;
     }
-
-    populateUnits();
   </script>
 </body>
 </html>
