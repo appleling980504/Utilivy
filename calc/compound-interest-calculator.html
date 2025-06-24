@@ -2,12 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Compound Interest Calculator - Toolnest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: sans-serif;
-      max-width: 600px;
+      max-width: 700px;
       margin: 40px auto;
       padding: 20px;
       background-color: #f9fafb;
@@ -26,18 +27,19 @@
       padding: 10px;
       margin-top: 6px;
       font-size: 16px;
-      box-sizing: border-box;
     }
     button {
-      margin-top: 24px;
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
+      margin-top: 20px;
+      padding: 12px 20px;
       background-color: #4f46e5;
       color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+    }
+    .lang-switch {
+      text-align: right;
+      margin-bottom: 10px;
     }
     .result {
       margin-top: 30px;
@@ -48,18 +50,31 @@
   </style>
 </head>
 <body>
-  <h1>Compound Interest Calculator</h1>
+  <div class="lang-switch">
+    <button onclick="toggleLanguage()"><span id="lang-btn">中文</span></button>
+  </div>
 
-  <label for="principal">Initial Amount (USD)</label>
+  <h1 id="title">Compound Interest Calculator</h1>
+
+  <label for="currency" id="label-currency">Currency</label>
+  <select id="currency">
+    <option value="USD">$ USD</option>
+    <option value="MYR">RM MYR</option>
+    <option value="CNY">¥ CNY</option>
+    <option value="EUR">€ EUR</option>
+    <option value="JPY">¥ JPY</option>
+  </select>
+
+  <label for="principal" id="label-principal">Initial Amount</label>
   <input type="number" id="principal" placeholder="e.g. 1000" />
 
-  <label for="rate">Annual Interest Rate (%)</label>
+  <label for="rate" id="label-rate">Annual Interest Rate (%)</label>
   <input type="number" id="rate" placeholder="e.g. 5" step="0.01" />
 
-  <label for="years">Number of Years</label>
+  <label for="years" id="label-years">Number of Years</label>
   <input type="number" id="years" placeholder="e.g. 10" />
 
-  <label for="frequency">Compounding Frequency</label>
+  <label for="frequency" id="label-frequency">Compounding Frequency</label>
   <select id="frequency">
     <option value="1">Annually</option>
     <option value="2">Semi-Annually</option>
@@ -68,34 +83,126 @@
     <option value="365">Daily</option>
   </select>
 
-  <button onclick="calculate()">Calculate</button>
+  <button onclick="calculate()" id="calc-btn">Calculate</button>
 
   <div id="output" class="result" style="display:none;"></div>
 
+  <canvas id="chart" height="300"></canvas>
+
   <script>
-    function formatMoney(num) {
-      return '$' + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    const labels = {
+      en: {
+        title: "Compound Interest Calculator",
+        currency: "Currency",
+        principal: "Initial Amount",
+        rate: "Annual Interest Rate (%)",
+        years: "Number of Years",
+        frequency: "Compounding Frequency",
+        calc: "Calculate",
+        total: "Total Value",
+        interest: "Total Interest Earned"
+      },
+      zh: {
+        title: "复利计算器",
+        currency: "货币",
+        principal: "初始金额",
+        rate: "年利率 (%)",
+        years: "年数",
+        frequency: "复利频率",
+        calc: "计算",
+        total: "总金额",
+        interest: "总利息"
+      }
+    };
+
+    let currentLang = "en";
+    let chart;
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "zh" : "en";
+      const lang = labels[currentLang];
+      document.getElementById("title").innerText = lang.title;
+      document.getElementById("label-currency").innerText = lang.currency;
+      document.getElementById("label-principal").innerText = lang.principal;
+      document.getElementById("label-rate").innerText = lang.rate;
+      document.getElementById("label-years").innerText = lang.years;
+      document.getElementById("label-frequency").innerText = lang.frequency;
+      document.getElementById("calc-btn").innerText = lang.calc;
+      document.getElementById("lang-btn").innerText = currentLang === "en" ? "中文" : "English";
+    }
+
+    function getCurrencySymbol(code) {
+      return {
+        USD: "$",
+        MYR: "RM",
+        CNY: "¥",
+        EUR: "€",
+        JPY: "¥"
+      }[code] || "$";
+    }
+
+    function formatMoney(num, code) {
+      return getCurrencySymbol(code) + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
     function calculate() {
       const principal = parseFloat(document.getElementById('principal').value);
       const rate = parseFloat(document.getElementById('rate').value) / 100;
-      const years = parseFloat(document.getElementById('years').value);
+      const years = parseInt(document.getElementById('years').value);
       const freq = parseInt(document.getElementById('frequency').value);
+      const currency = document.getElementById('currency').value;
+      const lang = labels[currentLang];
 
-      if (isNaN(principal) || isNaN(rate) || isNaN(years) || isNaN(freq)) {
+      if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
         alert("Please fill in all fields correctly.");
         return;
       }
 
-      const amount = principal * Math.pow((1 + rate / freq), freq * years);
-      const interest = amount - principal;
+      let values = [];
+      for (let y = 0; y <= years; y++) {
+        let amount = principal * Math.pow((1 + rate / freq), freq * y);
+        values.push(amount);
+      }
 
-      document.getElementById('output').innerHTML = `
-        <strong>Total Value:</strong> ${formatMoney(amount)}<br>
-        <strong>Total Interest Earned:</strong> ${formatMoney(interest)}
+      const total = values[values.length - 1];
+      const interest = total - principal;
+
+      document.getElementById("output").style.display = "block";
+      document.getElementById("output").innerHTML = `
+        <strong>${lang.total}:</strong> ${formatMoney(total, currency)}<br>
+        <strong>${lang.interest}:</strong> ${formatMoney(interest, currency)}
       `;
-      document.getElementById('output').style.display = 'block';
+
+      // draw chart
+      const ctx = document.getElementById("chart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array.from({length: years + 1}, (_, i) => `${i}`),
+          datasets: [{
+            label: lang.total,
+            data: values,
+            borderColor: "#6366f1",
+            backgroundColor: "rgba(99,102,241,0.1)",
+            fill: true,
+            tension: 0.2
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            },
+            x: {
+              title: {
+                display: true,
+                text: currentLang === "en" ? "Years" : "年"
+              }
+            }
+          }
+        }
+      });
     }
   </script>
 </body>
