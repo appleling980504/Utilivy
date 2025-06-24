@@ -1,141 +1,207 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Mortgage Calculator - ToolNest</title>
+  <meta charset="UTF-8" />
+  <title>Mortgage Calculator - Toolnest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    body { font-family: sans-serif; background: #f9f9f9; padding: 2rem; color: #333; }
-    .container { max-width: 800px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    input, select { padding: 0.5rem; margin: 0.5rem 0; width: 100%; box-sizing: border-box; }
-    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
-    th, td { border: 1px solid #ccc; padding: 0.5rem; text-align: right; }
-    th { background: #f0f0f0; }
-    canvas { margin-top: 2rem; }
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+      color: #111;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lang-switch {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .result {
+      margin-top: 24px;
+      background: #eef2ff;
+      padding: 16px;
+      border-radius: 6px;
+    }
   </style>
 </head>
 <body>
-<div class="container">
-  <h2>🏠 Mortgage Calculator</h2>
+  <div class="lang-switch">
+    <button onclick="toggleLang()" id="langBtn">中文</button>
+  </div>
 
-  <label>Loan Amount:</label>
-  <input type="number" id="loan" value="500000">
+  <h1 id="title">Mortgage Calculator</h1>
 
-  <label>Annual Interest Rate (%):</label>
-  <input type="number" id="rate" value="4">
-
-  <label>Loan Term (Years):</label>
-  <input type="number" id="years" value="30">
-
-  <label>Monthly Extra Payment (optional):</label>
-  <input type="number" id="extra" value="0">
-
-  <label>MRTA / MLTA Cost (optional):</label>
-  <input type="number" id="insurance" value="0">
-
-  <label>Compare with Alternative Interest Rate (%):</label>
-  <input type="number" id="altRate" value="3.5">
-
-  <label>Graph Type:</label>
-  <select id="chartType">
-    <option value="line">📈 Line Chart</option>
-    <option value="bar">📊 Bar Chart</option>
+  <label id="label-currency">Currency</label>
+  <select id="currency">
+    <option value="USD">$ USD</option>
+    <option value="MYR">RM MYR</option>
+    <option value="CNY">¥ CNY</option>
+    <option value="EUR">€ EUR</option>
+    <option value="JPY">¥ JPY</option>
   </select>
 
-  <button onclick="calculate()">Calculate</button>
+  <label id="label-home-price">Home Price</label>
+  <input type="number" id="homePrice" placeholder="e.g. 500000" />
 
-  <div id="summary"></div>
-  <canvas id="chart" height="120"></canvas>
-  <table id="scheduleTable"></table>
-</div>
+  <label id="label-down-payment">Down Payment</label>
+  <input type="number" id="downPayment" placeholder="e.g. 50000" />
 
-<script>
-  function formatCurrency(num) {
-    return "$" + Number(num).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
+  <label id="label-loan-amount">Loan Amount</label>
+  <input type="number" id="loanAmount" disabled />
 
-  function calculate() {
-    const loan = parseFloat(document.getElementById('loan').value);
-    const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-    const years = parseInt(document.getElementById('years').value);
-    const extra = parseFloat(document.getElementById('extra').value || 0);
-    const insurance = parseFloat(document.getElementById('insurance').value || 0);
-    const altRate = parseFloat(document.getElementById('altRate').value) / 100 / 12;
-    const months = years * 12;
+  <label id="label-rate">Annual Interest Rate (%)</label>
+  <input type="number" id="rate" placeholder="e.g. 4.5" step="0.01" />
 
-    let balance = loan;
-    const monthly = loan * rate / (1 - Math.pow(1 + rate, -months));
-    const altMonthly = loan * altRate / (1 - Math.pow(1 + altRate, -months));
+  <label id="label-years">Loan Term (Years)</label>
+  <input type="number" id="years" placeholder="e.g. 30" />
 
-    let totalInterest = 0, schedule = [], month = 1;
-    while (balance > 0 && month <= months) {
-      const interest = balance * rate;
-      let principal = monthly - interest + extra;
-      if (principal > balance) principal = balance;
-      schedule.push({ month, principal, interest, payment: principal + interest });
-      totalInterest += interest;
-      balance -= principal;
-      month++;
+  <button onclick="calculate()" id="calc-btn">Calculate</button>
+
+  <div class="result" id="result" style="display:none;"></div>
+  <canvas id="chart" height="300"></canvas>
+
+  <script>
+    const labels = {
+      en: {
+        title: "Mortgage Calculator",
+        currency: "Currency",
+        homePrice: "Home Price",
+        downPayment: "Down Payment",
+        loanAmount: "Loan Amount",
+        rate: "Annual Interest Rate (%)",
+        years: "Loan Term (Years)",
+        calc: "Calculate",
+        monthly: "Monthly Payment",
+        total: "Total Repayment",
+        interest: "Total Interest"
+      },
+      zh: {
+        title: "房贷计算器",
+        currency: "货币",
+        homePrice: "房屋总价",
+        downPayment: "首付金额",
+        loanAmount: "贷款金额",
+        rate: "年利率 (%)",
+        years: "贷款年限",
+        calc: "计算",
+        monthly: "每月还款额",
+        total: "总还款金额",
+        interest: "总利息"
+      }
+    };
+
+    let lang = "en";
+    let chart;
+
+    function toggleLang() {
+      lang = lang === "en" ? "zh" : "en";
+      const l = labels[lang];
+      document.getElementById("title").innerText = l.title;
+      document.getElementById("label-currency").innerText = l.currency;
+      document.getElementById("label-home-price").innerText = l.homePrice;
+      document.getElementById("label-down-payment").innerText = l.downPayment;
+      document.getElementById("label-loan-amount").innerText = l.loanAmount;
+      document.getElementById("label-rate").innerText = l.rate;
+      document.getElementById("label-years").innerText = l.years;
+      document.getElementById("calc-btn").innerText = l.calc;
+      document.getElementById("langBtn").innerText = lang === "en" ? "中文" : "English";
     }
 
-    const totalPaid = schedule.reduce((sum, p) => sum + p.payment, 0) + insurance;
-    const altTotal = altMonthly * months + insurance;
-    const interestSaved = altTotal - totalPaid;
+    function formatMoney(n, code) {
+      const sym = {
+        USD: "$",
+        MYR: "RM",
+        CNY: "¥",
+        EUR: "€",
+        JPY: "¥"
+      }[code] || "$";
+      return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
 
-    document.getElementById('summary').innerHTML = `
-      <p>🧾 Monthly Payment: <strong>${formatCurrency(monthly)}</strong> (without extra)</p>
-      <p>📅 Total Months: <strong>${schedule.length}</strong></p>
-      <p>💰 Total Interest Paid: <strong>${formatCurrency(totalInterest)}</strong></p>
-      <p>🏁 Total Paid with Insurance: <strong>${formatCurrency(totalPaid)}</strong></p>
-      <p>💡 Compared to ${document.getElementById('altRate').value}%: Saved <strong>${formatCurrency(interestSaved)}</strong></p>
-    `;
+    document.getElementById("homePrice").addEventListener("input", updateLoanAmount);
+    document.getElementById("downPayment").addEventListener("input", updateLoanAmount);
 
-    drawChart(schedule, document.getElementById('chartType').value);
-    renderTable(schedule);
-  }
+    function updateLoanAmount() {
+      const price = parseFloat(document.getElementById("homePrice").value) || 0;
+      const down = parseFloat(document.getElementById("downPayment").value) || 0;
+      const loan = Math.max(price - down, 0);
+      document.getElementById("loanAmount").value = loan;
+    }
 
-  function drawChart(schedule, type = "line") {
-    const months = schedule.map(p => p.month);
-    const principal = schedule.map(p => p.principal);
-    const interest = schedule.map(p => p.interest);
+    function calculate() {
+      const amount = parseFloat(document.getElementById("loanAmount").value);
+      const rate = parseFloat(document.getElementById("rate").value) / 100;
+      const years = parseInt(document.getElementById("years").value);
+      const currency = document.getElementById("currency").value;
+      const l = labels[lang];
 
-    if (window.chartInstance) window.chartInstance.destroy();
-    window.chartInstance = new Chart(document.getElementById('chart'), {
-      type,
-      data: {
-        labels: months,
-        datasets: [
-          { label: 'Principal', data: principal, backgroundColor: 'green', borderColor: 'green', fill: false },
-          { label: 'Interest', data: interest, backgroundColor: 'red', borderColor: 'red', fill: false }
-        ]
-      },
-      options: {
-        responsive: true,
-        scales: { y: { beginAtZero: true } },
-        plugins: { legend: { position: 'top' }, title: { display: true, text: 'Monthly Breakdown' } }
+      if (isNaN(amount) || isNaN(rate) || isNaN(years)) {
+        alert("Please fill in all fields.");
+        return;
       }
-    });
-  }
 
-  function renderTable(schedule) {
-    let html = `
-      <thead><tr><th>Month</th><th>Principal</th><th>Interest</th><th>Total Payment</th></tr></thead>
-      <tbody>
-    `;
-    schedule.forEach(p => {
-      html += `<tr>
-        <td>${p.month}</td>
-        <td>${formatCurrency(p.principal)}</td>
-        <td>${formatCurrency(p.interest)}</td>
-        <td>${formatCurrency(p.payment)}</td>
-      </tr>`;
-    });
-    html += '</tbody>';
-    document.getElementById('scheduleTable').innerHTML = html;
-  }
+      const n = years * 12;
+      const r = rate / 12;
+      const monthly = amount * r / (1 - Math.pow(1 + r, -n));
+      const total = monthly * n;
+      const interest = total - amount;
 
-  // Initial calculate
-  window.onload = () => calculate();
-</script>
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").innerHTML = `
+        <strong>${l.monthly}:</strong> ${formatMoney(monthly, currency)}<br>
+        <strong>${l.total}:</strong> ${formatMoney(total, currency)}<br>
+        <strong>${l.interest}:</strong> ${formatMoney(interest, currency)}
+      `;
+
+      const payments = Array.from({ length: n }, () => monthly);
+      const ctx = document.getElementById("chart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: payments.map((_, i) => `M${i + 1}`),
+          datasets: [{
+            label: l.monthly,
+            data: payments,
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79,70,229,0.2)",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: false
+            }
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
