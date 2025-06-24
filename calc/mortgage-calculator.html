@@ -125,6 +125,7 @@
       const sym = { USD: "$", MYR: "RM", CNY: "¥", EUR: "€", JPY: "¥" }[code] || "$";
       return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
+    let globalRows = [];
     function calculate() {
       const P = +document.getElementById("loanAmount").value;
       const r = +document.getElementById("rate").value / 100 / 12;
@@ -146,6 +147,7 @@
         interest += int;
         rows.push({ month: i, payment: prin + int + monthlyIns, principal: prin, interest: int, insurance: monthlyIns, balance: balance });
       }
+      globalRows = rows;
       document.getElementById("summary").style.display = "block";
       document.getElementById("summary").innerHTML = `<strong>${l.monthly}:</strong> ${formatMoney(monthly, code)}<br><strong>${l.total}:</strong> ${formatMoney(total, code)}<br><strong>${l.interest}:</strong> ${formatMoney(interest, code)}<br><strong>Insurance:</strong> ${formatMoney(insurance, code)} (${insMode})`;
       document.getElementById("table-wrapper").style.display = "block";
@@ -153,23 +155,7 @@
         rows.map((row, i) => `<tr><td>${row.month}</td><td><input value="${row.payment.toFixed(2)}" onchange="adjustRow(${i}, this.value)"></td><td>${row.principal.toFixed(2)}</td><td>${row.interest.toFixed(2)}</td><td>${row.insurance.toFixed(2)}</td><td>${row.balance.toFixed(2)}</td></tr>`).join('') +
         `</tbody></table>`;
       document.getElementById("table-wrapper").innerHTML = tableHTML;
-      const ctx = document.getElementById("chart").getContext("2d");
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: rows.map(r => `M${r.month}`),
-          datasets: [{
-            label: l.monthly,
-            data: rows.map(r => r.payment),
-            borderColor: "#4f46e5",
-            backgroundColor: "rgba(79,70,229,0.2)",
-            fill: true,
-            tension: 0.3
-          }]
-        },
-        options: { scales: { y: { beginAtZero: false } } }
-      });
+      updateChart();
     }
     function adjustRow(i, newPaymentStr) {
       const newPay = parseFloat(newPaymentStr);
@@ -180,6 +166,7 @@
       const monthlyIns = insMode === "monthly" ? (insPct * P) / (+document.getElementById("years").value * 12) : 0;
       const t = document.querySelector("#table-wrapper table tbody");
       let balance = P;
+      globalRows = [];
       for (let idx = 0; idx < t.rows.length; idx++) {
         const row = t.rows[idx];
         let payment = parseFloat(row.cells[1].children[0].value);
@@ -192,7 +179,28 @@
         row.cells[3].innerText = interest.toFixed(2);
         row.cells[4].innerText = monthlyIns.toFixed(2);
         row.cells[5].innerText = balance.toFixed(2);
+        globalRows.push({ month: idx + 1, payment, principal, interest, insurance: monthlyIns, balance });
       }
+      updateChart();
+    }
+    function updateChart() {
+      const ctx = document.getElementById("chart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: globalRows.map(r => `M${r.month}`),
+          datasets: [{
+            label: labels[lang].monthly,
+            data: globalRows.map(r => parseFloat(r.payment.toFixed(2))),
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79,70,229,0.2)",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: { scales: { y: { beginAtZero: false } } }
+      });
     }
   </script>
 </body>
