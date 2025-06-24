@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pregnancy Due Date Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -35,43 +36,196 @@
       margin-top: 20px;
       cursor: pointer;
     }
-    #result {
+    #result, #stageInfo {
       margin-top: 30px;
       padding: 20px;
-      background-color: #e9f7ef;
+      background-color: #fff;
       border-left: 6px solid #28a745;
-      font-size: 18px;
-      text-align: center;
+      font-size: 16px;
+    }
+    #lang-switch {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    #lang-switch button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f0f0f0;
+    }
+    canvas {
+      margin-top: 30px;
     }
   </style>
 </head>
 <body>
-  <h1>Pregnancy Due Date Calculator</h1>
+  <div id="lang-switch">
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('zh')">中</button>
+  </div>
 
-  <label for="lmp">First Day of Last Menstrual Period (LMP):</label>
+  <h1 id="title">Pregnancy Due Date Calculator</h1>
+
+  <label id="label-lmp" for="lmp">First Day of Last Menstrual Period (LMP):</label>
   <input type="date" id="lmp" />
 
-  <button onclick="calculateDueDate()">Calculate Due Date</button>
+  <button onclick="calculateDueDate()" id="calc-btn">Calculate Due Date</button>
 
   <div id="result"></div>
+  <div id="stageInfo"></div>
+
+  <canvas id="pregnancyChart" width="400" height="200"></canvas>
+
+  <div id="schedule"></div>
 
   <script>
+    let lang = 'en';
+
+    const texts = {
+      en: {
+        title: 'Pregnancy Due Date Calculator',
+        lmp: 'First Day of Last Menstrual Period (LMP):',
+        button: 'Calculate Due Date',
+        error: 'Please select your LMP date.',
+        result: 'Estimated Due Date:',
+        weeks: 'Weeks Pregnant:',
+        tip: 'Tip: Most pregnancies last around 40 weeks.',
+        stages: {
+          first: 'First Trimester (Week 1–12): Formation of vital organs. Important to take folic acid and avoid harmful substances.',
+          second: 'Second Trimester (Week 13–27): Baby starts moving, mother may feel more energetic.',
+          third: 'Third Trimester (Week 28–40): Rapid baby growth. Prepare for delivery and monitor health closely.'
+        },
+        scheduleTitle: 'Pregnancy Timeline',
+        schedule: [
+          ['Week 1-4', 'Implantation, hormone changes'],
+          ['Week 5-8', 'Heart and brain development'],
+          ['Week 9-12', 'Facial features form'],
+          ['Week 13-16', 'Movement begins'],
+          ['Week 17-20', 'Gender can be detected'],
+          ['Week 21-24', 'Rapid growth, hearing develops'],
+          ['Week 25-28', 'Eyes open, fat builds'],
+          ['Week 29-32', 'Brain development'],
+          ['Week 33-36', 'Position for birth'],
+          ['Week 37-40', 'Full term, ready for birth']
+        ]
+      },
+      zh: {
+        title: '怀孕预产期计算器',
+        lmp: '末次月经的第一天：',
+        button: '计算预产期',
+        error: '请输入末次月经日期。',
+        result: '预产期：',
+        weeks: '已怀孕周数：',
+        tip: '提示：大多数孕期大约为40周。',
+        stages: {
+          first: '第一孕期（第1–12周）：器官形成期。建议补充叶酸，避免有害物质。',
+          second: '第二孕期（第13–27周）：胎儿开始活动，孕妇精力增强。',
+          third: '第三孕期（第28–40周）：胎儿快速发育，准备分娩，注意健康监测。'
+        },
+        scheduleTitle: '孕期时间表',
+        schedule: [
+          ['第1-4周', '受精与着床，激素变化'],
+          ['第5-8周', '心脏与大脑发育'],
+          ['第9-12周', '面部特征形成'],
+          ['第13-16周', '开始胎动'],
+          ['第17-20周', '可检测性别'],
+          ['第21-24周', '快速增长，听觉形成'],
+          ['第25-28周', '睁眼、脂肪积累'],
+          ['第29-32周', '大脑发育加速'],
+          ['第33-36周', '进入分娩姿势'],
+          ['第37-40周', '足月，准备出生']
+        ]
+      }
+    };
+
+    function setLang(selectedLang) {
+      lang = selectedLang;
+      document.getElementById('title').innerText = texts[lang].title;
+      document.getElementById('label-lmp').innerText = texts[lang].lmp;
+      document.getElementById('calc-btn').innerText = texts[lang].button;
+      document.getElementById('result').innerHTML = '';
+      document.getElementById('stageInfo').innerHTML = '';
+      document.getElementById('schedule').innerHTML = '';
+      document.getElementById('pregnancyChart').style.display = 'none';
+    }
+
     function calculateDueDate() {
       const lmpInput = document.getElementById('lmp').value;
       const result = document.getElementById('result');
+      const stageInfo = document.getElementById('stageInfo');
+      const schedule = document.getElementById('schedule');
 
       if (!lmpInput) {
-        result.innerText = 'Please select your LMP date.';
+        result.innerText = texts[lang].error;
         return;
       }
 
       const lmpDate = new Date(lmpInput);
       const dueDate = new Date(lmpDate);
-      dueDate.setDate(dueDate.getDate() + 280); // 40 weeks
+      dueDate.setDate(dueDate.getDate() + 280);
+
+      const today = new Date();
+      const daysPregnant = Math.floor((today - lmpDate) / (1000 * 60 * 60 * 24));
+      const weeksPregnant = Math.floor(daysPregnant / 7);
 
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      result.innerHTML = `Estimated Due Date: <strong>${dueDate.toLocaleDateString(undefined, options)}</strong>`;
+      const dueDateStr = dueDate.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
+
+      result.innerHTML = `
+        <strong>${texts[lang].result}</strong><br>${dueDateStr}<br><br>
+        <strong>${texts[lang].weeks}</strong><br>${weeksPregnant} weeks<br><br>
+        <em>${texts[lang].tip}</em>
+      `;
+
+      let stage = '';
+      if (weeksPregnant <= 12) stage = texts[lang].stages.first;
+      else if (weeksPregnant <= 27) stage = texts[lang].stages.second;
+      else stage = texts[lang].stages.third;
+
+      stageInfo.innerText = stage;
+
+      const table = [`<h3>${texts[lang].scheduleTitle}</h3><table><tr><th>Stage</th><th>Description</th></tr>`];
+      for (const [stage, desc] of texts[lang].schedule) {
+        table.push(`<tr><td>${stage}</td><td>${desc}</td></tr>`);
+      }
+      table.push('</table>');
+      schedule.innerHTML = table.join('');
+
+      const ctx = document.getElementById('pregnancyChart').getContext('2d');
+      document.getElementById('pregnancyChart').style.display = 'block';
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['1st', '2nd', '3rd'],
+          datasets: [{
+            label: lang === 'zh' ? '孕期进度 (%)' : 'Pregnancy Progress (%)',
+            data: [
+              Math.min(weeksPregnant, 12) / 12 * 100,
+              weeksPregnant > 12 ? Math.min(weeksPregnant - 12, 15) / 15 * 100 : 0,
+              weeksPregnant > 27 ? Math.min(weeksPregnant - 27, 13) / 13 * 100 : 0
+            ],
+            backgroundColor: ['#007bff', '#ffc107', '#28a745']
+          }]
+        },
+        options: {
+          scales: { y: { beginAtZero: true, max: 100 } }
+        }
+      });
     }
+
+    setLang('en');
   </script>
 </body>
 </html>
