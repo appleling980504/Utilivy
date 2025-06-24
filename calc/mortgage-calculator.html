@@ -92,13 +92,14 @@
   <button onclick="calculate()" id="calc-btn">Calculate</button>
   <div class="result" id="summary" style="display:none;"></div>
   <canvas id="chart" height="300"></canvas>
+  <canvas id="pieChart" height="200"></canvas>
   <div class="result" id="table-wrapper" style="display:none;"></div>
   <script>
     const labels = {
       en: { title: "Advanced Mortgage Calculator", currency: "Currency", homePrice: "Home Price", downPayment: "Down Payment", loanAmount: "Loan Amount", rate: "Annual Interest Rate (%)", years: "Loan Term (Years)", insurance: "Include MRTA/MLTA Insurance (% of loan)", insMode: "Insurance Payment Method", calc: "Calculate", monthly: "Monthly Payment", total: "Total Repayment", interest: "Total Interest" },
       zh: { title: "高级房贷计算器", currency: "货币", homePrice: "房屋总价", downPayment: "首付金额", loanAmount: "贷款金额", rate: "年利率 (%)", years: "贷款年限", insurance: "MRTA/MLTA 保险（贷款%）", insMode: "保险付款方式", calc: "计算", monthly: "每月还款", total: "总还款", interest: "总利息" }
     };
-    let lang = "en", chart;
+    let lang = "en", chart, pieChart;
     function toggleLang() {
       lang = lang === "en" ? "zh" : "en";
       const l = labels[lang];
@@ -125,7 +126,7 @@
       const sym = { USD: "$", MYR: "RM", CNY: "¥", EUR: "€", JPY: "¥" }[code] || "$";
       return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-    let globalRows = [];
+    let globalRows = [], globalTotal = 0, globalInterest = 0;
     function calculate() {
       const P = +document.getElementById("loanAmount").value;
       const r = +document.getElementById("rate").value / 100 / 12;
@@ -148,6 +149,8 @@
         rows.push({ month: i, payment: prin + int + monthlyIns, principal: prin, interest: int, insurance: monthlyIns, balance: balance });
       }
       globalRows = rows;
+      globalTotal = total;
+      globalInterest = interest;
       document.getElementById("summary").style.display = "block";
       document.getElementById("summary").innerHTML = `<strong>${l.monthly}:</strong> ${formatMoney(monthly, code)}<br><strong>${l.total}:</strong> ${formatMoney(total, code)}<br><strong>${l.interest}:</strong> ${formatMoney(interest, code)}<br><strong>Insurance:</strong> ${formatMoney(insurance, code)} (${insMode})`;
       document.getElementById("table-wrapper").style.display = "block";
@@ -156,6 +159,7 @@
         `</tbody></table>`;
       document.getElementById("table-wrapper").innerHTML = tableHTML;
       updateChart();
+      updatePieChart();
     }
     function adjustRow(i, newPaymentStr) {
       const newPay = parseFloat(newPaymentStr);
@@ -182,6 +186,7 @@
         globalRows.push({ month: idx + 1, payment, principal, interest, insurance: monthlyIns, balance });
       }
       updateChart();
+      updatePieChart();
     }
     function updateChart() {
       const ctx = document.getElementById("chart").getContext("2d");
@@ -200,6 +205,21 @@
           }]
         },
         options: { scales: { y: { beginAtZero: false } } }
+      });
+    }
+    function updatePieChart() {
+      const ctx = document.getElementById("pieChart").getContext("2d");
+      if (pieChart) pieChart.destroy();
+      pieChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: [labels[lang].interest, labels[lang].total],
+          datasets: [{
+            data: [globalInterest, globalTotal - globalInterest],
+            backgroundColor: ["#f87171", "#60a5fa"]
+          }]
+        },
+        options: { responsive: true }
       });
     }
   </script>
