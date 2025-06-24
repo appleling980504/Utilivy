@@ -32,6 +32,7 @@
       width: 100%;
       padding: 8px;
       margin-bottom: 10px;
+      box-sizing: border-box;
     }
     button {
       padding: 12px 20px;
@@ -61,6 +62,14 @@
       font-size: 14px;
       cursor: pointer;
     }
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 22px;
+      }
+      .lang-toggle {
+        text-align: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -71,7 +80,6 @@
   </div>
 
   <h1 id="title">Retirement Calculator</h1>
-
   <div class="quote" id="quoteBox"></div>
 
   <label id="label-currentAge" for="currentAge">Current Age</label>
@@ -91,6 +99,9 @@
 
   <label id="label-retirementMonthlyExpense" for="retirementMonthlyExpense">Expected Monthly Expense After Retirement ($)</label>
   <input type="number" id="retirementMonthlyExpense" />
+
+  <label id="label-retirementGoal" for="retirementGoal">Retirement Goal Amount ($)</label>
+  <input type="number" id="retirementGoal" />
 
   <button id="calculateBtn" onclick="calculateRetirement()">Calculate</button>
 
@@ -124,8 +135,9 @@
         monthlyContribution: "Monthly Contribution ($)",
         annualInterest: "Expected Annual Interest Rate (%)",
         retirementMonthlyExpense: "Expected Monthly Expense After Retirement ($)",
+        retirementGoal: "Retirement Goal Amount ($)",
         calculateBtn: "Calculate",
-        resultWarning: "⚠️ Warning: Your retirement savings may not be enough.",
+        resultWarning: "⚠️ Warning: You may not reach your retirement goal.",
         resultSuccess: "🎉 Great! You’re on track.",
         resultError: "❗ Please fill in all fields correctly."
       },
@@ -138,9 +150,10 @@
         monthlyContribution: "每月储蓄（$）",
         annualInterest: "预计年利率（%）",
         retirementMonthlyExpense: "退休后的每月支出（$）",
+        retirementGoal: "退休目标金额（$）",
         calculateBtn: "计算",
-        resultWarning: "⚠️ 提示：您的退休储蓄可能不足以支撑未来生活。",
-        resultSuccess: "🎉 太棒了！您已朝着理想退休生活稳步前进。",
+        resultWarning: "⚠️ 提示：您的退休目标可能无法实现。",
+        resultSuccess: "🎉 太棒了！您已朝着目标稳步前进。",
         resultError: "❗ 请正确填写所有字段。"
       }
     };
@@ -156,6 +169,7 @@
       document.getElementById('label-monthlyContribution').innerText = l.monthlyContribution;
       document.getElementById('label-annualInterest').innerText = l.annualInterest;
       document.getElementById('label-retirementMonthlyExpense').innerText = l.retirementMonthlyExpense;
+      document.getElementById('label-retirementGoal').innerText = l.retirementGoal;
       document.getElementById('calculateBtn').innerText = l.calculateBtn;
 
       const randomQuote = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
@@ -175,9 +189,9 @@
       const currentSavings = parseFloat(document.getElementById('currentSavings').value);
       const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
       const annualInterest = parseFloat(document.getElementById('annualInterest').value);
-      const retirementMonthlyExpense = parseFloat(document.getElementById('retirementMonthlyExpense').value);
+      const retirementGoal = parseFloat(document.getElementById('retirementGoal').value);
 
-      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense].some(isNaN)) {
+      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementGoal].some(isNaN)) {
         document.getElementById('result').innerText = labels[lang].resultError;
         return;
       }
@@ -191,10 +205,9 @@
         totalSavings *= (1 + monthlyInterestRate);
       }
 
-      const supportedYears = Math.floor(totalSavings / (retirementMonthlyExpense * 12));
       let result = `${lang === 'zh' ? '到' : 'By'} ${retirementAge} ${lang === 'zh' ? '岁时，您预计将积累约 ' : ', you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
 
-      if (supportedYears < 20) {
+      if (totalSavings < retirementGoal) {
         result += `<br/><span style="color:red;">${labels[lang].resultWarning}</span>`;
       } else {
         result += `<br/><span style="color:green;">${labels[lang].resultSuccess}</span>`;
@@ -203,7 +216,6 @@
       document.getElementById('result').innerHTML = result;
     }
 
-    // 初始化语言和 quote
     setLanguage(lang);
   </script>
 </body>
