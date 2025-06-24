@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ideal Weight Calculator</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f7ff;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #fff;
+      border-left: 6px solid #007bff;
+    }
+    #lang-switch {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    #lang-switch button {
+      margin-left: 10px;
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+    #gender-icon {
+      font-size: 30px;
+      margin-left: 10px;
+    }
+    canvas {
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <div id="lang-switch">
+    <button onclick="setLang('en')">EN</button>
+    <button onclick="setLang('zh')">中</button>
+  </div>
+
+  <h1 id="title">Ideal Weight Calculator</h1>
+
+  <label id="label-gender">Gender:</label>
+  <select id="gender" onchange="updateGenderIcon()">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+  </select>
+  <div id="gender-icon">♂</div>
+
+  <label id="label-height">Height:</label>
+  <div style="display: flex; gap: 10px;">
+    <input type="number" id="height" placeholder="cm" />
+    <input type="number" id="feet" placeholder="ft" />
+    <input type="number" id="inches" placeholder="in" />
+  </div>
+
+  <label id="label-actual-weight">Actual Weight (kg):</label>
+  <input type="number" id="actual-weight" placeholder="kg" oninput="updateBMI()" />
+
+  <button onclick="calculateIdealWeight()" id="calc-btn">Calculate</button>
+
+  <div id="result"></div>
+  <canvas id="bmiChart" width="400" height="200"></canvas>
+
+  <script>
+    let lang = 'en';
+
+    const texts = {
+      en: {
+        title: 'Ideal Weight Calculator',
+        gender: 'Gender:',
+        height: 'Height:',
+        button: 'Calculate',
+        result: 'Your ideal weight is:',
+        range: 'Ideal weight range:',
+        bmi: 'Estimated BMI:',
+        advice: 'Health Advice:',
+        healthy: 'Your weight is within the healthy range.',
+        underweight: 'You are underweight. Consider consulting a healthcare provider.',
+        overweight: 'You are overweight. Consider a healthy lifestyle and consult a doctor if needed.',
+        chartLabel: 'BMI Range',
+        actualWeight: 'Actual Weight (kg):',
+        difference: 'Your weight difference from ideal is:'
+      },
+      zh: {
+        title: '理想体重计算器',
+        gender: '性别：',
+        height: '身高：',
+        button: '计算',
+        result: '您的理想体重是：',
+        range: '理想体重范围：',
+        bmi: '估算BMI：',
+        advice: '健康建议：',
+        healthy: '您的体重处于健康范围。',
+        underweight: '您偏瘦，建议咨询专业医生。',
+        overweight: '您超重，建议保持健康生活方式并咨询医生。',
+        chartLabel: 'BMI 区间',
+        actualWeight: '实际体重（kg）：',
+        difference: '与理想体重的差距为：'
+      }
+    };
+
+    function setLang(selectedLang) {
+      lang = selectedLang;
+      document.getElementById('title').innerText = texts[lang].title;
+      document.getElementById('label-gender').innerText = texts[lang].gender;
+      document.getElementById('label-height').innerText = texts[lang].height;
+      document.getElementById('label-actual-weight').innerText = texts[lang].actualWeight;
+      document.getElementById('calc-btn').innerText = texts[lang].button;
+      document.getElementById('result').innerText = '';
+      document.getElementById('bmiChart').style.display = 'none';
+    }
+
+    function updateGenderIcon() {
+      const icon = document.getElementById('gender-icon');
+      icon.innerText = document.getElementById('gender').value === 'male' ? '♂' : '♀';
+    }
+
+    function calculateIdealWeight() {
+      const gender = document.getElementById('gender').value;
+      let height = parseFloat(document.getElementById('height').value);
+      const feet = parseFloat(document.getElementById('feet').value);
+      const inches = parseFloat(document.getElementById('inches').value);
+      const actualWeight = parseFloat(document.getElementById('actual-weight').value);
+
+      if (!height && (feet || inches)) {
+        height = (feet || 0) * 30.48 + (inches || 0) * 2.54;
+        document.getElementById('height').value = height.toFixed(1);
+      }
+
+      if (!height || height < 100 || height > 250) {
+        document.getElementById('result').innerText = lang === 'zh' ? '请输入有效身高。' : 'Please enter a valid height.';
+        return;
+      }
+
+      const heightInInches = height / 2.54;
+      const ideal = gender === 'male'
+        ? 50 + 2.3 * (heightInInches - 60)
+        : 45.5 + 2.3 * (heightInInches - 60);
+
+      const rangeMin = ideal * 0.9;
+      const rangeMax = ideal * 1.1;
+      const bmi = ideal / ((height / 100) ** 2);
+
+      let advice = texts[lang].healthy;
+      if (bmi < 18.5) advice = texts[lang].underweight;
+      else if (bmi >= 25) advice = texts[lang].overweight;
+
+      let diffText = '';
+      if (actualWeight) {
+        const diff = actualWeight - ideal;
+        const sign = diff >= 0 ? '+' : '';
+        diffText = `<br><strong>${texts[lang].difference}</strong> ${sign}${diff.toFixed(1)} kg`;
+      }
+
+      document.getElementById('result').innerHTML = `
+        <strong>${texts[lang].result}</strong> ${ideal.toFixed(1)} kg<br>
+        <strong>${texts[lang].range}</strong> ${rangeMin.toFixed(1)} - ${rangeMax.toFixed(1)} kg<br>
+        <strong>${texts[lang].bmi}</strong> ${bmi.toFixed(1)}<br>
+        <strong>${texts[lang].advice}</strong> ${advice}
+        ${diffText}
+      `;
+
+      drawBMIChart();
+    }
+
+    function updateBMI() {
+      const height = parseFloat(document.getElementById('height').value);
+      const actualWeight = parseFloat(document.getElementById('actual-weight').value);
+      if (!height || !actualWeight) return;
+      const bmi = actualWeight / ((height / 100) ** 2);
+      document.getElementById('result').innerHTML += `<br><strong>Current BMI:</strong> ${bmi.toFixed(1)}`;
+    }
+
+    function drawBMIChart() {
+      const ctx = document.getElementById('bmiChart').getContext('2d');
+      document.getElementById('bmiChart').style.display = 'block';
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Underweight', 'Normal', 'Overweight', 'Obese'],
+          datasets: [{
+            label: texts[lang].chartLabel,
+            data: [18.4, 24.9, 29.9, 35],
+            backgroundColor: ['#5bc0de', '#5cb85c', '#f0ad4e', '#d9534f']
+          }]
+        },
+        options: {
+          plugins: { legend: { display: false } },
+          scales: {
+            y: { beginAtZero: true, max: 40 },
+            x: { title: { display: true, text: 'BMI Category' } }
+          }
+        }
+      });
+    }
+
+    setLang('en');
+    updateGenderIcon();
+  </script>
+</body>
+</html>
