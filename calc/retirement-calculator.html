@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Retirement Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    .quote {
+      background: #e8f5e9;
+      padding: 15px;
+      border-left: 5px solid #4caf50;
+      margin-bottom: 20px;
+      font-style: italic;
+      color: #2e7d32;
+    }
+    label {
+      display: block;
+      margin: 12px 0 4px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+    button:hover {
+      background-color: #2980b9;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fff3cd;
+      border-left: 5px solid #ffc107;
+    }
+  </style>
+</head>
+<body>
+  <h1>Retirement Calculator</h1>
+
+  <div class="quote" id="quoteBox"></div>
+
+  <label for="currentAge">Current Age</label>
+  <input type="number" id="currentAge" placeholder="e.g. 30" />
+
+  <label for="retirementAge">Retirement Age</label>
+  <input type="number" id="retirementAge" placeholder="e.g. 60" />
+
+  <label for="currentSavings">Current Savings ($)</label>
+  <input type="number" id="currentSavings" placeholder="e.g. 10000" />
+
+  <label for="monthlyContribution">Monthly Contribution ($)</label>
+  <input type="number" id="monthlyContribution" placeholder="e.g. 500" />
+
+  <label for="annualInterest">Expected Annual Interest Rate (%)</label>
+  <input type="number" id="annualInterest" placeholder="e.g. 5" />
+
+  <label for="retirementMonthlyExpense">Expected Monthly Expense After Retirement ($)</label>
+  <input type="number" id="retirementMonthlyExpense" placeholder="e.g. 2000" />
+
+  <button onclick="calculateRetirement()">Calculate</button>
+
+  <div id="result"></div>
+
+  <script>
+    // 动态激励语句
+    const quotes = [
+      "坚持储蓄，是未来自由的钥匙。",
+      "你现在的努力，就是未来的安心。",
+      "理财不是富人的专利，是自由的起点。",
+      "现在存一点，将来花不愁。",
+      "每个月的一点坚持，终将成为你退休时的底气。",
+      "Today’s sacrifice is tomorrow’s comfort.",
+      "Stay consistent – your retirement dream is getting closer.",
+      "Small steps now, giant leap at retirement.",
+      "A dollar saved today earns freedom tomorrow."
+    ];
+    const quoteBox = document.getElementById('quoteBox');
+    quoteBox.innerText = quotes[Math.floor(Math.random() * quotes.length)];
+
+    function formatCurrency(num) {
+      return num.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      });
+    }
+
+    function calculateRetirement() {
+      const currentAge = parseInt(document.getElementById('currentAge').value);
+      const retirementAge = parseInt(document.getElementById('retirementAge').value);
+      const currentSavings = parseFloat(document.getElementById('currentSavings').value);
+      const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
+      const annualInterest = parseFloat(document.getElementById('annualInterest').value);
+      const retirementMonthlyExpense = parseFloat(document.getElementById('retirementMonthlyExpense').value);
+
+      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense].some(isNaN)) {
+        document.getElementById('result').innerText = '❗ Please fill in all fields correctly.';
+        return;
+      }
+
+      const yearsToRetire = retirementAge - currentAge;
+      const monthsToRetire = yearsToRetire * 12;
+      const monthlyInterestRate = annualInterest / 100 / 12;
+
+      let totalSavings = currentSavings;
+      for (let i = 0; i < monthsToRetire; i++) {
+        totalSavings += monthlyContribution;
+        totalSavings *= (1 + monthlyInterestRate);
+      }
+
+      // 退休后可支撑月数
+      const supportedMonths = Math.floor(totalSavings / retirementMonthlyExpense);
+      const supportedYears = Math.floor(supportedMonths / 12);
+
+      let resultText = `By age ${retirementAge}, you will have around <strong>${formatCurrency(totalSavings)}</strong> saved.`;
+
+      if (retirementMonthlyExpense > 0) {
+        resultText += `<br/>This can support approximately <strong>${supportedYears}</strong> years of retirement at ${formatCurrency(retirementMonthlyExpense)} per month.`;
+
+        if (supportedYears < 20) {
+          resultText += `<br/><span style="color:red;">⚠️ Warning: Your retirement savings may not be enough for a comfortable retirement.</span>`;
+        } else {
+          resultText += `<br/><span style="color:green;">🎉 Great! You’re on track for a sustainable retirement.</span>`;
+        }
+      }
+
+      document.getElementById('result').innerHTML = resultText;
+    }
+  </script>
+</body>
+</html>
