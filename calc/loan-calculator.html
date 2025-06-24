@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Loan Calculator - Toolnest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+      color: #111;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .lang-switch {
+      text-align: right;
+      margin-bottom: 10px;
+    }
+    .result {
+      margin-top: 30px;
+      background: #eef2ff;
+      padding: 16px;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="lang-switch">
+    <button onclick="toggleLanguage()"><span id="lang-btn">中文</span></button>
+  </div>
+
+  <h1 id="title">Loan Calculator</h1>
+
+  <label for="currency" id="label-currency">Currency</label>
+  <select id="currency">
+    <option value="USD">$ USD</option>
+    <option value="MYR">RM MYR</option>
+    <option value="CNY">¥ CNY</option>
+    <option value="EUR">€ EUR</option>
+    <option value="JPY">¥ JPY</option>
+  </select>
+
+  <label for="amount" id="label-amount">Loan Amount</label>
+  <input type="number" id="amount" placeholder="e.g. 50000" />
+
+  <label for="rate" id="label-rate">Annual Interest Rate (%)</label>
+  <input type="number" id="rate" placeholder="e.g. 5" step="0.01" />
+
+  <label for="years" id="label-years">Loan Term (Years)</label>
+  <input type="number" id="years" placeholder="e.g. 10" />
+
+  <label for="frequency" id="label-frequency">Repayment Frequency</label>
+  <select id="frequency">
+    <option value="12">Monthly</option>
+    <option value="1">Annually</option>
+  </select>
+
+  <button onclick="calculate()" id="calc-btn">Calculate</button>
+
+  <div id="output" class="result" style="display:none;"></div>
+
+  <canvas id="chart" height="300"></canvas>
+
+  <script>
+    const labels = {
+      en: {
+        title: "Loan Calculator",
+        currency: "Currency",
+        amount: "Loan Amount",
+        rate: "Annual Interest Rate (%)",
+        years: "Loan Term (Years)",
+        frequency: "Repayment Frequency",
+        calc: "Calculate",
+        total: "Total Repayment",
+        monthly: "Per Payment",
+        interest: "Total Interest"
+      },
+      zh: {
+        title: "贷款计算器",
+        currency: "货币",
+        amount: "贷款金额",
+        rate: "年利率 (%)",
+        years: "贷款年限",
+        frequency: "还款频率",
+        calc: "计算",
+        total: "总还款金额",
+        monthly: "每期还款额",
+        interest: "总利息"
+      }
+    };
+
+    let currentLang = "en";
+    let chart;
+
+    function toggleLanguage() {
+      currentLang = currentLang === "en" ? "zh" : "en";
+      const lang = labels[currentLang];
+      document.getElementById("title").innerText = lang.title;
+      document.getElementById("label-currency").innerText = lang.currency;
+      document.getElementById("label-amount").innerText = lang.amount;
+      document.getElementById("label-rate").innerText = lang.rate;
+      document.getElementById("label-years").innerText = lang.years;
+      document.getElementById("label-frequency").innerText = lang.frequency;
+      document.getElementById("calc-btn").innerText = lang.calc;
+      document.getElementById("lang-btn").innerText = currentLang === "en" ? "中文" : "English";
+    }
+
+    function getCurrencySymbol(code) {
+      return {
+        USD: "$",
+        MYR: "RM",
+        CNY: "¥",
+        EUR: "€",
+        JPY: "¥"
+      }[code] || "$";
+    }
+
+    function formatMoney(num, code) {
+      return getCurrencySymbol(code) + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    function calculate() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const rate = parseFloat(document.getElementById('rate').value) / 100;
+      const years = parseInt(document.getElementById('years').value);
+      const freq = parseInt(document.getElementById('frequency').value);
+      const currency = document.getElementById('currency').value;
+      const lang = labels[currentLang];
+
+      if (isNaN(amount) || isNaN(rate) || isNaN(years)) {
+        alert("Please fill in all fields correctly.");
+        return;
+      }
+
+      const n = years * freq;
+      const i = rate / freq;
+      const payment = amount * i / (1 - Math.pow(1 + i, -n));
+      const total = payment * n;
+      const interest = total - amount;
+
+      document.getElementById("output").style.display = "block";
+      document.getElementById("output").innerHTML = `
+        <strong>${lang.monthly}:</strong> ${formatMoney(payment, currency)}<br>
+        <strong>${lang.total}:</strong> ${formatMoney(total, currency)}<br>
+        <strong>${lang.interest}:</strong> ${formatMoney(interest, currency)}
+      `;
+
+      // Draw chart
+      const payments = Array.from({length: n}, () => payment);
+      const ctx = document.getElementById("chart").getContext("2d");
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: payments.map((_, i) => `#${i + 1}`),
+          datasets: [{
+            label: lang.monthly,
+            data: payments,
+            borderColor: "#4f46e5",
+            backgroundColor: "rgba(79,70,229,0.1)",
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
