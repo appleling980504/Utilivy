@@ -139,7 +139,11 @@
         calculateBtn: "Calculate",
         resultWarning: "⚠️ Warning: You may not reach your retirement goal.",
         resultSuccess: "🎉 Great! You’re on track.",
-        resultError: "❗ Please fill in all fields correctly."
+        resultError: "❗ Please fill in all fields correctly.",
+        suggestion: "📌 Suggestion: Increase your monthly savings by approx ",
+        orDelay: " or delay retirement by about ",
+        years: " year(s).",
+        suggestionTitle: "Suggested Retirement Goal: "
       },
       zh: {
         title: "退休计算器",
@@ -154,7 +158,11 @@
         calculateBtn: "计算",
         resultWarning: "⚠️ 提示：您的退休目标可能无法实现。",
         resultSuccess: "🎉 太棒了！您已朝着目标稳步前进。",
-        resultError: "❗ 请正确填写所有字段。"
+        resultError: "❗ 请正确填写所有字段。",
+        suggestion: "📌 建议：每月多存约 ",
+        orDelay: " 或延迟退休约 ",
+        years: " 年。",
+        suggestionTitle: "建议的退休目标金额："
       }
     };
 
@@ -189,26 +197,33 @@
       const currentSavings = parseFloat(document.getElementById('currentSavings').value);
       const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
       const annualInterest = parseFloat(document.getElementById('annualInterest').value);
+      const retirementMonthlyExpense = parseFloat(document.getElementById('retirementMonthlyExpense').value);
       const retirementGoal = parseFloat(document.getElementById('retirementGoal').value);
 
-      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementGoal].some(isNaN)) {
+      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense].some(isNaN)) {
         document.getElementById('result').innerText = labels[lang].resultError;
         return;
       }
 
       const monthsToRetire = (retirementAge - currentAge) * 12;
       const monthlyInterestRate = annualInterest / 100 / 12;
-      let totalSavings = currentSavings;
 
+      let totalSavings = currentSavings;
       for (let i = 0; i < monthsToRetire; i++) {
         totalSavings += monthlyContribution;
         totalSavings *= (1 + monthlyInterestRate);
       }
 
-      let result = `${lang === 'zh' ? '到' : 'By'} ${retirementAge} ${lang === 'zh' ? '岁时，您预计将积累约 ' : ', you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
+      const suggestedGoal = retirementMonthlyExpense * 12 * 20;
+
+      let result = `${labels[lang].suggestionTitle} <strong>${formatCurrency(suggestedGoal)}</strong><br/><br/>`;
+      result += `${lang === 'zh' ? '到' : 'By'} ${retirementAge} ${lang === 'zh' ? '岁时，您预计将积累约 ' : ', you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
 
       if (totalSavings < retirementGoal) {
-        result += `<br/><span style="color:red;">${labels[lang].resultWarning}</span>`;
+        const gap = retirementGoal - totalSavings;
+        const morePerMonth = gap / monthsToRetire / ((1 + monthlyInterestRate) ** monthsToRetire / monthlyInterestRate - 1);
+        const moreYears = Math.ceil(Math.log((retirementGoal - currentSavings) / (monthlyContribution * ((1 + monthlyInterestRate) ** monthsToRetire - 1) / monthlyInterestRate)) / (12 * Math.log(1 + monthlyInterestRate)));
+        result += `<br/><span style="color:red;">${labels[lang].resultWarning}<br/>${labels[lang].suggestion}${formatCurrency(morePerMonth)}${labels[lang].orDelay}${moreYears}${labels[lang].years}</span>`;
       } else {
         result += `<br/><span style="color:green;">${labels[lang].resultSuccess}</span>`;
       }
