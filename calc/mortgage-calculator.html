@@ -53,7 +53,7 @@
     }
     th { background: #dbeafe; }
     td input {
-      width: 80px;
+      width: 100%;
       border: none;
       text-align: right;
     }
@@ -64,7 +64,6 @@
     <button onclick="toggleLang()" id="langBtn">中文</button>
   </div>
   <h1 id="title">Advanced Mortgage Calculator</h1>
-
   <label id="label-currency">Currency</label>
   <select id="currency">
     <option value="USD">$ USD</option>
@@ -73,44 +72,33 @@
     <option value="EUR">€ EUR</option>
     <option value="JPY">¥ JPY</option>
   </select>
-
   <label id="label-home-price">Home Price</label>
   <input type="number" id="homePrice" />
-
   <label id="label-down-payment">Down Payment</label>
   <input type="number" id="downPayment" />
-
   <label id="label-loan-amount">Loan Amount</label>
   <input type="number" id="loanAmount" disabled />
-
   <label id="label-rate">Annual Interest Rate (%)</label>
   <input type="number" id="rate" step="0.01" />
-
   <label id="label-years">Loan Term (Years)</label>
   <input type="number" id="years" />
-
   <label id="label-insurance">Include MRTA/MLTA Insurance (% of loan)</label>
   <input type="number" id="insurance" placeholder="e.g. 5" step="0.1" />
-
   <label id="label-ins-mode">Insurance Payment Method</label>
   <select id="insuranceMode">
     <option value="one">One-time upfront</option>
     <option value="monthly">Add to monthly</option>
   </select>
-
   <button onclick="calculate()" id="calc-btn">Calculate</button>
-
   <div class="result" id="summary" style="display:none;"></div>
   <canvas id="chart" height="300"></canvas>
   <div class="result" id="table-wrapper" style="display:none;"></div>
-
   <script>
     const labels = {
       en: { title: "Advanced Mortgage Calculator", currency: "Currency", homePrice: "Home Price", downPayment: "Down Payment", loanAmount: "Loan Amount", rate: "Annual Interest Rate (%)", years: "Loan Term (Years)", insurance: "Include MRTA/MLTA Insurance (% of loan)", insMode: "Insurance Payment Method", calc: "Calculate", monthly: "Monthly Payment", total: "Total Repayment", interest: "Total Interest" },
       zh: { title: "高级房贷计算器", currency: "货币", homePrice: "房屋总价", downPayment: "首付金额", loanAmount: "贷款金额", rate: "年利率 (%)", years: "贷款年限", insurance: "MRTA/MLTA 保险（贷款%）", insMode: "保险付款方式", calc: "计算", monthly: "每月还款", total: "总还款", interest: "总利息" }
     };
     let lang = "en", chart;
-
     function toggleLang() {
       lang = lang === "en" ? "zh" : "en";
       const l = labels[lang];
@@ -126,7 +114,6 @@
       document.getElementById("calc-btn").innerText = l.calc;
       document.getElementById("langBtn").innerText = lang === "en" ? "中文" : "English";
     }
-
     document.getElementById("homePrice").addEventListener("input", updateLoanAmount);
     document.getElementById("downPayment").addEventListener("input", updateLoanAmount);
     function updateLoanAmount() {
@@ -134,12 +121,10 @@
       const d = +document.getElementById("downPayment").value;
       document.getElementById("loanAmount").value = Math.max(p - d, 0);
     }
-
     function formatMoney(n, code) {
       const sym = { USD: "$", MYR: "RM", CNY: "¥", EUR: "€", JPY: "¥" }[code] || "$";
       return sym + n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
-
     function calculate() {
       const P = +document.getElementById("loanAmount").value;
       const r = +document.getElementById("rate").value / 100 / 12;
@@ -151,7 +136,6 @@
       const insurance = insPct * P;
       const monthlyIns = insMode === "monthly" ? insurance / n : 0;
       const monthly = P * r / (1 - Math.pow(1 + r, -n)) + monthlyIns;
-
       let balance = P, rows = [], total = 0, interest = 0;
       for (let i = 1; i <= n; i++) {
         const int = balance * r;
@@ -160,19 +144,15 @@
         balance -= prin;
         total += (prin + int + monthlyIns);
         interest += int;
-        rows.push({ month: i, principal: prin, interest: int, insurance: monthlyIns, balance: balance });
+        rows.push({ month: i, payment: prin + int + monthlyIns, principal: prin, interest: int, insurance: monthlyIns, balance: balance });
       }
-
       document.getElementById("summary").style.display = "block";
       document.getElementById("summary").innerHTML = `<strong>${l.monthly}:</strong> ${formatMoney(monthly, code)}<br><strong>${l.total}:</strong> ${formatMoney(total, code)}<br><strong>${l.interest}:</strong> ${formatMoney(interest, code)}<br><strong>Insurance:</strong> ${formatMoney(insurance, code)} (${insMode})`;
-
-      // Table
       document.getElementById("table-wrapper").style.display = "block";
-      const tableHTML = `<table><thead><tr><th>Month</th><th>Principal</th><th>Interest</th><th>Insurance</th><th>Remaining</th></tr></thead><tbody>` +
-        rows.map(row => `<tr><td>${row.month}</td><td><input value="${row.principal.toFixed(2)}" onchange="updateFromRow(${row.month - 1}, this.value)"></td><td>${row.interest.toFixed(2)}</td><td>${row.insurance.toFixed(2)}</td><td>${row.balance.toFixed(2)}</td></tr>`).join('') +
+      const tableHTML = `<table><thead><tr><th>Month</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Insurance</th><th>Remaining</th></tr></thead><tbody>` +
+        rows.map((row, i) => `<tr><td>${row.month}</td><td><input value="${row.payment.toFixed(2)}" onchange="adjustRow(${i}, this.value)"></td><td>${row.principal.toFixed(2)}</td><td>${row.interest.toFixed(2)}</td><td>${row.insurance.toFixed(2)}</td><td>${row.balance.toFixed(2)}</td></tr>`).join('') +
         `</tbody></table>`;
       document.getElementById("table-wrapper").innerHTML = tableHTML;
-
       const ctx = document.getElementById("chart").getContext("2d");
       if (chart) chart.destroy();
       chart = new Chart(ctx, {
@@ -181,7 +161,7 @@
           labels: rows.map(r => `M${r.month}`),
           datasets: [{
             label: l.monthly,
-            data: rows.map(r => r.principal + r.interest + r.insurance),
+            data: rows.map(r => r.payment),
             borderColor: "#4f46e5",
             backgroundColor: "rgba(79,70,229,0.2)",
             fill: true,
@@ -190,6 +170,26 @@
         },
         options: { scales: { y: { beginAtZero: false } } }
       });
+    }
+    function adjustRow(i, newPaymentStr) {
+      const newPay = parseFloat(newPaymentStr);
+      const P = +document.getElementById("loanAmount").value;
+      const r = +document.getElementById("rate").value / 100 / 12;
+      const insPct = +document.getElementById("insurance").value / 100;
+      const insMode = document.getElementById("insuranceMode").value;
+      const monthlyIns = insMode === "monthly" ? (insPct * P) / (+document.getElementById("years").value * 12) : 0;
+      const t = document.querySelector("#table-wrapper table tbody");
+      let balance = 0;
+      for (let row of t.rows) {
+        const pay = parseFloat(row.cells[1].children[0].value);
+        const int = balance * r;
+        const prin = pay - int - monthlyIns;
+        balance = Math.max(balance - prin, 0);
+        row.cells[2].innerText = prin.toFixed(2);
+        row.cells[3].innerText = int.toFixed(2);
+        row.cells[4].innerText = monthlyIns.toFixed(2);
+        row.cells[5].innerText = balance.toFixed(2);
+      }
     }
   </script>
 </body>
