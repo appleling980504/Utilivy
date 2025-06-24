@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Savings Goal Calculator - Toolnest</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background-color: #f9fafb;
+      color: #111;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 16px;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      font-size: 16px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 24px;
+      background: #eef2ff;
+      padding: 16px;
+      border-radius: 6px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Savings Goal Calculator</h1>
+
+  <label>Target Amount</label>
+  <input type="number" id="targetAmount" value="10000" />
+
+  <label>Monthly Contribution</label>
+  <input type="number" id="monthlyContribution" value="200" />
+
+  <label>Annual Interest Rate (%)</label>
+  <input type="number" id="annualRate" value="5" />
+
+  <button onclick="calculateSavingsGoal()">Calculate</button>
+
+  <div class="result" id="result" style="display:none;"></div>
+
+  <script>
+    function calculateSavingsGoal() {
+      const target = parseFloat(document.getElementById("targetAmount").value);
+      const monthly = parseFloat(document.getElementById("monthlyContribution").value);
+      const rate = parseFloat(document.getElementById("annualRate").value) / 100 / 12;
+
+      let months = 0;
+      let balance = 0;
+
+      while (balance < target) {
+        balance = balance * (1 + rate) + monthly;
+        months++;
+      }
+
+      const years = Math.floor(months / 12);
+      const remainingMonths = months % 12;
+
+      document.getElementById("result").style.display = 'block';
+      document.getElementById("result").innerText =
+        `You will reach your goal in ${years} years and ${remainingMonths} months.`;
+    }
+  </script>
+</body>
+</html>
