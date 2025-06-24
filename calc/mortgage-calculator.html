@@ -179,14 +179,17 @@
       const insMode = document.getElementById("insuranceMode").value;
       const monthlyIns = insMode === "monthly" ? (insPct * P) / (+document.getElementById("years").value * 12) : 0;
       const t = document.querySelector("#table-wrapper table tbody");
-      let balance = 0;
-      for (let row of t.rows) {
-        const pay = parseFloat(row.cells[1].children[0].value);
-        const int = balance * r;
-        const prin = pay - int - monthlyIns;
-        balance = Math.max(balance - prin, 0);
-        row.cells[2].innerText = prin.toFixed(2);
-        row.cells[3].innerText = int.toFixed(2);
+      let balance = P;
+      for (let idx = 0; idx < t.rows.length; idx++) {
+        const row = t.rows[idx];
+        let payment = parseFloat(row.cells[1].children[0].value);
+        if (idx === i) payment = newPay;
+        const interest = balance * r;
+        let principal = payment - interest - monthlyIns;
+        if (principal > balance) principal = balance;
+        balance -= principal;
+        row.cells[2].innerText = principal.toFixed(2);
+        row.cells[3].innerText = interest.toFixed(2);
         row.cells[4].innerText = monthlyIns.toFixed(2);
         row.cells[5].innerText = balance.toFixed(2);
       }
