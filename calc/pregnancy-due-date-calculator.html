@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pregnancy Due Date Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    label {
+      display: block;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+    button {
+      background-color: #28a745;
+      color: white;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 30px;
+      padding: 20px;
+      background-color: #e9f7ef;
+      border-left: 6px solid #28a745;
+      font-size: 18px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Pregnancy Due Date Calculator</h1>
+
+  <label for="lmp">First Day of Last Menstrual Period (LMP):</label>
+  <input type="date" id="lmp" />
+
+  <button onclick="calculateDueDate()">Calculate Due Date</button>
+
+  <div id="result"></div>
+
+  <script>
+    function calculateDueDate() {
+      const lmpInput = document.getElementById('lmp').value;
+      const result = document.getElementById('result');
+
+      if (!lmpInput) {
+        result.innerText = 'Please select your LMP date.';
+        return;
+      }
+
+      const lmpDate = new Date(lmpInput);
+      const dueDate = new Date(lmpDate);
+      dueDate.setDate(dueDate.getDate() + 280); // 40 weeks
+
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      result.innerHTML = `Estimated Due Date: <strong>${dueDate.toLocaleDateString(undefined, options)}</strong>`;
+    }
+  </script>
+</body>
+</html>
