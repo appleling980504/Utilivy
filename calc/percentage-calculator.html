@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Percentage Calculator / 百分比计算器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="max-w-xl mx-auto p-6 bg-white rounded shadow my-10">
+    <h1 class="text-2xl font-bold text-center mb-6">Percentage Calculator / 百分比计算器</h1>
+
+    <div class="mb-4">
+      <label class="font-semibold block mb-1">Language / 语言</label>
+      <select id="lang" class="w-full border rounded px-3 py-2">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <div class="mb-6">
+      <label class="block font-semibold mb-1" id="mode-label">Choose Mode / 选择模式</label>
+      <select id="mode" class="w-full border rounded px-3 py-2">
+        <option value="discount">Discount Calculation / 折扣计算</option>
+        <option value="increase">Increase or Decrease % / 增减百分比</option>
+        <option value="percentOf">What % is A of B / A 是 B 的百分之几</option>
+        <option value="reverse">Reverse Percentage / 反推原数</option>
+      </select>
+    </div>
+
+    <div id="inputs" class="space-y-4"></div>
+
+    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold">
+      Calculate / 计算
+    </button>
+
+    <div id="result" class="mt-6 text-center text-lg font-bold text-green-600"></div>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const langText = {
+      en: {
+        labels: {
+          discount: ["Original Price", "Discount %"],
+          increase: ["Old Value", "New Value"],
+          percentOf: ["A", "B"],
+          reverse: ["Percentage %", "Final Value"]
+        },
+        result: {
+          discount: (a, b, r) => `Final Price: ${r}`,
+          increase: (a, b, r) => `Change: ${r}%`,
+          percentOf: (a, b, r) => `${a} is ${r}% of ${b}`,
+          reverse: (a, b, r) => `Original Value: ${r}`
+        }
+      },
+      zh: {
+        labels: {
+          discount: ["原价", "折扣百分比"],
+          increase: ["原值", "新值"],
+          percentOf: ["A", "B"],
+          reverse: ["百分比", "结果值"]
+        },
+        result: {
+          discount: (a, b, r) => `最终价格为：${r}`,
+          increase: (a, b, r) => `变化百分比：${r}%`,
+          percentOf: (a, b, r) => `${a} 是 ${b} 的 ${r}%`,
+          reverse: (a, b, r) => `原始值为：${r}`
+        }
+      }
+    };
+
+    function renderInputs() {
+      const lang = $('lang').value;
+      const mode = $('mode').value;
+      const [label1, label2] = langText[lang].labels[mode];
+
+      $('inputs').innerHTML = `
+        <div>
+          <label class="block font-medium mb-1">${label1}</label>
+          <input type="number" id="input1" class="w-full border rounded px-3 py-2" />
+        </div>
+        <div>
+          <label class="block font-medium mb-1">${label2}</label>
+          <input type="number" id="input2" class="w-full border rounded px-3 py-2" />
+        </div>
+      `;
+    }
+
+    function calculate() {
+      const lang = $('lang').value;
+      const mode = $('mode').value;
+      const val1 = parseFloat($('input1').value);
+      const val2 = parseFloat($('input2').value);
+      let result = '';
+
+      if (isNaN(val1) || isNaN(val2)) {
+        $('result').innerText = lang === 'en' ? 'Please fill in valid numbers.' : '请输入有效数字。';
+        return;
+      }
+
+      switch (mode) {
+        case 'discount':
+          const discounted = val1 * (1 - val2 / 100);
+          result = langText[lang].result.discount(val1, val2, discounted.toFixed(2));
+          break;
+        case 'increase':
+          const change = ((val2 - val1) / val1) * 100;
+          result = langText[lang].result.increase(val1, val2, change.toFixed(2));
+          break;
+        case 'percentOf':
+          const perc = (val1 / val2) * 100;
+          result = langText[lang].result.percentOf(val1, val2, perc.toFixed(2));
+          break;
+        case 'reverse':
+          const origin = (val2 * 100) / val1;
+          result = langText[lang].result.reverse(val1, val2, origin.toFixed(2));
+          break;
+      }
+
+      $('result').innerText = result;
+    }
+
+    $('lang').addEventListener('change', renderInputs);
+    $('mode').addEventListener('change', renderInputs);
+    window.onload = renderInputs;
+  </script>
+</body>
+</html>
