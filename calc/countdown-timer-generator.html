@@ -3,56 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countdown Generator</title>
+  <title>Countdown Cutie</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: 'Comic Neue', cursive;
+      background: linear-gradient(to right, #fff0f5, #ffe4e1);
+    }
+    .cute-card {
+      background-color: #fff7fb;
+      border: 2px dashed #f9c5d1;
+      border-radius: 1.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+    }
+    .cute-input {
+      border-radius: 1rem;
+      border: 2px solid #ffc1cc;
+    }
+    .cute-button {
+      border-radius: 9999px;
+      background-color: #ffb6c1;
+      color: white;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    .cute-button:hover {
+      background-color: #ff69b4;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen py-8 px-4">
-  <div class="bg-white max-w-3xl mx-auto p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-6 text-center">Countdown Generator / 倒计时生成器</h1>
+<body class="text-pink-900 p-6">
+  <div class="max-w-2xl mx-auto bg-white bg-opacity-80 rounded-3xl p-6 shadow-lg">
+    <h1 class="text-3xl text-center font-bold mb-6">🎀 Cute Countdown Generator 倒计时生成器 🎀</h1>
 
     <form id="countdownForm" class="space-y-4">
       <div id="timersContainer">
-        <div class="timer-entry border-b pb-4 mb-4">
-          <label class="block mb-1 font-medium">Title / 标题</label>
-          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
-          <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
-          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+        <div class="cute-card mb-4">
+          <label class="block font-semibold">📝 Title / 标题</label>
+          <input type="text" class="name cute-input w-full px-3 py-2 mt-1" placeholder="e.g., 生日 / Birthday" required>
+          <label class="block mt-2 font-semibold">📅 Target Date / 目标时间</label>
+          <input type="datetime-local" class="target cute-input w-full px-3 py-2 mt-1" required>
         </div>
       </div>
-      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Countdown / 添加倒计时</button>
+      <button type="button" id="addTimer" class="cute-button px-4 py-2 text-sm">➕ Add Countdown</button>
 
       <div class="grid grid-cols-2 gap-4 mt-4">
         <div>
-          <label class="block mb-1 font-medium">Language / 语言</label>
-          <select id="lang" class="w-full border rounded px-3 py-2">
+          <label class="font-semibold">🌐 Language / 语言</label>
+          <select id="lang" class="cute-input w-full px-3 py-2 mt-1">
             <option value="en">English</option>
             <option value="zh">中文</option>
           </select>
         </div>
         <div>
-          <label class="block mb-1 font-medium">Font Size / 字体大小 (px)</label>
-          <input type="number" id="fontSize" value="28" class="w-full border rounded px-3 py-2">
+          <label class="font-semibold">🔠 Font Size (px)</label>
+          <input type="number" id="fontSize" value="24" class="cute-input w-full px-3 py-2 mt-1">
         </div>
         <div>
-          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
-          <input type="color" id="textColor" value="#ffffff" class="w-full h-10">
+          <label class="font-semibold">🎨 Text Color</label>
+          <input type="color" id="textColor" value="#ff69b4" class="w-full h-10 mt-1 cute-input">
         </div>
         <div>
-          <label class="block mb-1 font-medium">Background / 背景颜色</label>
-          <input type="color" id="bgColor" value="#111111" class="w-full h-10">
+          <label class="font-semibold">🌈 Background</label>
+          <input type="color" id="bgColor" value="#fff0f5" class="w-full h-10 mt-1 cute-input">
         </div>
       </div>
 
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">
-        Generate Countdown / 生成倒计时
-      </button>
+      <button type="submit" class="cute-button w-full py-3 mt-6 text-lg">🎁 Generate Countdown</button>
     </form>
 
-    <div id="previewContainer" class="mt-6 space-y-4"></div>
-    <button id="downloadImage" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4">
-      Download Countdown Image / 下载图片
-    </button>
+    <div id="previewContainer" class="mt-8 space-y-6"></div>
+    <button id="downloadImage" class="hidden cute-button px-5 py-3 mt-6 block mx-auto">📷 Download Countdown Image</button>
   </div>
 
   <script>
@@ -65,12 +89,12 @@
 
     document.getElementById('addTimer').addEventListener('click', () => {
       const container = document.createElement('div');
-      container.className = 'timer-entry border-b pb-4 mb-4';
+      container.className = 'cute-card mb-4';
       container.innerHTML = `
-        <label class="block mb-1 font-medium">Title / 标题</label>
-        <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., Holiday" required>
-        <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
-        <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+        <label class="block font-semibold">📝 Title / 标题</label>
+        <input type="text" class="name cute-input w-full px-3 py-2 mt-1" placeholder="e.g., Holiday" required>
+        <label class="block mt-2 font-semibold">📅 Target Date / 目标时间</label>
+        <input type="datetime-local" class="target cute-input w-full px-3 py-2 mt-1" required>
       `;
       document.getElementById('timersContainer').appendChild(container);
     });
@@ -80,7 +104,7 @@
       clearInterval(window.countdownInterval);
       activeTimers = [];
 
-      const entries = Array.from(document.querySelectorAll('.timer-entry'));
+      const entries = Array.from(document.querySelectorAll('.timer-entry, .cute-card'));
       const lang = document.getElementById('lang').value;
       const textColor = document.getElementById('textColor').value;
       const bgColor = document.getElementById('bgColor').value;
@@ -98,15 +122,15 @@
       const preview = document.getElementById('previewContainer');
       preview.innerHTML = '';
 
-      timers.forEach((t, i) => {
+      timers.forEach((t) => {
         const box = document.createElement('div');
-        box.className = 'rounded p-4 text-center shadow';
+        box.className = 'cute-card text-center';
         box.style.backgroundColor = bgColor;
         box.style.color = textColor;
         box.style.fontSize = fontSize;
         box.innerHTML = `
-          <div class="font-bold text-xl mb-2">${t.name}</div>
-          <div class="countdown" data-target="${t.target}">${'--'} ${langMap[lang].day} ${'--'} ${langMap[lang].hour} ${'--'} ${langMap[lang].minute} ${'--'} ${langMap[lang].second}</div>
+          <div class="font-bold text-xl mb-2">🎯 ${t.name}</div>
+          <div class="countdown text-lg font-semibold" data-target="${t.target}">⏳ Loading...</div>
         `;
         preview.appendChild(box);
         activeTimers.push({ el: box.querySelector('.countdown'), target: t.target });
@@ -133,7 +157,7 @@
     document.getElementById('downloadImage').addEventListener('click', () => {
       html2canvas(document.getElementById('previewContainer')).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'countdown.png';
+        link.download = 'cute-countdown.png';
         link.href = canvas.toDataURL();
         link.click();
       });
