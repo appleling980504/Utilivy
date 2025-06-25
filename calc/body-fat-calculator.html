@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Body Fat Calculator / 体脂率计算器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+</head>
+<body class="bg-gray-100 py-10 px-4 text-gray-800">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold text-center mb-6">Body Fat Calculator / 体脂率计算器</h1>
+
+    <div class="mb-4">
+      <label class="block font-medium mb-1">Language / 语言</label>
+      <select id="lang" class="w-full border rounded px-3 py-2">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <form id="bfcForm" class="space-y-4">
+      <div>
+        <label class="block font-medium mb-1">Gender / 性别</label>
+        <select id="gender" class="w-full border rounded px-3 py-2">
+          <option value="male">Male / 男性</option>
+          <option value="female">Female / 女性</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Height (cm) / 身高</label>
+        <input type="number" id="height" class="w-full border rounded px-3 py-2" required />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Neck (cm) / 颈围</label>
+        <input type="number" id="neck" class="w-full border rounded px-3 py-2" required />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Waist (cm) / 腰围</label>
+        <input type="number" id="waist" class="w-full border rounded px-3 py-2" required />
+      </div>
+      <div id="hipDiv" style="display: none;">
+        <label class="block font-medium mb-1">Hip (cm) / 臀围（女性专用）</label>
+        <input type="number" id="hip" class="w-full border rounded px-3 py-2" />
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+        Calculate / 计算
+      </button>
+    </form>
+
+    <div id="result" class="text-center mt-6 text-xl font-semibold text-green-600"></div>
+  </div>
+
+  <script>
+    const langMap = {
+      en: {
+        result: (bf, cat) => `Body Fat: ${bf.toFixed(1)}% (${cat})`,
+        categories: [
+          { max: 6, label: 'Essential Fat' },
+          { max: 14, label: 'Athletes' },
+          { max: 17, label: 'Fitness' },
+          { max: 24, label: 'Average' },
+          { max: 100, label: 'Obese' }
+        ],
+        categories_female: [
+          { max: 14, label: 'Essential Fat' },
+          { max: 20, label: 'Athletes' },
+          { max: 24, label: 'Fitness' },
+          { max: 31, label: 'Average' },
+          { max: 100, label: 'Obese' }
+        ]
+      },
+      zh: {
+        result: (bf, cat) => `体脂率：${bf.toFixed(1)}%（${cat}）`,
+        categories: [
+          { max: 6, label: '必要脂肪' },
+          { max: 14, label: '运动型' },
+          { max: 17, label: '健身型' },
+          { max: 24, label: '普通型' },
+          { max: 100, label: '肥胖' }
+        ],
+        categories_female: [
+          { max: 14, label: '必要脂肪' },
+          { max: 20, label: '运动型' },
+          { max: 24, label: '健身型' },
+          { max: 31, label: '普通型' },
+          { max: 100, label: '肥胖' }
+        ]
+      }
+    };
+
+    const form = document.getElementById('bfcForm');
+    const hipDiv = document.getElementById('hipDiv');
+
+    document.getElementById('gender').addEventListener('change', () => {
+      hipDiv.style.display = document.getElementById('gender').value === 'female' ? 'block' : 'none';
+    });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      const gender = document.getElementById('gender').value;
+      const height = parseFloat(document.getElementById('height').value);
+      const neck = parseFloat(document.getElementById('neck').value);
+      const waist = parseFloat(document.getElementById('waist').value);
+      const hip = parseFloat(document.getElementById('hip').value || 0);
+      const lang = document.getElementById('lang').value;
+
+      let bf = 0;
+      if (gender === 'male') {
+        bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+      } else {
+        bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+      }
+
+      const categories = gender === 'male' ? langMap[lang].categories : langMap[lang].categories_female;
+      const category = categories.find(cat => bf < cat.max).label;
+
+      document.getElementById('result').innerText = langMap[lang].result(bf, category);
+    });
+  </script>
+</body>
+</html>
