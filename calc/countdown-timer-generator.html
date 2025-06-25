@@ -1,144 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Generator Form</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
-    :root {
-      --bg-color: #111;
-      --text-color: #fefefe;
-      --accent-color: #00d1b2;
-      --font-family: 'Segoe UI', sans-serif;
-      --font-size: 28px;
-      --title-size: 22px;
-    }
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: var(--font-family);
-      background: var(--bg-color);
-      color: var(--text-color);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100px;
-      gap: 20px;
-    }
-    .countdown-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
-    .title {
-      font-size: var(--title-size);
-      color: var(--accent-color);
-    }
-    .countdown-box {
-      font-size: var(--font-size);
-      font-weight: bold;
-      background: rgba(255, 255, 255, 0.05);
-      padding: 10px 20px;
-      border-radius: 10px;
-      border: 1px solid var(--accent-color);
-    }
-    .share {
-      font-size: 14px;
-      opacity: 0.8;
-      cursor: pointer;
-      text-decoration: underline;
+    .preview-box iframe {
+      border: 1px solid #ccc;
+      border-radius: 8px;
     }
   </style>
 </head>
-<body>
-  <div id="container"></div>
+<body class="bg-gray-100 text-gray-800 min-h-screen py-8 px-4">
+  <div class="bg-white max-w-3xl mx-auto p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-6 text-center">Countdown Generator / 倒计时生成器</h1>
+
+    <form id="countdownForm" class="space-y-4">
+      <div id="timersContainer">
+        <div class="timer-entry border-b pb-4 mb-4">
+          <div>
+            <label class="block mb-1 font-medium">Title / 标题</label>
+            <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
+          </div>
+          <div class="mt-2">
+            <label class="block mb-1 font-medium">Target Date / 目标日期时间</label>
+            <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Another Countdown / 添加另一个倒计时</button>
+
+      <div class="mt-4">
+        <label class="block mb-1 font-medium">Language / 语言</label>
+        <select id="lang" class="w-full border rounded px-3 py-2">
+          <option value="en">English</option>
+          <option value="zh">中文</option>
+        </select>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block mb-1 font-medium">Accent Color / 主色调</label>
+          <input type="color" id="color" value="#00d1b2" class="w-full h-10">
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Background Color / 背景色</label>
+          <input type="color" id="bg" value="#111111" class="w-full h-10">
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
+          <input type="color" id="text" value="#ffffff" class="w-full h-10">
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Font Size / 字体大小 (px)</label>
+          <input type="number" id="size" value="28" class="w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Title Font Size / 标题字体大小 (px)</label>
+          <input type="number" id="titleSize" value="22" class="w-full border rounded px-3 py-2">
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">
+        Generate Embed Code / 生成嵌入代码
+      </button>
+    </form>
+
+    <div id="output" class="mt-6 hidden">
+      <h2 class="text-lg font-semibold mb-2">Embed Code / 嵌入代码:</h2>
+      <textarea id="embedCode" class="w-full border rounded p-2 text-sm h-32"></textarea>
+      <button id="copyBtn" class="mt-2 text-blue-600 underline">Copy / 复制</button>
+
+      <div class="preview-box mt-6">
+        <h3 class="text-md font-medium mb-2">Preview / 预览</h3>
+        <div id="iframePreview"></div>
+      </div>
+
+      <div id="individualEmbeds" class="mt-6"></div>
+      <div class="mt-6">
+        <button onclick="downloadCountdownImage()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+          Download Countdown Image / 下载倒计时图片
+        </button>
+      </div>
+    </div>
+  </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const lang = urlParams.get('lang') || 'en';
-    const color = urlParams.get('color') || '#00d1b2';
-    const bg = urlParams.get('bg') || '#111';
-    const text = urlParams.get('text') || '#fefefe';
-    const size = urlParams.get('size') || '28px';
-    const titleSize = urlParams.get('titleSize') || '22px';
+    document.getElementById('addTimer').addEventListener('click', () => {
+      const container = document.createElement('div');
+      container.className = 'timer-entry border-b pb-4 mb-4';
+      container.innerHTML = `
+        <div>
+          <label class="block mb-1 font-medium">Title / 标题</label>
+          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
+        </div>
+        <div class="mt-2">
+          <label class="block mb-1 font-medium">Target Date / 目标日期时间</label>
+          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+        </div>
+      `;
+      document.getElementById('timersContainer').appendChild(container);
+    });
 
-    document.documentElement.style.setProperty('--accent-color', color);
-    document.documentElement.style.setProperty('--bg-color', bg);
-    document.documentElement.style.setProperty('--text-color', text);
-    document.documentElement.style.setProperty('--font-size', size);
-    document.documentElement.style.setProperty('--title-size', titleSize);
+    document.getElementById('countdownForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const entries = Array.from(document.querySelectorAll('.timer-entry'));
+      let timers = entries.map(entry => {
+        const name = entry.querySelector('.name').value.trim();
+        const target = entry.querySelector('.target').value;
+        return name && target ? { name, target } : null;
+      }).filter(Boolean);
 
-    const labels = {
-      en: ['d', 'h', 'm', 's'],
-      zh: ['天', '时', '分', '秒']
-    };
+      timers.sort((a, b) => new Date(a.target) - new Date(b.target));
 
-    const targets = urlParams.getAll('target');
-    const names = urlParams.getAll('name');
+      const lang = document.getElementById('lang').value;
+      const color = document.getElementById('color').value.replace('#', '%23');
+      const bg = document.getElementById('bg').value.replace('#', '%23');
+      const text = document.getElementById('text').value.replace('#', '%23');
+      const size = document.getElementById('size').value + 'px';
+      const titleSize = document.getElementById('titleSize').value + 'px';
 
-    const parsed = targets.map((target, i) => {
-      return { date: new Date(target), name: names[i] || '', raw: target };
-    }).filter(t => t.date instanceof Date && !isNaN(t.date));
+      const params = new URLSearchParams();
+      timers.forEach(t => {
+        params.append('name', encodeURIComponent(t.name));
+        params.append('target', encodeURIComponent(t.target));
+      });
+      params.set('lang', lang);
+      params.set('color', color);
+      params.set('bg', bg);
+      params.set('text', text);
+      params.set('size', size);
+      params.set('titleSize', titleSize);
 
-    parsed.sort((a, b) => a.date - b.date);
+      const src = `/embed/countdown.html?${params.toString()}`;
+      const code = `<iframe src="${src}" width="100%" height="300" frameborder="0"></iframe>`;
 
-    function createCountdownElement(entry, index) {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'countdown-item';
+      document.getElementById('embedCode').value = code;
+      document.getElementById('output').classList.remove('hidden');
+      document.getElementById('iframePreview').innerHTML = `<iframe src="${src}" width="100%" height="300"></iframe>`;
 
-      const title = document.createElement('div');
-      title.className = 'title';
-      title.innerText = entry.name || `${lang === 'zh' ? '倒计时' : 'Countdown'} ${index + 1}`;
+      // Individual Links
+      const individualEmbeds = timers.map(t => {
+        const singleParams = new URLSearchParams();
+        singleParams.set('name', encodeURIComponent(t.name));
+        singleParams.set('target', encodeURIComponent(t.target));
+        singleParams.set('lang', lang);
+        singleParams.set('color', color);
+        singleParams.set('bg', bg);
+        singleParams.set('text', text);
+        singleParams.set('size', size);
+        singleParams.set('titleSize', titleSize);
 
-      const div = document.createElement('div');
-      div.className = 'countdown-box';
-      div.innerText = 'Loading...';
+        return `<p><strong>${t.name}</strong>: <code>/embed/countdown.html?${singleParams.toString()}</code></p>`;
+      }).join('');
 
-      const share = document.createElement('div');
-      share.className = 'share';
-      share.innerText = lang === 'zh' ? '复制分享链接' : 'Copy Share Link';
-      share.onclick = () => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('target', entry.raw);
-        if (entry.name) url.searchParams.set('name', entry.name);
-        navigator.clipboard.writeText(url.toString());
-        share.innerText = lang === 'zh' ? '已复制！' : 'Copied!';
-        setTimeout(() => share.innerText = lang === 'zh' ? '复制分享链接' : 'Copy Share Link', 2000);
-      };
+      document.getElementById('individualEmbeds').innerHTML = `<h3 class="font-medium mb-2">Individual Links / 每个倒计时独立链接</h3>${individualEmbeds}`;
+    });
 
-      wrapper.appendChild(title);
-      wrapper.appendChild(div);
-      wrapper.appendChild(share);
-      document.getElementById('container').appendChild(wrapper);
+    document.getElementById('copyBtn').addEventListener('click', () => {
+      navigator.clipboard.writeText(document.getElementById('embedCode').value);
+      alert('Copied / 已复制');
+    });
 
-      function update() {
-        const now = new Date();
-        const diff = entry.date - now;
-
-        if (diff <= 0) {
-          div.innerText = lang === 'zh' ? '倒计时结束' : "Time's up!";
-          return;
-        }
-
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const minutes = Math.floor((diff / (1000 * 60)) % 60);
-        const seconds = Math.floor((diff / 1000) % 60);
-
-        const [d, h, m, s] = labels[lang] || labels['en'];
-        div.innerText = `${days}${d} ${hours}${h} ${minutes}${m} ${seconds}${s}`;
-      }
-
-      update();
-      setInterval(update, 1000);
-    }
-
-    if (parsed.length === 0) {
-      document.getElementById('container').innerText = 'No target specified';
-    } else {
-      parsed.forEach((entry, i) => createCountdownElement(entry, i));
+    function downloadCountdownImage() {
+      const preview = document.getElementById('iframePreview');
+      if (!preview) return;
+      html2canvas(preview).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'countdown.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
     }
   </script>
 </body>
