@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Word Counter / 字数统计器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">Word Counter / 字数统计器</h1>
+      <select id="lang" class="border rounded px-2 py-1 text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <textarea id="textInput" rows="10" class="w-full border rounded p-3 text-sm" placeholder="Enter or paste your text here..."></textarea>
+
+    <div class="my-4">
+      <label class="block mb-1 font-medium">Upload File (txt, md)</label>
+      <input type="file" id="fileInput" accept=".txt,.md" class="border px-2 py-1 rounded" />
+    </div>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-6 text-sm" id="stats">
+      <div><strong id="wordCount">0</strong> <span class="label">Words</span></div>
+      <div><strong id="charCount">0</strong> <span class="label">Characters</span></div>
+      <div><strong id="cnWordCount">0</strong> <span class="label">中文词数</span></div>
+      <div><strong id="sentenceCount">0</strong> <span class="label">Sentences</span></div>
+      <div><strong id="paragraphCount">0</strong> <span class="label">Paragraphs</span></div>
+      <div><strong id="spaceCount">0</strong> <span class="label">Spaces</span></div>
+      <div><strong id="lineCount">0</strong> <span class="label">Lines</span></div>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('textInput');
+    const lang = document.getElementById('lang');
+    const fileInput = document.getElementById('fileInput');
+
+    function updateCounts(text) {
+      const enWords = text.match(/\b\w+\b/g)?.length || 0;
+      const cnWords = text.match(/[\u4e00-\u9fa5]/g)?.length || 0;
+      const chars = text.length;
+      const sentences = text.match(/[^.!?。！？\n]+[.!?。！？]*/g)?.length || 0;
+      const paragraphs = text.split(/\n+/).filter(p => p.trim().length > 0).length;
+      const spaces = (text.match(/ /g) || []).length;
+      const lines = text.split(/\n/).length;
+
+      document.getElementById('wordCount').textContent = enWords;
+      document.getElementById('cnWordCount').textContent = cnWords;
+      document.getElementById('charCount').textContent = chars;
+      document.getElementById('sentenceCount').textContent = sentences;
+      document.getElementById('paragraphCount').textContent = paragraphs;
+      document.getElementById('spaceCount').textContent = spaces;
+      document.getElementById('lineCount').textContent = lines;
+    }
+
+    input.addEventListener('input', () => updateCounts(input.value));
+    lang.addEventListener('change', () => updateLang(lang.value));
+
+    fileInput.addEventListener('change', e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        input.value = reader.result;
+        updateCounts(reader.result);
+      };
+      reader.readAsText(file);
+    });
+
+    function updateLang(lang) {
+      const labelMap = {
+        en: ['Words', 'Characters', 'Chinese Chars', 'Sentences', 'Paragraphs', 'Spaces', 'Lines'],
+        zh: ['英文词数', '字符数', '中文词数', '句子数', '段落数', '空格数', '行数']
+      }[lang];
+      document.querySelectorAll('#stats .label').forEach((el, i) => {
+        el.textContent = labelMap[i];
+      });
+    }
+
+    updateCounts('');
+    updateLang('en');
+  </script>
+</body>
+</html>
