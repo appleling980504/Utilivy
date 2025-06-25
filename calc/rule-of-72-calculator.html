@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rule of 72 Calculator / 72法则计算器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 py-10 px-4">
+  <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold text-center mb-6">Rule of 72 Calculator / 72法则计算器</h1>
+
+    <div class="mb-4">
+      <label class="block font-semibold mb-1">Language / 语言</label>
+      <select id="lang" class="w-full border px-3 py-2 rounded">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label id="modeLabel" class="block font-semibold mb-1">Choose Mode / 选择模式</label>
+      <select id="mode" class="w-full border px-3 py-2 rounded">
+        <option value="rate">Know interest rate → Calculate years</option>
+        <option value="years">Know years → Calculate rate</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label id="inputLabel" class="block font-semibold mb-1">Annual Interest Rate (%)</label>
+      <input type="number" id="input" class="w-full border px-3 py-2 rounded" step="any">
+    </div>
+
+    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold">
+      Calculate / 计算
+    </button>
+
+    <div id="result" class="mt-6 text-center text-lg font-bold text-green-600"></div>
+  </div>
+
+  <script>
+    const langMap = {
+      en: {
+        modeLabel: "Choose Mode",
+        modes: {
+          rate: "Know interest rate → Calculate years",
+          years: "Know years → Calculate rate"
+        },
+        inputLabels: {
+          rate: "Annual Interest Rate (%)",
+          years: "Number of Years"
+        },
+        results: {
+          rate: (v) => `It will take approximately ${v.toFixed(2)} years to double your money.`,
+          years: (v) => `You need an annual return of approximately ${v.toFixed(2)}% to double in that time.`
+        }
+      },
+      zh: {
+        modeLabel: "选择模式",
+        modes: {
+          rate: "知道利率 → 计算翻倍所需年数",
+          years: "知道年数 → 计算年回报率"
+        },
+        inputLabels: {
+          rate: "年回报率 (%)",
+          years: "年数"
+        },
+        results: {
+          rate: (v) => `大约需要 ${v.toFixed(2)} 年资金翻倍。`,
+          years: (v) => `需要年回报率约为 ${v.toFixed(2)}%。`
+        }
+      }
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    function updateText() {
+      const lang = $('lang').value;
+      const mode = $('mode').value;
+      $('modeLabel').innerText = langMap[lang].modeLabel;
+      $('mode').options[0].text = langMap[lang].modes.rate;
+      $('mode').options[1].text = langMap[lang].modes.years;
+      $('inputLabel').innerText = langMap[lang].inputLabels[mode];
+    }
+
+    $('lang').addEventListener('change', updateText);
+    $('mode').addEventListener('change', updateText);
+
+    function calculate() {
+      const lang = $('lang').value;
+      const mode = $('mode').value;
+      const val = parseFloat($('input').value);
+      if (isNaN(val) || val <= 0) {
+        $('result').innerText = lang === 'zh' ? '请输入有效数字。' : 'Please enter a valid number.';
+        return;
+      }
+
+      const result = mode === 'rate'
+        ? langMap[lang].results.rate(72 / val)
+        : langMap[lang].results.years(72 / val);
+      $('result').innerText = result;
+    }
+
+    window.onload = updateText;
+  </script>
+</body>
+</html>
