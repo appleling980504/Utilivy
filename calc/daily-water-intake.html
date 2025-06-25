@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Daily Water Intake Calculator / 日常饮水量计算器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"/>
+</head>
+<body class="bg-blue-50 py-10 px-4 text-gray-800">
+  <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold text-center mb-6">Daily Water Intake Calculator<br/>日常饮水量计算器</h1>
+
+    <div class="mb-4">
+      <label class="block font-medium mb-1">Language / 语言</label>
+      <select id="lang" class="w-full border rounded px-3 py-2">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <form id="waterForm" class="space-y-4">
+      <div>
+        <label class="block font-medium mb-1">Weight (kg) / 体重</label>
+        <input type="number" id="weight" class="w-full border rounded px-3 py-2" required />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Activity Level / 活动水平</label>
+        <select id="activity" class="w-full border rounded px-3 py-2">
+          <option value="low">Low / 静态工作</option>
+          <option value="moderate">Moderate / 中度活动</option>
+          <option value="high">High / 高强度锻炼</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Hot Weather? / 是否高温天气</label>
+        <select id="weather" class="w-full border rounded px-3 py-2">
+          <option value="no">No / 否</option>
+          <option value="yes">Yes / 是</option>
+        </select>
+      </div>
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
+        Calculate / 计算
+      </button>
+    </form>
+
+    <div id="result" class="text-center mt-6 text-xl font-semibold text-blue-700"></div>
+  </div>
+
+  <script>
+    const langMap = {
+      en: (ml, cups) => `Recommended: ${ml} ml/day (${cups} cups)`,
+      zh: (ml, cups) => `建议饮水量：${ml} 毫升/天（约 ${cups} 杯）`
+    };
+
+    document.getElementById('waterForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+      const weight = parseFloat(document.getElementById('weight').value);
+      const activity = document.getElementById('activity').value;
+      const hotWeather = document.getElementById('weather').value === 'yes';
+      const lang = document.getElementById('lang').value;
+
+      let multiplier = 35; // base: 35ml per kg
+      if (activity === 'moderate') multiplier += 5;
+      if (activity === 'high') multiplier += 10;
+      if (hotWeather) multiplier += 5;
+
+      const intake = Math.round(weight * multiplier);
+      const cups = Math.round(intake / 240);
+
+      document.getElementById('result').innerText = langMap[lang](intake, cups);
+    });
+  </script>
+</body>
+</html>
