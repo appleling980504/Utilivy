@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .countdown-title {
+      margin-bottom: 12px;
+    }
+    .countdown-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+  </style>
+</head>
+<body>
+  <div id="countdownContainer"></div>
+
+  <script>
+    function getParam(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.getAll(name);
+    }
+
+    const names = getParam('name');
+    const targets = getParam('target');
+    const lang = getParam('lang') || 'en';
+    const color = getParam('color') || '%2300d1b2';
+    const bg = getParam('bg') || '%23111111';
+    const text = getParam('text') || '%23ffffff';
+    const size = getParam('size') || '28px';
+    const titleSize = getParam('titleSize') || '22px';
+
+    document.body.style.backgroundColor = decodeURIComponent(bg);
+    document.body.style.color = decodeURIComponent(text);
+    document.body.style.fontSize = size;
+
+    const container = document.getElementById('countdownContainer');
+
+    function formatTime(unit, value) {
+      const labels = {
+        en: ['Days', 'Hours', 'Minutes', 'Seconds'],
+        zh: ['天', '小时', '分钟', '秒']
+      };
+      return `${value} ${labels[lang][unit]}`;
+    }
+
+    names.forEach((name, i) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'mb-6 text-center';
+
+      const title = document.createElement('div');
+      title.className = 'countdown-title font-bold';
+      title.style.fontSize = titleSize;
+      title.innerText = decodeURIComponent(name);
+      wrapper.appendChild(title);
+
+      const box = document.createElement('div');
+      box.className = 'countdown-box';
+      box.style.color = decodeURIComponent(color);
+
+      for (let j = 0; j < 4; j++) {
+        const item = document.createElement('div');
+        item.className = 'countdown-item';
+
+        const num = document.createElement('div');
+        num.className = 'font-bold text-3xl';
+        num.id = `timer-${i}-${j}`;
+        item.appendChild(num);
+
+        const label = document.createElement('div');
+        label.innerText = formatTime(j, '');
+        item.appendChild(label);
+
+        box.appendChild(item);
+      }
+
+      wrapper.appendChild(box);
+      container.appendChild(wrapper);
+    });
+
+    function updateCountdown() {
+      targets.forEach((target, i) => {
+        const future = new Date(decodeURIComponent(target));
+        const now = new Date();
+        let diff = Math.floor((future - now) / 1000);
+
+        const days = Math.floor(diff / (3600 * 24));
+        const hours = Math.floor((diff % (3600 * 24)) / 3600);
+        const minutes = Math.floor((diff % 3600) / 60);
+        const seconds = diff % 60;
+
+        document.getElementById(`timer-${i}-0`).innerText = days;
+        document.getElementById(`timer-${i}-1`).innerText = hours;
+        document.getElementById(`timer-${i}-2`).innerText = minutes;
+        document.getElementById(`timer-${i}-3`).innerText = seconds;
+      });
+    }
+
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
