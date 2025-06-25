@@ -3,15 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countdown Generator / 倒计时生成器</title>
+  <title>Countdown Generator</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <style>
-    .preview-box iframe {
-      border: 1px solid #ccc;
-      border-radius: 8px;
-    }
-  </style>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen py-8 px-4">
   <div class="bg-white max-w-3xl mx-auto p-6 rounded shadow">
@@ -20,161 +14,130 @@
     <form id="countdownForm" class="space-y-4">
       <div id="timersContainer">
         <div class="timer-entry border-b pb-4 mb-4">
-          <div>
-            <label class="block mb-1 font-medium">Title / 标题</label>
-            <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
-          </div>
-          <div class="mt-2">
-            <label class="block mb-1 font-medium">Target Date / 目标日期时间</label>
-            <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
-          </div>
+          <label class="block mb-1 font-medium">Title / 标题</label>
+          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
+          <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
+          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
         </div>
       </div>
+      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Countdown / 添加倒计时</button>
 
-      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Another Countdown / 添加另一个倒计时</button>
-
-      <div class="mt-4">
-        <label class="block mb-1 font-medium">Language / 语言</label>
-        <select id="lang" class="w-full border rounded px-3 py-2">
-          <option value="en">English</option>
-          <option value="zh">中文</option>
-        </select>
-      </div>
-
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-2 gap-4 mt-4">
         <div>
-          <label class="block mb-1 font-medium">Accent Color / 主色调</label>
-          <input type="color" id="color" value="#00d1b2" class="w-full h-10">
-        </div>
-        <div>
-          <label class="block mb-1 font-medium">Background Color / 背景色</label>
-          <input type="color" id="bg" value="#111111" class="w-full h-10">
-        </div>
-        <div>
-          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
-          <input type="color" id="text" value="#ffffff" class="w-full h-10">
+          <label class="block mb-1 font-medium">Language / 语言</label>
+          <select id="lang" class="w-full border rounded px-3 py-2">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
         </div>
         <div>
           <label class="block mb-1 font-medium">Font Size / 字体大小 (px)</label>
-          <input type="number" id="size" value="28" class="w-full border rounded px-3 py-2">
+          <input type="number" id="fontSize" value="28" class="w-full border rounded px-3 py-2">
         </div>
         <div>
-          <label class="block mb-1 font-medium">Title Font Size / 标题字体大小 (px)</label>
-          <input type="number" id="titleSize" value="22" class="w-full border rounded px-3 py-2">
+          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
+          <input type="color" id="textColor" value="#ffffff" class="w-full h-10">
+        </div>
+        <div>
+          <label class="block mb-1 font-medium">Background / 背景颜色</label>
+          <input type="color" id="bgColor" value="#111111" class="w-full h-10">
         </div>
       </div>
 
       <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">
-        Generate Embed Code / 生成嵌入代码
+        Generate Countdown / 生成倒计时
       </button>
     </form>
 
-    <div id="output" class="mt-6 hidden">
-      <h2 class="text-lg font-semibold mb-2">Embed Code / 嵌入代码:</h2>
-      <textarea id="embedCode" class="w-full border rounded p-2 text-sm h-32"></textarea>
-      <button id="copyBtn" class="mt-2 text-blue-600 underline">Copy / 复制</button>
-
-      <div class="preview-box mt-6">
-        <h3 class="text-md font-medium mb-2">Preview / 预览</h3>
-        <div id="iframePreview"></div>
-      </div>
-
-      <div id="individualEmbeds" class="mt-6"></div>
-      <div class="mt-6">
-        <button onclick="downloadCountdownImage()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
-          Download Countdown Image / 下载倒计时图片
-        </button>
-      </div>
-    </div>
+    <div id="previewContainer" class="mt-6 space-y-4"></div>
+    <button id="downloadImage" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4">
+      Download Countdown Image / 下载图片
+    </button>
   </div>
 
   <script>
+    const langMap = {
+      en: { day: 'days', hour: 'hours', minute: 'minutes', second: 'seconds' },
+      zh: { day: '天', hour: '小时', minute: '分钟', second: '秒' },
+    };
+
+    let activeTimers = [];
+
     document.getElementById('addTimer').addEventListener('click', () => {
       const container = document.createElement('div');
       container.className = 'timer-entry border-b pb-4 mb-4';
       container.innerHTML = `
-        <div>
-          <label class="block mb-1 font-medium">Title / 标题</label>
-          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
-        </div>
-        <div class="mt-2">
-          <label class="block mb-1 font-medium">Target Date / 目标日期时间</label>
-          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
-        </div>
+        <label class="block mb-1 font-medium">Title / 标题</label>
+        <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., Holiday" required>
+        <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
+        <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
       `;
       document.getElementById('timersContainer').appendChild(container);
     });
 
     document.getElementById('countdownForm').addEventListener('submit', function(e) {
       e.preventDefault();
+      clearInterval(window.countdownInterval);
+      activeTimers = [];
+
       const entries = Array.from(document.querySelectorAll('.timer-entry'));
-      let timers = entries.map(entry => {
-        const name = entry.querySelector('.name').value.trim();
-        const target = entry.querySelector('.target').value;
-        return name && target ? { name, target } : null;
-      }).filter(Boolean);
+      const lang = document.getElementById('lang').value;
+      const textColor = document.getElementById('textColor').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const fontSize = document.getElementById('fontSize').value + 'px';
+
+      const timers = entries.map(entry => {
+        return {
+          name: entry.querySelector('.name').value,
+          target: entry.querySelector('.target').value
+        };
+      }).filter(t => t.name && t.target);
 
       timers.sort((a, b) => new Date(a.target) - new Date(b.target));
 
-      const lang = document.getElementById('lang').value;
-      const color = document.getElementById('color').value.replace('#', '%23');
-      const bg = document.getElementById('bg').value.replace('#', '%23');
-      const text = document.getElementById('text').value.replace('#', '%23');
-      const size = document.getElementById('size').value + 'px';
-      const titleSize = document.getElementById('titleSize').value + 'px';
+      const preview = document.getElementById('previewContainer');
+      preview.innerHTML = '';
 
-      const params = new URLSearchParams();
-      timers.forEach(t => {
-        params.append('name', encodeURIComponent(t.name));
-        params.append('target', encodeURIComponent(t.target));
+      timers.forEach((t, i) => {
+        const box = document.createElement('div');
+        box.className = 'rounded p-4 text-center shadow';
+        box.style.backgroundColor = bgColor;
+        box.style.color = textColor;
+        box.style.fontSize = fontSize;
+        box.innerHTML = `
+          <div class="font-bold text-xl mb-2">${t.name}</div>
+          <div class="countdown" data-target="${t.target}">${'--'} ${langMap[lang].day} ${'--'} ${langMap[lang].hour} ${'--'} ${langMap[lang].minute} ${'--'} ${langMap[lang].second}</div>
+        `;
+        preview.appendChild(box);
+        activeTimers.push({ el: box.querySelector('.countdown'), target: t.target });
       });
-      params.set('lang', lang);
-      params.set('color', color);
-      params.set('bg', bg);
-      params.set('text', text);
-      params.set('size', size);
-      params.set('titleSize', titleSize);
 
-      const src = `/embed/countdown.html?${params.toString()}`;
-      const code = `<iframe src="${src}" width="100%" height="300" frameborder="0"></iframe>`;
+      startCountdown(lang);
 
-      document.getElementById('embedCode').value = code;
-      document.getElementById('output').classList.remove('hidden');
-      document.getElementById('iframePreview').innerHTML = `<iframe src="${src}" width="100%" height="300"></iframe>`;
-
-      // Individual links
-      const individualEmbeds = timers.map(t => {
-        const singleParams = new URLSearchParams();
-        singleParams.set('name', encodeURIComponent(t.name));
-        singleParams.set('target', encodeURIComponent(t.target));
-        singleParams.set('lang', lang);
-        singleParams.set('color', color);
-        singleParams.set('bg', bg);
-        singleParams.set('text', text);
-        singleParams.set('size', size);
-        singleParams.set('titleSize', titleSize);
-
-        return `<p><strong>${t.name}</strong>: <code>/embed/countdown.html?${singleParams.toString()}</code></p>`;
-      }).join('');
-
-      document.getElementById('individualEmbeds').innerHTML = `<h3 class="font-medium mb-2">Individual Links / 每个倒计时独立链接</h3>${individualEmbeds}`;
+      document.getElementById('downloadImage').classList.remove('hidden');
     });
 
-    document.getElementById('copyBtn').addEventListener('click', () => {
-      navigator.clipboard.writeText(document.getElementById('embedCode').value);
-      alert('Copied / 已复制');
-    });
+    function startCountdown(lang) {
+      window.countdownInterval = setInterval(() => {
+        activeTimers.forEach(t => {
+          const diff = new Date(t.target) - new Date();
+          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+          const m = Math.floor((diff / (1000 * 60)) % 60);
+          const s = Math.floor((diff / 1000) % 60);
+          t.el.innerHTML = `${d} ${langMap[lang].day} ${h} ${langMap[lang].hour} ${m} ${langMap[lang].minute} ${s} ${langMap[lang].second}`;
+        });
+      }, 1000);
+    }
 
-    function downloadCountdownImage() {
-      const preview = document.getElementById('iframePreview');
-      if (!preview) return;
-      html2canvas(preview).then(canvas => {
+    document.getElementById('downloadImage').addEventListener('click', () => {
+      html2canvas(document.getElementById('previewContainer')).then(canvas => {
         const link = document.createElement('a');
         link.download = 'countdown.png';
         link.href = canvas.toDataURL();
         link.click();
       });
-    }
+    });
   </script>
 </body>
 </html>
