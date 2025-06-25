@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Number to Words Converter</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-50 min-h-screen p-6 text-gray-800">
+  <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-4 text-center">🔢 Number to Words 转换器</h1>
+    <input id="numberInput" type="text" placeholder="请输入数字，例如 123456.78"
+           class="w-full border px-4 py-2 rounded mb-4 text-lg" />
+    
+    <button onclick="convert()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold mb-4">
+      🔄 Convert / 转换
+    </button>
+
+    <div class="mb-3">
+      <h2 class="font-bold">📘 English:</h2>
+      <p id="englishResult" class="text-blue-700 mt-1 break-words"></p>
+    </div>
+
+    <div>
+      <h2 class="font-bold">📙 中文大写:</h2>
+      <p id="chineseResult" class="text-red-700 mt-1 break-words"></p>
+    </div>
+  </div>
+
+  <script>
+    function convert() {
+      const val = document.getElementById('numberInput').value.trim();
+      const num = parseFloat(val);
+      if (isNaN(num)) {
+        alert("请输入有效的数字");
+        return;
+      }
+      document.getElementById('englishResult').textContent = numberToEnglish(num);
+      document.getElementById('chineseResult').textContent = numberToChinese(num);
+    }
+
+    // 英文转换
+    function numberToEnglish(n) {
+      if (n === 0) return 'Zero';
+      const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine'];
+      const teens = ['Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+      const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+      const thousands = ['','Thousand','Million','Billion','Trillion'];
+
+      function chunkToWords(num) {
+        let str = '';
+        const hundred = Math.floor(num / 100);
+        const rem = num % 100;
+        if (hundred) str += ones[hundred] + ' Hundred ';
+        if (rem < 10) str += ones[rem];
+        else if (rem < 20) str += teens[rem - 10];
+        else str += tens[Math.floor(rem / 10)] + (rem % 10 ? '-' + ones[rem % 10] : '');
+        return str.trim();
+      }
+
+      let intPart = Math.floor(n);
+      const cents = Math.round((n - intPart) * 100);
+
+      let result = '';
+      let i = 0;
+      while (intPart > 0) {
+        const chunk = intPart % 1000;
+        if (chunk) result = chunkToWords(chunk) + ' ' + thousands[i] + ' ' + result;
+        intPart = Math.floor(intPart / 1000);
+        i++;
+      }
+
+      result = result.trim();
+      if (cents > 0) {
+        result += ` and ${chunkToWords(cents)} Cent${cents === 1 ? '' : 's'}`;
+      }
+
+      return result;
+    }
+
+    // 中文转换
+    function numberToChinese(n) {
+      const fraction = ['角', '分'];
+      const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
+      const unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']];
+      let head = n < 0 ? '负' : '';
+      n = Math.abs(n);
+
+      let s = '';
+      for (let i = 0; i < fraction.length; i++) {
+        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
+      }
+      s = s || '整';
+      n = Math.floor(n);
+
+      for (let i = 0; i < unit[0].length && n > 0; i++) {
+        let p = '';
+        for (let j = 0; j < unit[1].length && n > 0; j++) {
+          p = digit[n % 10] + unit[1][j] + p;
+          n = Math.floor(n / 10);
+        }
+        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+      }
+
+      return head + s
+        .replace(/(零.)*零元/, '元')
+        .replace(/(零.)+/g, '零')
+        .replace(/^整$/, '零元整')
+        .replace(/零角零分$/, '整')
+        .replace(/零分$/, '整');
+    }
+  </script>
+</body>
+</html>
