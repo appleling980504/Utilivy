@@ -1,121 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Countdown</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Countdown Generator</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
-    .countdown-title {
-      margin-bottom: 12px;
-    }
-    .countdown-box {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .countdown-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
-<body>
-  <div id="countdownContainer"></div>
+<body class="bg-gray-100 text-gray-800 min-h-screen py-8 px-4">
+  <div class="bg-white max-w-3xl mx-auto p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-6 text-center">Countdown Generator / 倒计时生成器</h1>
+
+    <form id="countdownForm" class="space-y-4">
+      <div id="timersContainer">
+        <div class="timer-entry border-b pb-4 mb-4">
+          <label class="block mb-1 font-medium">Title / 标题</label>
+          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
+          <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
+          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+        </div>
+      </div>
+      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Countdown / 添加倒计时</button>
+
+      <div class="grid grid-cols-2 gap-4 mt-4">
+        <div>
+          <label class="block mb-1 font-medium">Language / 语言</label>
+          <select id="lang" class="w-full border rounded px-3 py-2">
+            <option value="en">English</option>
+            <option value="zh">中文</option>
+          </select>
+        </div>
+        <div>
+          <label class="block mb-1 font-medium">Font Size / 字体大小 (px)</label>
+          <input type="number" id="fontSize" value="28" class="w-full border rounded px-3 py-2">
+        </div>
+        <div>
+          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
+          <input type="color" id="textColor" value="#ffffff" class="w-full h-10">
+        </div>
+        <div>
+          <label class="block mb-1 font-medium">Background / 背景颜色</label>
+          <input type="color" id="bgColor" value="#111111" class="w-full h-10">
+        </div>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">
+        Generate Countdown / 生成倒计时
+      </button>
+    </form>
+
+    <div id="previewContainer" class="mt-6 space-y-4"></div>
+    <button id="downloadImage" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4">
+      Download Countdown Image / 下载图片
+    </button>
+  </div>
 
   <script>
-    function getParam(name) {
-      const params = new URLSearchParams(window.location.search);
-      return params.getAll(name);
-    }
+    const langMap = {
+      en: { day: 'days', hour: 'hours', minute: 'minutes', second: 'seconds' },
+      zh: { day: '天', hour: '小时', minute: '分钟', second: '秒' },
+    };
 
-    const names = getParam('name');
-    const targets = getParam('target');
-    const lang = getParam('lang') || 'en';
-    const color = getParam('color') || '%2300d1b2';
-    const bg = getParam('bg') || '%23111111';
-    const text = getParam('text') || '%23ffffff';
-    const size = getParam('size') || '28px';
-    const titleSize = getParam('titleSize') || '22px';
-
-    document.body.style.backgroundColor = decodeURIComponent(bg);
-    document.body.style.color = decodeURIComponent(text);
-    document.body.style.fontSize = size;
-
-    const container = document.getElementById('countdownContainer');
-
-    function formatTime(unit, value) {
-      const labels = {
-        en: ['Days', 'Hours', 'Minutes', 'Seconds'],
-        zh: ['天', '小时', '分钟', '秒']
-      };
-      return `${value} ${labels[lang][unit]}`;
-    }
-
-    names.forEach((name, i) => {
-      const wrapper = document.createElement('div');
-      wrapper.className = 'mb-6 text-center';
-
-      const title = document.createElement('div');
-      title.className = 'countdown-title font-bold';
-      title.style.fontSize = titleSize;
-      title.innerText = decodeURIComponent(name);
-      wrapper.appendChild(title);
-
-      const box = document.createElement('div');
-      box.className = 'countdown-box';
-      box.style.color = decodeURIComponent(color);
-
-      for (let j = 0; j < 4; j++) {
-        const item = document.createElement('div');
-        item.className = 'countdown-item';
-
-        const num = document.createElement('div');
-        num.className = 'font-bold text-3xl';
-        num.id = `timer-${i}-${j}`;
-        item.appendChild(num);
-
-        const label = document.createElement('div');
-        label.innerText = formatTime(j, '');
-        item.appendChild(label);
-
-        box.appendChild(item);
-      }
-
-      wrapper.appendChild(box);
-      container.appendChild(wrapper);
+    document.getElementById('addTimer').addEventListener('click', () => {
+      const container = document.createElement('div');
+      container.className = 'timer-entry border-b pb-4 mb-4';
+      container.innerHTML = `
+        <label class="block mb-1 font-medium">Title / 标题</label>
+        <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., Holiday" required>
+        <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
+        <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
+      `;
+      document.getElementById('timersContainer').appendChild(container);
     });
 
-    function updateCountdown() {
-      targets.forEach((target, i) => {
-        const future = new Date(decodeURIComponent(target));
-        const now = new Date();
-        let diff = Math.floor((future - now) / 1000);
+    document.getElementById('countdownForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const entries = Array.from(document.querySelectorAll('.timer-entry'));
+      const lang = document.getElementById('lang').value;
+      const textColor = document.getElementById('textColor').value;
+      const bgColor = document.getElementById('bgColor').value;
+      const fontSize = document.getElementById('fontSize').value + 'px';
 
-        const days = Math.floor(diff / (3600 * 24));
-        const hours = Math.floor((diff % (3600 * 24)) / 3600);
-        const minutes = Math.floor((diff % 3600) / 60);
-        const seconds = diff % 60;
+      const timers = entries.map(entry => {
+        return {
+          name: entry.querySelector('.name').value,
+          target: entry.querySelector('.target').value
+        };
+      }).filter(t => t.name && t.target);
 
-        document.getElementById(`timer-${i}-0`).innerText = days;
-        document.getElementById(`timer-${i}-1`).innerText = hours;
-        document.getElementById(`timer-${i}-2`).innerText = minutes;
-        document.getElementById(`timer-${i}-3`).innerText = seconds;
+      timers.sort((a, b) => new Date(a.target) - new Date(b.target));
+
+      const preview = document.getElementById('previewContainer');
+      preview.innerHTML = '';
+
+      timers.forEach((t, i) => {
+        const diff = new Date(t.target) - new Date();
+        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const m = Math.floor((diff / (1000 * 60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+
+        const unit = langMap[lang];
+        const box = document.createElement('div');
+        box.className = 'rounded p-4 text-center shadow';
+        box.style.backgroundColor = bgColor;
+        box.style.color = textColor;
+        box.style.fontSize = fontSize;
+        box.innerHTML = `
+          <div class="font-bold text-xl mb-2">${t.name}</div>
+          <div>${d} ${unit.day} ${h} ${unit.hour} ${m} ${unit.minute} ${s} ${unit.second}</div>
+        `;
+        preview.appendChild(box);
       });
-    }
 
-    updateCountdown();
-    setInterval(updateCountdown, 1000);
+      document.getElementById('downloadImage').classList.remove('hidden');
+    });
+
+    document.getElementById('downloadImage').addEventListener('click', () => {
+      html2canvas(document.getElementById('previewContainer')).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'countdown.png';
+        link.href = canvas.toDataURL();
+        link.click();
+      });
+    });
   </script>
 </body>
 </html>
