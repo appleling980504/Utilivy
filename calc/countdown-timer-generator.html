@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown</title>
+  <style>
+    :root {
+      --bg-color: #111;
+      --text-color: #fefefe;
+      --accent-color: #00d1b2;
+      --font-family: 'Segoe UI', sans-serif;
+      --font-size: 28px;
+      --title-size: 22px;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-family);
+      background: var(--bg-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+      gap: 20px;
+    }
+    .countdown-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .title {
+      font-size: var(--title-size);
+      color: var(--accent-color);
+    }
+    .countdown-box {
+      font-size: var(--font-size);
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--accent-color);
+    }
+    .share {
+      font-size: 14px;
+      opacity: 0.8;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const lang = urlParams.get('lang') || 'en';
+    const color = urlParams.get('color') || '#00d1b2';
+    const bg = urlParams.get('bg') || '#111';
+    const text = urlParams.get('text') || '#fefefe';
+    const size = urlParams.get('size') || '28px';
+    const titleSize = urlParams.get('titleSize') || '22px';
+
+    document.documentElement.style.setProperty('--accent-color', color);
+    document.documentElement.style.setProperty('--bg-color', bg);
+    document.documentElement.style.setProperty('--text-color', text);
+    document.documentElement.style.setProperty('--font-size', size);
+    document.documentElement.style.setProperty('--title-size', titleSize);
+
+    const labels = {
+      en: ['d', 'h', 'm', 's'],
+      zh: ['天', '时', '分', '秒']
+    };
+
+    const targets = urlParams.getAll('target');
+    const names = urlParams.getAll('name');
+
+    const parsed = targets.map((target, i) => {
+      return { date: new Date(target), name: names[i] || '', raw: target };
+    }).filter(t => t.date instanceof Date && !isNaN(t.date));
+
+    parsed.sort((a, b) => a.date - b.date);
+
+    function createCountdownElement(entry, index) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'countdown-item';
+
+      const title = document.createElement('div');
+      title.className = 'title';
+      title.innerText = entry.name || `${lang === 'zh' ? '倒计时' : 'Countdown'} ${index + 1}`;
+
+      const div = document.createElement('div');
+      div.className = 'countdown-box';
+      div.innerText = 'Loading...';
+
+      const share = document.createElement('div');
+      share.className = 'share';
+      share.innerText = lang === 'zh' ? '复制分享链接' : 'Copy Share Link';
+      share.onclick = () => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('target', entry.raw);
+        if (entry.name) url.searchParams.set('name', entry.name);
+        navigator.clipboard.writeText(url.toString());
+        share.innerText = lang === 'zh' ? '已复制！' : 'Copied!';
+        setTimeout(() => share.innerText = lang === 'zh' ? '复制分享链接' : 'Copy Share Link', 2000);
+      };
+
+      wrapper.appendChild(title);
+      wrapper.appendChild(div);
+      wrapper.appendChild(share);
+      document.getElementById('container').appendChild(wrapper);
+
+      function update() {
+        const now = new Date();
+        const diff = entry.date - now;
+
+        if (diff <= 0) {
+          div.innerText = lang === 'zh' ? '倒计时结束' : "Time's up!";
+          return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+
+        const [d, h, m, s] = labels[lang] || labels['en'];
+        div.innerText = `${days}${d} ${hours}${h} ${minutes}${m} ${seconds}${s}`;
+      }
+
+      update();
+      setInterval(update, 1000);
+    }
+
+    if (parsed.length === 0) {
+      document.getElementById('container').innerText = 'No target specified';
+    } else {
+      parsed.forEach((entry, i) => createCountdownElement(entry, i));
+    }
+  </script>
+</body>
+</html>
