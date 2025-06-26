@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Text to ASCII/Binary Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 p-4">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Text to ASCII / Binary / Unicode Converter</h1>
+
+    <textarea id="textInput" rows="6" placeholder="Enter your text here..." class="w-full p-3 border rounded mb-4"></textarea>
+
+    <div class="flex flex-wrap gap-3 mb-4">
+      <button onclick="convert('ascii')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">ASCII</button>
+      <button onclick="convert('binary')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Binary</button>
+      <button onclick="convert('unicode')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Unicode</button>
+      <button onclick="convert('hex')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Hex</button>
+      <button onclick="convert('octal')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Octal</button>
+      <button onclick="downloadTxt()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Download .txt</button>
+    </div>
+
+    <textarea id="output" rows="10" placeholder="Converted output will appear here..." class="w-full p-3 border rounded"></textarea>
+  </div>
+
+  <script>
+    function convert(mode) {
+      const text = document.getElementById('textInput').value;
+      const lines = text.split('\n');
+      let result = lines.map(line => {
+        return [...line].map(char => {
+          const code = char.charCodeAt(0);
+          switch (mode) {
+            case 'ascii': return code;
+            case 'binary': return code.toString(2).padStart(8, '0');
+            case 'unicode': return '\\u' + code.toString(16).padStart(4, '0');
+            case 'hex': return '0x' + code.toString(16).toUpperCase();
+            case 'octal': return '\\' + code.toString(8);
+          }
+        }).join(' ');
+      }).join('\n');
+      document.getElementById('output').value = result;
+    }
+
+    function downloadTxt() {
+      const blob = new Blob([document.getElementById('output').value], { type: 'text/plain' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'converted_output.txt';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
