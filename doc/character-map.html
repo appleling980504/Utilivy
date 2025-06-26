@@ -8,21 +8,22 @@
   <style>
     .symbol {
       font-size: 1.5rem;
-      padding: 0.5rem;
+      padding: 0.4rem;
       border: 1px solid #ccc;
       cursor: pointer;
       text-align: center;
       border-radius: 0.375rem;
       transition: all 0.2s;
+      background-color: #fff;
     }
     .symbol:hover {
-      background-color: #f0f0f0;
+      background-color: #f3f4f6;
       transform: scale(1.05);
     }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 min-h-screen p-4">
-  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
     <div class="flex justify-between items-center mb-4">
       <h1 class="text-xl sm:text-2xl font-bold" id="title">Character Map / 特殊符号表</h1>
       <select id="lang" class="border rounded px-2 py-1 text-sm">
@@ -43,7 +44,7 @@
       </div>
     </div>
 
-    <div id="symbolsContainer" class="grid grid-cols-6 sm:grid-cols-8 gap-4 mt-4"></div>
+    <div id="symbolsContainer" class="grid grid-cols-5 sm:grid-cols-10 gap-2 mt-4"></div>
     <p id="copyMsg" class="text-green-600 text-sm mt-4 hidden"></p>
   </div>
 
