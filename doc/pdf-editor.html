@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Editor / PDF编辑器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    body { font-family: sans-serif; background: #f9f9f9; padding: 20px; }
+    #pdf-container { border: 1px solid #ccc; background: white; position: relative; }
+    canvas { display: block; margin: 0 auto; }
+    .note { position: absolute; background: yellow; padding: 4px 6px; border: 1px solid #aaa; cursor: move; }
+    .toolbar { margin-bottom: 10px; }
+    .note input { border: none; background: transparent; width: 100px; }
+  </style>
+</head>
+<body>
+  <h2 id="title">PDF Editor / PDF编辑器</h2>
+
+  <div class="toolbar">
+    <label>
+      <span id="uploadLabel">Upload PDF / 上传 PDF:</span>
+      <input type="file" id="pdf-upload" accept=".pdf" />
+    </label>
+    <button onclick="enableAddText()"><span id="addTextBtn">Add Text 注释</span></button>
+    <button onclick="downloadPDF()"><span id="downloadBtn">Download 导出</span></button>
+    <select id="lang-switch" onchange="switchLang(this.value)">
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+    </select>
+  </div>
+
+  <div id="pdf-container"></div>
+
+  <script>
+    let currentPDF = null;
+    let container = document.getElementById('pdf-container');
+    let addTextMode = false;
+    let lang = 'en';
+
+    const LANG_MAP = {
+      en: {
+        title: 'PDF Editor',
+        uploadLabel: 'Upload PDF',
+        addTextBtn: 'Add Text',
+        downloadBtn: 'Download'
+      },
+      zh: {
+        title: 'PDF编辑器',
+        uploadLabel: '上传 PDF',
+        addTextBtn: '添加注释',
+        downloadBtn: '导出'
+      }
+    };
+
+    function switchLang(l) {
+      lang = l;
+      const map = LANG_MAP[l];
+      document.getElementById('title').textContent = `${map.title} / PDF编辑器`;
+      document.getElementById('uploadLabel').textContent = map.uploadLabel + ' / 上传 PDF';
+      document.getElementById('addTextBtn').textContent = map.addTextBtn + ' 注释';
+      document.getElementById('downloadBtn').textContent = map.downloadBtn + ' 导出';
+    }
+
+    function enableAddText() {
+      addTextMode = true;
+      alert(lang === 'zh' ? '点击PDF页面添加文本' : 'Click on PDF to add text');
+    }
+
+    container.addEventListener('click', function(e) {
+      if (!addTextMode) return;
+      const note = document.createElement('div');
+      note.className = 'note';
+      note.style.left = `${e.offsetX}px`;
+      note.style.top = `${e.offsetY}px`;
+      note.draggable = true;
+      note.innerHTML = `<input type="text" value="${lang === 'zh' ? '文本' : 'Text'}" />`;
+      container.appendChild(note);
+      makeDraggable(note);
+      addTextMode = false;
+    });
+
+    function makeDraggable(el) {
+      let offsetX, offsetY;
+      el.addEventListener('dragstart', e => {
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+      });
+      el.addEventListener('dragend', e => {
+        el.style.left = `${e.pageX - offsetX}px`;
+        el.style.top = `${e.pageY - offsetY - window.scrollY}px`;
+      });
+    }
+
+    document.getElementById('pdf-upload').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async function () {
+        const typedarray = new Uint8Array(this.result);
+        const loadingTask = pdfjsLib.getDocument({ data: typedarray });
+        const pdf = await loadingTask.promise;
+        currentPDF = await PDFLib.PDFDocument.load(typedarray);
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 1.5 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        container.innerHTML = '';
+        container.style.position = 'relative';
+        container.appendChild(canvas);
+        await page.render({ canvasContext: context, viewport }).promise;
+      };
+      reader.readAsArrayBuffer(file);
+    });
+
+    async function downloadPDF() {
+      if (!currentPDF) return alert('Please upload a PDF first!');
+      const pages = currentPDF.getPages();
+      const page = pages[0];
+      const form = currentPDF.getForm();
+      const notes = document.querySelectorAll('.note');
+
+      for (let note of notes) {
+        const text = note.querySelector('input').value;
+        const x = parseFloat(note.style.left);
+        const y = parseFloat(note.style.top);
+        page.drawText(text, {
+          x: x,
+          y: page.getHeight() - y - 10,
+          size: 12,
+        });
+      }
+
+      const pdfBytes = await currentPDF.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'edited.pdf';
+      link.click();
+    }
+  </script>
+</body>
+</html>
