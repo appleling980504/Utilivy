@@ -2,179 +2,154 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PDF Editor / PDF 编辑器</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PDF Editor / 编辑器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-  <script src="https://unpkg.com/@pdf-lib/fontkit"></script>
-  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.5/dist/signature_pad.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sortable/1.15.0/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <style>
-    canvas { border: 1px solid #ccc; }
-    .page-thumb { width: 100px; margin: 5px; cursor: move; border: 2px solid transparent; }
-    .page-thumb.dragging { opacity: 0.5; border-color: blue; }
+    body { font-family: sans-serif; padding: 1rem; background: #f7f7f7; }
+    #pdf-preview { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pdf-page { border: 1px solid #ccc; position: relative; }
+    .pdf-page canvas { border: 1px solid #000; }
+    .controls { margin: 1rem 0; }
+    .draggable { position: absolute; cursor: move; }
+    #editor-toolbar button { margin: 0 0.5rem 0.5rem 0; }
     .hidden { display: none; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-7xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">PDF Editor / PDF 编辑器</h1>
-      <select id="lang" class="border rounded px-2 py-1 text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
+<body>
+  <h1>PDF Editor / 编辑器</h1>
 
-    <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
-    <div id="controls" class="mb-4 hidden">
-      <button onclick="addSignature()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">✍️ Add Signature</button>
-      <button onclick="addImage()" class="bg-blue-500 text-white px-4 py-2 rounded mr-2">📷 Insert Image</button>
-      <button onclick="deletePage()" class="bg-red-500 text-white px-4 py-2 rounded mr-2">✂️ Delete Page</button>
-      <button onclick="exportPDF()" class="bg-green-500 text-white px-4 py-2 rounded mr-2">📤 Export PDF</button>
-    </div>
-
-    <div id="pageControls" class="flex flex-wrap gap-2 mb-4"></div>
-    <canvas id="pdfCanvas" class="w-full mb-4 max-h-[80vh]"></canvas>
-
-    <div class="hidden" id="signatureContainer">
-      <p class="mb-2">Draw your signature below:</p>
-      <canvas id="sigCanvas" width="400" height="150" class="mb-2"></canvas>
-      <button onclick="saveSignature()" class="bg-green-500 text-white px-4 py-2 rounded">Save Signature</button>
-    </div>
+  <div class="controls">
+    <input type="file" id="pdf-upload" accept="application/pdf" />
+    <button onclick="addText()">➕ Add Text</button>
+    <button onclick="addSignature()">✍️ Add Signature</button>
+    <input type="file" id="image-upload" accept="image/*" onchange="addImage(event)" />
+    <button onclick="deleteSelectedPage()">✂️ Delete Selected Page</button>
+    <button onclick="exportPDF()">📤 Export PDF</button>
   </div>
 
+  <div id="pdf-preview"></div>
+
   <script>
-    let pdfDoc = null;
-    let currentPage = 1;
-    let pdfCanvas = document.getElementById('pdfCanvas');
-    let ctx = pdfCanvas.getContext('2d');
-    let signatureData = null;
-    let currentLang = 'en';
+    let pdfDoc, pages = [], selectedPageIndex = null;
 
-    const langText = {
-      en: {
-        'PDF Editor / PDF 编辑器': 'PDF Editor',
-        'Add Signature': '✍️ Add Signature',
-        'Insert Image': '📷 Insert Image',
-        'Delete Page': '✂️ Delete Page',
-        'Export PDF': '📤 Export PDF',
-        'Draw your signature below:': 'Draw your signature below:'
-      },
-      zh: {
-        'PDF Editor / PDF 编辑器': 'PDF 编辑器',
-        'Add Signature': '✍️ 添加签名',
-        'Insert Image': '📷 插入图像',
-        'Delete Page': '✂️ 删除页面',
-        'Export PDF': '📤 导出 PDF',
-        'Draw your signature below:': '请在下方签名：'
-      }
-    };
-
-    document.getElementById('lang').addEventListener('change', (e) => {
-      currentLang = e.target.value;
-      document.querySelector('h1').textContent = langText[currentLang]['PDF Editor / PDF 编辑器'];
-      document.querySelectorAll('#controls button').forEach(btn => {
-        btn.textContent = langText[currentLang][btn.textContent.trim()];
-      });
-      document.querySelector('#signatureContainer p').textContent = langText[currentLang]['Draw your signature below:'];
-    });
-
-    document.getElementById('pdfFile').addEventListener('change', async (e) => {
+    document.getElementById('pdf-upload').addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       const arrayBuffer = await file.arrayBuffer();
-      pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-      document.getElementById('controls').classList.remove('hidden');
-      showPage(1);
-      generatePageThumbnails();
+      const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
+      pdfDoc = pdf;
+      pages = [];
+      document.getElementById('pdf-preview').innerHTML = '';
+
+      for (let i = 0; i < pdf.numPages; i++) {
+        const page = await pdf.getPage(i + 1);
+        const viewport = page.getViewport({ scale: 1 });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const container = document.createElement('div');
+        container.className = 'pdf-page';
+        container.appendChild(canvas);
+        container.setAttribute('data-index', i);
+        container.addEventListener('click', () => {
+          document.querySelectorAll('.pdf-page').forEach(p => p.style.outline = '');
+          container.style.outline = '3px solid #007bff';
+          selectedPageIndex = i;
+        });
+        document.getElementById('pdf-preview').appendChild(container);
+        pages.push(canvas);
+      }
+
+      Sortable.create(document.getElementById('pdf-preview'), {
+        animation: 150,
+        onEnd: (e) => {
+          const item = pages.splice(e.oldIndex, 1)[0];
+          pages.splice(e.newIndex, 0, item);
+        }
+      });
     });
 
-    async function showPage(pageNum) {
-      currentPage = pageNum;
-      const page = await pdfDoc.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
-      pdfCanvas.height = viewport.height;
-      pdfCanvas.width = viewport.width;
-      await page.render({ canvasContext: ctx, viewport }).promise;
-    }
-
-    function generatePageThumbnails() {
-      const pageControls = document.getElementById('pageControls');
-      pageControls.innerHTML = '';
-      for (let i = 1; i <= pdfDoc.numPages; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = `Page ${i}`;
-        btn.className = "bg-gray-300 hover:bg-gray-400 text-sm px-2 py-1 rounded";
-        btn.onclick = () => showPage(i);
-        pageControls.appendChild(btn);
-      }
+    function addText() {
+      if (selectedPageIndex === null) return alert("Please select a page first");
+      const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
+      const text = prompt("Enter text:");
+      const div = document.createElement('div');
+      div.className = 'draggable';
+      div.contentEditable = true;
+      div.style.left = '10px';
+      div.style.top = '10px';
+      div.style.fontSize = '16px';
+      div.textContent = text || 'Sample Text';
+      makeDraggable(div);
+      pageEl.appendChild(div);
     }
 
     function addSignature() {
-      document.getElementById('signatureContainer').classList.remove('hidden');
-      const sigCanvas = document.getElementById('sigCanvas');
-      const sigPad = new SignaturePad(sigCanvas);
-      window.saveSignature = () => {
-        signatureData = sigPad.toDataURL();
-        document.getElementById('signatureContainer').classList.add('hidden');
-        alert(currentLang === 'zh' ? '签名已保存。点击导出 PDF 插入。' : 'Signature saved. It will be inserted on export.');
+      const signText = prompt("Sign with your name:");
+      if (!signText) return;
+      const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
+      const div = document.createElement('div');
+      div.className = 'draggable';
+      div.style.left = '10px';
+      div.style.top = '100px';
+      div.style.fontSize = '18px';
+      div.style.fontStyle = 'italic';
+      div.textContent = signText;
+      makeDraggable(div);
+      pageEl.appendChild(div);
+    }
+
+    function addImage(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        const img = document.createElement('img');
+        img.src = event.target.result;
+        img.style.width = '100px';
+        img.className = 'draggable';
+        img.style.left = '10px';
+        img.style.top = '150px';
+        makeDraggable(img);
+        const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
+        pageEl.appendChild(img);
       };
+      reader.readAsDataURL(file);
     }
 
-    async function addImage() {
-      const imgInput = document.createElement('input');
-      imgInput.type = 'file';
-      imgInput.accept = 'image/*';
-      imgInput.onchange = async () => {
-        const imgFile = imgInput.files[0];
-        const imgData = await imgFile.arrayBuffer();
-        const pdfBytes = await pdfDoc.getData();
-        const pdfLibDoc = await PDFLib.PDFDocument.load(pdfBytes);
-        pdfLibDoc.registerFontkit(fontkit);
-        const page = pdfLibDoc.getPages()[currentPage - 1];
-        const img = await pdfLibDoc.embedPng(imgData);
-        page.drawImage(img, { x: 100, y: 300, width: 150, height: 150 });
-        const updatedBytes = await pdfLibDoc.save();
-        pdfDoc = await pdfjsLib.getDocument({ data: updatedBytes }).promise;
-        showPage(currentPage);
-        alert(currentLang === 'zh' ? '图像已添加。' : 'Image inserted.');
-      };
-      imgInput.click();
+    function deleteSelectedPage() {
+      if (selectedPageIndex === null) return alert("No page selected");
+      pages.splice(selectedPageIndex, 1);
+      document.querySelectorAll('.pdf-page')[selectedPageIndex].remove();
+      selectedPageIndex = null;
     }
 
-    async function deletePage() {
-      if (!pdfDoc) return;
-      const pageCount = pdfDoc.numPages;
-      if (pageCount <= 1) return alert(currentLang === 'zh' ? '至少保留一页。' : 'At least one page must remain.');
-      const pdfBytes = await pdfDoc.getData();
-      const pdfLibDoc = await PDFLib.PDFDocument.load(pdfBytes);
-      const pages = pdfLibDoc.getPages();
-      pdfLibDoc.removePage(currentPage - 1);
-      const updatedBytes = await pdfLibDoc.save();
-      pdfDoc = await pdfjsLib.getDocument({ data: updatedBytes }).promise;
-      showPage(1);
-      generatePageThumbnails();
-      alert(currentLang === 'zh' ? '页面已删除。' : 'Page deleted.');
+    function exportPDF() {
+      alert("📢 PDF 导出功能请等待第二阶段实现（基于 fabric 或 html2canvas + pdf-lib 绘制）");
     }
 
-    async function exportPDF() {
-      const pdfBytes = await pdfDoc.getData();
-      const pdfLibDoc = await PDFLib.PDFDocument.load(pdfBytes);
-      pdfLibDoc.registerFontkit(fontkit);
-      const pages = pdfLibDoc.getPages();
-      if (signatureData) {
-        const img = await pdfLibDoc.embedPng(signatureData);
-        pages[currentPage - 1].drawImage(img, { x: 100, y: 100, width: 100, height: 50 });
-      }
-      const blob = new Blob([await pdfLibDoc.save()], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = "edited.pdf";
-      a.click();
+    function makeDraggable(el) {
+      el.style.position = 'absolute';
+      el.draggable = true;
+      el.addEventListener('dragstart', e => {
+        e.dataTransfer.setData("text/plain", null);
+        el.dataset.dragging = "true";
+      });
+      el.addEventListener('dragend', e => {
+        el.dataset.dragging = "false";
+        const rect = el.parentElement.getBoundingClientRect();
+        el.style.left = `${e.pageX - rect.left - el.offsetWidth / 2}px`;
+        el.style.top = `${e.pageY - rect.top - el.offsetHeight / 2}px`;
+      });
     }
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
 </body>
 </html>
