@@ -21,16 +21,22 @@
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 p-6 min-h-screen">
-  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
     <h1 class="text-2xl font-bold mb-4">Character Map / 特殊符号表</h1>
 
-    <div class="flex flex-wrap gap-2 mb-4">
+    <div class="flex flex-wrap gap-2 mb-4 text-sm">
+      <button onclick="switchCategory('all')" class="bg-blue-200 hover:bg-blue-300 px-3 py-1 rounded">全部</button>
       <button onclick="switchCategory('emoji')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">Emoji</button>
       <button onclick="switchCategory('punctuation')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">标点</button>
       <button onclick="switchCategory('math')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">数学</button>
-      <button onclick="switchCategory('currency')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">货币</button>
-      <button onclick="switchCategory('logic')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">逻辑</button>
-      <button onclick="switchCategory('fancy')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">装饰</button>
+      <button onclick="switchCategory('currency')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">货币</button>
+      <button onclick="switchCategory('arrows')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">箭头</button>
+      <button onclick="switchCategory('logic')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">逻辑</button>
+      <button onclick="switchCategory('academic')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">学术</button>
+      <button onclick="switchCategory('units')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">单位</button>
+      <button onclick="switchCategory('astrology')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">星座</button>
+      <button onclick="switchCategory('pictographs')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">象形</button>
+      <button onclick="switchCategory('fancy')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">装饰</button>
       <button onclick="switchCategory('favorites')" class="bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded">⭐ 收藏</button>
     </div>
 
@@ -43,42 +49,17 @@
 
   <script>
     const symbols = {
-      emoji: [
-        { char: '😊', desc: '微笑' }, { char: '😂', desc: '大笑' }, { char: '😢', desc: '哭泣' },
-        { char: '😍', desc: '爱心眼' }, { char: '👍', desc: '点赞' }, { char: '🙏', desc: '祈祷' },
-        { char: '😎', desc: '酷' }, { char: '🎉', desc: '庆祝' }, { char: '😡', desc: '生气' },
-        { char: '😴', desc: '睡觉' }
-      ],
-      punctuation: [
-        { char: '—', desc: '破折号' }, { char: '…', desc: '省略号' }, { char: '·', desc: '间隔点' },
-        { char: '、', desc: '顿号' }, { char: '「', desc: '左书名号' }, { char: '」', desc: '右书名号' },
-        { char: '『', desc: '左引号' }, { char: '』', desc: '右引号' }, { char: '！', desc: '感叹号' },
-        { char: '？', desc: '问号' }
-      ],
-      math: [
-        { char: '±', desc: '正负号' }, { char: '×', desc: '乘号' }, { char: '÷', desc: '除号' },
-        { char: '√', desc: '根号' }, { char: '≈', desc: '约等于' }, { char: '≠', desc: '不等于' },
-        { char: '∞', desc: '无限' }, { char: '∑', desc: '总和' }, { char: '∫', desc: '积分' },
-        { char: '∂', desc: '偏导' }
-      ],
-      currency: [
-        { char: '$', desc: '美元' }, { char: '€', desc: '欧元' }, { char: '£', desc: '英镑' },
-        { char: '¥', desc: '人民币' }, { char: '₩', desc: '韩元' }, { char: '₽', desc: '卢布' },
-        { char: '₹', desc: '卢比' }, { char: '฿', desc: '泰铢' }, { char: '₫', desc: '越南盾' },
-        { char: '₦', desc: '奈拉' }
-      ],
-      logic: [
-        { char: '∧', desc: '与' }, { char: '∨', desc: '或' }, { char: '¬', desc: '非' },
-        { char: '⊕', desc: '异或' }, { char: '⇒', desc: '蕴含' }, { char: '⇔', desc: '等价' },
-        { char: '∀', desc: '全称' }, { char: '∃', desc: '存在' }, { char: '⊥', desc: '矛盾' },
-        { char: '⊢', desc: '推导' }
-      ],
-      fancy: [
-        { char: '★', desc: '实心星' }, { char: '☆', desc: '空心星' }, { char: '✿', desc: '花朵' },
-        { char: '❀', desc: '小花' }, { char: '❄', desc: '雪花' }, { char: '♬', desc: '音乐符' },
-        { char: '☂', desc: '雨伞' }, { char: '☕', desc: '咖啡' }, { char: '♛', desc: '皇后' },
-        { char: '⚡', desc: '闪电' }
-      ],
+      punctuation: ['•', '‽', '…', '—', '–', '·', '※', '§', '¶', '„', '“', '”', '‘', '’', '‚', '‹', '›', '«', '»', '¡'],
+      math: ['±', '×', '÷', '≈', '≠', '≤', '≥', '√', '∞', '∑', '∏', '∫', '∂', '∇', '∈', '∩', '∪', '∅', '⊂', '⊃'],
+      currency: ['$', '€', '£', '¥', '₹', '₩', '₱', '₽', '฿', '₴', '₦', '₪', '₫', '₭', '₡', '₲', '₵', '₮', '₠', '₳'],
+      arrows: ['→', '←', '↑', '↓', '↔', '↕', '⇒', '⇐', '⇑', '⇓', '⟶', '⟵', '⟹', '⟸', '⇄', '⇆', '↻', '↺', '↩', '↪'],
+      emoji: ['☺️', '😂', '❤️', '😍', '🤔', '👍', '🔥', '🎉', '😎', '😢', '😡', '🙏', '🤯', '🤗', '🥳', '😭', '👀', '💡', '😴', '👑'],
+      academic: ['∴', '∵', '∝', '⊕', '⊗', '⊥', '⋅', '∇', 'ℏ', 'ℓ', '℮', '⊙', '⊚', '⊛', '◉', '⦿', '≜', '≝', '≞'],
+      logic: ['⊤', '⊥', '⊢', '⊨', '¬', '∧', '∨', '⊻', '⇒', '⇔', '∃', '∀', '∴', '⊕', '⊗', '⊂', '⊃', '∈', '∉', '∅'],
+      units: ['℃', '℉', 'ℓ', '‰', '‱', 'Ω', '℧', 'µ', 'Å', '㎜', '㎝', '㎞', '㎎', '㎏', '㏄', '㏏', '㎐', '㎲', '㎍'],
+      astrology: ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '☉', '☽', '♁', '☿', '♀', '♂', '♃', '♄'],
+      pictographs: ['☀', '☁', '☂', '☃', '☕', '♨', '⚠', '⚡', '✈', '☠', '☣', '☯', '☮', '⚓', '⚖', '⚔', '⚙', '♻', '☘', '⚰'],
+      fancy: ['❀', '❁', '✿', '❃', '❄', '❆', '✪', '✯', '✰', '✶', '✷', '✸', '✹', '❈', '❉', '❊', '✧', '✦', '✩', '✫'],
       favorites: []
     };
 
@@ -87,19 +68,17 @@
     const copyBox = document.getElementById('copyBox');
     const searchInput = document.getElementById('searchInput');
 
-    function render(symbolList) {
+    function render(list) {
       grid.innerHTML = '';
-      symbolList.forEach(item => {
+      list.forEach(symbol => {
         const btn = document.createElement('button');
         btn.className = 'symbol-btn';
-        btn.title = item.desc;
-        btn.textContent = item.char;
+        btn.textContent = symbol;
         btn.onclick = () => {
-          navigator.clipboard.writeText(item.char).then(() => {
-            copyBox.value += item.char;
-          });
-          if (!symbols.favorites.find(f => f.char === item.char)) {
-            symbols.favorites.push(item);
+          navigator.clipboard.writeText(symbol);
+          copyBox.value += symbol;
+          if (!symbols.favorites.includes(symbol)) {
+            symbols.favorites.push(symbol);
           }
         };
         grid.appendChild(btn);
@@ -109,17 +88,24 @@
     function switchCategory(cat) {
       current = cat;
       searchInput.value = '';
-      render(symbols[cat]);
+      if (cat === 'all') {
+        const merged = Object.keys(symbols)
+          .filter(k => k !== 'favorites')
+          .flatMap(k => symbols[k]);
+        render(merged);
+      } else {
+        render(symbols[cat]);
+      }
     }
 
     searchInput.addEventListener('input', () => {
       const kw = searchInput.value.trim();
-      if (!kw) return render(symbols[current]);
-      const all = Object.values(symbols).flat();
-      const results = all.filter(item =>
-        item.char.includes(kw) || item.desc.includes(kw)
-      );
-      render(results);
+      if (!kw) return switchCategory(current);
+      const merged = Object.keys(symbols)
+        .flatMap(k => symbols[k])
+        .filter((v, i, arr) => arr.indexOf(v) === i); // 去重
+      const matched = merged.filter(c => c.includes(kw));
+      render(matched);
     });
 
     switchCategory('emoji');
