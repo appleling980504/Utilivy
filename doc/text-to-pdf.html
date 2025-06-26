@@ -5,9 +5,13 @@
   <title>Plain Text to PDF / 文本转 PDF（支持中文）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://unpkg.com/jspdf@2.5.1/dist/polyfills.umd.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <script src="https://unpkg.com/jspdf@2.5.1/dist/fonts/NotoSansSC.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/polyfills.umd.min.js"></script>
+  <script>
+    // NotoSansSC 字体 base64 内容（已裁剪，仅示例）
+    const notoSansSCFont = `AAEAAAALAIAAAwAwT1MvMg...（此处应插入完整 base64 字体数据）`;
+
+    window.NotoSansSC = notoSansSCFont;
+  </script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen p-4">
@@ -50,31 +54,27 @@
 
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        orientation: "portrait",
-        unit: "mm",
-        format: "a4"
-      });
+      const doc = new jsPDF({ unit: "mm", format: "a4" });
 
-      // 注册支持中文的字体
-      doc.addFileToVFS("NotoSansSC-Regular.ttf", NotoSansSC);
+      // 添加并使用中文字体
+      doc.addFileToVFS("NotoSansSC-Regular.ttf", window.NotoSansSC);
       doc.addFont("NotoSansSC-Regular.ttf", "NotoSansSC", "normal");
       doc.setFont("NotoSansSC");
+      doc.setFontSize(12);
 
-      const text = document.getElementById('textArea').value;
+      const text = document.getElementById('textArea').value || '（空白）';
       const lines = doc.splitTextToSize(text, 180);
-      let y = 10;
-
-      lines.forEach(line => {
+      let y = 20;
+      for (let line of lines) {
         if (y > 280) {
           doc.addPage();
-          y = 10;
+          y = 20;
         }
-        doc.text(line, 10, y);
-        y += 10;
-      });
+        doc.text(line, 15, y);
+        y += 8;
+      }
 
-      doc.save("converted.pdf");
+      doc.save("text.pdf");
     }
   </script>
 </body>
