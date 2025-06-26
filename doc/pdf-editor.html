@@ -1,148 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>PDF Editor / PDF 编辑器</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <title>PDF Editor / 编辑器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  <script>
+    // ⭐ 设置 workerSrc，确保 PDF.js 渲染正常
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/SignaturePad/4.1.6/signature_pad.umd.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
-    body { font-family: sans-serif; margin:10px; background:#f2f2f2; }
-    #toolbar { margin-bottom:10px; }
-    #preview { display:flex; flex-wrap: wrap; gap:10px; }
-    .page-container { position: relative; border:1px solid #aaa; }
-    .page-canvas { display: block; }
-    .hidden { display:none; }
+    body{font-family:sans-serif;margin:10px;background:#f7f7f7;}
+    #toolbar{margin-bottom:10px;}
+    #preview{display:flex;flex-wrap:wrap;gap:10px;}
+    .page-container{position:relative;border:1px solid #aaa;}
+    canvas{display:block;}
+    .selected{outline:3px solid blue;}
+    #sig-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
+      background:#fff;padding:10px;border:1px solid #aaa;z-index:100;}
   </style>
 </head>
 <body>
 <div id="toolbar">
   <input type="file" id="pdf-upload" accept="application/pdf">
-  <button onclick="addText()">文字覆盖</button>
-  <button onclick="startSignature()">手写签名</button>
+  <button onclick="addText()">Add Text</button>
+  <button onclick="startSignature()">Add Signature</button>
   <input type="file" id="img-upload" accept="image/*">
-  <button onclick="deletePage()">删除页面</button>
-  <button onclick="exportPDF()">导出 PDF</button>
-  <select id="lang-select" onchange="switchLang()"><option value="en">English</option><option value="zh">中文</option></select>
+  <button onclick="deletePage()">Delete Page</button>
+  <button onclick="exportPDF()">Export PDF</button>
+  <select id="lang-select" onchange="switchLang()">
+    <option value="en">English</option><option value="zh">中文</option>
+  </select>
 </div>
 
 <div id="preview"></div>
 
-<!-- 签名 modal -->
-<div id="sig-modal" class="hidden" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:10px;border:1px solid #aaa;z-index:100">
+<div id="sig-modal">
   <p id="sigTip">Sign here:</p>
   <canvas id="sigpad" width="400" height="150" style="border:1px solid #888;"></canvas><br>
-  <button onclick="finishSignature()">保存签名</button>
-  <button onclick="cancelSignature()">取消</button>
+  <button onclick="finishSignature()">Save</button>
+  <button onclick="cancelSignature()">Cancel</button>
 </div>
 
 <script>
-let pdfDoc = null, canvasPages = [], fabricCanvases = [], selectedIndex = null, lang='en';
-
-const texts = {
-  en: { delPg:'Delete page', sign:'Sign here:', txt:'Text overlay', btnText:'文字覆盖', btnSign:'手写签名', btnImg:'插入图片', btnDel:'删除页面', btnExp:'导出 PDF' },
-  zh: { delPg:'删除页面', sign:'请签名：', txt:'文字覆盖', btnText:'Add text', btnSign:'Add signature', btnImg:'Insert image', btnDel:'Delete page', btnExp:'Export PDF' }
+let pdfDoc, canvases = [], fabricCanvs = [], selIndex = null, lang = 'en';
+const T = {
+  en: { sigTip:'Sign here:' },
+  zh: { sigTip:'请在此签名：' }
 };
-
 function switchLang(){
   lang = document.getElementById('lang-select').value;
-  document.getElementById('sigTip').innerText = texts[lang].sign;
+  document.getElementById('sigTip').innerText = T[lang].sigTip;
 }
 
 document.getElementById('pdf-upload').addEventListener('change', async(e)=>{
   const file = e.target.files[0]; if(!file) return;
-  const data = await file.arrayBuffer();
-  pdfDoc = await pdfjsLib.getDocument({data}).promise;
-  document.getElementById('preview').innerHTML = '';
-  canvasPages = []; fabricCanvases = [];
+  const buf = await file.arrayBuffer();
+  pdfDoc = await pdfjsLib.getDocument({data:buf}).promise;
+  const preview = document.getElementById('preview');
+  preview.innerHTML = ''; canvases=[]; fabricCanvs=[];
   for(let i=1;i<=pdfDoc.numPages;i++){
-    const page = await pdfDoc.getPage(i);
-    const vp = page.getViewport({scale:1.5});
+    const p = await pdfDoc.getPage(i);
+    const vp = p.getViewport({scale:1.5});
     const c = document.createElement('canvas');
     c.width=vp.width; c.height=vp.height;
-    await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
-    const fc = new fabric.Canvas(c,{selection:true});
-    fabricCanvases.push(fc);
+    await p.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
     const cont = document.createElement('div');
-    cont.className='page-container';
+    cont.classList.add('page-container');
     cont.appendChild(c);
-    cont.onclick=()=>selectPage(i-1);
-    document.getElementById('preview').appendChild(cont);
-    canvasPages.push(c);
+    cont.addEventListener('click', ()=>selectPage(i-1));
+    preview.appendChild(cont);
+    canvases.push(c);
+    fabricCanvs.push(new fabric.Canvas(c, { selection: true }));
   }
-  Sortable.create(document.getElementById('preview'),{animation:150,onEnd:e=>{
-    const [fc] = fabricCanvases.splice(e.oldIndex,1);
-    fabricCanvases.splice(e.newIndex,0,fc);
+  Sortable.create(preview, { animation:150, onEnd:e=>{
+    const [f]=fabricCanvs.splice(e.oldIndex,1);
+    const [c]=canvases.splice(e.oldIndex,1);
+    fabricCanvs.splice(e.newIndex,0,f);
+    canvases.splice(e.newIndex,0,c);
   }});
 });
 
 function selectPage(i){
-  selectedIndex=i;
-  fabricCanvases.forEach((fc,j)=>fc.uppercanvas.parentElement.style.border=(j===i?'2px solid blue':'1px solid #aaa'));
+  selIndex = i;
+  document.querySelectorAll('.page-container').forEach((pc,j)=>
+    pc.classList.toggle('selected', j===i));
 }
 
 function addText(){
-  if(selectedIndex===null) return alert('Pick a page');
-  const txt = prompt(texts[lang].txt);
-  fabricCanvases[selectedIndex].add(new fabric.IText(txt||texts[lang].txt,{
-    left:50, top:50, fontSize:20, fill:'#000'
-  }));
+  if(selIndex===null) return alert('Select a page');
+  const txt = prompt('Enter text');
+  const it = new fabric.IText(txt||'Text',{ left:50, top:50, fontSize:20 });
+  fabricCanvs[selIndex].add(it);
 }
 
+let sigPad;
 function startSignature(){
-  document.getElementById('sig-modal').classList.remove('hidden');
-  const pad = new SignaturePad(document.getElementById('sigpad'));
-  window.finishSignature =()=>{
-    const url = pad.toDataURL();
-    const img = new Image(); img.onload=()=>{
-      const oImg = new fabric.Image(img,{left:50,top:50,scaleX:0.3,scaleY:0.3});
-      fabricCanvases[selectedIndex].add(oImg);
-    };
-    img.src=url;
-    document.getElementById('sig-modal').classList.add('hidden');
+  document.getElementById('sig-modal').style.display='block';
+  sigPad = new SignaturePad(document.getElementById('sigpad'));
+}
+function finishSignature(){
+  const url = sigPad.toDataURL();
+  const img = new Image();
+  img.onload=()=>{
+    fabricCanvs[selIndex].add(new fabric.Image(img,{
+      left:50, top:50, scaleX:0.3, scaleY:0.3
+    }));
   };
-  window.cancelSignature=()=>document.getElementById('sig-modal').classList.add('hidden');
+  img.src = url;
+  document.getElementById('sig-modal').style.display='none';
+}
+function cancelSignature(){
+  document.getElementById('sig-modal').style.display='none';
 }
 
 document.getElementById('img-upload').addEventListener('change',e=>{
-  const reader=new FileReader();
-  reader.onload=()=>{ 
-    const imgEl = new Image(); imgEl.onload=()=>{
-      const oImg=new fabric.Image(imgEl,{left:50,top:50,scaleX:0.5,scaleY:0.5});
-      fabricCanvases[selectedIndex].add(oImg);
-    }; imgEl.src=reader.result;
+  const file = e.target.files[0]; if(!file) return;
+  const fr = new FileReader();
+  fr.onload = ()=>{
+    const imgEl = new Image();
+    imgEl.onload=()=>{
+      fabricCanvs[selIndex].add(new fabric.Image(imgEl,{
+        left:50, top:50, scaleX:0.5, scaleY:0.5
+      }));
+    };
+    imgEl.src = fr.result;
   };
-  reader.readAsDataURL(e.target.files[0]);
+  fr.readAsDataURL(file);
 });
 
 function deletePage(){
-  if(selectedIndex===null) return;
-  fabricCanvases[selectedIndex].dispose();
-  fabricCanvases.splice(selectedIndex,1);
-  canvasPages.splice(selectedIndex,1);
-  document.getElementById('preview').children[selectedIndex].remove();
-  selectedIndex=null;
+  if(selIndex===null) return;
+  fabricCanvs[selIndex].dispose();
+  canvases.splice(selIndex,1);
+  fabricCanvs.splice(selIndex,1);
+  document.getElementById('preview').children[selIndex].remove();
+  selIndex=null;
 }
 
 async function exportPDF(){
-  const pdfDocOut = await PDFLib.PDFDocument.create();
-  for(let i=0;i<fabricCanvases.length;i++){
-    const fc=fabricCanvases[i];
-    const dataUrl = fc.toDataURL({format:'png'});
-    const imgBytes = await fetch(dataUrl).then(r=>r.arrayBuffer());
-    const img = await pdfDocOut.embedPng(imgBytes);
-    const page = pdfDocOut.addPage([fc.width,fc.height]);
-    page.drawImage(img,{x:0,y:0,width:fc.width,height:fc.height});
+  const blobPdf = await pdfDoc.getData();
+  const pdfOut = await PDFLib.PDFDocument.load(blobPdf);
+  for(let i=0;i<fabricCanvs.length;i++){
+    const fc = fabricCanvs[i];
+    const dataURL = fc.toDataURL({format:'png'});
+    const imgBytes = await fetch(dataURL).then(r=>r.arrayBuffer());
+    const img = await pdfOut.embedPng(imgBytes);
+    const [page] = pdfOut.getPages().slice(0, fabricCanvs.length);
+    const { width, height } = fc;
+    page.drawImage(img, { x: 0, y: 0, width, height });
   }
-  const blob = await pdfDocOut.save();
-  const url = URL.createObjectURL(new Blob([blob],{type:'application/pdf'}));
-  const a=document.createElement('a');a.href=url;a.download='edited.pdf';a.click();
+  const outBytes = await pdfOut.save();
+  const blob = new Blob([outBytes], { type:'application/pdf' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download='edited.pdf';
+  a.click();
 }
-
 </script>
 </body>
 </html>
