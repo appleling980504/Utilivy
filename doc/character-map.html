@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Character Map / 特殊符号表</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    .symbol {
+      font-size: 1.5rem;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 0.375rem;
+      transition: all 0.2s;
+    }
+    .symbol:hover {
+      background-color: #f0f0f0;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl sm:text-2xl font-bold" id="title">Character Map / 特殊符号表</h1>
+      <select id="lang" class="border rounded px-2 py-1 text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label class="block font-semibold mb-1" id="categoryLabel">Category / 分类</label>
+      <div class="flex flex-wrap gap-2">
+        <button class="category-btn bg-blue-100 hover:bg-blue-200 text-blue-800 rounded px-3 py-1 text-sm" data-category="punctuation">Punctuation / 标点</button>
+        <button class="category-btn bg-green-100 hover:bg-green-200 text-green-800 rounded px-3 py-1 text-sm" data-category="math">Math / 数学</button>
+        <button class="category-btn bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded px-3 py-1 text-sm" data-category="currency">Currency / 货币</button>
+        <button class="category-btn bg-pink-100 hover:bg-pink-200 text-pink-800 rounded px-3 py-1 text-sm" data-category="arrows">Arrows / 箭头</button>
+        <button class="category-btn bg-purple-100 hover:bg-purple-200 text-purple-800 rounded px-3 py-1 text-sm" data-category="emoji">Emoji / 表情</button>
+        <button class="category-btn bg-gray-200 hover:bg-gray-300 text-gray-800 rounded px-3 py-1 text-sm" data-category="all">All / 全部</button>
+      </div>
+    </div>
+
+    <div id="symbolsContainer" class="grid grid-cols-6 sm:grid-cols-8 gap-4 mt-4"></div>
+    <p id="copyMsg" class="text-green-600 text-sm mt-4 hidden"></p>
+  </div>
+
+  <script>
+    const symbols = {
+      punctuation: ['•', '‽', '…', '—', '–', '·', '※', '§', '¶', '„', '“', '”', '‘', '’'],
+      math: ['±', '×', '÷', '≈', '≠', '≤', '≥', '√', '∞', '∑', '∏', '∫', '∂', '∇'],
+      currency: ['$', '€', '£', '¥', '₹', '₩', '₱', '₽', '฿', '₴', '₦'],
+      arrows: ['→', '←', '↑', '↓', '↔', '↕', '⇒', '⇐', '⇑', '⇓', '⟶', '⟵'],
+      emoji: ['☺️', '😂', '❤️', '😍', '🤔', '👍', '🔥', '🎉', '😎', '😢', '😡', '🙏'],
+    };
+
+    const langText = {
+      en: {
+        title: "Character Map",
+        categoryLabel: "Category",
+        copy: "Copied to clipboard!",
+      },
+      zh: {
+        title: "特殊符号表",
+        categoryLabel: "分类",
+        copy: "已复制到剪贴板！",
+      }
+    };
+
+    const container = document.getElementById('symbolsContainer');
+    const langSelect = document.getElementById('lang');
+    const title = document.getElementById('title');
+    const categoryLabel = document.getElementById('categoryLabel');
+    const copyMsg = document.getElementById('copyMsg');
+
+    function render(category = 'all') {
+      container.innerHTML = '';
+      let chars = [];
+      if (category === 'all') {
+        Object.values(symbols).forEach(arr => chars.push(...arr));
+      } else {
+        chars = symbols[category] || [];
+      }
+      chars.forEach(char => {
+        const div = document.createElement('div');
+        div.className = 'symbol';
+        div.textContent = char;
+        div.onclick = () => {
+          navigator.clipboard.writeText(char);
+          copyMsg.textContent = langText[langSelect.value].copy;
+          copyMsg.classList.remove('hidden');
+          setTimeout(() => copyMsg.classList.add('hidden'), 1500);
+        };
+        container.appendChild(div);
+      });
+    }
+
+    document.querySelectorAll('.category-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        render(btn.dataset.category);
+      });
+    });
+
+    langSelect.addEventListener('change', () => {
+      const l = langSelect.value;
+      title.textContent = `${langText[l].title} / ${langText[l === 'en' ? 'zh' : 'en'].title}`;
+      categoryLabel.textContent = langText[l].categoryLabel + ' / ' + langText[l === 'en' ? 'zh' : 'en'].categoryLabel;
+    });
+
+    render();
+  </script>
+</body>
+</html>
