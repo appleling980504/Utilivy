@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>文本差异对比编辑器</title>
+  <title>文本差异对比编辑器（支持上传）</title>
   <script src="https://unpkg.com/diff-match-patch"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -12,7 +12,7 @@
     .diff-output { border: 1px solid #ccc; padding: 10px; background: #fff; white-space: pre-wrap; margin-bottom: 10px; }
     ins { background: #a6f3a6; text-decoration: none; }
     del { background: #f7a6a6; text-decoration: line-through; }
-    button { margin-right: 10px; }
+    button, input[type="file"] { margin-right: 10px; margin-bottom: 5px; }
     .nav-links { margin-bottom: 10px; }
     .version-list { margin-top: 10px; font-size: 14px; }
     .version-item { cursor: pointer; text-decoration: underline; color: blue; margin-bottom: 5px; }
@@ -22,10 +22,16 @@
   <h2>文本差异对比 / 可编辑导出</h2>
 
   <label>原始文本：</label>
-  <textarea id="text1" placeholder="输入或粘贴原始文本..."></textarea>
+  <div>
+    <input type="file" accept=".txt" onchange="loadFile(event, 'text1')" />
+  </div>
+  <textarea id="text1" placeholder="输入或上传原始文本..."></textarea>
 
   <label>修改文本：</label>
-  <textarea id="text2" placeholder="输入或粘贴修改后的文本..."></textarea>
+  <div>
+    <input type="file" accept=".txt" onchange="loadFile(event, 'text2')" />
+  </div>
+  <textarea id="text2" placeholder="输入或上传修改文本..."></textarea>
 
   <div>
     <button onclick="compareTexts()">比对差异</button>
@@ -47,6 +53,14 @@
     const dmp = new diff_match_patch();
     let versionHistory = [];
 
+    function loadFile(event, targetId) {
+      const reader = new FileReader();
+      reader.onload = function () {
+        document.getElementById(targetId).value = reader.result;
+      };
+      reader.readAsText(event.target.files[0]);
+    }
+
     function compareTexts() {
       const text1 = document.getElementById("text1").value.trim();
       const text2 = document.getElementById("text2").value.trim();
@@ -57,26 +71,15 @@
       const output = document.getElementById("diffOutput");
       output.innerHTML = html;
 
-      // 创建导航
+      // 创建段落导航
       const navLinks = document.getElementById("navLinks");
-      const segments = html.split(/<\/?(ins|del)>/);
       navLinks.innerHTML = '';
-      segments.forEach((s, i) => {
-        if (s && (i % 4 === 2 || i % 4 === 0)) {
-          const btn = document.createElement('button');
-          btn.textContent = `段落 ${Math.ceil(i/4)+1}`;
-          btn.onclick = () => {
-            const range = document.createRange();
-            const sel = window.getSelection();
-            const target = document.getElementById("diffOutput").childNodes[Math.floor(i/4)];
-            if (target) {
-              range.selectNodeContents(target);
-              sel.removeAllRanges();
-              sel.addRange(range);
-            }
-          };
-          navLinks.appendChild(btn);
-        }
+      const matches = output.querySelectorAll("ins, del");
+      matches.forEach((node, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = `${node.tagName === "INS" ? "新增" : "删除"} ${i + 1}`;
+        btn.onclick = () => node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        navLinks.appendChild(btn);
       });
     }
 
