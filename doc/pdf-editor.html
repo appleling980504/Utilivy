@@ -2,154 +2,147 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PDF Editor / 编辑器</title>
+  <title>PDF Editor / PDF 编辑器</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/sortable/1.15.0/Sortable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/SignaturePad/4.1.6/signature_pad.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <style>
-    body { font-family: sans-serif; padding: 1rem; background: #f7f7f7; }
-    #pdf-preview { display: flex; flex-wrap: wrap; gap: 10px; }
-    .pdf-page { border: 1px solid #ccc; position: relative; }
-    .pdf-page canvas { border: 1px solid #000; }
-    .controls { margin: 1rem 0; }
-    .draggable { position: absolute; cursor: move; }
-    #editor-toolbar button { margin: 0 0.5rem 0.5rem 0; }
-    .hidden { display: none; }
+    body { font-family: sans-serif; margin:10px; background:#f2f2f2; }
+    #toolbar { margin-bottom:10px; }
+    #preview { display:flex; flex-wrap: wrap; gap:10px; }
+    .page-container { position: relative; border:1px solid #aaa; }
+    .page-canvas { display: block; }
+    .hidden { display:none; }
   </style>
 </head>
 <body>
-  <h1>PDF Editor / 编辑器</h1>
+<div id="toolbar">
+  <input type="file" id="pdf-upload" accept="application/pdf">
+  <button onclick="addText()">文字覆盖</button>
+  <button onclick="startSignature()">手写签名</button>
+  <input type="file" id="img-upload" accept="image/*">
+  <button onclick="deletePage()">删除页面</button>
+  <button onclick="exportPDF()">导出 PDF</button>
+  <select id="lang-select" onchange="switchLang()"><option value="en">English</option><option value="zh">中文</option></select>
+</div>
 
-  <div class="controls">
-    <input type="file" id="pdf-upload" accept="application/pdf" />
-    <button onclick="addText()">➕ Add Text</button>
-    <button onclick="addSignature()">✍️ Add Signature</button>
-    <input type="file" id="image-upload" accept="image/*" onchange="addImage(event)" />
-    <button onclick="deleteSelectedPage()">✂️ Delete Selected Page</button>
-    <button onclick="exportPDF()">📤 Export PDF</button>
-  </div>
+<div id="preview"></div>
 
-  <div id="pdf-preview"></div>
+<!-- 签名 modal -->
+<div id="sig-modal" class="hidden" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:10px;border:1px solid #aaa;z-index:100">
+  <p id="sigTip">Sign here:</p>
+  <canvas id="sigpad" width="400" height="150" style="border:1px solid #888;"></canvas><br>
+  <button onclick="finishSignature()">保存签名</button>
+  <button onclick="cancelSignature()">取消</button>
+</div>
 
-  <script>
-    let pdfDoc, pages = [], selectedPageIndex = null;
+<script>
+let pdfDoc = null, canvasPages = [], fabricCanvases = [], selectedIndex = null, lang='en';
 
-    document.getElementById('pdf-upload').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = window.pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdf = await loadingTask.promise;
-      pdfDoc = pdf;
-      pages = [];
-      document.getElementById('pdf-preview').innerHTML = '';
+const texts = {
+  en: { delPg:'Delete page', sign:'Sign here:', txt:'Text overlay', btnText:'文字覆盖', btnSign:'手写签名', btnImg:'插入图片', btnDel:'删除页面', btnExp:'导出 PDF' },
+  zh: { delPg:'删除页面', sign:'请签名：', txt:'文字覆盖', btnText:'Add text', btnSign:'Add signature', btnImg:'Insert image', btnDel:'Delete page', btnExp:'Export PDF' }
+};
 
-      for (let i = 0; i < pdf.numPages; i++) {
-        const page = await pdf.getPage(i + 1);
-        const viewport = page.getViewport({ scale: 1 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-        await page.render({ canvasContext: context, viewport }).promise;
+function switchLang(){
+  lang = document.getElementById('lang-select').value;
+  document.getElementById('sigTip').innerText = texts[lang].sign;
+}
 
-        const container = document.createElement('div');
-        container.className = 'pdf-page';
-        container.appendChild(canvas);
-        container.setAttribute('data-index', i);
-        container.addEventListener('click', () => {
-          document.querySelectorAll('.pdf-page').forEach(p => p.style.outline = '');
-          container.style.outline = '3px solid #007bff';
-          selectedPageIndex = i;
-        });
-        document.getElementById('pdf-preview').appendChild(container);
-        pages.push(canvas);
-      }
+document.getElementById('pdf-upload').addEventListener('change', async(e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  const data = await file.arrayBuffer();
+  pdfDoc = await pdfjsLib.getDocument({data}).promise;
+  document.getElementById('preview').innerHTML = '';
+  canvasPages = []; fabricCanvases = [];
+  for(let i=1;i<=pdfDoc.numPages;i++){
+    const page = await pdfDoc.getPage(i);
+    const vp = page.getViewport({scale:1.5});
+    const c = document.createElement('canvas');
+    c.width=vp.width; c.height=vp.height;
+    await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+    const fc = new fabric.Canvas(c,{selection:true});
+    fabricCanvases.push(fc);
+    const cont = document.createElement('div');
+    cont.className='page-container';
+    cont.appendChild(c);
+    cont.onclick=()=>selectPage(i-1);
+    document.getElementById('preview').appendChild(cont);
+    canvasPages.push(c);
+  }
+  Sortable.create(document.getElementById('preview'),{animation:150,onEnd:e=>{
+    const [fc] = fabricCanvases.splice(e.oldIndex,1);
+    fabricCanvases.splice(e.newIndex,0,fc);
+  }});
+});
 
-      Sortable.create(document.getElementById('pdf-preview'), {
-        animation: 150,
-        onEnd: (e) => {
-          const item = pages.splice(e.oldIndex, 1)[0];
-          pages.splice(e.newIndex, 0, item);
-        }
-      });
-    });
+function selectPage(i){
+  selectedIndex=i;
+  fabricCanvases.forEach((fc,j)=>fc.uppercanvas.parentElement.style.border=(j===i?'2px solid blue':'1px solid #aaa'));
+}
 
-    function addText() {
-      if (selectedPageIndex === null) return alert("Please select a page first");
-      const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
-      const text = prompt("Enter text:");
-      const div = document.createElement('div');
-      div.className = 'draggable';
-      div.contentEditable = true;
-      div.style.left = '10px';
-      div.style.top = '10px';
-      div.style.fontSize = '16px';
-      div.textContent = text || 'Sample Text';
-      makeDraggable(div);
-      pageEl.appendChild(div);
-    }
+function addText(){
+  if(selectedIndex===null) return alert('Pick a page');
+  const txt = prompt(texts[lang].txt);
+  fabricCanvases[selectedIndex].add(new fabric.IText(txt||texts[lang].txt,{
+    left:50, top:50, fontSize:20, fill:'#000'
+  }));
+}
 
-    function addSignature() {
-      const signText = prompt("Sign with your name:");
-      if (!signText) return;
-      const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
-      const div = document.createElement('div');
-      div.className = 'draggable';
-      div.style.left = '10px';
-      div.style.top = '100px';
-      div.style.fontSize = '18px';
-      div.style.fontStyle = 'italic';
-      div.textContent = signText;
-      makeDraggable(div);
-      pageEl.appendChild(div);
-    }
+function startSignature(){
+  document.getElementById('sig-modal').classList.remove('hidden');
+  const pad = new SignaturePad(document.getElementById('sigpad'));
+  window.finishSignature =()=>{
+    const url = pad.toDataURL();
+    const img = new Image(); img.onload=()=>{
+      const oImg = new fabric.Image(img,{left:50,top:50,scaleX:0.3,scaleY:0.3});
+      fabricCanvases[selectedIndex].add(oImg);
+    };
+    img.src=url;
+    document.getElementById('sig-modal').classList.add('hidden');
+  };
+  window.cancelSignature=()=>document.getElementById('sig-modal').classList.add('hidden');
+}
 
-    function addImage(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (event) {
-        const img = document.createElement('img');
-        img.src = event.target.result;
-        img.style.width = '100px';
-        img.className = 'draggable';
-        img.style.left = '10px';
-        img.style.top = '150px';
-        makeDraggable(img);
-        const pageEl = document.querySelectorAll('.pdf-page')[selectedPageIndex];
-        pageEl.appendChild(img);
-      };
-      reader.readAsDataURL(file);
-    }
+document.getElementById('img-upload').addEventListener('change',e=>{
+  const reader=new FileReader();
+  reader.onload=()=>{ 
+    const imgEl = new Image(); imgEl.onload=()=>{
+      const oImg=new fabric.Image(imgEl,{left:50,top:50,scaleX:0.5,scaleY:0.5});
+      fabricCanvases[selectedIndex].add(oImg);
+    }; imgEl.src=reader.result;
+  };
+  reader.readAsDataURL(e.target.files[0]);
+});
 
-    function deleteSelectedPage() {
-      if (selectedPageIndex === null) return alert("No page selected");
-      pages.splice(selectedPageIndex, 1);
-      document.querySelectorAll('.pdf-page')[selectedPageIndex].remove();
-      selectedPageIndex = null;
-    }
+function deletePage(){
+  if(selectedIndex===null) return;
+  fabricCanvases[selectedIndex].dispose();
+  fabricCanvases.splice(selectedIndex,1);
+  canvasPages.splice(selectedIndex,1);
+  document.getElementById('preview').children[selectedIndex].remove();
+  selectedIndex=null;
+}
 
-    function exportPDF() {
-      alert("📢 PDF 导出功能请等待第二阶段实现（基于 fabric 或 html2canvas + pdf-lib 绘制）");
-    }
+async function exportPDF(){
+  const pdfDocOut = await PDFLib.PDFDocument.create();
+  for(let i=0;i<fabricCanvases.length;i++){
+    const fc=fabricCanvases[i];
+    const dataUrl = fc.toDataURL({format:'png'});
+    const imgBytes = await fetch(dataUrl).then(r=>r.arrayBuffer());
+    const img = await pdfDocOut.embedPng(imgBytes);
+    const page = pdfDocOut.addPage([fc.width,fc.height]);
+    page.drawImage(img,{x:0,y:0,width:fc.width,height:fc.height});
+  }
+  const blob = await pdfDocOut.save();
+  const url = URL.createObjectURL(new Blob([blob],{type:'application/pdf'}));
+  const a=document.createElement('a');a.href=url;a.download='edited.pdf';a.click();
+}
 
-    function makeDraggable(el) {
-      el.style.position = 'absolute';
-      el.draggable = true;
-      el.addEventListener('dragstart', e => {
-        e.dataTransfer.setData("text/plain", null);
-        el.dataset.dragging = "true";
-      });
-      el.addEventListener('dragend', e => {
-        el.dataset.dragging = "false";
-        const rect = el.parentElement.getBoundingClientRect();
-        el.style.left = `${e.pageX - rect.left - el.offsetWidth / 2}px`;
-        el.style.top = `${e.pageY - rect.top - el.offsetHeight / 2}px`;
-      });
-    }
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</script>
 </body>
 </html>
