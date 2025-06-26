@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Text Diff Checker / 文本差异对比工具</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .diff-added { background-color: #d1fae5; }   /* green */
+    .diff-removed { background-color: #fee2e2; } /* red */
+    .diff-unchanged { background-color: white; }
+  </style>
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">Text Diff Checker / 文本差异对比工具</h1>
+      <select id="lang" class="border rounded px-2 py-1 text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-4 mb-4">
+      <textarea id="textA" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Enter original text..."></textarea>
+      <textarea id="textB" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Enter modified text..."></textarea>
+    </div>
+
+    <button onclick="compareTexts()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2 text-sm mb-4">
+      Compare / 对比
+    </button>
+
+    <div id="diffResult" class="whitespace-pre-wrap text-sm font-mono border p-4 rounded bg-gray-50"></div>
+  </div>
+
+  <script>
+    const lang = document.getElementById('lang');
+    const textA = document.getElementById('textA');
+    const textB = document.getElementById('textB');
+    const diffResult = document.getElementById('diffResult');
+
+    lang.addEventListener('change', () => updateLang(lang.value));
+
+    function updateLang(l) {
+      const placeholders = {
+        en: ['Enter original text...', 'Enter modified text...', 'Compare'],
+        zh: ['输入原始文本...', '输入修改后的文本...', '对比']
+      }[l];
+
+      textA.placeholder = placeholders[0];
+      textB.placeholder = placeholders[1];
+      document.querySelector('button').textContent = placeholders[2];
+    }
+
+    function compareTexts() {
+      const linesA = textA.value.split('\n');
+      const linesB = textB.value.split('\n');
+      let result = '';
+
+      const maxLength = Math.max(linesA.length, linesB.length);
+
+      for (let i = 0; i < maxLength; i++) {
+        const lineA = linesA[i] ?? '';
+        const lineB = linesB[i] ?? '';
+
+        if (lineA === lineB) {
+          result += `<div class="diff-unchanged"><span class="text-gray-400">=</span> ${lineA}</div>`;
+        } else {
+          if (lineA) result += `<div class="diff-removed"><span class="text-red-500">-</span> ${lineA}</div>`;
+          if (lineB) result += `<div class="diff-added"><span class="text-green-600">+</span> ${lineB}</div>`;
+        }
+      }
+
+      diffResult.innerHTML = result;
+    }
+
+    updateLang('en');
+  </script>
+</body>
+</html>
