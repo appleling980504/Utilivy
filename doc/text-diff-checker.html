@@ -1,80 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Text Diff Checker / 文本差异对比工具</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>文本差异对比编辑器</title>
+  <script src="https://unpkg.com/diff-match-patch"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    .diff-added { background-color: #d1fae5; }   /* green */
-    .diff-removed { background-color: #fee2e2; } /* red */
-    .diff-unchanged { background-color: white; }
+    body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
+    textarea { width: 100%; height: 150px; margin-bottom: 10px; padding: 10px; }
+    .diff-output { border: 1px solid #ccc; padding: 10px; background: #fff; white-space: pre-wrap; margin-bottom: 10px; }
+    ins { background: #a6f3a6; text-decoration: none; }
+    del { background: #f7a6a6; text-decoration: line-through; }
+    button { margin-right: 10px; }
+    .nav-links { margin-bottom: 10px; }
+    .version-list { margin-top: 10px; font-size: 14px; }
+    .version-item { cursor: pointer; text-decoration: underline; color: blue; margin-bottom: 5px; }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
-  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold">Text Diff Checker / 文本差异对比工具</h1>
-      <select id="lang" class="border rounded px-2 py-1 text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
+<body>
+  <h2>文本差异对比 / 可编辑导出</h2>
 
-    <div class="grid md:grid-cols-2 gap-4 mb-4">
-      <textarea id="textA" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Enter original text..."></textarea>
-      <textarea id="textB" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Enter modified text..."></textarea>
-    </div>
+  <label>原始文本：</label>
+  <textarea id="text1" placeholder="输入或粘贴原始文本..."></textarea>
 
-    <button onclick="compareTexts()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2 text-sm mb-4">
-      Compare / 对比
-    </button>
+  <label>修改文本：</label>
+  <textarea id="text2" placeholder="输入或粘贴修改后的文本..."></textarea>
 
-    <div id="diffResult" class="whitespace-pre-wrap text-sm font-mono border p-4 rounded bg-gray-50"></div>
+  <div>
+    <button onclick="compareTexts()">比对差异</button>
+    <button onclick="exportModified('txt')">导出 TXT</button>
+    <button onclick="exportModified('docx')">导出 DOCX</button>
+    <button onclick="exportModified('pdf')">导出 PDF</button>
+    <button onclick="saveVersion()">保存当前版本</button>
   </div>
 
+  <h3>差异对比结果：</h3>
+  <div class="diff-output" id="diffOutput" contenteditable="true"></div>
+
+  <div class="nav-links" id="navLinks"></div>
+
+  <h3>历史版本：</h3>
+  <div class="version-list" id="versionList"></div>
+
   <script>
-    const lang = document.getElementById('lang');
-    const textA = document.getElementById('textA');
-    const textB = document.getElementById('textB');
-    const diffResult = document.getElementById('diffResult');
-
-    lang.addEventListener('change', () => updateLang(lang.value));
-
-    function updateLang(l) {
-      const placeholders = {
-        en: ['Enter original text...', 'Enter modified text...', 'Compare'],
-        zh: ['输入原始文本...', '输入修改后的文本...', '对比']
-      }[l];
-
-      textA.placeholder = placeholders[0];
-      textB.placeholder = placeholders[1];
-      document.querySelector('button').textContent = placeholders[2];
-    }
+    const dmp = new diff_match_patch();
+    let versionHistory = [];
 
     function compareTexts() {
-      const linesA = textA.value.split('\n');
-      const linesB = textB.value.split('\n');
-      let result = '';
+      const text1 = document.getElementById("text1").value.trim();
+      const text2 = document.getElementById("text2").value.trim();
+      const diff = dmp.diff_main(text1, text2);
+      dmp.diff_cleanupSemantic(diff);
+      const html = dmp.diff_prettyHtml(diff);
 
-      const maxLength = Math.max(linesA.length, linesB.length);
+      const output = document.getElementById("diffOutput");
+      output.innerHTML = html;
 
-      for (let i = 0; i < maxLength; i++) {
-        const lineA = linesA[i] ?? '';
-        const lineB = linesB[i] ?? '';
-
-        if (lineA === lineB) {
-          result += `<div class="diff-unchanged"><span class="text-gray-400">=</span> ${lineA}</div>`;
-        } else {
-          if (lineA) result += `<div class="diff-removed"><span class="text-red-500">-</span> ${lineA}</div>`;
-          if (lineB) result += `<div class="diff-added"><span class="text-green-600">+</span> ${lineB}</div>`;
+      // 创建导航
+      const navLinks = document.getElementById("navLinks");
+      const segments = html.split(/<\/?(ins|del)>/);
+      navLinks.innerHTML = '';
+      segments.forEach((s, i) => {
+        if (s && (i % 4 === 2 || i % 4 === 0)) {
+          const btn = document.createElement('button');
+          btn.textContent = `段落 ${Math.ceil(i/4)+1}`;
+          btn.onclick = () => {
+            const range = document.createRange();
+            const sel = window.getSelection();
+            const target = document.getElementById("diffOutput").childNodes[Math.floor(i/4)];
+            if (target) {
+              range.selectNodeContents(target);
+              sel.removeAllRanges();
+              sel.addRange(range);
+            }
+          };
+          navLinks.appendChild(btn);
         }
-      }
-
-      diffResult.innerHTML = result;
+      });
     }
 
-    updateLang('en');
+    async function exportModified(type) {
+      const text = document.getElementById("diffOutput").innerText.trim();
+
+      if (type === 'txt') {
+        const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+        saveAs(blob, "modified.txt");
+      } else if (type === 'docx') {
+        const zip = new JSZip();
+        const content = `Modified Text:\n\n${text}`;
+        zip.file("modified.docx", content);
+        const blob = await zip.generateAsync({type: "blob"});
+        saveAs(blob, "modified.docx");
+      } else if (type === 'pdf') {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF();
+        const lines = pdf.splitTextToSize(text, 180);
+        pdf.text(lines, 10, 10);
+        pdf.save("modified.pdf");
+      }
+    }
+
+    function saveVersion() {
+      const versionContent = document.getElementById("diffOutput").innerHTML;
+      const timestamp = new Date().toLocaleString();
+      versionHistory.push({ time: timestamp, content: versionContent });
+
+      updateVersionList();
+    }
+
+    function updateVersionList() {
+      const list = document.getElementById("versionList");
+      list.innerHTML = '';
+      versionHistory.forEach((v, i) => {
+        const div = document.createElement("div");
+        div.className = "version-item";
+        div.textContent = `版本 ${i + 1} - ${v.time}`;
+        div.onclick = () => {
+          document.getElementById("diffOutput").innerHTML = v.content;
+        };
+        list.appendChild(div);
+      });
+    }
   </script>
 </body>
 </html>
