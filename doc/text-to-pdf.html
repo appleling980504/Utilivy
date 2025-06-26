@@ -1,81 +1,120 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Plain Text to PDF / 文本转 PDF </title>
+  <title>Text to PDF / 文本转 PDF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/polyfills.umd.min.js"></script>
-  <script>
-    // NotoSansSC 字体 base64 内容（已裁剪，仅示例）
-    const notoSansSCFont = `AAEAAAALAIAAAwAwT1MvMg...（此处应插入完整 base64 字体数据）`;
-
-    window.NotoSansSC = notoSansSCFont;
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+
+    #pdfContent {
+      font-family: 'Noto Sans SC', sans-serif;
+      white-space: pre-wrap;
+    }
+
+    textarea {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen p-4">
-  <div class="max-w-3xl mx-auto bg-white rounded shadow p-6">
-    <h1 class="text-2xl font-bold mb-4">Plain Text to PDF / 文本转 PDF</h1>
-
-    <div class="mb-4">
-      <label class="block font-medium mb-2">上传 .txt 文件：</label>
-      <input type="file" id="fileInput" accept=".txt" class="mb-2" />
+<body class="bg-gray-100 text-gray-900 p-4">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold" id="title">Text to PDF / 文本转 PDF</h1>
+      <select id="langSelect" class="border px-2 py-1 rounded text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
     </div>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-2">可编辑内容：</label>
-      <textarea id="textArea" rows="15" class="w-full border rounded p-3 text-sm" placeholder="您可以在这里粘贴或修改中文文本..."></textarea>
+    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+      <input type="file" accept=".txt" class="text-sm" id="fileInput" />
+      <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm px-4 py-2 rounded" onclick="downloadPDF()">
+        Generate PDF / 生成 PDF
+      </button>
     </div>
 
-    <div class="flex justify-between items-center">
-      <button onclick="generatePDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">生成 PDF</button>
-      <button onclick="clearText()" class="text-red-600 hover:underline text-sm">清空内容</button>
+    <textarea id="textInput" rows="15" class="w-full p-3 border rounded text-sm mb-4" placeholder="Enter your text or upload a .txt file..."></textarea>
+
+    <div class="border p-4 rounded bg-gray-50">
+      <h2 class="text-lg font-semibold mb-2" id="previewTitle">PDF Preview / 预览区域</h2>
+      <div id="pdfContent" class="text-sm"></div>
     </div>
   </div>
 
   <script>
-    document.getElementById('fileInput').addEventListener('change', function (event) {
-      const file = event.target.files[0];
-      if (file && file.type === 'text/plain') {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          document.getElementById('textArea').value = e.target.result;
-        };
-        reader.readAsText(file);
-      } else {
-        alert("请上传 .txt 文件");
-      }
+    const langSelect = document.getElementById('langSelect');
+    const title = document.getElementById('title');
+    const textInput = document.getElementById('textInput');
+    const pdfContent = document.getElementById('pdfContent');
+    const previewTitle = document.getElementById('previewTitle');
+    const fileInput = document.getElementById('fileInput');
+
+    textInput.addEventListener('input', () => {
+      pdfContent.textContent = textInput.value;
     });
 
-    function clearText() {
-      document.getElementById('textArea').value = '';
-    }
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
 
-    async function generatePDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: "mm", format: "a4" });
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        textInput.value = e.target.result;
+        pdfContent.textContent = textInput.value;
+      };
+      reader.readAsText(file, 'utf-8');
+    });
 
-      // 添加并使用中文字体
-      doc.addFileToVFS("NotoSansSC-Regular.ttf", window.NotoSansSC);
-      doc.addFont("NotoSansSC-Regular.ttf", "NotoSansSC", "normal");
-      doc.setFont("NotoSansSC");
-      doc.setFontSize(12);
-
-      const text = document.getElementById('textArea').value || '（空白）';
-      const lines = doc.splitTextToSize(text, 180);
-      let y = 20;
-      for (let line of lines) {
-        if (y > 280) {
-          doc.addPage();
-          y = 20;
-        }
-        doc.text(line, 15, y);
-        y += 8;
+    function downloadPDF() {
+      if (!textInput.value.trim()) {
+        alert(currentLang === 'zh' ? '请输入或上传一些文字' : 'Please enter or upload some text');
+        return;
       }
 
-      doc.save("text.pdf");
+      const opt = {
+        margin: 0.5,
+        filename: 'converted.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: {
+          unit: 'in',
+          format: 'a4',
+          orientation: 'portrait'
+        }
+      };
+      html2pdf().set(opt).from(pdfContent).save();
     }
+
+    const i18n = {
+      en: {
+        title: 'Text to PDF',
+        preview: 'PDF Preview',
+        generate: 'Generate PDF',
+        placeholder: 'Enter your text or upload a .txt file...',
+        alert: 'Please enter or upload some text'
+      },
+      zh: {
+        title: '文本转 PDF',
+        preview: '预览区域',
+        generate: '生成 PDF',
+        placeholder: '输入文字或上传 .txt 文件...',
+        alert: '请输入或上传一些文字'
+      }
+    };
+
+    let currentLang = 'en';
+
+    langSelect.addEventListener('change', () => {
+      currentLang = langSelect.value;
+      const t = i18n[currentLang];
+      title.textContent = `${t.title} / 文本转 PDF`;
+      previewTitle.textContent = `${t.preview} / 预览区域`;
+      document.querySelector('button').textContent = `${t.generate} / ${currentLang === 'en' ? '生成 PDF' : 'Generate PDF'}`;
+      textInput.placeholder = t.placeholder;
+    });
   </script>
 </body>
 </html>
