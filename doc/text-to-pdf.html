@@ -1,15 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
-  <title>Plain Text to PDF / 文本转 PDF</title>
+  <title>Plain Text to PDF / 文本转 PDF（支持中文）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.1/dist/polyfills.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.1/dist/fonts/NotoSansSC.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen p-4">
   <div class="max-w-3xl mx-auto bg-white rounded shadow p-6">
-    <h1 class="text-2xl font-bold mb-4">Plain Text to PDF / 文本转 PDF</h1>
+    <h1 class="text-2xl font-bold mb-4">Plain Text to PDF / 文本转 PDF（支持中文）</h1>
 
     <div class="mb-4">
       <label class="block font-medium mb-2">上传 .txt 文件：</label>
@@ -18,7 +21,7 @@
 
     <div class="mb-4">
       <label class="block font-medium mb-2">可编辑内容：</label>
-      <textarea id="textArea" rows="15" class="w-full border rounded p-3 text-sm" placeholder="您可以在这里粘贴或修改文本..."></textarea>
+      <textarea id="textArea" rows="15" class="w-full border rounded p-3 text-sm" placeholder="您可以在这里粘贴或修改中文文本..."></textarea>
     </div>
 
     <div class="flex justify-between items-center">
@@ -28,7 +31,6 @@
   </div>
 
   <script>
-    // 读取文件内容
     document.getElementById('fileInput').addEventListener('change', function (event) {
       const file = event.target.files[0];
       if (file && file.type === 'text/plain') {
@@ -42,30 +44,35 @@
       }
     });
 
-    // 清空内容
     function clearText() {
       document.getElementById('textArea').value = '';
     }
 
-    // 生成 PDF
     async function generatePDF() {
       const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
+      const doc = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4"
+      });
+
+      // 注册支持中文的字体
+      doc.addFileToVFS("NotoSansSC-Regular.ttf", NotoSansSC);
+      doc.addFont("NotoSansSC-Regular.ttf", "NotoSansSC", "normal");
+      doc.setFont("NotoSansSC");
+
       const text = document.getElementById('textArea').value;
-
-      const margin = 10;
-      const pageHeight = doc.internal.pageSize.height;
       const lines = doc.splitTextToSize(text, 180);
-      let y = margin;
+      let y = 10;
 
-      for (let i = 0; i < lines.length; i++) {
-        if (y + 10 > pageHeight - margin) {
+      lines.forEach(line => {
+        if (y > 280) {
           doc.addPage();
-          y = margin;
+          y = 10;
         }
-        doc.text(lines[i], margin, y);
+        doc.text(line, 10, y);
         y += 10;
-      }
+      });
 
       doc.save("converted.pdf");
     }
