@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Remove Line Breaks / 删除换行符</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">Remove Line Breaks / 删除换行符</h1>
+      <select id="lang" class="border rounded px-2 py-1 text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <textarea id="textInput" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Paste your text here..."></textarea>
+
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+      <button onclick="removeLineBreaks('all')" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm">Remove All</button>
+      <button onclick="removeLineBreaks('merge')" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm">Merge Paragraphs</button>
+      <button onclick="copyOutput()" class="bg-green-500 hover:bg-green-600 text-white rounded px-3 py-2 text-sm">Copy</button>
+    </div>
+
+    <textarea id="textOutput" rows="10" class="w-full border rounded p-3 text-sm" placeholder="Result will appear here..."></textarea>
+  </div>
+
+  <script>
+    const input = document.getElementById('textInput');
+    const output = document.getElementById('textOutput');
+    const lang = document.getElementById('lang');
+
+    function removeLineBreaks(mode) {
+      let text = input.value;
+      let result = '';
+
+      if (mode === 'all') {
+        result = text.replace(/(\r\n|\n|\r)/gm, '');
+      } else if (mode === 'merge') {
+        result = text.replace(/([^\n])\n(?=[^\n])/g, ' ');
+      }
+
+      output.value = result;
+    }
+
+    function copyOutput() {
+      output.select();
+      document.execCommand('copy');
+    }
+
+    lang.addEventListener('change', () => updateLang(lang.value));
+
+    function updateLang(l) {
+      const labels = {
+        en: ['Remove All', 'Merge Paragraphs', 'Copy', 'Paste your text here...', 'Result will appear here...'],
+        zh: ['删除所有换行符', '合并段落换行', '复制', '请粘贴你的文本...', '结果将在此显示...']
+      }[l];
+
+      document.querySelectorAll('button')[0].textContent = labels[0];
+      document.querySelectorAll('button')[1].textContent = labels[1];
+      document.querySelectorAll('button')[2].textContent = labels[2];
+      input.placeholder = labels[3];
+      output.placeholder = labels[4];
+    }
+
+    updateLang('en');
+  </script>
+</body>
+</html>
