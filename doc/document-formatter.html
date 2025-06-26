@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Document Formatter / 清洁器</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold" id="title">Document Formatter / 清洁器</h1>
+      <select id="lang" class="border rounded px-2 py-1 text-sm">
+        <option value="en">English</option>
+        <option value="zh">中文</option>
+      </select>
+    </div>
+
+    <textarea id="inputText" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Paste your content here..."></textarea>
+
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
+      <button onclick="cleanHTML()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Remove HTML Tags</button>
+      <button onclick="cleanSpaces()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Trim Whitespace</button>
+      <button onclick="cleanInvisible()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Remove Invisible Chars</button>
+      <button onclick="copyOutput()" class="bg-green-500 hover:bg-green-600 text-white rounded px-3 py-2">Copy Output</button>
+    </div>
+
+    <textarea id="outputText" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Formatted result will appear here..."></textarea>
+    
+    <button onclick="downloadText()" class="bg-purple-500 hover:bg-purple-600 text-white rounded px-4 py-2 text-sm">Download as TXT</button>
+  </div>
+
+  <script>
+    const langTexts = {
+      en: {
+        title: "Document Formatter / Cleaner",
+        placeholder: "Paste your content here...",
+        outputPlaceholder: "Formatted result will appear here...",
+        buttons: ["Remove HTML Tags", "Trim Whitespace", "Remove Invisible Chars", "Copy Output", "Download as TXT"]
+      },
+      zh: {
+        title: "文档清洁器",
+        placeholder: "粘贴你的内容...",
+        outputPlaceholder: "格式化后的结果将在此显示...",
+        buttons: ["清除 HTML 标签", "清除空格", "删除不可见字符", "复制结果", "下载 TXT"]
+      }
+    };
+
+    function cleanHTML() {
+      const input = document.getElementById("inputText").value;
+      const output = input.replace(/<[^>]+>/g, "");
+      document.getElementById("outputText").value = output;
+    }
+
+    function cleanSpaces() {
+      const input = document.getElementById("inputText").value;
+      const output = input.replace(/\s+/g, " ").trim();
+      document.getElementById("outputText").value = output;
+    }
+
+    function cleanInvisible() {
+      const input = document.getElementById("inputText").value;
+      const output = input.replace(/[\u200B-\u200D\uFEFF]/g, '');
+      document.getElementById("outputText").value = output;
+    }
+
+    function copyOutput() {
+      const output = document.getElementById("outputText");
+      output.select();
+      document.execCommand("copy");
+    }
+
+    function downloadText() {
+      const text = document.getElementById("outputText").value;
+      const blob = new Blob([text], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "cleaned_text.txt";
+      link.click();
+    }
+
+    document.getElementById("lang").addEventListener("change", (e) => {
+      const l = e.target.value;
+      const t = langTexts[l];
+      document.getElementById("title").innerText = t.title;
+      document.getElementById("inputText").placeholder = t.placeholder;
+      document.getElementById("outputText").placeholder = t.outputPlaceholder;
+      document.querySelectorAll("button").forEach((btn, i) => {
+        if (t.buttons[i]) btn.innerText = t.buttons[i];
+      });
+    });
+  </script>
+</body>
+</html>
