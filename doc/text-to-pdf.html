@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Plain Text to PDF</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800 p-6">
+  <div class="max-w-3xl mx-auto bg-white shadow rounded p-6">
+    <h1 class="text-2xl font-bold mb-4">Plain Text to PDF</h1>
+
+    <div class="mb-4">
+      <label class="block mb-1 font-medium">Upload TXT file</label>
+      <input type="file" id="fileInput" accept=".txt" class="mb-2"/>
+      <textarea id="textInput" rows="12" class="w-full border rounded p-3 text-sm" placeholder="Paste or type your plain text here..."></textarea>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <div>
+        <label class="block font-medium mb-1">Font Size</label>
+        <input type="number" id="fontSize" value="12" class="w-full border rounded px-3 py-1" />
+      </div>
+      <div>
+        <label class="block font-medium mb-1">Page Orientation</label>
+        <select id="orientation" class="w-full border rounded px-3 py-1">
+          <option value="portrait">Portrait</option>
+          <option value="landscape">Landscape</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="generatePDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm">Download PDF</button>
+  </div>
+
+  <script>
+    document.getElementById('fileInput').addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('textInput').value = e.target.result;
+        };
+        reader.readAsText(file);
+      }
+    });
+
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const text = document.getElementById('textInput').value;
+      const fontSize = parseInt(document.getElementById('fontSize').value, 10) || 12;
+      const orientation = document.getElementById('orientation').value;
+
+      const doc = new jsPDF({ orientation: orientation });
+      doc.setFontSize(fontSize);
+
+      const margin = 15;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+      const maxLineWidth = pageWidth - margin * 2;
+      const lineHeight = fontSize * 1.2;
+      const lines = doc.splitTextToSize(text, maxLineWidth);
+
+      let y = margin;
+
+      for (let i = 0; i < lines.length; i++) {
+        if (y + lineHeight > pageHeight - margin) {
+          doc.addPage();
+          y = margin;
+        }
+        doc.text(lines[i], margin, y);
+        y += lineHeight;
+      }
+
+      doc.save('text.pdf');
+    }
+  </script>
+</body>
+</html>
