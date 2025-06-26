@@ -1,121 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Character Map / 特殊符号表</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"/>
   <style>
-    .symbol {
-      font-size: 1.4rem;
-      padding: 0.6rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      background-color: #fff;
+    .symbol-btn {
+      font-size: 1.5rem;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 0.25rem;
       text-align: center;
+      background: white;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .symbol:hover {
-      background-color: #f3f4f6;
-      transform: scale(1.05);
-    }
-    .grid-10 {
-      display: grid;
-      grid-template-columns: repeat(10, minmax(0, 1fr));
-      gap: 0.5rem;
+    .symbol-btn:hover {
+      background-color: #f0f0f0;
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
-  <div class="max-w-7xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold" id="title">Character Map / 特殊符号表</h1>
-      <select id="lang" class="border rounded px-2 py-1 text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body class="bg-gray-100 text-gray-900 p-6 min-h-screen">
+  <div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-2xl font-bold mb-4">Character Map / 特殊符号表</h1>
+
+    <div class="flex flex-wrap gap-2 mb-4">
+      <button onclick="switchCategory('emoji')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">Emoji</button>
+      <button onclick="switchCategory('punctuation')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">标点</button>
+      <button onclick="switchCategory('math')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">数学</button>
+      <button onclick="switchCategory('currency')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">货币</button>
+      <button onclick="switchCategory('logic')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">逻辑</button>
+      <button onclick="switchCategory('fancy')" class="bg-gray-100 hover:bg-gray-200 px-3 py-1 rounded">装饰</button>
+      <button onclick="switchCategory('favorites')" class="bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded">⭐ 收藏</button>
     </div>
 
-    <div class="mb-4">
-      <label class="block font-semibold mb-1" id="categoryLabel">Category / 分类</label>
-      <div class="flex flex-wrap gap-2">
-        <button class="category-btn bg-blue-100 hover:bg-blue-200 text-blue-800 rounded px-3 py-1 text-sm" data-category="punctuation">Punctuation / 标点</button>
-        <button class="category-btn bg-green-100 hover:bg-green-200 text-green-800 rounded px-3 py-1 text-sm" data-category="math">Math / 数学</button>
-        <button class="category-btn bg-yellow-100 hover:bg-yellow-200 text-yellow-800 rounded px-3 py-1 text-sm" data-category="currency">Currency / 货币</button>
-        <button class="category-btn bg-pink-100 hover:bg-pink-200 text-pink-800 rounded px-3 py-1 text-sm" data-category="arrows">Arrows / 箭头</button>
-        <button class="category-btn bg-purple-100 hover:bg-purple-200 text-purple-800 rounded px-3 py-1 text-sm" data-category="emoji">Emoji / 表情</button>
-        <button class="category-btn bg-gray-200 hover:bg-gray-300 text-gray-800 rounded px-3 py-1 text-sm" data-category="all">All / 全部</button>
-      </div>
-    </div>
+    <input id="searchInput" type="text" placeholder="搜索符号或中文说明..." class="w-full p-2 mb-4 border rounded">
 
-    <div id="symbolsContainer" class="grid-10 mt-4"></div>
-    <p id="copyMsg" class="text-green-600 text-sm mt-4 hidden"></p>
+    <div id="symbolGrid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 mb-6"></div>
+
+    <textarea id="copyBox" rows="3" class="w-full p-3 border rounded" placeholder="点击符号后自动复制，可粘贴在此或其他地方"></textarea>
   </div>
 
   <script>
     const symbols = {
-      punctuation: ['•', '‽', '…', '—', '–', '·', '※', '§', '¶', '„', '“', '”', '‘', '’', '‚', '‹', '›', '«', '»', '¡'],
-      math: ['±', '×', '÷', '≈', '≠', '≤', '≥', '√', '∞', '∑', '∏', '∫', '∂', '∇', '∈', '∩', '∪', '∅', '⊂', '⊃'],
-      currency: ['$', '€', '£', '¥', '₹', '₩', '₱', '₽', '฿', '₴', '₦', '₪', '₫', '₭', '₡', '₲', '₵', '₮', '₠', '₳'],
-      arrows: ['→', '←', '↑', '↓', '↔', '↕', '⇒', '⇐', '⇑', '⇓', '⟶', '⟵', '⟹', '⟸', '⇄', '⇆', '↻', '↺', '↩', '↪'],
-      emoji: ['☺️', '😂', '❤️', '😍', '🤔', '👍', '🔥', '🎉', '😎', '😢', '😡', '🙏', '🤯', '🤗', '🥳', '😭', '👀', '💡', '😴', '👑']
+      emoji: [
+        { char: '😊', desc: '微笑' }, { char: '😂', desc: '大笑' }, { char: '😢', desc: '哭泣' },
+        { char: '😍', desc: '爱心眼' }, { char: '👍', desc: '点赞' }, { char: '🙏', desc: '祈祷' },
+        { char: '😎', desc: '酷' }, { char: '🎉', desc: '庆祝' }, { char: '😡', desc: '生气' },
+        { char: '😴', desc: '睡觉' }
+      ],
+      punctuation: [
+        { char: '—', desc: '破折号' }, { char: '…', desc: '省略号' }, { char: '·', desc: '间隔点' },
+        { char: '、', desc: '顿号' }, { char: '「', desc: '左书名号' }, { char: '」', desc: '右书名号' },
+        { char: '『', desc: '左引号' }, { char: '』', desc: '右引号' }, { char: '！', desc: '感叹号' },
+        { char: '？', desc: '问号' }
+      ],
+      math: [
+        { char: '±', desc: '正负号' }, { char: '×', desc: '乘号' }, { char: '÷', desc: '除号' },
+        { char: '√', desc: '根号' }, { char: '≈', desc: '约等于' }, { char: '≠', desc: '不等于' },
+        { char: '∞', desc: '无限' }, { char: '∑', desc: '总和' }, { char: '∫', desc: '积分' },
+        { char: '∂', desc: '偏导' }
+      ],
+      currency: [
+        { char: '$', desc: '美元' }, { char: '€', desc: '欧元' }, { char: '£', desc: '英镑' },
+        { char: '¥', desc: '人民币' }, { char: '₩', desc: '韩元' }, { char: '₽', desc: '卢布' },
+        { char: '₹', desc: '卢比' }, { char: '฿', desc: '泰铢' }, { char: '₫', desc: '越南盾' },
+        { char: '₦', desc: '奈拉' }
+      ],
+      logic: [
+        { char: '∧', desc: '与' }, { char: '∨', desc: '或' }, { char: '¬', desc: '非' },
+        { char: '⊕', desc: '异或' }, { char: '⇒', desc: '蕴含' }, { char: '⇔', desc: '等价' },
+        { char: '∀', desc: '全称' }, { char: '∃', desc: '存在' }, { char: '⊥', desc: '矛盾' },
+        { char: '⊢', desc: '推导' }
+      ],
+      fancy: [
+        { char: '★', desc: '实心星' }, { char: '☆', desc: '空心星' }, { char: '✿', desc: '花朵' },
+        { char: '❀', desc: '小花' }, { char: '❄', desc: '雪花' }, { char: '♬', desc: '音乐符' },
+        { char: '☂', desc: '雨伞' }, { char: '☕', desc: '咖啡' }, { char: '♛', desc: '皇后' },
+        { char: '⚡', desc: '闪电' }
+      ],
+      favorites: []
     };
 
-    const langText = {
-      en: {
-        title: "Character Map",
-        categoryLabel: "Category",
-        copy: "Copied to clipboard!",
-      },
-      zh: {
-        title: "特殊符号表",
-        categoryLabel: "分类",
-        copy: "已复制到剪贴板！",
-      }
-    };
+    let current = 'emoji';
+    const grid = document.getElementById('symbolGrid');
+    const copyBox = document.getElementById('copyBox');
+    const searchInput = document.getElementById('searchInput');
 
-    const container = document.getElementById('symbolsContainer');
-    const langSelect = document.getElementById('lang');
-    const title = document.getElementById('title');
-    const categoryLabel = document.getElementById('categoryLabel');
-    const copyMsg = document.getElementById('copyMsg');
-
-    function render(category = 'all') {
-      container.innerHTML = '';
-      let chars = [];
-      if (category === 'all') {
-        Object.values(symbols).forEach(arr => chars.push(...arr));
-      } else {
-        chars = symbols[category] || [];
-      }
-      chars.forEach(char => {
-        const div = document.createElement('div');
-        div.className = 'symbol';
-        div.textContent = char;
-        div.onclick = () => {
-          navigator.clipboard.writeText(char);
-          copyMsg.textContent = langText[langSelect.value].copy;
-          copyMsg.classList.remove('hidden');
-          setTimeout(() => copyMsg.classList.add('hidden'), 1500);
+    function render(symbolList) {
+      grid.innerHTML = '';
+      symbolList.forEach(item => {
+        const btn = document.createElement('button');
+        btn.className = 'symbol-btn';
+        btn.title = item.desc;
+        btn.textContent = item.char;
+        btn.onclick = () => {
+          navigator.clipboard.writeText(item.char).then(() => {
+            copyBox.value += item.char;
+          });
+          if (!symbols.favorites.find(f => f.char === item.char)) {
+            symbols.favorites.push(item);
+          }
         };
-        container.appendChild(div);
+        grid.appendChild(btn);
       });
     }
 
-    document.querySelectorAll('.category-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        render(btn.dataset.category);
-      });
+    function switchCategory(cat) {
+      current = cat;
+      searchInput.value = '';
+      render(symbols[cat]);
+    }
+
+    searchInput.addEventListener('input', () => {
+      const kw = searchInput.value.trim();
+      if (!kw) return render(symbols[current]);
+      const all = Object.values(symbols).flat();
+      const results = all.filter(item =>
+        item.char.includes(kw) || item.desc.includes(kw)
+      );
+      render(results);
     });
 
-    langSelect.addEventListener('change', () => {
-      const l = langSelect.value;
-      title.textContent = `${langText[l].title} / ${langText[l === 'en' ? 'zh' : 'en'].title}`;
-      categoryLabel.textContent = `${langText[l].categoryLabel} / ${langText[l === 'en' ? 'zh' : 'en'].categoryLabel}`;
-    });
-
-    render();
+    switchCategory('emoji');
   </script>
 </body>
 </html>
