@@ -2,145 +2,129 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>PDF Editor / PDF编辑器</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <title>PDF Editor / PDF编辑工具</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    body { font-family: sans-serif; background: #f9f9f9; padding: 20px; }
-    #pdf-container { border: 1px solid #ccc; background: white; position: relative; }
-    canvas { display: block; margin: 0 auto; }
-    .note { position: absolute; background: yellow; padding: 4px 6px; border: 1px solid #aaa; cursor: move; }
-    .toolbar { margin-bottom: 10px; }
-    .note input { border: none; background: transparent; width: 100px; }
+    body { font-family: Arial, sans-serif; margin: 0; padding: 1rem; background: #f0f0f0; }
+    .container { max-width: 960px; margin: auto; background: #fff; padding: 1rem; border-radius: 8px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+    .signature-pad { border: 1px solid #aaa; width: 300px; height: 150px; }
+    canvas { border: 1px solid #ddd; margin-top: 1rem; }
   </style>
 </head>
 <body>
-  <h2 id="title">PDF Editor / PDF编辑器</h2>
-
-  <div class="toolbar">
-    <label>
-      <span id="uploadLabel">Upload PDF / 上传 PDF:</span>
-      <input type="file" id="pdf-upload" accept=".pdf" />
-    </label>
-    <button onclick="enableAddText()"><span id="addTextBtn">Add Text 注释</span></button>
-    <button onclick="downloadPDF()"><span id="downloadBtn">Download 导出</span></button>
-    <select id="lang-switch" onchange="switchLang(this.value)">
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-    </select>
+<div class="container">
+  <h2>📄 PDF Editor / PDF编辑工具</h2>
+  <div class="controls">
+    <input type="file" id="pdf-upload" accept="application/pdf">
+    <input type="file" id="image-upload" accept="image/*">
+    <button onclick="addSignature()">✍️ 添加签名</button>
+    <button onclick="addImage()">📷 插入图像</button>
+    <button onclick="deletePage()">✂️ 删除当前页</button>
+    <button onclick="downloadPDF()">💾 导出 PDF</button>
   </div>
 
-  <div id="pdf-container"></div>
+  <canvas id="pdf-canvas" width="600" height="800"></canvas>
 
-  <script>
-    let currentPDF = null;
-    let container = document.getElementById('pdf-container');
-    let addTextMode = false;
-    let lang = 'en';
+  <h3>✍️ 签名区域：</h3>
+  <canvas id="signature-pad" class="signature-pad"></canvas>
+  <br><button onclick="clearSignature()">清除签名</button>
+</div>
 
-    const LANG_MAP = {
-      en: {
-        title: 'PDF Editor',
-        uploadLabel: 'Upload PDF',
-        addTextBtn: 'Add Text',
-        downloadBtn: 'Download'
-      },
-      zh: {
-        title: 'PDF编辑器',
-        uploadLabel: '上传 PDF',
-        addTextBtn: '添加注释',
-        downloadBtn: '导出'
-      }
-    };
+<script>
+  let pdfDoc = null;
+  let currentPage = 0;
+  let canvas = document.getElementById("pdf-canvas");
+  let ctx = canvas.getContext("2d");
+  let signaturePad = document.getElementById("signature-pad");
+  let sigCtx = signaturePad.getContext("2d");
+  let uploadedImages = [];
 
-    function switchLang(l) {
-      lang = l;
-      const map = LANG_MAP[l];
-      document.getElementById('title').textContent = `${map.title} / PDF编辑器`;
-      document.getElementById('uploadLabel').textContent = map.uploadLabel + ' / 上传 PDF';
-      document.getElementById('addTextBtn').textContent = map.addTextBtn + ' 注释';
-      document.getElementById('downloadBtn').textContent = map.downloadBtn + ' 导出';
+  // 签名功能
+  let drawing = false;
+  signaturePad.addEventListener("mousedown", () => drawing = true);
+  signaturePad.addEventListener("mouseup", () => {
+    drawing = false;
+    sigCtx.beginPath();
+  });
+  signaturePad.addEventListener("mousemove", (e) => {
+    if (!drawing) return;
+    const rect = signaturePad.getBoundingClientRect();
+    sigCtx.lineWidth = 2;
+    sigCtx.lineCap = "round";
+    sigCtx.strokeStyle = "black";
+    sigCtx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+    sigCtx.stroke();
+    sigCtx.beginPath();
+    sigCtx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+  });
+  function clearSignature() {
+    sigCtx.clearRect(0, 0, signaturePad.width, signaturePad.height);
+  }
+
+  // 加载 PDF
+  document.getElementById("pdf-upload").addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    const arrayBuffer = await file.arrayBuffer();
+    pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+    renderPage(0);
+  });
+
+  async function renderPage(index) {
+    currentPage = index;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#eee";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#000";
+    ctx.font = "20px sans-serif";
+    ctx.fillText("这是 PDF 页面的占位图。编辑内容将直接作用于 PDF 文件本身。", 50, 100);
+  }
+
+  document.getElementById("image-upload").addEventListener("change", (e) => {
+    const reader = new FileReader();
+    reader.onload = () => uploadedImages.push(reader.result);
+    reader.readAsDataURL(e.target.files[0]);
+  });
+
+  async function addSignature() {
+    if (!pdfDoc) return;
+    const sigDataUrl = signaturePad.toDataURL("image/png");
+    const img = await pdfDoc.embedPng(sigDataUrl);
+    const page = pdfDoc.getPages()[currentPage];
+    page.drawImage(img, { x: 100, y: 400, width: 150, height: 75 });
+    alert("签名已添加！");
+  }
+
+  async function addImage() {
+    if (!pdfDoc || uploadedImages.length === 0) return;
+    const imgData = uploadedImages.pop();
+    const img = await pdfDoc.embedPng(imgData);
+    const page = pdfDoc.getPages()[currentPage];
+    page.drawImage(img, { x: 50, y: 500, width: 150, height: 100 });
+    alert("图像已添加！");
+  }
+
+  async function deletePage() {
+    if (!pdfDoc) return;
+    pdfDoc.removePage(currentPage);
+    if (pdfDoc.getPageCount() > 0) {
+      renderPage(0);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      alert("已删除所有页面。");
     }
+  }
 
-    function enableAddText() {
-      addTextMode = true;
-      alert(lang === 'zh' ? '点击PDF页面添加文本' : 'Click on PDF to add text');
-    }
-
-    container.addEventListener('click', function(e) {
-      if (!addTextMode) return;
-      const note = document.createElement('div');
-      note.className = 'note';
-      note.style.left = `${e.offsetX}px`;
-      note.style.top = `${e.offsetY}px`;
-      note.draggable = true;
-      note.innerHTML = `<input type="text" value="${lang === 'zh' ? '文本' : 'Text'}" />`;
-      container.appendChild(note);
-      makeDraggable(note);
-      addTextMode = false;
-    });
-
-    function makeDraggable(el) {
-      let offsetX, offsetY;
-      el.addEventListener('dragstart', e => {
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-      });
-      el.addEventListener('dragend', e => {
-        el.style.left = `${e.pageX - offsetX}px`;
-        el.style.top = `${e.pageY - offsetY - window.scrollY}px`;
-      });
-    }
-
-    document.getElementById('pdf-upload').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = async function () {
-        const typedarray = new Uint8Array(this.result);
-        const loadingTask = pdfjsLib.getDocument({ data: typedarray });
-        const pdf = await loadingTask.promise;
-        currentPDF = await PDFLib.PDFDocument.load(typedarray);
-        const page = await pdf.getPage(1);
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.height = viewport.height;
-        canvas.width = viewport.width;
-        container.innerHTML = '';
-        container.style.position = 'relative';
-        container.appendChild(canvas);
-        await page.render({ canvasContext: context, viewport }).promise;
-      };
-      reader.readAsArrayBuffer(file);
-    });
-
-    async function downloadPDF() {
-      if (!currentPDF) return alert('Please upload a PDF first!');
-      const pages = currentPDF.getPages();
-      const page = pages[0];
-      const form = currentPDF.getForm();
-      const notes = document.querySelectorAll('.note');
-
-      for (let note of notes) {
-        const text = note.querySelector('input').value;
-        const x = parseFloat(note.style.left);
-        const y = parseFloat(note.style.top);
-        page.drawText(text, {
-          x: x,
-          y: page.getHeight() - y - 10,
-          size: 12,
-        });
-      }
-
-      const pdfBytes = await currentPDF.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'edited.pdf';
-      link.click();
-    }
-  </script>
+  async function downloadPDF() {
+    if (!pdfDoc) return;
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: "application/pdf" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "modified.pdf";
+    link.click();
+  }
+</script>
 </body>
 </html>
