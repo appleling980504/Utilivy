@@ -7,13 +7,17 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"/>
   <style>
     .symbol-btn {
-      font-size: 1.5rem;
-      padding: 0.75rem;
-      border: 1px solid #ddd;
-      border-radius: 0.25rem;
-      text-align: center;
-      background: white;
+      width: 64px;
+      height: 64px;
+      font-size: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #ccc;
+      border-radius: 0.375rem;
+      background-color: white;
       cursor: pointer;
+      transition: background 0.2s;
     }
     .symbol-btn:hover {
       background-color: #f0f0f0;
@@ -40,8 +44,6 @@
       <button onclick="switchCategory('favorites')" class="bg-yellow-100 hover:bg-yellow-200 px-3 py-1 rounded">⭐ 收藏</button>
     </div>
 
-    <input id="searchInput" type="text" placeholder="搜索符号或中文说明..." class="w-full p-2 mb-4 border rounded">
-
     <div id="symbolGrid" class="grid grid-cols-5 sm:grid-cols-10 gap-2 mb-6"></div>
 
     <textarea id="copyBox" rows="3" class="w-full p-3 border rounded" placeholder="点击符号后自动复制，可粘贴在此或其他地方"></textarea>
@@ -66,7 +68,6 @@
     let current = 'emoji';
     const grid = document.getElementById('symbolGrid');
     const copyBox = document.getElementById('copyBox');
-    const searchInput = document.getElementById('searchInput');
 
     function render(list) {
       grid.innerHTML = '';
@@ -87,7 +88,6 @@
 
     function switchCategory(cat) {
       current = cat;
-      searchInput.value = '';
       if (cat === 'all') {
         const merged = Object.keys(symbols)
           .filter(k => k !== 'favorites')
@@ -97,16 +97,6 @@
         render(symbols[cat]);
       }
     }
-
-    searchInput.addEventListener('input', () => {
-      const kw = searchInput.value.trim();
-      if (!kw) return switchCategory(current);
-      const merged = Object.keys(symbols)
-        .flatMap(k => symbols[k])
-        .filter((v, i, arr) => arr.indexOf(v) === i); // 去重
-      const matched = merged.filter(c => c.includes(kw));
-      render(matched);
-    });
 
     switchCategory('emoji');
   </script>
