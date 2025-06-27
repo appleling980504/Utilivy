@@ -1,155 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <title>Text to PDF / 文本转 PDF</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <title>文本转 PDF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    @font-face {
-      font-family: 'NotoSansSC';
-      src: url('data:font/ttf;base64,AAEAAAAPAIAAAwBwR1NVQn...（此处省略）...') format('truetype');
-      font-weight: normal;
-      font-style: normal;
-    }
-
     body {
-      font-family: 'NotoSansSC', sans-serif;
+      font-family: sans-serif;
     }
-
-    textarea, select, button, input {
-      font-family: 'NotoSansSC', sans-serif;
+    textarea {
+      font-family: sans-serif;
     }
-
-    #pdfPreview {
-      white-space: pre-wrap;
-    }
-
-    .underline { text-decoration: underline; }
-    .bold { font-weight: bold; }
   </style>
 </head>
-<body class="bg-gray-100 p-6 text-gray-800">
-  <div class="max-w-3xl mx-auto bg-white rounded shadow p-6">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl font-bold" id="title">Text to PDF / 文本转 PDF</h1>
-      <select id="lang" class="border px-2 py-1 text-sm rounded">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
+<body class="bg-gray-100 text-gray-900 p-4">
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <h1 class="text-xl font-bold mb-4">文本转 PDF（支持中文）</h1>
 
-    <textarea id="textInput" rows="10" class="w-full border p-3 text-sm rounded mb-4" placeholder="Enter your text..."></textarea>
+    <textarea id="textInput" rows="10" class="w-full p-3 border rounded text-sm mb-4" placeholder="输入中文或英文内容..."></textarea>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm mb-4">
-      <label>Font Size:
-        <select id="fontSize" class="border p-1 rounded w-full">
-          <option value="12">12pt</option>
-          <option value="14" selected>14pt</option>
-          <option value="16">16pt</option>
-          <option value="18">18pt</option>
-          <option value="20">20pt</option>
-        </select>
-      </label>
-      <label>Line Spacing:
-        <select id="lineHeight" class="border p-1 rounded w-full">
-          <option value="1.2">1.2</option>
-          <option value="1.5" selected>1.5</option>
-          <option value="2">2</option>
-        </select>
-      </label>
-      <label>Text Align:
-        <select id="textAlign" class="border p-1 rounded w-full">
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </select>
-      </label>
-      <label>Style:
-        <select id="textStyle" class="border p-1 rounded w-full">
-          <option value="normal">Normal</option>
-          <option value="bold">Bold</option>
-          <option value="underline">Underline</option>
-        </select>
-      </label>
-    </div>
-
-    <button onclick="generatePDF()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded text-sm mb-4">
-      Generate PDF / 生成 PDF
-    </button>
-
-    <div class="border bg-gray-50 p-4 rounded">
-      <h2 class="font-semibold mb-2 text-lg" id="previewTitle">PDF Preview / 预览</h2>
-      <div id="pdfPreview" class="text-sm"></div>
-    </div>
+    <button onclick="downloadPDF()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">生成 PDF</button>
   </div>
 
   <script>
     const { jsPDF } = window.jspdf;
 
-    const i18n = {
-      en: {
-        title: "Text to PDF",
-        preview: "PDF Preview",
-        placeholder: "Enter your text...",
-        generate: "Generate PDF"
-      },
-      zh: {
-        title: "文本转 PDF",
-        preview: "预览",
-        placeholder: "请输入文字...",
-        generate: "生成 PDF"
+    async function loadFont() {
+      const fontUrl = './NotoSansCJKsc-Regular.otf'; // 确保这个文件和 HTML 同目录
+      const fontData = await fetch(fontUrl).then(res => res.arrayBuffer());
+      return fontData;
+    }
+
+    async function downloadPDF() {
+      const text = document.getElementById('textInput').value;
+      if (!text.trim()) {
+        alert('请输入内容');
+        return;
       }
-    };
 
-    document.getElementById('lang').addEventListener('change', () => {
-      const lang = document.getElementById('lang').value;
-      document.getElementById('title').textContent = `${i18n[lang].title} / 文本转 PDF`;
-      document.getElementById('previewTitle').textContent = `${i18n[lang].preview} / 预览`;
-      document.getElementById('textInput').placeholder = i18n[lang].placeholder;
-      document.querySelector('button').textContent = `${i18n[lang].generate} / 生成 PDF`;
-    });
+      const pdf = new jsPDF({ unit: "pt", format: "a4" });
+      const fontData = await loadFont();
 
-    function generatePDF() {
-      const text = document.getElementById('textInput').value || '';
-      const fontSize = parseInt(document.getElementById('fontSize').value);
-      const lineHeight = parseFloat(document.getElementById('lineHeight').value);
-      const align = document.getElementById('textAlign').value;
-      const style = document.getElementById('textStyle').value;
+      pdf.addFileToVFS("NotoSansCJKsc-Regular.otf", btoa(String.fromCharCode(...new Uint8Array(fontData))));
+      pdf.addFont("NotoSansCJKsc-Regular.otf", "NotoSansCJK", "normal");
+      pdf.setFont("NotoSansCJK");
 
-      // Update Preview
-      const preview = document.getElementById('pdfPreview');
-      preview.innerHTML = text.replace(/\n/g, "<br>");
-      preview.style.textAlign = align;
-      preview.style.fontSize = fontSize + "pt";
-      preview.style.lineHeight = lineHeight;
-      preview.style.fontWeight = style === "bold" ? "bold" : "normal";
-      preview.style.textDecoration = style === "underline" ? "underline" : "none";
-
-      // Generate PDF
-      const doc = new jsPDF({ unit: "pt", format: "a4" });
-      doc.setFont("NotoSansSC", "normal");
-      doc.setFontSize(fontSize);
-
+      pdf.setFontSize(14);
+      const lineHeight = 20;
       const margin = 40;
-      const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
-      const lines = doc.splitTextToSize(text, maxWidth);
+      let x = margin, y = margin + 10;
 
-      let y = 60;
-      const lineSpacing = fontSize * lineHeight;
+      const lines = pdf.splitTextToSize(text, 520);
       lines.forEach(line => {
-        if (y + lineSpacing > doc.internal.pageSize.getHeight() - 40) {
-          doc.addPage();
-          y = 60;
+        if (y > 800) {
+          pdf.addPage();
+          y = margin;
         }
-        doc.text(line, align === "center" ? doc.internal.pageSize.getWidth() / 2 : margin, y, {
-          align: align
-        });
-        y += lineSpacing;
+        pdf.text(line, x, y);
+        y += lineHeight;
       });
 
-      doc.save("converted.pdf");
+      pdf.save("text.pdf");
     }
   </script>
 </body>
