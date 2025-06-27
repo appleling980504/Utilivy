@@ -1,56 +1,92 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>文本转 PDF</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <title>Text to PDF / 文本转 PDF</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
   <style>
-    body {
-      font-family: sans-serif;
-    }
-    textarea {
-      font-family: sans-serif;
-    }
+    body { font-family: sans-serif; }
+    textarea { font-family: sans-serif; white-space: pre-wrap; }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-xl font-bold mb-4">文本转 PDF（支持中文）</h1>
+  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow space-y-4">
+    <div class="flex justify-between items-center">
+      <h1 id="title" class="text-xl font-bold">文本转 PDF / Text to PDF</h1>
+      <select id="langSelect" class="border px-2 py-1 rounded text-sm">
+        <option value="zh">中文</option>
+        <option value="en">English</option>
+      </select>
+    </div>
 
-    <textarea id="textInput" rows="10" class="w-full p-3 border rounded text-sm mb-4" placeholder="输入中文或英文内容..."></textarea>
+    <textarea id="textInput" rows="10" class="w-full p-3 border rounded text-sm" placeholder="输入文字..."></textarea>
 
-    <button onclick="downloadPDF()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">生成 PDF</button>
+    <div class="grid grid-cols-2 gap-4 text-sm">
+      <div>
+        <label>字体大小 / Font Size</label>
+        <input type="number" id="fontSize" class="w-full border p-1 rounded" value="14" />
+      </div>
+      <div>
+        <label>行距 / Line Height</label>
+        <input type="number" id="lineHeight" class="w-full border p-1 rounded" value="20" />
+      </div>
+      <div>
+        <label>加粗 / Bold</label>
+        <input type="checkbox" id="bold" class="ml-2" />
+      </div>
+      <div>
+        <label>下划线 / Underline</label>
+        <input type="checkbox" id="underline" class="ml-2" />
+      </div>
+      <div>
+        <label>对齐方式 / Align</label>
+        <select id="align" class="w-full border p-1 rounded">
+          <option value="left">左对齐 / Left</option>
+          <option value="center">居中 / Center</option>
+          <option value="right">右对齐 / Right</option>
+        </select>
+      </div>
+    </div>
+
+    <button onclick="downloadPDF()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+      生成 PDF / Generate PDF
+    </button>
   </div>
 
   <script>
     const { jsPDF } = window.jspdf;
 
     async function loadFont() {
-      const fontUrl = './NotoSansCJKsc-Regular.otf'; // 确保这个文件和 HTML 同目录
+      const fontUrl = './NotoSansCJKsc-Regular.otf'; // 确保字体文件在同目录
       const fontData = await fetch(fontUrl).then(res => res.arrayBuffer());
       return fontData;
     }
 
     async function downloadPDF() {
-      const text = document.getElementById('textInput').value;
-      if (!text.trim()) {
-        alert('请输入内容');
+      const text = document.getElementById('textInput').value.trim();
+      if (!text) {
+        alert(currentLang === 'zh' ? '请输入内容' : 'Please enter text');
         return;
       }
 
+      const fontSize = parseInt(document.getElementById('fontSize').value) || 14;
+      const lineHeight = parseInt(document.getElementById('lineHeight').value) || 20;
+      const bold = document.getElementById('bold').checked;
+      const underline = document.getElementById('underline').checked;
+      const align = document.getElementById('align').value;
+
       const pdf = new jsPDF({ unit: "pt", format: "a4" });
       const fontData = await loadFont();
-
       pdf.addFileToVFS("NotoSansCJKsc-Regular.otf", btoa(String.fromCharCode(...new Uint8Array(fontData))));
-      pdf.addFont("NotoSansCJKsc-Regular.otf", "NotoSansCJK", "normal");
-      pdf.setFont("NotoSansCJK");
+      pdf.addFont("NotoSansCJKsc-Regular.otf", "NotoSans", "normal");
+      pdf.setFont("NotoSans", "normal");
+      pdf.setFontSize(fontSize);
 
-      pdf.setFontSize(14);
-      const lineHeight = 20;
+      let x, textWidth;
       const margin = 40;
-      let x = margin, y = margin + 10;
+      let y = margin;
 
       const lines = pdf.splitTextToSize(text, 520);
       lines.forEach(line => {
@@ -58,12 +94,50 @@
           pdf.addPage();
           y = margin;
         }
+
+        textWidth = pdf.getTextWidth(line);
+        if (align === 'center') x = (pdf.internal.pageSize.getWidth() - textWidth) / 2;
+        else if (align === 'right') x = pdf.internal.pageSize.getWidth() - margin - textWidth;
+        else x = margin;
+
+        if (bold) pdf.setFont(undefined, 'bold');
+        else pdf.setFont(undefined, 'normal');
+
         pdf.text(line, x, y);
+
+        if (underline) {
+          pdf.line(x, y + 2, x + textWidth, y + 2);
+        }
+
         y += lineHeight;
       });
 
-      pdf.save("text.pdf");
+      pdf.save('text.pdf');
     }
+
+    // 语言切换
+    const i18n = {
+      zh: {
+        title: "文本转 PDF",
+        placeholder: "输入文字...",
+        generate: "生成 PDF"
+      },
+      en: {
+        title: "Text to PDF",
+        placeholder: "Enter text...",
+        generate: "Generate PDF"
+      }
+    };
+
+    let currentLang = 'zh';
+    const langSelect = document.getElementById('langSelect');
+    langSelect.addEventListener('change', () => {
+      currentLang = langSelect.value;
+      const t = i18n[currentLang];
+      document.getElementById('title').textContent = `${t.title} / ${i18n[currentLang === 'zh' ? 'en' : 'zh'].title}`;
+      document.getElementById('textInput').placeholder = t.placeholder;
+      document.querySelector('button').textContent = `${t.generate} / ${i18n[currentLang === 'zh' ? 'en' : 'zh'].generate}`;
+    });
   </script>
 </body>
 </html>
