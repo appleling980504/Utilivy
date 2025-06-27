@@ -8,6 +8,12 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+
+    #pdfContent {
+      font-family: 'Noto Sans SC', sans-serif;
+      white-space: pre-wrap;
+    }
+
     textarea {
       font-family: 'Noto Sans SC', sans-serif;
     }
@@ -34,7 +40,7 @@
 
     <div class="border p-4 rounded bg-gray-50">
       <h2 class="text-lg font-semibold mb-2" id="previewTitle">PDF Preview / 预览区域</h2>
-      <div id="pdfContent" class="text-sm whitespace-pre-wrap font-mono p-2 bg-white border rounded h-60 overflow-auto"></div>
+      <div id="pdfContent" class="text-sm"></div>
     </div>
   </div>
 
@@ -63,38 +69,22 @@
     });
 
     async function downloadPDF() {
-      const text = textInput.value.trim();
-      if (!text) {
+      if (!textInput.value.trim()) {
         alert(currentLang === 'zh' ? '请输入或上传一些文字' : 'Please enter or upload some text');
         return;
       }
 
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({
-        unit: 'mm',
-        format: 'a4',
-        orientation: 'portrait'
-      });
+      const {{ jsPDF }} = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
 
-      const marginLeft = 15;
-      const marginTop = 20;
-      const pageHeight = doc.internal.pageSize.height;
-      const lineHeight = 8;
-      const maxLineWidth = 180;
+      const text = textInput.value;
+      const lines = doc.splitTextToSize(text, 180); // 180mm width
 
-      const lines = doc.splitTextToSize(text, maxLineWidth);
-      let y = marginTop;
+      doc.setFont('helvetica', 'normal'); // helvetica supports UTF-8 when using browser's default fonts
+      doc.setFontSize(12);
+      doc.text(lines, 15, 20);
 
-      for (let i = 0; i < lines.length; i++) {
-        if (y + lineHeight > pageHeight - 20) {
-          doc.addPage();
-          y = marginTop;
-        }
-        doc.text(lines[i], marginLeft, y);
-        y += lineHeight;
-      }
-
-      doc.save("converted.pdf");
+      doc.save('converted.pdf');
     }
 
     const i18n = {
