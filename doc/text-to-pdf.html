@@ -4,16 +4,10 @@
   <meta charset="UTF-8" />
   <title>Text to PDF / 文本转 PDF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
-
-    #pdfContent {
-      font-family: 'Noto Sans SC', sans-serif;
-      white-space: pre-wrap;
-    }
-
     textarea {
       font-family: 'Noto Sans SC', sans-serif;
     }
@@ -40,7 +34,7 @@
 
     <div class="border p-4 rounded bg-gray-50">
       <h2 class="text-lg font-semibold mb-2" id="previewTitle">PDF Preview / 预览区域</h2>
-      <div id="pdfContent" class="text-sm"></div>
+      <div id="pdfContent" class="text-sm whitespace-pre-wrap font-mono p-2 bg-white border rounded h-60 overflow-auto"></div>
     </div>
   </div>
 
@@ -68,24 +62,39 @@
       reader.readAsText(file, 'utf-8');
     });
 
-    function downloadPDF() {
-      if (!textInput.value.trim()) {
+    async function downloadPDF() {
+      const text = textInput.value.trim();
+      if (!text) {
         alert(currentLang === 'zh' ? '请输入或上传一些文字' : 'Please enter or upload some text');
         return;
       }
 
-      const opt = {
-        margin: 0.5,
-        filename: 'converted.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: {
-          unit: 'in',
-          format: 'a4',
-          orientation: 'portrait'
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({
+        unit: 'mm',
+        format: 'a4',
+        orientation: 'portrait'
+      });
+
+      const marginLeft = 15;
+      const marginTop = 20;
+      const pageHeight = doc.internal.pageSize.height;
+      const lineHeight = 8;
+      const maxLineWidth = 180;
+
+      const lines = doc.splitTextToSize(text, maxLineWidth);
+      let y = marginTop;
+
+      for (let i = 0; i < lines.length; i++) {
+        if (y + lineHeight > pageHeight - 20) {
+          doc.addPage();
+          y = marginTop;
         }
-      };
-      html2pdf().set(opt).from(pdfContent).save();
+        doc.text(lines[i], marginLeft, y);
+        y += lineHeight;
+      }
+
+      doc.save("converted.pdf");
     }
 
     const i18n = {
