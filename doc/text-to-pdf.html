@@ -4,14 +4,19 @@
   <meta charset="UTF-8" />
   <title>Text to PDF / 文本转 PDF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
 
-    #pdfContent {
+    body {
       font-family: 'Noto Sans SC', sans-serif;
+    }
+
+    #pdfContent {
       white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
     textarea {
@@ -45,6 +50,8 @@
   </div>
 
   <script>
+    const { jsPDF } = window.jspdf;
+
     const langSelect = document.getElementById('langSelect');
     const title = document.getElementById('title');
     const textInput = document.getElementById('textInput');
@@ -69,22 +76,32 @@
     });
 
     async function downloadPDF() {
-      if (!textInput.value.trim()) {
+      const text = textInput.value.trim();
+      if (!text) {
         alert(currentLang === 'zh' ? '请输入或上传一些文字' : 'Please enter or upload some text');
         return;
       }
 
-      const {{ jsPDF }} = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const content = document.getElementById('pdfContent');
+      const canvas = await html2canvas(content, {
+        scale: 2,
+        useCORS: true
+      });
 
-      const text = textInput.value;
-      const lines = doc.splitTextToSize(text, 180); // 180mm width
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF({
+        unit: 'px',
+        format: 'a4',
+        orientation: 'portrait'
+      });
 
-      doc.setFont('helvetica', 'normal'); // helvetica supports UTF-8 when using browser's default fonts
-      doc.setFontSize(12);
-      doc.text(lines, 15, 20);
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const imgProps = pdf.getImageProperties(imgData);
+      const imgHeight = (imgProps.height * pageWidth) / imgProps.width;
 
-      doc.save('converted.pdf');
+      pdf.addImage(imgData, 'PNG', 20, 20, pageWidth - 40, imgHeight);
+      pdf.save('converted.pdf');
     }
 
     const i18n = {
