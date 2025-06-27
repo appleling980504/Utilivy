@@ -1,116 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-  <meta charset="UTF-8" />
-  <title>Text to PDF / 文本转 PDF</title>
+  <meta charset="UTF-8">
+  <title>文本转 PDF（支持中文）</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
-  <style>
-    body {
-      font-family: sans-serif;
-    }
-    textarea {
-      font-family: sans-serif;
-    }
-  </style>
 </head>
-<body class="bg-gray-100 p-6 text-sm text-gray-900">
+<body class="bg-gray-100 p-6 text-gray-900 text-sm">
   <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow space-y-4">
-    <div class="flex justify-between items-center">
-      <h1 class="text-xl font-bold">Text to PDF / 文本转 PDF</h1>
-      <select id="langSelect" class="border px-2 py-1 rounded text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
-    </div>
+    <h1 class="text-xl font-bold">文本转 PDF（支持中文）</h1>
 
-    <textarea id="textInput" rows="12" class="w-full p-3 border rounded" placeholder="Enter your text..."></textarea>
+    <textarea id="textInput" rows="10" class="w-full p-3 border rounded" placeholder="请输入中文文本..."></textarea>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
       <div>
-        <label class="block mb-1">Font Size / 字体大小</label>
-        <input type="number" id="fontSize" value="14" min="6" max="36" class="w-full border px-2 py-1 rounded" />
+        <label class="block mb-1">字体大小</label>
+        <input type="number" id="fontSize" value="14" class="w-full border px-2 py-1 rounded">
       </div>
       <div>
-        <label class="block mb-1">Line Spacing / 行距</label>
-        <input type="number" id="lineSpacing" value="1.5" step="0.1" class="w-full border px-2 py-1 rounded" />
+        <label class="block mb-1">行距</label>
+        <input type="number" id="lineHeight" value="1.5" step="0.1" class="w-full border px-2 py-1 rounded">
       </div>
       <div>
-        <label class="block mb-1">Text Alignment / 对齐方式</label>
+        <label class="block mb-1">对齐方式</label>
         <select id="align" class="w-full border px-2 py-1 rounded">
-          <option value="left">Left / 左对齐</option>
-          <option value="center">Center / 居中</option>
-          <option value="right">Right / 右对齐</option>
+          <option value="left">左对齐</option>
+          <option value="center">居中</option>
+          <option value="right">右对齐</option>
         </select>
       </div>
-      <div class="col-span-3 flex gap-4 items-center">
-        <label><input type="checkbox" id="isBold" class="mr-1" /> Bold / 加粗</label>
-        <label><input type="checkbox" id="isUnderline" class="mr-1" /> Underline / 下划线</label>
-        <button onclick="generatePDF()" class="ml-auto bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-          Generate PDF / 生成 PDF
-        </button>
-      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <label><input type="checkbox" id="isBold" class="mr-1"> 加粗</label>
+      <label><input type="checkbox" id="isUnderline" class="mr-1"> 下划线</label>
+      <button onclick="generatePDF()" class="ml-auto bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+        生成 PDF
+      </button>
     </div>
   </div>
 
   <script>
-    async function generatePDF() {
-      const { jsPDF } = window.jspdf;
+    const { jsPDF } = window.jspdf;
+
+    // 嵌入 Noto Sans SC 字体（Base64 格式，节选部分）
+    const notoBase64 = 'AAEAAAATAQA...（省略长字符串，可提供完整版）';
+
+    function loadFont(doc) {
+      doc.addFileToVFS("NotoSansSC-Regular.ttf", notoBase64);
+      doc.addFont("NotoSansSC-Regular.ttf", "NotoSansSC", "normal");
+      doc.setFont("NotoSansSC");
+    }
+
+    function generatePDF() {
       const text = document.getElementById('textInput').value.trim();
-      if (!text) {
-        alert('请输入一些文字 / Please enter some text');
-        return;
-      }
+      if (!text) return alert("请输入一些文字");
 
       const fontSize = parseInt(document.getElementById('fontSize').value);
-      const lineSpacing = parseFloat(document.getElementById('lineSpacing').value);
+      const lineHeight = parseFloat(document.getElementById('lineHeight').value);
       const align = document.getElementById('align').value;
       const isBold = document.getElementById('isBold').checked;
       const isUnderline = document.getElementById('isUnderline').checked;
 
       const doc = new jsPDF({
-        unit: 'pt',
-        format: 'a4',
-        orientation: 'portrait'
+        unit: "pt",
+        format: "a4",
+        orientation: "portrait"
       });
 
-      const margin = 40;
-      const pageWidth = doc.internal.pageSize.getWidth();
-      const maxWidth = pageWidth - margin * 2;
+      loadFont(doc); // 加载中文字体
 
-      doc.setFont('helvetica', isBold ? 'bold' : 'normal');
       doc.setFontSize(fontSize);
+      if (isBold) doc.setFont(undefined, "bold");
 
-      const lines = doc.splitTextToSize(text, maxWidth);
+      const margin = 40;
+      const maxWidth = doc.internal.pageSize.getWidth() - margin * 2;
       let y = margin;
 
-      lines.forEach(line => {
+      const lines = doc.splitTextToSize(text, maxWidth);
+
+      for (let line of lines) {
         if (y > doc.internal.pageSize.getHeight() - margin) {
           doc.addPage();
           y = margin;
         }
 
-        const textWidth = doc.getTextWidth(line);
         let x = margin;
-
-        if (align === 'center') {
-          x = (pageWidth - textWidth) / 2;
-        } else if (align === 'right') {
-          x = pageWidth - margin - textWidth;
-        }
+        const lineWidth = doc.getTextWidth(line);
+        if (align === "center") x = (doc.internal.pageSize.getWidth() - lineWidth) / 2;
+        else if (align === "right") x = doc.internal.pageSize.getWidth() - margin - lineWidth;
 
         doc.text(line, x, y);
+        if (isUnderline) doc.line(x, y + 2, x + lineWidth, y + 2);
 
-        if (isUnderline) {
-          doc.line(x, y + 2, x + textWidth, y + 2);
-        }
+        y += fontSize * lineHeight;
+      }
 
-        y += fontSize * lineSpacing;
-      });
-
-      doc.save('text.pdf');
+      doc.save("文本.pdf");
     }
   </script>
 </body>
