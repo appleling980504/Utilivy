@@ -1,143 +1,147 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Text to PDF / 文本转 PDF</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; }
-    textarea { font-family: sans-serif; white-space: pre-wrap; }
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+    body {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
+    textarea {
+      font-family: 'Noto Sans SC', sans-serif;
+    }
   </style>
 </head>
 <body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow space-y-4">
-    <div class="flex justify-between items-center">
-      <h1 id="title" class="text-xl font-bold">文本转 PDF / Text to PDF</h1>
+  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-xl font-bold" id="title">Text to PDF / 文本转 PDF</h1>
       <select id="langSelect" class="border px-2 py-1 rounded text-sm">
-        <option value="zh">中文</option>
         <option value="en">English</option>
+        <option value="zh">中文</option>
       </select>
     </div>
 
-    <textarea id="textInput" rows="10" class="w-full p-3 border rounded text-sm" placeholder="输入文字..."></textarea>
-
-    <div class="grid grid-cols-2 gap-4 text-sm">
-      <div>
-        <label>字体大小 / Font Size</label>
-        <input type="number" id="fontSize" class="w-full border p-1 rounded" value="14" />
-      </div>
-      <div>
-        <label>行距 / Line Height</label>
-        <input type="number" id="lineHeight" class="w-full border p-1 rounded" value="20" />
-      </div>
-      <div>
-        <label>加粗 / Bold</label>
-        <input type="checkbox" id="bold" class="ml-2" />
-      </div>
-      <div>
-        <label>下划线 / Underline</label>
-        <input type="checkbox" id="underline" class="ml-2" />
-      </div>
-      <div>
-        <label>对齐方式 / Align</label>
-        <select id="align" class="w-full border p-1 rounded">
-          <option value="left">左对齐 / Left</option>
-          <option value="center">居中 / Center</option>
-          <option value="right">右对齐 / Right</option>
-        </select>
-      </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+      <input type="file" accept=".txt" id="fileInput" class="text-sm" />
+      <button onclick="downloadPDF()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
+        Generate PDF / 生成 PDF
+      </button>
     </div>
 
-    <button onclick="downloadPDF()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
-      生成 PDF / Generate PDF
-    </button>
+    <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
+      <label>Font Size <input type="number" id="fontSize" value="12" class="w-full border px-2 py-1 rounded" /></label>
+      <label>Line Height <input type="number" id="lineHeight" value="1.5" step="0.1" class="w-full border px-2 py-1 rounded" /></label>
+      <label>Text Align
+        <select id="align" class="w-full border px-2 py-1 rounded">
+          <option value="left">Left</option>
+          <option value="center">Center</option>
+          <option value="right">Right</option>
+        </select>
+      </label>
+      <label>Style
+        <select id="style" class="w-full border px-2 py-1 rounded">
+          <option value="normal">Normal</option>
+          <option value="bold">Bold</option>
+          <option value="underline">Underline</option>
+        </select>
+      </label>
+    </div>
+
+    <textarea id="textInput" rows="12" class="w-full border p-3 rounded text-sm mb-4" placeholder="Enter your text or upload a .txt file..."></textarea>
+
+    <div class="border p-4 rounded bg-gray-50 text-sm whitespace-pre-wrap" id="preview"></div>
   </div>
 
   <script>
     const { jsPDF } = window.jspdf;
+    let currentLang = 'en';
 
-    async function loadFont() {
-      const fontUrl = './NotoSansCJKsc-Regular.otf'; // 确保字体文件在同目录
-      const fontData = await fetch(fontUrl).then(res => res.arrayBuffer());
-      return fontData;
-    }
-
-    async function downloadPDF() {
-      const text = document.getElementById('textInput').value.trim();
-      if (!text) {
-        alert(currentLang === 'zh' ? '请输入内容' : 'Please enter text');
-        return;
-      }
-
-      const fontSize = parseInt(document.getElementById('fontSize').value) || 14;
-      const lineHeight = parseInt(document.getElementById('lineHeight').value) || 20;
-      const bold = document.getElementById('bold').checked;
-      const underline = document.getElementById('underline').checked;
-      const align = document.getElementById('align').value;
-
-      const pdf = new jsPDF({ unit: "pt", format: "a4" });
-      const fontData = await loadFont();
-      pdf.addFileToVFS("NotoSansCJKsc-Regular.otf", btoa(String.fromCharCode(...new Uint8Array(fontData))));
-      pdf.addFont("NotoSansCJKsc-Regular.otf", "NotoSans", "normal");
-      pdf.setFont("NotoSans", "normal");
-      pdf.setFontSize(fontSize);
-
-      let x, textWidth;
-      const margin = 40;
-      let y = margin;
-
-      const lines = pdf.splitTextToSize(text, 520);
-      lines.forEach(line => {
-        if (y > 800) {
-          pdf.addPage();
-          y = margin;
-        }
-
-        textWidth = pdf.getTextWidth(line);
-        if (align === 'center') x = (pdf.internal.pageSize.getWidth() - textWidth) / 2;
-        else if (align === 'right') x = pdf.internal.pageSize.getWidth() - margin - textWidth;
-        else x = margin;
-
-        if (bold) pdf.setFont(undefined, 'bold');
-        else pdf.setFont(undefined, 'normal');
-
-        pdf.text(line, x, y);
-
-        if (underline) {
-          pdf.line(x, y + 2, x + textWidth, y + 2);
-        }
-
-        y += lineHeight;
-      });
-
-      pdf.save('text.pdf');
-    }
-
-    // 语言切换
     const i18n = {
-      zh: {
-        title: "文本转 PDF",
-        placeholder: "输入文字...",
-        generate: "生成 PDF"
-      },
       en: {
-        title: "Text to PDF",
-        placeholder: "Enter text...",
-        generate: "Generate PDF"
+        title: 'Text to PDF',
+        generate: 'Generate PDF',
+        placeholder: 'Enter your text or upload a .txt file...',
+        alert: 'Please enter or upload some text'
+      },
+      zh: {
+        title: '文本转 PDF',
+        generate: '生成 PDF',
+        placeholder: '输入文字或上传 .txt 文件...',
+        alert: '请输入或上传一些文字'
       }
     };
 
-    let currentLang = 'zh';
     const langSelect = document.getElementById('langSelect');
+    const title = document.getElementById('title');
+    const textInput = document.getElementById('textInput');
+    const preview = document.getElementById('preview');
+    const fileInput = document.getElementById('fileInput');
+
     langSelect.addEventListener('change', () => {
       currentLang = langSelect.value;
       const t = i18n[currentLang];
-      document.getElementById('title').textContent = `${t.title} / ${i18n[currentLang === 'zh' ? 'en' : 'zh'].title}`;
-      document.getElementById('textInput').placeholder = t.placeholder;
-      document.querySelector('button').textContent = `${t.generate} / ${i18n[currentLang === 'zh' ? 'en' : 'zh'].generate}`;
+      title.textContent = `${t.title} / 文本转 PDF`;
+      document.querySelector('button').textContent = `${t.generate} / ${currentLang === 'en' ? '生成 PDF' : 'Generate PDF'}`;
+      textInput.placeholder = t.placeholder;
     });
+
+    textInput.addEventListener('input', () => {
+      preview.textContent = textInput.value;
+    });
+
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        textInput.value = e.target.result;
+        preview.textContent = e.target.result;
+      };
+      reader.readAsText(file, 'utf-8');
+    });
+
+    async function downloadPDF() {
+      const text = textInput.value.trim();
+      if (!text) {
+        alert(i18n[currentLang].alert);
+        return;
+      }
+
+      const doc = new jsPDF();
+      doc.addFileToVFS("NotoSans.otf", "T1RUTwARAQAABAAQQkFTRe369RYA74igAAAA8ENGRiAzjnN0AAOniADr4RZEU0lHAAAAAQDzhpwAAAAIR0RFRgIOAgEA84akAAAAHEdQT1MMyK2iAPOGwAAAuRpHU1VCoxCpSAD0P9wAAozkT1MvMp/jF+4AAAGAAAAAYFZPUkfSA/QVAPbMwAAAA5hjbWFwLk8uEgAACkQAA50haGVhZB//YUgAAAEcAAAANmhoZWEMEghuAAABVAAAACRobXR4K+QFUQD20F..."); // base64 内容省略，会替换
+      doc.addFont("NotoSans.otf", "NotoSans", "normal");
+      doc.setFont("NotoSans");
+
+      const fontSize = parseInt(document.getElementById("fontSize").value) || 12;
+      const lineHeight = parseFloat(document.getElementById("lineHeight").value) || 1.5;
+      const align = document.getElementById("align").value;
+      const style = document.getElementById("style").value;
+
+      if (style === "bold") doc.setFont(undefined, "bold");
+      if (style === "underline") doc.setTextColor(0, 0, 255);
+
+      doc.setFontSize(fontSize);
+      const lines = doc.splitTextToSize(text, 180);
+      const lineSpacing = fontSize * lineHeight;
+      let y = 20;
+
+      lines.forEach(line => {
+        if (y > 280) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(line, align === 'center' ? 105 : (align === 'right' ? 200 : 20), y, { align });
+        y += lineSpacing;
+      });
+
+      doc.save("converted.pdf");
+    }
   </script>
 </body>
 </html>
