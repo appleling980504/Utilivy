@@ -1,74 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daily Water Intake Calculator / 日常饮水量计算器</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilivy - Daily Water Intake Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-blue-50 py-10 px-4 text-gray-800">
-  <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold text-center mb-6">Daily Water Intake Calculator<br/>日常饮水量计算器</h1>
-
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Language / 语言</label>
-      <select id="lang" class="w-full border rounded px-3 py-2">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Daily Water Intake Calculator" data-zh="Utilivy - 每日饮水量计算器">Utilivy - Daily Water Intake Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <form id="waterForm" class="space-y-4">
-      <div>
-        <label class="block font-medium mb-1">Weight (kg) / 体重</label>
-        <input type="number" id="weight" class="w-full border rounded px-3 py-2" required />
-      </div>
-      <div>
-        <label class="block font-medium mb-1">Activity Level / 活动水平</label>
-        <select id="activity" class="w-full border rounded px-3 py-2">
-          <option value="low">Low / 静态工作</option>
-          <option value="moderate">Moderate / 中度活动</option>
-          <option value="high">High / 高强度锻炼</option>
-        </select>
-      </div>
-      <div>
-        <label class="block font-medium mb-1">Hot Weather? / 是否高温天气</label>
-        <select id="weather" class="w-full border rounded px-3 py-2">
-          <option value="no">No / 否</option>
-          <option value="yes">Yes / 是</option>
-        </select>
-      </div>
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">
-        Calculate / 计算
-      </button>
-    </form>
-
-    <div id="result" class="text-center mt-6 text-xl font-semibold text-blue-700"></div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <h2 data-en="Daily Water Intake Calculator" data-zh="每日饮水量计算器">Daily Water Intake Calculator</h2>
+    <label for="weight" data-en="Enter your weight (kg)" data-zh="输入你的体重（公斤）">Enter your weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 60">
+    <button onclick="calculateWaterIntake()" data-en="Calculate" data-zh="计算">Calculate</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const langMap = {
-      en: (ml, cups) => `Recommended: ${ml} ml/day (${cups} cups)`,
-      zh: (ml, cups) => `建议饮水量：${ml} 毫升/天（约 ${cups} 杯）`
-    };
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
+      });
+    }
 
-    document.getElementById('waterForm').addEventListener('submit', function (e) {
-      e.preventDefault();
+    function calculateWaterIntake() {
       const weight = parseFloat(document.getElementById('weight').value);
-      const activity = document.getElementById('activity').value;
-      const hotWeather = document.getElementById('weather').value === 'yes';
-      const lang = document.getElementById('lang').value;
-
-      let multiplier = 35; // base: 35ml per kg
-      if (activity === 'moderate') multiplier += 5;
-      if (activity === 'high') multiplier += 10;
-      if (hotWeather) multiplier += 5;
-
-      const intake = Math.round(weight * multiplier);
-      const cups = Math.round(intake / 240);
-
-      document.getElementById('result').innerText = langMap[lang](intake, cups);
-    });
+      if (isNaN(weight) || weight <= 0) {
+        document.getElementById('result').textContent = lang === 'zh' ? '请输入有效体重。' : 'Please enter a valid weight.';
+        return;
+      }
+      const intake = (weight * 35).toFixed(0);
+      document.getElementById('result').textContent = lang === 'zh'
+        ? `建议每日饮水量约为 ${intake} 毫升。`
+        : `Recommended daily water intake: ${intake} ml.`;
+    }
   </script>
 </body>
 </html>
