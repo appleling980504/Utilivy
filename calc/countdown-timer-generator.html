@@ -35,11 +35,16 @@
       font-size: 1.5rem;
       flex-grow: 1;
     }
-    header .lang-switch {
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
       display: flex;
       gap: 0.5rem;
     }
-    header .lang-switch button {
+    .lang-switch button {
       padding: 0.3rem 0.8rem;
       font-size: 0.9rem;
       border: 1px solid #ccc;
@@ -52,7 +57,6 @@
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
-      margin-left: 2rem;
     }
     .adsense-banner,
     .adsense-footer {
@@ -112,11 +116,13 @@
 <body>
   <header>
     <h1 data-en="Utilivy - Countdown Timer Generator" data-zh="Utilivy - 倒计时生成器">Utilivy - Countdown Timer Generator</h1>
-    <div class="lang-switch">
-      <button onclick="setLanguage('en')">EN</button>
-      <button onclick="setLanguage('zh')">中</button>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
-    <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
   </header>
 
   <div class="adsense-banner">
