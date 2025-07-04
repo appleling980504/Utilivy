@@ -1,167 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Countdown Cutie</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilivy - Countdown Timer Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Comic Neue', cursive;
-      background: linear-gradient(to right, #fff0f5, #ffe4e1);
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
-    .cute-card {
-      background-color: #fff7fb;
-      border: 2px dashed #f9c5d1;
-      border-radius: 1.5rem;
-      padding: 1rem;
-      box-shadow: 0 4px 10px rgba(255, 182, 193, 0.2);
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
-    .cute-input {
-      border-radius: 1rem;
-      border: 2px solid #ffc1cc;
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      flex-grow: 1;
     }
-    .cute-button {
-      border-radius: 9999px;
-      background-color: #ffb6c1;
+    header .lang-switch {
+      display: flex;
+      gap: 0.5rem;
+    }
+    header .lang-switch button {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
       color: white;
-      font-weight: bold;
-      transition: all 0.3s;
     }
-    .cute-button:hover {
-      background-color: #ff69b4;
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      margin-left: 2rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
-<body class="text-pink-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white bg-opacity-80 rounded-3xl p-6 shadow-lg">
-    <h1 class="text-3xl text-center font-bold mb-6">🎀 Cute Countdown Generator 倒计时生成器 🎀</h1>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Countdown Timer Generator" data-zh="Utilivy - 倒计时生成器">Utilivy - Countdown Timer Generator</h1>
+    <div class="lang-switch">
+      <button onclick="setLanguage('en')">EN</button>
+      <button onclick="setLanguage('zh')">中</button>
+    </div>
+    <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+  </header>
 
-    <form id="countdownForm" class="space-y-4">
-      <div id="timersContainer">
-        <div class="cute-card mb-4">
-          <label class="block font-semibold">📝 Title / 标题</label>
-          <input type="text" class="name cute-input w-full px-3 py-2 mt-1" placeholder="e.g., 生日 / Birthday" required>
-          <label class="block mt-2 font-semibold">📅 Target Date / 目标时间</label>
-          <input type="datetime-local" class="target cute-input w-full px-3 py-2 mt-1" required>
-        </div>
-      </div>
-      <button type="button" id="addTimer" class="cute-button px-4 py-2 text-sm">➕ Add Countdown</button>
-
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <div>
-          <label class="font-semibold">🌐 Language / 语言</label>
-          <select id="lang" class="cute-input w-full px-3 py-2 mt-1">
-            <option value="en">English</option>
-            <option value="zh">中文</option>
-          </select>
-        </div>
-        <div>
-          <label class="font-semibold">🔠 Font Size (px)</label>
-          <input type="number" id="fontSize" value="24" class="cute-input w-full px-3 py-2 mt-1">
-        </div>
-        <div>
-          <label class="font-semibold">🎨 Text Color</label>
-          <input type="color" id="textColor" value="#ff69b4" class="w-full h-10 mt-1 cute-input">
-        </div>
-        <div>
-          <label class="font-semibold">🌈 Background</label>
-          <input type="color" id="bgColor" value="#fff0f5" class="w-full h-10 mt-1 cute-input">
-        </div>
-      </div>
-
-      <button type="submit" class="cute-button w-full py-3 mt-6 text-lg">🎁 Generate Countdown</button>
-    </form>
-
-    <div id="previewContainer" class="mt-8 space-y-6"></div>
-    <button id="downloadImage" class="hidden cute-button px-5 py-3 mt-6 block mx-auto">📷 Download Countdown Image</button>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <h2 data-en="Countdown Timer Generator" data-zh="倒计时生成器">Countdown Timer Generator</h2>
+    <label data-en="Enter duration (seconds)" data-zh="输入持续时间（秒）">Enter duration (seconds)</label>
+    <input type="number" id="seconds" placeholder="e.g. 60">
+    <button onclick="startCountdown()" data-en="Start Countdown" data-zh="开始倒计时">Start Countdown</button>
+    <div class="result" id="display"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const langMap = {
-      en: { day: 'days', hour: 'hours', minute: 'minutes', second: 'seconds' },
-      zh: { day: '天', hour: '小时', minute: '分钟', second: '秒' },
-    };
-
-    let activeTimers = [];
-
-    document.getElementById('addTimer').addEventListener('click', () => {
-      const container = document.createElement('div');
-      container.className = 'cute-card mb-4';
-      container.innerHTML = `
-        <label class="block font-semibold">📝 Title / 标题</label>
-        <input type="text" class="name cute-input w-full px-3 py-2 mt-1" placeholder="e.g., Holiday" required>
-        <label class="block mt-2 font-semibold">📅 Target Date / 目标时间</label>
-        <input type="datetime-local" class="target cute-input w-full px-3 py-2 mt-1" required>
-      `;
-      document.getElementById('timersContainer').appendChild(container);
-    });
-
-    document.getElementById('countdownForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      clearInterval(window.countdownInterval);
-      activeTimers = [];
-
-      const entries = Array.from(document.querySelectorAll('.timer-entry, .cute-card'));
-      const lang = document.getElementById('lang').value;
-      const textColor = document.getElementById('textColor').value;
-      const bgColor = document.getElementById('bgColor').value;
-      const fontSize = document.getElementById('fontSize').value + 'px';
-
-      const timers = entries.map(entry => {
-        return {
-          name: entry.querySelector('.name').value,
-          target: entry.querySelector('.target').value
-        };
-      }).filter(t => t.name && t.target);
-
-      timers.sort((a, b) => new Date(a.target) - new Date(b.target));
-
-      const preview = document.getElementById('previewContainer');
-      preview.innerHTML = '';
-
-      timers.forEach((t) => {
-        const box = document.createElement('div');
-        box.className = 'cute-card text-center';
-        box.style.backgroundColor = bgColor;
-        box.style.color = textColor;
-        box.style.fontSize = fontSize;
-        box.innerHTML = `
-          <div class="font-bold text-xl mb-2">🎯 ${t.name}</div>
-          <div class="countdown text-lg font-semibold" data-target="${t.target}">⏳ Loading...</div>
-        `;
-        preview.appendChild(box);
-        activeTimers.push({ el: box.querySelector('.countdown'), target: t.target });
-      });
-
-      startCountdown(lang);
-
-      document.getElementById('downloadImage').classList.remove('hidden');
-    });
-
-    function startCountdown(lang) {
-      window.countdownInterval = setInterval(() => {
-        activeTimers.forEach(t => {
-          const diff = new Date(t.target) - new Date();
-          const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-          const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-          const m = Math.floor((diff / (1000 * 60)) % 60);
-          const s = Math.floor((diff / 1000) % 60);
-          t.el.innerHTML = `${d} ${langMap[lang].day} ${h} ${langMap[lang].hour} ${m} ${langMap[lang].minute} ${s} ${langMap[lang].second}`;
-        });
+    function startCountdown() {
+      let seconds = parseInt(document.getElementById('seconds').value);
+      if (isNaN(seconds) || seconds <= 0) {
+        document.getElementById('display').textContent = lang === 'zh'
+          ? '请输入一个正整数。'
+          : 'Please enter a positive integer.';
+        return;
+      }
+      const display = document.getElementById('display');
+      const interval = setInterval(() => {
+        display.textContent = lang === 'zh'
+          ? `剩余：${seconds} 秒`
+          : `Remaining: ${seconds} seconds`;
+        seconds--;
+        if (seconds < 0) {
+          clearInterval(interval);
+          display.textContent = lang === 'zh'
+            ? '倒计时结束！'
+            : 'Countdown finished!';
+        }
       }, 1000);
     }
 
-    document.getElementById('downloadImage').addEventListener('click', () => {
-      html2canvas(document.getElementById('previewContainer')).then(canvas => {
-        const link = document.createElement('a');
-        link.download = 'cute-countdown.png';
-        link.href = canvas.toDataURL();
-        link.click();
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
       });
-    });
+    }
   </script>
 </body>
 </html>
