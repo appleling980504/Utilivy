@@ -1,208 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Compound Interest Calculator - Toolnest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilivy - Compound Interest Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f9fafb;
-      color: #111;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     label {
       display: block;
-      margin-top: 16px;
+      margin-top: 1rem;
+      font-weight: 500;
     }
-    input, select {
+    input {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 16px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
     }
     button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      background-color: #4f46e5;
+      background: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
-    .lang-switch {
-      text-align: right;
-      margin-bottom: 10px;
+    button:hover {
+      background-color: #4338ca;
     }
     .result {
-      margin-top: 30px;
-      background: #eef2ff;
-      padding: 16px;
-      border-radius: 6px;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <div class="lang-switch">
-    <button onclick="toggleLanguage()"><span id="lang-btn">中文</span></button>
+  <header>
+    <h1>Utilivy - Compound Interest Calculator</h1>
+    <a href="/">← Back to Home</a>
+  </header>
+
+  <div class="container">
+    <h2>Compound Interest Calculator</h2>
+
+    <label for="principal">Principal Amount ($)</label>
+    <input type="number" id="principal" placeholder="e.g. 1000">
+
+    <label for="rate">Annual Interest Rate (%)</label>
+    <input type="number" id="rate" placeholder="e.g. 5">
+
+    <label for="years">Time (years)</label>
+    <input type="number" id="years" placeholder="e.g. 10">
+
+    <label for="frequency">Compounds per Year</label>
+    <input type="number" id="frequency" placeholder="e.g. 12">
+
+    <button onclick="calculateCompoundInterest()">Calculate</button>
+    <div id="result" class="result"></div>
   </div>
 
-  <h1 id="title">Compound Interest Calculator</h1>
-
-  <label for="currency" id="label-currency">Currency</label>
-  <select id="currency">
-    <option value="USD">$ USD</option>
-    <option value="MYR">RM MYR</option>
-    <option value="CNY">¥ CNY</option>
-    <option value="EUR">€ EUR</option>
-    <option value="JPY">¥ JPY</option>
-  </select>
-
-  <label for="principal" id="label-principal">Initial Amount</label>
-  <input type="number" id="principal" placeholder="e.g. 1000" />
-
-  <label for="rate" id="label-rate">Annual Interest Rate (%)</label>
-  <input type="number" id="rate" placeholder="e.g. 5" step="0.01" />
-
-  <label for="years" id="label-years">Number of Years</label>
-  <input type="number" id="years" placeholder="e.g. 10" />
-
-  <label for="frequency" id="label-frequency">Compounding Frequency</label>
-  <select id="frequency">
-    <option value="1">Annually</option>
-    <option value="2">Semi-Annually</option>
-    <option value="4">Quarterly</option>
-    <option value="12" selected>Monthly</option>
-    <option value="365">Daily</option>
-  </select>
-
-  <button onclick="calculate()" id="calc-btn">Calculate</button>
-
-  <div id="output" class="result" style="display:none;"></div>
-
-  <canvas id="chart" height="300"></canvas>
+  <footer>
+    &copy; 2025 Utilivy. All rights reserved.
+  </footer>
 
   <script>
-    const labels = {
-      en: {
-        title: "Compound Interest Calculator",
-        currency: "Currency",
-        principal: "Initial Amount",
-        rate: "Annual Interest Rate (%)",
-        years: "Number of Years",
-        frequency: "Compounding Frequency",
-        calc: "Calculate",
-        total: "Total Value",
-        interest: "Total Interest Earned"
-      },
-      zh: {
-        title: "复利计算器",
-        currency: "货币",
-        principal: "初始金额",
-        rate: "年利率 (%)",
-        years: "年数",
-        frequency: "复利频率",
-        calc: "计算",
-        total: "总金额",
-        interest: "总利息"
-      }
-    };
-
-    let currentLang = "en";
-    let chart;
-
-    function toggleLanguage() {
-      currentLang = currentLang === "en" ? "zh" : "en";
-      const lang = labels[currentLang];
-      document.getElementById("title").innerText = lang.title;
-      document.getElementById("label-currency").innerText = lang.currency;
-      document.getElementById("label-principal").innerText = lang.principal;
-      document.getElementById("label-rate").innerText = lang.rate;
-      document.getElementById("label-years").innerText = lang.years;
-      document.getElementById("label-frequency").innerText = lang.frequency;
-      document.getElementById("calc-btn").innerText = lang.calc;
-      document.getElementById("lang-btn").innerText = currentLang === "en" ? "中文" : "English";
-    }
-
-    function getCurrencySymbol(code) {
-      return {
-        USD: "$",
-        MYR: "RM",
-        CNY: "¥",
-        EUR: "€",
-        JPY: "¥"
-      }[code] || "$";
-    }
-
-    function formatMoney(num, code) {
-      return getCurrencySymbol(code) + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function calculate() {
+    function calculateCompoundInterest() {
       const principal = parseFloat(document.getElementById('principal').value);
-      const rate = parseFloat(document.getElementById('rate').value) / 100;
-      const years = parseInt(document.getElementById('years').value);
-      const freq = parseInt(document.getElementById('frequency').value);
-      const currency = document.getElementById('currency').value;
-      const lang = labels[currentLang];
+      const rate = parseFloat(document.getElementById('rate').value);
+      const years = parseFloat(document.getElementById('years').value);
+      const frequency = parseFloat(document.getElementById('frequency').value);
 
-      if (isNaN(principal) || isNaN(rate) || isNaN(years)) {
-        alert("Please fill in all fields correctly.");
+      if (isNaN(principal) || isNaN(rate) || isNaN(years) || isNaN(frequency)) {
+        document.getElementById('result').textContent = 'Please fill in all fields correctly.';
         return;
       }
 
-      let values = [];
-      for (let y = 0; y <= years; y++) {
-        let amount = principal * Math.pow((1 + rate / freq), freq * y);
-        values.push(amount);
-      }
+      const amount = principal * Math.pow(1 + (rate / 100) / frequency, frequency * years);
+      const interest = amount - principal;
 
-      const total = values[values.length - 1];
-      const interest = total - principal;
-
-      document.getElementById("output").style.display = "block";
-      document.getElementById("output").innerHTML = `
-        <strong>${lang.total}:</strong> ${formatMoney(total, currency)}<br>
-        <strong>${lang.interest}:</strong> ${formatMoney(interest, currency)}
-      `;
-
-      // draw chart
-      const ctx = document.getElementById("chart").getContext("2d");
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: Array.from({length: years + 1}, (_, i) => `${i}`),
-          datasets: [{
-            label: lang.total,
-            data: values,
-            borderColor: "#6366f1",
-            backgroundColor: "rgba(99,102,241,0.1)",
-            fill: true,
-            tension: 0.2
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            },
-            x: {
-              title: {
-                display: true,
-                text: currentLang === "en" ? "Years" : "年"
-              }
-            }
-          }
-        }
-      });
+      document.getElementById('result').textContent = `Total Value: $${amount.toFixed(2)} (Interest Earned: $${interest.toFixed(2)})`;
     }
   </script>
 </body>
