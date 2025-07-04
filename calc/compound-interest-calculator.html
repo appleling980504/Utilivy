@@ -37,6 +37,18 @@
       color: var(--primary-color);
       font-weight: 500;
     }
+    .lang-switch {
+      margin-left: auto;
+      margin-right: 1rem;
+    }
+    .lang-switch button {
+      margin-left: 0.5rem;
+      padding: 0.3rem 0.6rem;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+    }
     .container {
       max-width: 500px;
       margin: 2rem auto;
@@ -87,31 +99,35 @@
 </head>
 <body>
   <header>
-    <h1>Utilivy - Compound Interest Calculator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - Compound Interest Calculator" data-zh="Utilivy - 复利计算器">Utilivy - Compound Interest Calculator</h1>
+    <div class="lang-switch">
+      <button onclick="setLanguage('en')">EN</button>
+      <button onclick="setLanguage('zh')">中</button>
+    </div>
+    <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
   </header>
 
   <div class="container">
-    <h2>Compound Interest Calculator</h2>
+    <h2 data-en="Compound Interest Calculator" data-zh="复利计算器">Compound Interest Calculator</h2>
 
-    <label for="principal">Principal Amount ($)</label>
+    <label for="principal" data-en="Principal Amount ($)" data-zh="本金 ($)">Principal Amount ($)</label>
     <input type="number" id="principal" placeholder="e.g. 1000">
 
-    <label for="rate">Annual Interest Rate (%)</label>
+    <label for="rate" data-en="Annual Interest Rate (%)" data-zh="年利率 (%)">Annual Interest Rate (%)</label>
     <input type="number" id="rate" placeholder="e.g. 5">
 
-    <label for="years">Time (years)</label>
+    <label for="years" data-en="Time (years)" data-zh="时间 (年)">Time (years)</label>
     <input type="number" id="years" placeholder="e.g. 10">
 
-    <label for="frequency">Compounds per Year</label>
+    <label for="frequency" data-en="Compounds per Year" data-zh="每年复利次数">Compounds per Year</label>
     <input type="number" id="frequency" placeholder="e.g. 12">
 
-    <button onclick="calculateCompoundInterest()">Calculate</button>
+    <button onclick="calculateCompoundInterest()" data-en="Calculate" data-zh="计算">Calculate</button>
     <div id="result" class="result"></div>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
@@ -122,14 +138,26 @@
       const frequency = parseFloat(document.getElementById('frequency').value);
 
       if (isNaN(principal) || isNaN(rate) || isNaN(years) || isNaN(frequency)) {
-        document.getElementById('result').textContent = 'Please fill in all fields correctly.';
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请正确填写所有字段。'
+          : 'Please fill in all fields correctly.';
         return;
       }
 
       const amount = principal * Math.pow(1 + (rate / 100) / frequency, frequency * years);
       const interest = amount - principal;
 
-      document.getElementById('result').textContent = `Total Value: $${amount.toFixed(2)} (Interest Earned: $${interest.toFixed(2)})`;
+      document.getElementById('result').textContent = lang === 'zh'
+        ? `总金额: $${amount.toFixed(2)}（利息: $${interest.toFixed(2)}）`
+        : `Total Value: $${amount.toFixed(2)} (Interest Earned: $${interest.toFixed(2)})`;
+    }
+
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
+      });
     }
   </script>
 </body>
