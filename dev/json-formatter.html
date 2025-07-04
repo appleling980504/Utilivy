@@ -3,28 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>JSON Formatter - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - JSON Formatter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: monospace;
+      resize: vertical;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-3xl mx-auto">
-    <h1 class="text-3xl font-bold mb-4">🧩 JSON Formatter</h1>
-    <textarea id="json-input" class="w-full h-60 p-2 border border-gray-300 rounded mb-4" placeholder="Paste your JSON here..."></textarea>
-    <button onclick="formatJSON()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Format</button>
-    <h2 class="text-xl font-semibold mt-6 mb-2">Formatted Output:</h2>
-    <pre id="json-output" class="bg-white p-4 border border-gray-300 rounded h-60 overflow-auto"></pre>
+<body>
+
+  <header>
+    <h1>Utilivy - JSON Formatter</h1>
+    <a href="/">← Back to Home</a>
+  </header>
+
+  <div class="container">
+    <h2>JSON Formatter</h2>
+    <p>Paste your JSON below and click "Format".</p>
+    <textarea id="input" rows="10" placeholder="Paste your JSON here..."></textarea>
+    <button onclick="formatJSON()">Format</button>
+    <textarea id="output" rows="10" placeholder="Formatted JSON will appear here..." readonly></textarea>
   </div>
+
+  <footer>
+    &copy; 2025 Utilivy. All rights reserved.
+  </footer>
 
   <script>
     function formatJSON() {
-      const input = document.getElementById('json-input').value;
+      const input = document.getElementById('input').value;
       try {
         const obj = JSON.parse(input);
-        document.getElementById('json-output').textContent = JSON.stringify(obj, null, 2);
+        document.getElementById('output').value = JSON.stringify(obj, null, 2);
       } catch (err) {
-        document.getElementById('json-output').textContent = 'Invalid JSON';
+        document.getElementById('output').value = 'Invalid JSON ❌';
       }
     }
   </script>
+
 </body>
 </html>
