@@ -27,27 +27,38 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      flex-grow: 1;
+    }
+    header .lang-switch {
+      display: flex;
+      gap: 0.5rem;
+    }
+    header .lang-switch button {
+      padding: 0.3rem 0.8rem;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      margin-left: 2rem;
     }
-    .lang-switch {
-      margin-left: auto;
-      margin-right: 1rem;
-    }
-    .lang-switch button {
-      margin-left: 0.5rem;
-      padding: 0.3rem 0.6rem;
-      font-size: 0.9rem;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      cursor: pointer;
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
     }
     .container {
       max-width: 500px;
@@ -107,6 +118,11 @@
     <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
   </header>
 
+  <div class="adsense-banner">
+    <!-- Replace with real AdSense script after approval -->
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
     <h2 data-en="Compound Interest Calculator" data-zh="复利计算器">Compound Interest Calculator</h2>
 
@@ -124,6 +140,11 @@
 
     <button onclick="calculateCompoundInterest()" data-en="Calculate" data-zh="计算">Calculate</button>
     <div id="result" class="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <!-- Replace with real AdSense script after approval -->
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
