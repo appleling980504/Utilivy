@@ -3,64 +3,148 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Lorem Ipsum Generator - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Lorem Ipsum Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    label, p {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input[type="number"], select {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    textarea {
+      width: 100%;
+      margin-top: 1rem;
+      padding: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      min-height: 200px;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.25rem;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🧠 Lorem Ipsum Generator</h1>
-    <p class="mb-4 text-gray-700">Generate placeholder text for your designs or projects.</p>
+<body>
 
-    <div class="grid grid-cols-2 gap-4 mb-4">
-      <div>
-        <label class="block text-sm font-medium mb-1">Paragraphs</label>
-        <input type="number" id="paraCount" value="3" min="1" max="10" class="border px-3 py-2 rounded w-full">
-      </div>
-      <div>
-        <label class="block text-sm font-medium mb-1">Sentences/Paragraph</label>
-        <input type="number" id="sentCount" value="5" min="1" max="20" class="border px-3 py-2 rounded w-full">
-      </div>
-    </div>
+  <header>
+    <h1>Utilivy - Lorem Ipsum Generator</h1>
+    <a href="/">← Back to Home</a>
+  </header>
 
-    <button onclick="generateLorem()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate</button>
-    <button onclick="copyText()" class="bg-gray-600 text-white px-4 py-2 rounded ml-2 hover:bg-gray-700">Copy All</button>
+  <div class="container">
+    <h2>Lorem Ipsum Generator</h2>
+    <label for="type">Type:</label>
+    <select id="type">
+      <option value="paragraphs">Paragraphs</option>
+      <option value="sentences">Sentences</option>
+      <option value="words">Words</option>
+    </select>
 
-    <div id="output" class="mt-6 whitespace-pre-wrap text-gray-800"></div>
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" value="3" min="1">
+
+    <button onclick="generateLorem()">Generate</button>
+
+    <textarea id="output" readonly></textarea>
   </div>
 
+  <footer>
+    &copy; 2025 Utilivy. All rights reserved.
+  </footer>
+
   <script>
-    const loremWords = ["lorem", "ipsum", "dolor", "sit", "amet", "consectetur", "adipiscing", "elit", "sed", "do", "eiusmod", "tempor", "incididunt", "ut", "labore", "et", "dolore", "magna", "aliqua"];
-
     function generateLorem() {
-      const paras = parseInt(document.getElementById("paraCount").value);
-      const sents = parseInt(document.getElementById("sentCount").value);
-      let result = "";
+      const type = document.getElementById("type").value;
+      const amount = parseInt(document.getElementById("amount").value);
+      const output = document.getElementById("output");
 
-      for (let i = 0; i < paras; i++) {
-        let paragraph = "";
-        for (let j = 0; j < sents; j++) {
-          let sentence = [];
-          const wordCount = Math.floor(Math.random() * 6) + 6; // 6–11 words
-          for (let k = 0; k < wordCount; k++) {
-            const word = loremWords[Math.floor(Math.random() * loremWords.length)];
-            sentence.push(word);
+      fetch(`https://baconipsum.com/api/?type=meat-and-filler&format=text&paras=${type === 'paragraphs' ? amount : 1}`)
+        .then(res => res.text())
+        .then(data => {
+          let text = data;
+          if (type === 'sentences') {
+            const sentences = data.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]/g);
+            text = sentences?.slice(0, amount).join(' ') || '';
+          } else if (type === 'words') {
+            text = data.replace(/\n+/g, ' ').split(/\s+/).slice(0, amount).join(' ');
           }
-          let sentenceStr = sentence.join(" ");
-          sentenceStr = sentenceStr.charAt(0).toUpperCase() + sentenceStr.slice(1) + ".";
-          paragraph += sentenceStr + " ";
-        }
-        result += paragraph.trim() + "\n\n";
-      }
-
-      document.getElementById("output").textContent = result.trim();
-    }
-
-    function copyText() {
-      const output = document.getElementById("output").textContent;
-      navigator.clipboard.writeText(output).then(() => {
-        alert("Copied to clipboard!");
-      });
+          output.value = text;
+        });
     }
   </script>
+
 </body>
 </html>
