@@ -1,48 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>BMI Calculator - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilivy - BMI Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-lg mx-auto">
-    <h1 class="text-3xl font-bold mb-6">🧮 BMI Calculator</h1>
+<body>
+  <header>
+    <h1>Utilivy - BMI Calculator</h1>
+    <a href="/">← Back to Home</a>
+  </header>
 
-    <div class="mb-4">
-      <label class="block mb-1">Height (cm):</label>
-      <input id="height" type="number" class="w-full p-2 border rounded" placeholder="e.g. 170" />
-    </div>
-    <div class="mb-4">
-      <label class="block mb-1">Weight (kg):</label>
-      <input id="weight" type="number" class="w-full p-2 border rounded" placeholder="e.g. 65" />
-    </div>
+  <div class="container">
+    <h2>Body Mass Index Calculator</h2>
+    <label for="weight">Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 70">
 
-    <button onclick="calculateBMI()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Calculate</button>
+    <label for="height">Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 175">
 
-    <div id="result" class="mt-6 text-lg font-semibold"></div>
+    <button onclick="calculateBMI()">Calculate</button>
+
+    <div id="result" class="result"></div>
   </div>
+
+  <footer>
+    &copy; 2025 Utilivy. All rights reserved.
+  </footer>
 
   <script>
     function calculateBMI() {
-      const height = parseFloat(document.getElementById('height').value);
-      const weight = parseFloat(document.getElementById('weight').value);
+      const weight = parseFloat(document.getElementById("weight").value);
+      const height = parseFloat(document.getElementById("height").value);
 
-      if (!height || !weight || height <= 0 || weight <= 0) {
-        document.getElementById('result').textContent = 'Please enter valid height and weight.';
+      if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
+        document.getElementById("result").textContent = "Please enter valid numbers for weight and height.";
         return;
       }
 
       const bmi = weight / ((height / 100) ** 2);
-      let category = '';
+      let category = "";
+      if (bmi < 18.5) category = "Underweight";
+      else if (bmi < 24.9) category = "Normal weight";
+      else if (bmi < 29.9) category = "Overweight";
+      else category = "Obese";
 
-      if (bmi < 18.5) category = 'Underweight';
-      else if (bmi < 24.9) category = 'Normal weight';
-      else if (bmi < 29.9) category = 'Overweight';
-      else category = 'Obese';
-
-      document.getElementById('result').textContent = `Your BMI is ${bmi.toFixed(1)} (${category})`;
+      document.getElementById("result").textContent = `Your BMI is ${bmi.toFixed(1)} (${category})`;
     }
   </script>
 </body>
