@@ -2,225 +2,140 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Advanced Mortgage Calculator - Toolnest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Mortgage Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f9fafb;
-      color: #111;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    h1 { text-align: center; }
-    label { display: block; margin-top: 16px; }
-    input, select {
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input[type="number"] {
       width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 16px;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
     }
     button {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #4f46e5;
+      background: var(--primary-color);
       color: white;
       border: none;
-      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
     }
-    .lang-switch {
-      text-align: right;
-      margin-bottom: 10px;
+    button:hover {
+      background-color: #4338ca;
     }
-    .result, table {
-      margin-top: 24px;
-      background: #eef2ff;
-      padding: 16px;
-      border-radius: 6px;
+    .result {
+      margin-top: 2rem;
+      font-size: 1.2rem;
+      font-weight: 500;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: white;
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: right;
-    }
-    th { background: #dbeafe; }
-    td input {
-      width: 100%;
-      border: none;
-      text-align: right;
-    }
-    #pieChart {
-      max-width: 360px;
-      margin: 20px auto;
-      display: block;
+    @media (max-width: 600px) {
+      .container {
+        margin: 1rem;
+        padding: 1rem;
+      }
+      header h1 {
+        font-size: 1.25rem;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="lang-switch">
-    <button onclick="toggleLang()" id="langBtn">中文</button>
+
+  <header>
+    <h1>Utilivy - Mortgage Calculator</h1>
+    <a href="/">← Back to Home</a>
+  </header>
+
+  <div class="container">
+    <h2>Mortgage Calculator</h2>
+    <p>Estimate your monthly mortgage payment.</p>
+
+    <label for="principal">Loan Amount (RM)</label>
+    <input type="number" id="principal" placeholder="e.g. 300000">
+
+    <label for="interest">Annual Interest Rate (%)</label>
+    <input type="number" id="interest" placeholder="e.g. 3.5">
+
+    <label for="years">Loan Term (Years)</label>
+    <input type="number" id="years" placeholder="e.g. 30">
+
+    <button onclick="calculateMortgage()">Calculate</button>
+    <div id="result" class="result"></div>
   </div>
-  <h1 id="title">Advanced Mortgage Calculator</h1>
 
-  <label id="priceLabel">Home Price</label>
-  <input type="number" id="price" value="500000" />
-
-  <label id="downLabel">Down Payment (%)</label>
-  <input type="number" id="down" value="10" />
-
-  <label id="loanLabel">Loan Term (years)</label>
-  <input type="number" id="years" value="30" />
-
-  <label id="rateLabel">Annual Interest Rate (%)</label>
-  <input type="number" id="rate" value="3.5" />
-
-  <label id="insuranceLabel">Monthly Insurance (MRTA / MLTA)</label>
-  <input type="number" id="insurance" value="100" />
-
-  <button onclick="calculate()">Calculate</button>
-
-  <div class="result" id="summary" style="display:none;"></div>
-
-  <canvas id="pieChart" height="200"></canvas>
-
-  <div class="result" id="table-wrapper" style="display:none;"></div>
+  <footer>
+    &copy; 2025 Utilivy. All rights reserved.
+  </footer>
 
   <script>
-    let lang = 'en';
+    function calculateMortgage() {
+      const P = parseFloat(document.getElementById("principal").value);
+      const r = parseFloat(document.getElementById("interest").value) / 100 / 12;
+      const n = parseInt(document.getElementById("years").value) * 12;
 
-    const i18n = {
-      en: {
-        title: 'Advanced Mortgage Calculator',
-        priceLabel: 'Home Price',
-        downLabel: 'Down Payment (%)',
-        loanLabel: 'Loan Term (years)',
-        rateLabel: 'Annual Interest Rate (%)',
-        insuranceLabel: 'Monthly Insurance (MRTA / MLTA)',
-        langBtn: '中文',
-        summary: 'Monthly Payment: ',
-        pieLabels: ['Principal', 'Interest']
-      },
-      zh: {
-        title: '高级房贷计算器',
-        priceLabel: '房价',
-        downLabel: '首付比例 (%)',
-        loanLabel: '贷款期限（年）',
-        rateLabel: '年利率 (%)',
-        insuranceLabel: '月保险 (MRTA / MLTA)',
-        langBtn: 'English',
-        summary: '每月还款：',
-        pieLabels: ['本金', '利息']
-      }
-    };
-
-    function toggleLang() {
-      lang = lang === 'en' ? 'zh' : 'en';
-      const t = i18n[lang];
-      document.getElementById('title').textContent = t.title;
-      document.getElementById('priceLabel').textContent = t.priceLabel;
-      document.getElementById('downLabel').textContent = t.downLabel;
-      document.getElementById('loanLabel').textContent = t.loanLabel;
-      document.getElementById('rateLabel').textContent = t.rateLabel;
-      document.getElementById('insuranceLabel').textContent = t.insuranceLabel;
-      document.getElementById('langBtn').textContent = t.langBtn;
-      if (window.chart) updatePieChart(); // Update chart labels
-    }
-
-    let chart = null;
-
-    function calculate() {
-      const price = parseFloat(document.getElementById('price').value);
-      const downPercent = parseFloat(document.getElementById('down').value);
-      const years = parseInt(document.getElementById('years').value);
-      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-      const insurance = parseFloat(document.getElementById('insurance').value);
-      const totalMonths = years * 12;
-      const loan = price * (1 - downPercent / 100);
-
-      const monthly = loan * rate / (1 - Math.pow(1 + rate, -totalMonths));
-      const fullMonthly = monthly + insurance;
-
-      document.getElementById('summary').style.display = 'block';
-      document.getElementById('summary').innerHTML = `<strong>${i18n[lang].summary}</strong> ${fullMonthly.toFixed(2)}`;
-
-      let table = `<table><thead><tr><th>#</th><th>${lang === 'zh' ? '还款金额' : 'Payment'}</th><th>${lang === 'zh' ? '本金' : 'Principal'}</th><th>${lang === 'zh' ? '利息' : 'Interest'}</th><th>${lang === 'zh' ? '保险' : 'Insurance'}</th><th>${lang === 'zh' ? '剩余贷款' : 'Balance'}</th></tr></thead><tbody>`;
-      let balance = loan, totalInterest = 0;
-
-      for (let i = 1; i <= totalMonths; i++) {
-        const interest = balance * rate;
-        const principal = monthly - interest;
-        totalInterest += interest;
-        balance -= principal;
-
-        table += `<tr>
-          <td>${i}</td>
-          <td><input value="${(monthly + insurance).toFixed(2)}" onchange="manualEdit(this, ${i - 1})" /></td>
-          <td>${principal.toFixed(2)}</td>
-          <td>${interest.toFixed(2)}</td>
-          <td>${insurance.toFixed(2)}</td>
-          <td>${Math.max(balance, 0).toFixed(2)}</td>
-        </tr>`;
-      }
-      table += '</tbody></table>';
-      document.getElementById('table-wrapper').innerHTML = table;
-      document.getElementById('table-wrapper').style.display = 'block';
-
-      updatePieChart(loan, totalInterest);
-    }
-
-    function updatePieChart(principal = 0, interest = 0) {
-      const labels = i18n[lang].pieLabels;
-      const data = {
-        labels,
-        datasets: [{
-          data: [principal, interest],
-          backgroundColor: ['#3b82f6', '#ef4444']
-        }]
-      };
-      const config = {
-        type: 'pie',
-        data: data,
-        options: {
-          plugins: {
-            legend: { position: 'bottom' }
-          }
-        }
-      };
-
-      if (chart) chart.destroy();
-      chart = new Chart(document.getElementById('pieChart'), config);
-    }
-
-    function manualEdit(input, index) {
-      const rows = document.querySelectorAll('#table-wrapper tbody tr');
-      let balance = parseFloat(document.getElementById('price').value) * (1 - parseFloat(document.getElementById('down').value) / 100);
-      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-      const insurance = parseFloat(document.getElementById('insurance').value);
-
-      let totalInterest = 0;
-      for (let i = 0; i < rows.length; i++) {
-        const row = rows[i];
-        const payment = parseFloat(row.cells[1].children[0].value) - insurance;
-        const interest = balance * rate;
-        const principal = payment - interest;
-        balance -= principal;
-        row.cells[2].textContent = principal.toFixed(2);
-        row.cells[3].textContent = interest.toFixed(2);
-        row.cells[4].textContent = insurance.toFixed(2);
-        row.cells[5].textContent = Math.max(balance, 0).toFixed(2);
-        totalInterest += interest;
+      if (!P || !r || !n) {
+        document.getElementById("result").innerText = "Please fill all fields correctly.";
+        return;
       }
 
-      updatePieChart(parseFloat(document.getElementById('price').value) * (1 - parseFloat(document.getElementById('down').value) / 100), totalInterest);
+      const monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+      document.getElementById("result").innerText = `Monthly Payment: RM ${monthly.toFixed(2)}`;
     }
   </script>
+
 </body>
 </html>
