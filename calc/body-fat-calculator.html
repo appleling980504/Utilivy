@@ -96,13 +96,26 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
       font-size: 1.2rem;
+    }
+    .info {
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: #374151;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    table th, table td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem;
+      text-align: center;
     }
     footer {
       text-align: center;
@@ -125,29 +138,47 @@
   </header>
 
   <div class="container">
-    <h2 data-en="Body Fat Calculator" data-zh="体脂率计算器">Body Fat Calculator</h2>
+    <h2 data-en="Body Fat Calculator (U.S. Navy Method)" data-zh="体脂率计算器（美国海军法）">Body Fat Calculator (U.S. Navy Method)</h2>
+
     <label data-en="Gender" data-zh="性别">Gender</label>
-    <select id="gender">
-      <option value="male">Male</option>
-      <option value="female">Female</option>
+    <select id="gender" onchange="toggleHip()">
+      <option value="male">Male / 男</option>
+      <option value="female">Female / 女</option>
     </select>
 
     <label data-en="Height (cm)" data-zh="身高 (cm)">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 175">
+    <input type="number" id="height">
 
     <label data-en="Neck Circumference (cm)" data-zh="颈围 (cm)">Neck Circumference (cm)</label>
-    <input type="number" id="neck" placeholder="e.g. 38">
+    <input type="number" id="neck">
 
     <label data-en="Waist Circumference (cm)" data-zh="腰围 (cm)">Waist Circumference (cm)</label>
-    <input type="number" id="waist" placeholder="e.g. 85">
+    <input type="number" id="waist">
 
-    <div id="hip-section" style="display:none">
-      <label data-en="Hip Circumference (cm)" data-zh="臀围 (cm)">Hip Circumference (cm)</label>
-      <input type="number" id="hip" placeholder="e.g. 95">
-    </div>
+    <label id="hipLabel" data-en="Hip Circumference (cm)" data-zh="臀围 (cm)" style="display:none;">Hip Circumference (cm)</label>
+    <input type="number" id="hip" style="display:none;">
 
-    <button class="calculate" onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
+    <button class="calculate" onclick="calculate()" data-en="Calculate" data-zh="计算">Calculate</button>
+
     <div class="result" id="result"></div>
+    <div class="info" id="info"></div>
+
+    <table>
+      <thead>
+        <tr>
+          <th data-en="Category" data-zh="分类">Category</th>
+          <th data-en="Men (%)" data-zh="男性 (%)">Men (%)</th>
+          <th data-en="Women (%)" data-zh="女性 (%)">Women (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-en="Essential Fat" data-zh="基本脂肪">Essential Fat</td><td>2–5%</td><td>10–13%</td></tr>
+        <tr><td data-en="Athletes" data-zh="运动员">Athletes</td><td>6–13%</td><td>14–20%</td></tr>
+        <tr><td data-en="Fitness" data-zh="健身">Fitness</td><td>14–17%</td><td>21–24%</td></tr>
+        <tr><td data-en="Acceptable" data-zh="可接受">Acceptable</td><td>18–24%</td><td>25–31%</td></tr>
+        <tr><td data-en="Obese" data-zh="肥胖">Obese</td><td>25%+</td><td>32%+</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <footer>
@@ -163,12 +194,30 @@
       });
     }
 
-    document.getElementById('gender').addEventListener('change', () => {
-      document.getElementById('hip-section').style.display =
-        document.getElementById('gender').value === 'female' ? 'block' : 'none';
-    });
+    function toggleHip() {
+      const isFemale = document.getElementById('gender').value === 'female';
+      document.getElementById('hip').style.display = isFemale ? 'block' : 'none';
+      document.getElementById('hipLabel').style.display = isFemale ? 'block' : 'none';
+    }
 
-    function calculateBodyFat() {
+    function getCategory(percent, gender) {
+      const p = percent;
+      if (gender === 'male') {
+        if (p < 6) return 'Essential Fat';
+        if (p < 14) return 'Athletes';
+        if (p < 18) return 'Fitness';
+        if (p < 25) return 'Acceptable';
+        return 'Obese';
+      } else {
+        if (p < 14) return 'Essential Fat';
+        if (p < 21) return 'Athletes';
+        if (p < 25) return 'Fitness';
+        if (p < 32) return 'Acceptable';
+        return 'Obese';
+      }
+    }
+
+    function calculate() {
       const gender = document.getElementById('gender').value;
       const height = parseFloat(document.getElementById('height').value);
       const neck = parseFloat(document.getElementById('neck').value);
@@ -176,22 +225,28 @@
       const hip = parseFloat(document.getElementById('hip').value);
 
       if (isNaN(height) || isNaN(neck) || isNaN(waist) || (gender === 'female' && isNaN(hip))) {
-        document.getElementById('result').textContent = lang === 'zh' ? '请输入所有字段。' : 'Please enter all fields.';
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请输入所有有效数据。'
+          : 'Please enter all valid measurements.';
+        document.getElementById('info').textContent = '';
         return;
       }
 
-      let bf = 0;
+      let bf;
       if (gender === 'male') {
         bf = 86.010 * Math.log10(waist - neck) - 70.041 * Math.log10(height) + 36.76;
       } else {
         bf = 163.205 * Math.log10(waist + hip - neck) - 97.684 * Math.log10(height) - 78.387;
       }
 
-      bf = Math.max(2, Math.min(60, bf));
-      const resultText = lang === 'zh'
-        ? `估算体脂率：${bf.toFixed(1)}%`
-        : `Estimated Body Fat: ${bf.toFixed(1)}%`;
-      document.getElementById('result').textContent = resultText;
+      const rounded = bf.toFixed(2);
+      const category = getCategory(bf, gender);
+      document.getElementById('result').textContent =
+        lang === 'zh' ? `体脂率：${rounded}%（${category}）` : `Body Fat: ${rounded}% (${category})`;
+      document.getElementById('info').textContent =
+        lang === 'zh'
+          ? '基于美国海军体脂率计算法（U.S. Navy Method）'
+          : 'Based on U.S. Navy Body Fat Formula';
     }
   </script>
 </body>
