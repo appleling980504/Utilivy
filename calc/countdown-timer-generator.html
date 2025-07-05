@@ -1,108 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Countdown Timer Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
   <style>
     :root {
       --primary-color: #4f46e5;
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
+      background: var(--bg-color);
       color: var(--text-color);
     }
     header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
     }
     header h1 {
-      margin: 0;
       font-size: 1.5rem;
+      margin: 0;
     }
     .header-right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.5rem;
-    }
     .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-      border: 1px solid #ccc;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.5rem 0.75rem;
       border-radius: 6px;
       cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
+      background: white;
       margin: 2rem auto;
       padding: 2rem;
-      background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     label {
-      display: block;
-      margin-top: 1rem;
       font-weight: 500;
+      margin-top: 1rem;
+      display: block;
     }
     input {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.7rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      margin-top: 0.5rem;
       font-size: 1rem;
+      margin-top: 0.3rem;
+    }
+    .time-inputs {
+      display: flex;
+      gap: 1rem;
+    }
+    .time-inputs input {
+      width: 100%;
     }
     button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
       margin-top: 1.5rem;
       width: 100%;
+      padding: 0.8rem;
+      background: var(--primary-color);
+      color: white;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
     }
     button:hover {
       background-color: #4338ca;
     }
-    .result {
-      margin-top: 1.5rem;
+    .timer-display {
+      text-align: center;
+      font-size: 2.5rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      margin-top: 1.5rem;
+    }
+    .embed-box {
+      margin-top: 2rem;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-top: 0.5rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
     }
     footer {
       text-align: center;
@@ -114,66 +115,83 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Countdown Timer Generator" data-zh="Utilivy - 倒计时生成器">Utilivy - Countdown Timer Generator</h1>
+    <h1>Utilivy - Countdown Timer Generator</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
         <button onclick="setLanguage('zh')">中</button>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <a href="/">← Back to Home</a>
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
   <div class="container">
-    <h2 data-en="Countdown Timer Generator" data-zh="倒计时生成器">Countdown Timer Generator</h2>
-    <label data-en="Enter duration (seconds)" data-zh="输入持续时间（秒）">Enter duration (seconds)</label>
-    <input type="number" id="seconds" placeholder="e.g. 60">
-    <button onclick="startCountdown()" data-en="Start Countdown" data-zh="开始倒计时">Start Countdown</button>
-    <div class="result" id="display"></div>
-  </div>
+    <label for="minutes">Minutes</label>
+    <input type="number" id="minutes" placeholder="e.g. 5">
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
+    <label for="seconds">Seconds</label>
+    <input type="number" id="seconds" placeholder="e.g. 30">
+
+    <button onclick="startCountdown()">Start Countdown</button>
+
+    <div class="timer-display" id="timer">00:00</div>
+
+    <div class="embed-box">
+      <label>Embed Code (iframe)</label>
+      <textarea id="embedCode" readonly></textarea>
+    </div>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+    &copy; 2025 Utilivy. All rights reserved.
   </footer>
 
+  <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
+
   <script>
-    function startCountdown() {
-      let seconds = parseInt(document.getElementById('seconds').value);
-      if (isNaN(seconds) || seconds <= 0) {
-        document.getElementById('display').textContent = lang === 'zh'
-          ? '请输入一个正整数。'
-          : 'Please enter a positive integer.';
-        return;
-      }
-      const display = document.getElementById('display');
-      const interval = setInterval(() => {
-        display.textContent = lang === 'zh'
-          ? `剩余：${seconds} 秒`
-          : `Remaining: ${seconds} seconds`;
-        seconds--;
-        if (seconds < 0) {
-          clearInterval(interval);
-          display.textContent = lang === 'zh'
-            ? '倒计时结束！'
-            : 'Countdown finished!';
-        }
-      }, 1000);
+    let countdown;
+    let lang = 'en';
+
+    function setLanguage(l) {
+      lang = l;
     }
 
-    let lang = 'en';
-    function setLanguage(selectedLang) {
-      lang = selectedLang;
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${selectedLang}`);
-      });
+    function startCountdown() {
+      const minutes = parseInt(document.getElementById("minutes").value) || 0;
+      const seconds = parseInt(document.getElementById("seconds").value) || 0;
+      let total = minutes * 60 + seconds;
+
+      if (isNaN(total) || total <= 0) {
+        alert(lang === 'zh' ? "请输入有效的时间。" : "Please enter a valid time.");
+        return;
+      }
+
+      clearInterval(countdown);
+      updateDisplay(total);
+
+      countdown = setInterval(() => {
+        total--;
+        updateDisplay(total);
+
+        if (total <= 0) {
+          clearInterval(countdown);
+          document.getElementById("alarm-sound").play();
+        }
+      }, 1000);
+
+      generateEmbedCode(minutes, seconds);
+    }
+
+    function updateDisplay(total) {
+      const m = String(Math.floor(total / 60)).padStart(2, "0");
+      const s = String(total % 60).padStart(2, "0");
+      document.getElementById("timer").textContent = `${m}:${s}`;
+    }
+
+    function generateEmbedCode(min, sec) {
+      const url = `${window.location.origin}/embed-timer.html?min=${min}&sec=${sec}`;
+      const iframe = `<iframe src="${url}" width="300" height="100" frameborder="0"></iframe>`;
+      document.getElementById("embedCode").value = iframe;
     }
   </script>
 </body>
