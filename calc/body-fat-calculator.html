@@ -161,6 +161,9 @@
     <label data-en="Waist Circumference (cm)" data-zh="腰围 (厘米)">Waist Circumference (cm)</label>
     <input type="number" id="waist" placeholder="e.g. 85">
 
+    <label data-en="Height (cm)" data-zh="身高 (厘米)">Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 175">
+
     <button onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
     <div class="result" id="result"></div>
 
@@ -215,8 +218,9 @@
       const age = parseInt(document.getElementById('age').value);
       const weight = parseFloat(document.getElementById('weight').value);
       const waist = parseFloat(document.getElementById('waist').value);
+      const height = parseFloat(document.getElementById('height').value);
 
-      if (isNaN(age) || isNaN(weight) || isNaN(waist)) {
+      if (isNaN(age) || isNaN(weight) || isNaN(waist) || isNaN(height)) {
         document.getElementById('result').textContent = lang === 'zh' ? '请输入所有字段。' : 'Please enter all fields.';
         return;
       }
