@@ -1,18 +1,13 @@
 /* utilivy-header.css */
 .utilivy-header {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  padding: 1rem 2rem;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  flex-wrap: wrap;
-  gap: 2rem;
   font-family: 'Inter', sans-serif;
-}
-
-.utilivy-header .header-section {
-  flex: 0 0 auto;
+  flex-wrap: wrap;
 }
 
 #page-title {
@@ -20,6 +15,12 @@
   font-weight: 600;
   color: #111827;
   white-space: nowrap;
+}
+
+.right-section {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
 }
 
 .lang-switch button {
@@ -32,7 +33,6 @@
   color: white;
   width: 42px;
   height: 32px;
-  margin: 0 0.2rem;
 }
 
 .lang-switch button:hover {
@@ -49,4 +49,16 @@
 
 .back-link a:hover {
   text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .utilivy-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .right-section {
+    align-self: flex-end;
+  }
 }
