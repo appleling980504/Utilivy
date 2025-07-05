@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilivy - Compound Interest Calculator</title>
+  <title>Utilivy - Body Fat Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -84,7 +84,7 @@
       margin-top: 1rem;
       font-weight: 500;
     }
-    input {
+    input, select {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid #d1d5db;
@@ -121,7 +121,7 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Compound Interest Calculator" data-zh="Utilivy - 复利计算器">Utilivy - Compound Interest Calculator</h1>
+    <h1 data-en="Utilivy - Body Fat Calculator" data-zh="Utilivy - 体脂率计算器">Utilivy - Body Fat Calculator</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -161,12 +161,8 @@
       <input type="number" id="hip" placeholder="e.g. 95">
     </div>
 
-    <button onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
+    <button class="calculate" onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
     <div class="result" id="result"></div>
-  </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
@@ -175,7 +171,6 @@
 
   <script>
     let lang = 'en';
-
     function setLanguage(selectedLang) {
       lang = selectedLang;
       document.querySelectorAll('[data-en]').forEach(el => {
@@ -183,25 +178,6 @@
       });
     }
 
-    // Replace header via fetch
-    fetch('/utilivy-header.html')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('utilivy-header').innerHTML = html;
-        setLanguage(lang);
-
-        // Set correct title for this page
-        const titleEl = document.getElementById('page-title');
-        if (titleEl) {
-          titleEl.setAttribute('data-en', 'Utilivy - Body Fat Calculator');
-          titleEl.setAttribute('data-zh', 'Utilivy - 体脂率计算器');
-          titleEl.textContent = lang === 'zh'
-            ? titleEl.getAttribute('data-zh')
-            : titleEl.getAttribute('data-en');
-        }
-      });
-
-    // Toggle hip input
     document.getElementById('gender').addEventListener('change', () => {
       document.getElementById('hip-section').style.display =
         document.getElementById('gender').value === 'female' ? 'block' : 'none';
@@ -215,12 +191,8 @@
       const waist = parseFloat(document.getElementById('waist').value);
       const hip = parseFloat(document.getElementById('hip').value);
 
-      if (
-        isNaN(age) || isNaN(height) || isNaN(neck) || isNaN(waist) ||
-        (gender === 'female' && isNaN(hip))
-      ) {
-        document.getElementById('result').textContent = lang === 'zh'
-          ? '请输入所有字段。' : 'Please enter all fields.';
+      if (isNaN(age) || isNaN(height) || isNaN(neck) || isNaN(waist) || (gender === 'female' && isNaN(hip))) {
+        document.getElementById('result').textContent = lang === 'zh' ? '请输入所有字段。' : 'Please enter all fields.';
         return;
       }
 
