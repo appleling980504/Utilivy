@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Compound Interest Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -28,45 +28,56 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
-      flex-grow: 1;
+      line-height: 1;
     }
-    header .lang-switch {
+    .header-right {
       display: flex;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 1rem;
     }
-    header .lang-switch button {
-      padding: 0.3rem 0.8rem;
-      font-size: 0.9rem;
-      border: 1px solid #ccc;
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
       background-color: var(--primary-color);
       color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
-      margin-left: 2rem;
+      font-size: 0.95rem;
     }
     .adsense-banner,
     .adsense-footer {
       text-align: center;
       margin: 1rem 0;
       color: gray;
+      display: none;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
@@ -81,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -92,13 +103,13 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
     footer {
       text-align: center;
@@ -111,39 +122,39 @@
 <body>
   <header>
     <h1 data-en="Utilivy - Compound Interest Calculator" data-zh="Utilivy - 复利计算器">Utilivy - Compound Interest Calculator</h1>
-    <div class="lang-switch">
-      <button onclick="setLanguage('en')">EN</button>
-      <button onclick="setLanguage('zh')">中</button>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
-    <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
   </header>
 
-  <div class="adsense-banner" style="display:none">
-    <!-- Replace with real AdSense script after approval -->
+  <div class="adsense-banner">
     <p>[Ad Placeholder - Top]</p>
   </div>
 
   <div class="container">
     <h2 data-en="Compound Interest Calculator" data-zh="复利计算器">Compound Interest Calculator</h2>
-
-    <label for="principal" data-en="Principal Amount ($)" data-zh="本金 ($)">Principal Amount ($)</label>
+    <label data-en="Principal Amount" data-zh="本金">Principal Amount</label>
     <input type="number" id="principal" placeholder="e.g. 1000">
-
-    <label for="rate" data-en="Annual Interest Rate (%)" data-zh="年利率 (%)">Annual Interest Rate (%)</label>
+    
+    <label data-en="Annual Interest Rate (%)" data-zh="年利率 (%)">Annual Interest Rate (%)</label>
     <input type="number" id="rate" placeholder="e.g. 5">
-
-    <label for="years" data-en="Time (years)" data-zh="时间 (年)">Time (years)</label>
+    
+    <label data-en="Years" data-zh="年数">Years</label>
     <input type="number" id="years" placeholder="e.g. 10">
+    
+    <label data-en="Compoundings per Year" data-zh="每年复利次数">Compoundings per Year</label>
+    <input type="number" id="compound" placeholder="e.g. 4">
 
-    <label for="frequency" data-en="Compounds per Year" data-zh="每年复利次数">Compounds per Year</label>
-    <input type="number" id="frequency" placeholder="e.g. 12">
+    <button class="calculate" onclick="calculate()" data-en="Calculate" data-zh="计算">Calculate</button>
 
-    <button onclick="calculateCompoundInterest()" data-en="Calculate" data-zh="计算">Calculate</button>
-    <div id="result" class="result"></div>
+    <div class="result" id="result"></div>
   </div>
 
-  <div class="adsense-footer" style="display:none">
-    <!-- Replace with real AdSense script after approval -->
+  <div class="adsense-footer">
     <p>[Ad Placeholder - Bottom]</p>
   </div>
 
@@ -152,33 +163,33 @@
   </footer>
 
   <script>
-    function calculateCompoundInterest() {
-      const principal = parseFloat(document.getElementById('principal').value);
-      const rate = parseFloat(document.getElementById('rate').value);
-      const years = parseFloat(document.getElementById('years').value);
-      const frequency = parseFloat(document.getElementById('frequency').value);
-
-      if (isNaN(principal) || isNaN(rate) || isNaN(years) || isNaN(frequency)) {
-        document.getElementById('result').textContent = lang === 'zh'
-          ? '请正确填写所有字段。'
-          : 'Please fill in all fields correctly.';
-        return;
-      }
-
-      const amount = principal * Math.pow(1 + (rate / 100) / frequency, frequency * years);
-      const interest = amount - principal;
-
-      document.getElementById('result').textContent = lang === 'zh'
-        ? `总金额: $${amount.toFixed(2)}（利息: $${interest.toFixed(2)}）`
-        : `Total Value: $${amount.toFixed(2)} (Interest Earned: $${interest.toFixed(2)})`;
-    }
-
     let lang = 'en';
     function setLanguage(selectedLang) {
       lang = selectedLang;
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${selectedLang}`);
       });
+    }
+
+    function calculate() {
+      const principal = parseFloat(document.getElementById('principal').value);
+      const rate = parseFloat(document.getElementById('rate').value) / 100;
+      const years = parseInt(document.getElementById('years').value);
+      const compound = parseInt(document.getElementById('compound').value);
+
+      if (isNaN(principal) || isNaN(rate) || isNaN(years) || isNaN(compound) || principal <= 0 || compound <= 0) {
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请输入所有有效值。'
+          : 'Please enter all valid values.';
+        return;
+      }
+
+      const amount = principal * Math.pow((1 + rate / compound), compound * years);
+      const rounded = amount.toFixed(2);
+
+      document.getElementById('result').textContent = lang === 'zh'
+        ? `未来价值：${rounded}`
+        : `Future Value: ${rounded}`;
     }
   </script>
 </body>
