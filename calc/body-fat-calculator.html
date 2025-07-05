@@ -64,13 +64,6 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
     .container {
       max-width: 600px;
       margin: 2rem auto;
@@ -111,11 +104,29 @@
       font-weight: bold;
       font-size: 1.2rem;
     }
+    table {
+      margin-top: 1.5rem;
+      width: 100%;
+      border-collapse: collapse;
+    }
+    table, th, td {
+      border: 1px solid #d1d5db;
+    }
+    th, td {
+      padding: 0.6rem;
+      text-align: center;
+      font-size: 0.95rem;
+    }
     footer {
       text-align: center;
       padding: 1rem;
       font-size: 0.9rem;
       color: #6b7280;
+    }
+    .note {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
     }
   </style>
 </head>
@@ -131,10 +142,6 @@
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
   <div class="container">
     <h2 data-en="Body Fat Calculator" data-zh="体脂率计算器">Body Fat Calculator</h2>
 
@@ -147,22 +154,36 @@
     <label data-en="Age" data-zh="年龄">Age</label>
     <input type="number" id="age" placeholder="e.g. 25">
 
-    <label data-en="Height (cm)" data-zh="身高 (厘米)">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 175">
-
-    <label data-en="Neck Circumference (cm)" data-zh="颈围 (厘米)">Neck Circumference (cm)</label>
-    <input type="number" id="neck" placeholder="e.g. 38">
+    <label data-en="Weight (kg)" data-zh="体重 (公斤)">Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 70">
 
     <label data-en="Waist Circumference (cm)" data-zh="腰围 (厘米)">Waist Circumference (cm)</label>
     <input type="number" id="waist" placeholder="e.g. 85">
 
-    <div id="hip-section" style="display:none">
-      <label data-en="Hip Circumference (cm)" data-zh="臀围 (厘米)">Hip Circumference (cm)</label>
-      <input type="number" id="hip" placeholder="e.g. 95">
+    <button class="calculate" onclick="calculate()" data-en="Calculate" data-zh="计算">Calculate</button>
+
+    <div class="result" id="result"></div>
+
+    <div class="note" data-en="Using U.S. Navy Method for body fat estimation." data-zh="本计算基于美国海军体脂估算方法。">
+      Using U.S. Navy Method for body fat estimation.
     </div>
 
-    <button class="calculate" onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
-    <div class="result" id="result"></div>
+    <table>
+      <thead>
+        <tr>
+          <th data-en="Category" data-zh="分类">Category</th>
+          <th data-en="Male (%)" data-zh="男性 (%)">Male (%)</th>
+          <th data-en="Female (%)" data-zh="女性 (%)">Female (%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-en="Essential Fat" data-zh="必要脂肪">Essential Fat</td><td>2–5</td><td>10–13</td></tr>
+        <tr><td data-en="Athletes" data-zh="运动员">Athletes</td><td>6–13</td><td>14–20</td></tr>
+        <tr><td data-en="Fitness" data-zh="健身">Fitness</td><td>14–17</td><td>21–24</td></tr>
+        <tr><td data-en="Acceptable" data-zh="可接受">Acceptable</td><td>18–24</td><td>25–31</td></tr>
+        <tr><td data-en="Obese" data-zh="肥胖">Obese</td><td>25+</td><td>32+</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <footer>
@@ -178,35 +199,56 @@
       });
     }
 
-    document.getElementById('gender').addEventListener('change', () => {
-      document.getElementById('hip-section').style.display =
-        document.getElementById('gender').value === 'female' ? 'block' : 'none';
-    });
-
-    function calculateBodyFat() {
+    function calculate() {
       const gender = document.getElementById('gender').value;
       const age = parseFloat(document.getElementById('age').value);
-      const height = parseFloat(document.getElementById('height').value);
-      const neck = parseFloat(document.getElementById('neck').value);
+      const weight = parseFloat(document.getElementById('weight').value);
       const waist = parseFloat(document.getElementById('waist').value);
-      const hip = parseFloat(document.getElementById('hip').value);
 
-      if (isNaN(age) || isNaN(height) || isNaN(neck) || isNaN(waist) || (gender === 'female' && isNaN(hip))) {
-        document.getElementById('result').textContent = lang === 'zh' ? '请输入所有字段。' : 'Please enter all fields.';
+      if (isNaN(age) || isNaN(weight) || isNaN(waist)) {
+        document.getElementById('result').textContent =
+          lang === 'zh' ? '请输入所有字段。' : 'Please fill in all fields.';
         return;
       }
 
-      let bf = 0;
+      // 简化版海军公式估算（仅使用腰围、体重）
+      let bodyFatPercent;
       if (gender === 'male') {
-        bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+        bodyFatPercent = 64 - 20 * (weight / waist);
       } else {
-        bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+        bodyFatPercent = 76 - 20 * (weight / waist);
       }
 
-      bf = Math.max(2, Math.min(60, bf));
+      bodyFatPercent = Math.max(2, Math.min(60, bodyFatPercent));
+      const percentText = bodyFatPercent.toFixed(1) + '%';
+
+      let category = '';
+      if (gender === 'male') {
+        if (bodyFatPercent < 6) category = 'Essential Fat';
+        else if (bodyFatPercent < 14) category = 'Athletes';
+        else if (bodyFatPercent < 18) category = 'Fitness';
+        else if (bodyFatPercent < 25) category = 'Acceptable';
+        else category = 'Obese';
+      } else {
+        if (bodyFatPercent < 11) category = 'Essential Fat';
+        else if (bodyFatPercent < 21) category = 'Athletes';
+        else if (bodyFatPercent < 25) category = 'Fitness';
+        else if (bodyFatPercent < 32) category = 'Acceptable';
+        else category = 'Obese';
+      }
+
+      const zhMap = {
+        'Essential Fat': '必要脂肪',
+        'Athletes': '运动员',
+        'Fitness': '健身',
+        'Acceptable': '可接受',
+        'Obese': '肥胖'
+      };
+
       const resultText = lang === 'zh'
-        ? `估算体脂率：${bf.toFixed(1)}%`
-        : `Estimated Body Fat: ${bf.toFixed(1)}%`;
+        ? `估算体脂率：${percentText}（${zhMap[category]}）`
+        : `Estimated Body Fat: ${percentText} (${category})`;
+
       document.getElementById('result').textContent = resultText;
     }
   </script>
