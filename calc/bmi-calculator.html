@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - BMI Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -27,23 +27,57 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
@@ -58,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -69,13 +103,28 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+    }
+    .bmi-table {
+      margin-top: 1.5rem;
+      border-collapse: collapse;
+      width: 100%;
+      font-size: 0.95rem;
+    }
+    .bmi-table th, .bmi-table td {
+      border: 1px solid #d1d5db;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    .bmi-table th {
+      background-color: #f9fafb;
+      font-weight: 600;
     }
     footer {
       text-align: center;
@@ -87,45 +136,89 @@
 </head>
 <body>
   <header>
-    <h1>Utilivy - BMI Calculator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - BMI Calculator" data-zh="Utilivy - BMI 计算器">Utilivy - BMI Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <h2>Body Mass Index Calculator</h2>
-    <label for="weight">Weight (kg)</label>
-    <input type="number" id="weight" placeholder="e.g. 70">
+    <h2 data-en="BMI Calculator" data-zh="BMI 计算器">BMI Calculator</h2>
+    
+    <label data-en="Height (cm)" data-zh="身高（厘米）">Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 170">
 
-    <label for="height">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 175">
+    <label data-en="Weight (kg)" data-zh="体重（公斤）">Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 65">
 
-    <button onclick="calculateBMI()">Calculate</button>
+    <button class="calculate" onclick="calculateBMI()" data-en="Calculate" data-zh="计算">Calculate</button>
 
-    <div id="result" class="result"></div>
+    <div class="result" id="result"></div>
+
+    <table class="bmi-table">
+      <thead>
+        <tr>
+          <th data-en="Category" data-zh="类别">Category</th>
+          <th data-en="BMI Range" data-zh="BMI 范围">BMI Range</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td data-en="Underweight" data-zh="偏瘦">Underweight</td><td>&lt; 18.5</td></tr>
+        <tr><td data-en="Normal weight" data-zh="正常">Normal weight</td><td>18.5 – 24.9</td></tr>
+        <tr><td data-en="Overweight" data-zh="偏重">Overweight</td><td>25 – 29.9</td></tr>
+        <tr><td data-en="Obesity" data-zh="肥胖">Obesity</td><td>30+</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
-    function calculateBMI() {
-      const weight = parseFloat(document.getElementById("weight").value);
-      const height = parseFloat(document.getElementById("height").value);
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
+      });
+    }
 
-      if (isNaN(weight) || isNaN(height) || weight <= 0 || height <= 0) {
-        document.getElementById("result").textContent = "Please enter valid numbers for weight and height.";
+    function calculateBMI() {
+      const height = parseFloat(document.getElementById('height').value) / 100;
+      const weight = parseFloat(document.getElementById('weight').value);
+
+      if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请输入有效的身高和体重。'
+          : 'Please enter valid height and weight.';
         return;
       }
 
-      const bmi = weight / ((height / 100) ** 2);
-      let category = "";
-      if (bmi < 18.5) category = "Underweight";
-      else if (bmi < 24.9) category = "Normal weight";
-      else if (bmi < 29.9) category = "Overweight";
-      else category = "Obese";
+      const bmi = weight / (height * height);
+      const rounded = bmi.toFixed(1);
+      let category = '';
 
-      document.getElementById("result").textContent = `Your BMI is ${bmi.toFixed(1)} (${category})`;
+      if (bmi < 18.5) category = lang === 'zh' ? '偏瘦' : 'Underweight';
+      else if (bmi < 25) category = lang === 'zh' ? '正常' : 'Normal weight';
+      else if (bmi < 30) category = lang === 'zh' ? '偏重' : 'Overweight';
+      else category = lang === 'zh' ? '肥胖' : 'Obesity';
+
+      document.getElementById('result').textContent = 
+        (lang === 'zh' ? `您的 BMI 为 ${rounded}，属于「${category}」范围。` 
+                       : `Your BMI is ${rounded}, which is considered "${category}".`);
     }
   </script>
 </body>
