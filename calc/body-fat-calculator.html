@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilivy - Body Fat Calculator</title>
+  <title>Utilivy - Compound Interest Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/utilivy-header.css" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -20,6 +19,50 @@
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
     }
     .adsense-banner,
     .adsense-footer {
@@ -41,7 +84,7 @@
       margin-top: 1rem;
       font-weight: 500;
     }
-    input, select {
+    input {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid #d1d5db;
@@ -49,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -60,7 +103,7 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
@@ -77,7 +120,16 @@
   </style>
 </head>
 <body>
-  <div id="utilivy-header"></div>
+  <header>
+    <h1 data-en="Utilivy - Compound Interest Calculator" data-zh="Utilivy - 复利计算器">Utilivy - Compound Interest Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
   <div class="adsense-banner">
     <p>[Ad Placeholder - Top]</p>
