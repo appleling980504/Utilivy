@@ -4,106 +4,114 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Countdown Timer Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: var(--bg-color);
+      background-color: var(--bg-color);
       color: var(--text-color);
     }
     header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
-      font-size: 1.5rem;
       margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
     }
     .header-right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
     .lang-switch button {
-      background: var(--primary-color);
-      color: white;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
       border: none;
-      padding: 0.5rem 0.75rem;
       border-radius: 6px;
       cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
     }
     .container {
       max-width: 600px;
-      background: white;
       margin: 2rem auto;
       padding: 2rem;
+      background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
-      font-weight: 500;
-      margin-top: 1rem;
       display: block;
+      margin-top: 1rem;
+      font-weight: 500;
     }
     input {
       width: 100%;
-      padding: 0.7rem;
+      padding: 0.75rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
+      margin-top: 0.5rem;
       font-size: 1rem;
-      margin-top: 0.3rem;
-    }
-    .time-inputs {
-      display: flex;
-      gap: 1rem;
-    }
-    .time-inputs input {
-      width: 100%;
     }
     button {
-      margin-top: 1.5rem;
-      width: 100%;
-      padding: 0.8rem;
       background: var(--primary-color);
       color: white;
-      font-size: 1rem;
       border: none;
+      padding: 0.75rem 1rem;
       border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
     button:hover {
       background-color: #4338ca;
     }
-    .timer-display {
-      text-align: center;
-      font-size: 2.5rem;
-      font-weight: bold;
-      margin-top: 1.5rem;
-    }
-    .embed-box {
+    .result {
       margin-top: 2rem;
+      font-size: 2rem;
+      text-align: center;
+      font-weight: bold;
     }
-    textarea {
-      width: 100%;
-      height: 100px;
-      margin-top: 0.5rem;
-      font-family: monospace;
-      font-size: 0.9rem;
+    .embed-code {
+      margin-top: 2rem;
+      background: #f9fafb;
       padding: 1rem;
       border-radius: 8px;
-      border: 1px solid #d1d5db;
-      background: #f9fafb;
+      font-family: monospace;
+      word-break: break-all;
     }
     footer {
       text-align: center;
@@ -115,83 +123,71 @@
 </head>
 <body>
   <header>
-    <h1>Utilivy - Countdown Timer Generator</h1>
+    <h1 data-en="Utilivy - Countdown Timer Generator" data-zh="Utilivy - 倒计时生成器">Utilivy - Countdown Timer Generator</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
         <button onclick="setLanguage('zh')">中</button>
       </div>
-      <a href="/">← Back to Home</a>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
   </header>
 
   <div class="container">
-    <label for="minutes">Minutes</label>
-    <input type="number" id="minutes" placeholder="e.g. 5">
+    <label data-en="Enter countdown seconds" data-zh="输入倒计时秒数">Enter countdown seconds</label>
+    <input type="number" id="secondsInput" min="1" placeholder="e.g. 60" />
 
-    <label for="seconds">Seconds</label>
-    <input type="number" id="seconds" placeholder="e.g. 30">
+    <button onclick="startCountdown()" data-en="Start Countdown" data-zh="开始倒计时">Start Countdown</button>
 
-    <button onclick="startCountdown()">Start Countdown</button>
+    <div class="result" id="countdownDisplay"></div>
 
-    <div class="timer-display" id="timer">00:00</div>
-
-    <div class="embed-box">
-      <label>Embed Code (iframe)</label>
-      <textarea id="embedCode" readonly></textarea>
+    <div class="embed-code">
+      <div data-en="Embed Code (iframe):" data-zh="嵌入代码 (iframe):">Embed Code (iframe):</div>
+      <code id="embedCode"></code>
     </div>
+
+    <audio id="alarmSound">
+      <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+      Your browser does not support the audio element.
+    </audio>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    © 2025 Utilivy. All rights reserved.
   </footer>
 
-  <audio id="alarm-sound" src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" preload="auto"></audio>
-
   <script>
-    let countdown;
-    let lang = 'en';
-
-    function setLanguage(l) {
-      lang = l;
-    }
-
     function startCountdown() {
-      const minutes = parseInt(document.getElementById("minutes").value) || 0;
-      const seconds = parseInt(document.getElementById("seconds").value) || 0;
-      let total = minutes * 60 + seconds;
+      const seconds = parseInt(document.getElementById("secondsInput").value);
+      const display = document.getElementById("countdownDisplay");
+      const audio = document.getElementById("alarmSound");
 
-      if (isNaN(total) || total <= 0) {
-        alert(lang === 'zh' ? "请输入有效的时间。" : "Please enter a valid time.");
+      if (isNaN(seconds) || seconds < 1) {
+        alert("Please enter a valid number of seconds.");
         return;
       }
 
-      clearInterval(countdown);
-      updateDisplay(total);
+      let remaining = seconds;
+      display.textContent = remaining + "s";
 
-      countdown = setInterval(() => {
-        total--;
-        updateDisplay(total);
-
-        if (total <= 0) {
-          clearInterval(countdown);
-          document.getElementById("alarm-sound").play();
+      const interval = setInterval(() => {
+        remaining--;
+        display.textContent = remaining + "s";
+        if (remaining <= 0) {
+          clearInterval(interval);
+          display.textContent = "⏰ Time's up!";
+          audio.play();
         }
       }, 1000);
 
-      generateEmbedCode(minutes, seconds);
+      const embed = `<iframe src="${location.href}" width="300" height="150" frameborder="0"></iframe>`;
+      document.getElementById("embedCode").textContent = embed;
     }
 
-    function updateDisplay(total) {
-      const m = String(Math.floor(total / 60)).padStart(2, "0");
-      const s = String(total % 60).padStart(2, "0");
-      document.getElementById("timer").textContent = `${m}:${s}`;
-    }
-
-    function generateEmbedCode(min, sec) {
-      const url = `${window.location.origin}/embed-timer.html?min=${min}&sec=${sec}`;
-      const iframe = `<iframe src="${url}" width="300" height="100" frameborder="0"></iframe>`;
-      document.getElementById("embedCode").value = iframe;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      });
     }
   </script>
 </body>
