@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Age Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -27,15 +27,42 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
     }
     .container {
       max-width: 600px;
@@ -43,7 +70,39 @@
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
     footer {
       text-align: center;
@@ -51,77 +110,74 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    input[type="date"] {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-    button:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1rem;
-      font-size: 1.2rem;
-      font-weight: 500;
-    }
-    @media (max-width: 600px) {
-      .container {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.25rem;
-      }
-    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>Utilivy - Age Calculator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - Age Calculator" data-zh="Utilivy - 年龄计算器">Utilivy - Age Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
   <div class="container">
-    <h2>Age Calculator</h2>
-    <p>Select your birthdate to calculate your age.</p>
-    <input type="date" id="birthdate">
-    <button onclick="calculateAge()">Calculate Age</button>
-    <div id="result" class="result"></div>
+    <h2 data-en="Age Calculator" data-zh="年龄计算器">Age Calculator</h2>
+
+    <label for="dob" data-en="Enter your date of birth:" data-zh="请输入出生日期：">Enter your date of birth:</label>
+    <input type="date" id="dob" />
+
+    <button class="calculate" onclick="calculateAge()" data-en="Calculate" data-zh="计算">Calculate</button>
+
+    <div class="result" id="result"></div>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
+      });
+    }
+
     function calculateAge() {
-      const birthdate = document.getElementById("birthdate").value;
-      if (!birthdate) return;
-      const today = new Date();
-      const birth = new Date(birthdate);
-      let age = today.getFullYear() - birth.getFullYear();
-      const m = today.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-        age--;
+      const dob = new Date(document.getElementById('dob').value);
+      if (isNaN(dob)) {
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请输入有效的出生日期。'
+          : 'Please enter a valid date of birth.';
+        return;
       }
-      document.getElementById("result").innerText = `You are ${age} years old.`;
+
+      const today = new Date();
+      let years = today.getFullYear() - dob.getFullYear();
+      let months = today.getMonth() - dob.getMonth();
+      let days = today.getDate() - dob.getDate();
+
+      if (days < 0) {
+        months -= 1;
+        days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+      }
+
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+
+      const resultText = lang === 'zh'
+        ? `您已经 ${years} 岁 ${months} 个月 ${days} 天。`
+        : `You are ${years} years, ${months} months, and ${days} days old.`;
+
+      document.getElementById('result').textContent = resultText;
     }
   </script>
-
 </body>
 </html>
