@@ -1,64 +1,50 @@
-/* utilivy-header.css */
-.utilivy-header {
+header {
+  background: white;
+  padding: 1rem 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  font-family: 'Inter', sans-serif;
   flex-wrap: wrap;
+  gap: 1rem;
 }
 
-#page-title {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #111827;
-  white-space: nowrap;
+header h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1;
 }
 
-.right-section {
+.header-right {
   display: flex;
   align-items: center;
-  gap: 1.2rem;
+  gap: 1rem;
+}
+
+.lang-switch {
+  display: flex;
+  gap: 0.4rem;
 }
 
 .lang-switch button {
   padding: 0.4rem 0.8rem;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background-color: #4f46e5;
+  background-color: var(--primary-color);
   color: white;
   width: 42px;
   height: 32px;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.lang-switch button:hover {
-  background-color: #4338ca;
-}
-
-.back-link a {
+header a {
   text-decoration: none;
-  font-size: 0.95rem;
-  color: #4f46e5;
+  color: var(--primary-color);
   font-weight: 500;
-  white-space: nowrap;
-}
-
-.back-link a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-  .utilivy-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.8rem;
-  }
-
-  .right-section {
-    align-self: flex-end;
-  }
+  font-size: 0.95rem;
 }
