@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Body Fat Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -27,23 +27,57 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
@@ -58,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -69,13 +103,13 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
     }
     footer {
       text-align: center;
@@ -87,71 +121,110 @@
 </head>
 <body>
   <header>
-    <h1>Utilivy - Body Fat Calculator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - Body Fat Calculator" data-zh="Utilivy - 体脂率计算器">Utilivy - Body Fat Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <h2>Body Fat Percentage Calculator</h2>
-    <label for="gender">Gender</label>
+    <h2 data-en="Body Fat Calculator" data-zh="体脂率计算器">Body Fat Calculator</h2>
+
+    <label data-en="Gender" data-zh="性别">Gender</label>
     <select id="gender">
-      <option value="male">Male</option>
-      <option value="female">Female</option>
+      <option value="male" data-en="Male" data-zh="男">Male</option>
+      <option value="female" data-en="Female" data-zh="女">Female</option>
     </select>
 
-    <label for="waist">Waist Circumference (cm)</label>
-    <input type="number" id="waist" placeholder="e.g. 85">
+    <label data-en="Age" data-zh="年龄">Age</label>
+    <input type="number" id="age" placeholder="e.g. 25" />
 
-    <label for="neck">Neck Circumference (cm)</label>
-    <input type="number" id="neck" placeholder="e.g. 40">
+    <label data-en="Height (cm)" data-zh="身高（cm）">Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 170" />
 
-    <label for="height">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 175">
+    <label data-en="Neck Circumference (cm)" data-zh="颈围（cm）">Neck Circumference (cm)</label>
+    <input type="number" id="neck" placeholder="e.g. 38" />
 
-    <div id="hipInput" style="display: none">
-      <label for="hip">Hip Circumference (cm)</label>
-      <input type="number" id="hip" placeholder="e.g. 95">
-    </div>
+    <label data-en="Waist Circumference (cm)" data-zh="腰围（cm）">Waist Circumference (cm)</label>
+    <input type="number" id="waist" placeholder="e.g. 80" />
 
-    <button onclick="calculateBodyFat()">Calculate</button>
-    <div id="result" class="result"></div>
+    <label id="hipLabel" data-en="Hip Circumference (cm)" data-zh="臀围（cm）" style="display:none;">Hip Circumference (cm)</label>
+    <input type="number" id="hip" placeholder="e.g. 95" style="display:none;" />
+
+    <button class="calculate" onclick="calculateFat()" data-en="Calculate" data-zh="计算">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
-    const genderSelect = document.getElementById("gender");
-    const hipInput = document.getElementById("hipInput");
+    let lang = 'en';
+    function setLanguage(selectedLang) {
+      lang = selectedLang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${selectedLang}`);
+      });
+      const gender = document.getElementById('gender').value;
+      toggleHipField(gender);
+    }
 
-    genderSelect.addEventListener("change", () => {
-      if (genderSelect.value === "female") {
-        hipInput.style.display = "block";
-      } else {
-        hipInput.style.display = "none";
-      }
+    document.getElementById('gender').addEventListener('change', function() {
+      toggleHipField(this.value);
     });
 
-    function calculateBodyFat() {
-      const gender = genderSelect.value;
-      const waist = parseFloat(document.getElementById("waist").value);
-      const neck = parseFloat(document.getElementById("neck").value);
-      const height = parseFloat(document.getElementById("height").value);
-      const hip = parseFloat(document.getElementById("hip").value);
+    function toggleHipField(gender) {
+      const hip = document.getElementById('hip');
+      const label = document.getElementById('hipLabel');
+      if (gender === 'female') {
+        hip.style.display = 'block';
+        label.style.display = 'block';
+      } else {
+        hip.style.display = 'none';
+        label.style.display = 'none';
+      }
+    }
 
-      let bodyFat = 0;
-      if (gender === "male") {
+    function calculateFat() {
+      const gender = document.getElementById('gender').value;
+      const height = parseFloat(document.getElementById('height').value);
+      const neck = parseFloat(document.getElementById('neck').value);
+      const waist = parseFloat(document.getElementById('waist').value);
+      const hip = parseFloat(document.getElementById('hip').value);
+
+      if (isNaN(height) || isNaN(neck) || isNaN(waist) || (gender === 'female' && isNaN(hip))) {
+        document.getElementById('result').textContent = lang === 'zh'
+          ? '请输入所有有效数值。'
+          : 'Please enter all valid values.';
+        return;
+      }
+
+      let bodyFat;
+      if (gender === 'male') {
         bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
       } else {
-        if (isNaN(hip)) {
-          document.getElementById("result").textContent = "Please enter hip circumference.";
-          return;
-        }
         bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
       }
 
-      document.getElementById("result").textContent = `Your estimated body fat percentage is ${bodyFat.toFixed(1)}%`;
+      const resultText = lang === 'zh'
+        ? `估计体脂率：${bodyFat.toFixed(2)}%`
+        : `Estimated Body Fat: ${bodyFat.toFixed(2)}%`;
+
+      document.getElementById('result').textContent = resultText;
     }
   </script>
 </body>
