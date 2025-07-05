@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Utilivy - Body Fat Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -28,12 +28,10 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
-      line-height: 1;
     }
     .header-right {
       display: flex;
@@ -42,27 +40,22 @@
     }
     .lang-switch {
       display: flex;
-      gap: 0.4rem;
+      gap: 0.5rem;
     }
     .lang-switch button {
       padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
       border-radius: 6px;
       cursor: pointer;
       background-color: var(--primary-color);
       color: white;
       width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
-      font-size: 0.95rem;
     }
     .adsense-banner,
     .adsense-footer {
@@ -77,7 +70,7 @@
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     label {
       display: block;
@@ -92,7 +85,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button.calculate {
+    button {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -103,13 +96,29 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button.calculate:hover {
+    button:hover {
       background-color: #4338ca;
     }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+    }
+    .info-section {
+      margin-top: 2rem;
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      margin-top: 1rem;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: center;
     }
     footer {
       text-align: center;
@@ -137,31 +146,51 @@
 
   <div class="container">
     <h2 data-en="Body Fat Calculator" data-zh="体脂率计算器">Body Fat Calculator</h2>
-
     <label data-en="Gender" data-zh="性别">Gender</label>
     <select id="gender">
-      <option value="male" data-en="Male" data-zh="男">Male</option>
-      <option value="female" data-en="Female" data-zh="女">Female</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
     </select>
 
     <label data-en="Age" data-zh="年龄">Age</label>
-    <input type="number" id="age" placeholder="e.g. 25" />
+    <input type="number" id="age" placeholder="e.g. 25">
 
-    <label data-en="Height (cm)" data-zh="身高（cm）">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 170" />
+    <label data-en="Weight (kg)" data-zh="体重 (公斤)">Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 70">
 
-    <label data-en="Neck Circumference (cm)" data-zh="颈围（cm）">Neck Circumference (cm)</label>
-    <input type="number" id="neck" placeholder="e.g. 38" />
+    <label data-en="Waist Circumference (cm)" data-zh="腰围 (厘米)">Waist Circumference (cm)</label>
+    <input type="number" id="waist" placeholder="e.g. 85">
 
-    <label data-en="Waist Circumference (cm)" data-zh="腰围（cm）">Waist Circumference (cm)</label>
-    <input type="number" id="waist" placeholder="e.g. 80" />
-
-    <label id="hipLabel" data-en="Hip Circumference (cm)" data-zh="臀围（cm）" style="display:none;">Hip Circumference (cm)</label>
-    <input type="number" id="hip" placeholder="e.g. 95" style="display:none;" />
-
-    <button class="calculate" onclick="calculateFat()" data-en="Calculate" data-zh="计算">Calculate</button>
-
+    <button onclick="calculateBodyFat()" data-en="Calculate" data-zh="计算">Calculate</button>
     <div class="result" id="result"></div>
+
+    <div class="info-section">
+      <details>
+        <summary><strong data-en="How is body fat calculated?" data-zh="体脂率是如何计算的？">How is body fat calculated?</strong></summary>
+        <p data-en="This calculator uses the US Navy Method, based on age, gender, weight, and waist circumference."
+           data-zh="该计算器使用美国海军法，根据年龄、性别、体重和腰围计算。">
+           This calculator uses the US Navy Method, based on age, gender, weight, and waist circumference.
+        </p>
+      </details>
+
+      <h4 data-en="Reference Table" data-zh="参考表">Reference Table</h4>
+      <table>
+        <thead>
+          <tr>
+            <th data-en="Category" data-zh="类别">Category</th>
+            <th data-en="Male (%)" data-zh="男性 (%)">Male (%)</th>
+            <th data-en="Female (%)" data-zh="女性 (%)">Female (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td data-en="Essential fat" data-zh="必要脂肪">Essential fat</td><td>2–5%</td><td>10–13%</td></tr>
+          <tr><td data-en="Athletes" data-zh="运动员">Athletes</td><td>6–13%</td><td>14–20%</td></tr>
+          <tr><td data-en="Fitness" data-zh="健康">Fitness</td><td>14–17%</td><td>21–24%</td></tr>
+          <tr><td data-en="Acceptable" data-zh="可接受">Acceptable</td><td>18–24%</td><td>25–31%</td></tr>
+          <tr><td data-en="Obese" data-zh="肥胖">Obese</td><td>25%+</td><td>32%+</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="adsense-footer">
@@ -179,52 +208,52 @@
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${selectedLang}`);
       });
-      const gender = document.getElementById('gender').value;
-      toggleHipField(gender);
     }
 
-    document.getElementById('gender').addEventListener('change', function() {
-      toggleHipField(this.value);
-    });
-
-    function toggleHipField(gender) {
-      const hip = document.getElementById('hip');
-      const label = document.getElementById('hipLabel');
-      if (gender === 'female') {
-        hip.style.display = 'block';
-        label.style.display = 'block';
-      } else {
-        hip.style.display = 'none';
-        label.style.display = 'none';
-      }
-    }
-
-    function calculateFat() {
+    function calculateBodyFat() {
       const gender = document.getElementById('gender').value;
-      const height = parseFloat(document.getElementById('height').value);
-      const neck = parseFloat(document.getElementById('neck').value);
+      const age = parseInt(document.getElementById('age').value);
+      const weight = parseFloat(document.getElementById('weight').value);
       const waist = parseFloat(document.getElementById('waist').value);
-      const hip = parseFloat(document.getElementById('hip').value);
 
-      if (isNaN(height) || isNaN(neck) || isNaN(waist) || (gender === 'female' && isNaN(hip))) {
-        document.getElementById('result').textContent = lang === 'zh'
-          ? '请输入所有有效数值。'
-          : 'Please enter all valid values.';
+      if (isNaN(age) || isNaN(weight) || isNaN(waist)) {
+        document.getElementById('result').textContent = lang === 'zh' ? '请输入所有字段。' : 'Please enter all fields.';
         return;
       }
 
-      let bodyFat;
+      let bf = 0;
       if (gender === 'male') {
-        bodyFat = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+        bf = 64 - 20 * (height / waist);
       } else {
-        bodyFat = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+        bf = 76 - 20 * (height / waist);
       }
+      bf = Math.max(2, Math.min(60, bf));
+      const category = getFatCategory(gender, bf);
 
       const resultText = lang === 'zh'
-        ? `估计体脂率：${bodyFat.toFixed(2)}%`
-        : `Estimated Body Fat: ${bodyFat.toFixed(2)}%`;
-
+        ? `估算体脂率：${bf.toFixed(1)}%，属于“${category.zh}”范围。`
+        : `Estimated Body Fat: ${bf.toFixed(1)}% → You are in the "${category.en}" range.`;
       document.getElementById('result').textContent = resultText;
+    }
+
+    function getFatCategory(gender, bf) {
+      const ranges = {
+        male: [
+          { max: 5, en: 'Essential fat', zh: '必要脂肪' },
+          { max: 13, en: 'Athletes', zh: '运动员' },
+          { max: 17, en: 'Fitness', zh: '健康' },
+          { max: 24, en: 'Acceptable', zh: '可接受' },
+          { max: Infinity, en: 'Obese', zh: '肥胖' },
+        ],
+        female: [
+          { max: 13, en: 'Essential fat', zh: '必要脂肪' },
+          { max: 20, en: 'Athletes', zh: '运动员' },
+          { max: 24, en: 'Fitness', zh: '健康' },
+          { max: 31, en: 'Acceptable', zh: '可接受' },
+          { max: Infinity, en: 'Obese', zh: '肥胖' },
+        ]
+      };
+      return ranges[gender].find(r => bf <= r.max);
     }
   </script>
 </body>
