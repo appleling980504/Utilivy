@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - GPA Calculator</title>
-  <link href="="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -64,59 +64,61 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-    .adsense-banner,
-    .adsense-footer {
+    .adsense-banner, .adsense-footer {
       text-align: center;
       margin: 1rem 0;
       color: gray;
       display: none;
     }
     .container {
-      max-width: 800px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    table {
-      width: 100%;
+    label {
+      display: block;
       margin-top: 1rem;
-      border-collapse: collapse;
+      font-weight: 500;
     }
-    th, td {
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-    }
-    input[type="text"], input[type="number"] {
+    select, input {
       width: 100%;
-      padding: 0.5rem;
+      padding: 0.6rem;
       font-size: 1rem;
-      border-radius: 6px;
       border: 1px solid #ccc;
+      border-radius: 8px;
+      margin-top: 0.5rem;
     }
     button {
-      margin-top: 1rem;
-      background-color: var(--primary-color);
+      background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
-      border-radius: 6px;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 8px;
       cursor: pointer;
-    }
-    button:hover {
-      background-color: #4338ca;
+      margin-top: 1.5rem;
+      width: 100%;
     }
     .result {
+      margin-top: 1.5rem;
       font-weight: bold;
       font-size: 1.2rem;
-      margin-top: 1rem;
     }
-    footer {
+    .grade-table {
+      margin-top: 2rem;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    .grade-table th, .grade-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
       text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    }
+    .grade-table th {
+      background-color: #f9fafb;
     }
   </style>
 </head>
@@ -137,20 +139,28 @@
   </div>
 
   <div class="container">
-    <table id="courseTable">
-      <thead>
-        <tr>
-          <th data-en="Course Name" data-zh="课程名">Course Name</th>
-          <th data-en="Credits" data-zh="学分">Credits</th>
-          <th data-en="Grade (0-4)" data-zh="成绩（0-4）">Grade (0–4)</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-    <button onclick="addRow()" data-en="Add Course" data-zh="添加课程">Add Course</button>
+    <label data-en="Number of Subjects" data-zh="科目数量">Number of Subjects</label>
+    <input type="number" id="subjectCount" min="1" value="5" />
+
+    <div id="gradesContainer"></div>
+
     <button onclick="calculateGPA()" data-en="Calculate GPA" data-zh="计算 GPA">Calculate GPA</button>
+    
     <div class="result" id="gpaResult"></div>
+
+    <h3 data-en="GPA Scale Reference" data-zh="GPA 对照表">GPA Scale Reference</h3>
+    <table class="grade-table">
+      <thead>
+        <tr><th>Letter Grade</th><th>GPA Value</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>4.0</td></tr>
+        <tr><td>B</td><td>3.0</td></tr>
+        <tr><td>C</td><td>2.0</td></tr>
+        <tr><td>D</td><td>1.0</td></tr>
+        <tr><td>F</td><td>0.0</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <div class="adsense-footer">
@@ -158,52 +168,67 @@
   </div>
 
   <footer>
-    <span data-en="Enter your courses, credits, and grades to calculate your GPA." data-zh="输入课程、学分和成绩即可计算 GPA。">Enter your courses, credits, and grades to calculate your GPA.</span>
+    &copy; 2025 Utilivy.com
   </footer>
 
   <script>
-    function addRow() {
-      const tbody = document.querySelector("#courseTable tbody");
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td><input type="text" placeholder="Math" /></td>
-        <td><input type="number" min="0" step="0.5" /></td>
-        <td><input type="number" min="0" max="4" step="0.1" /></td>
-        <td><button onclick="removeRow(this)">✕</button></td>
-      `;
-      tbody.appendChild(row);
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en]").forEach(el => {
+        el.innerText = lang === "zh" ? el.getAttribute("data-zh") : el.getAttribute("data-en");
+      });
     }
 
-    function removeRow(button) {
-      button.parentElement.parentElement.remove();
+    const gradeOptions = ['Select', 'A', 'B', 'C', 'D', 'F'];
+
+    document.getElementById("subjectCount").addEventListener("change", renderGradeInputs);
+    renderGradeInputs();
+
+    function renderGradeInputs() {
+      const count = parseInt(document.getElementById("subjectCount").value);
+      const container = document.getElementById("gradesContainer");
+      container.innerHTML = "";
+      for (let i = 0; i < count; i++) {
+        const wrapper = document.createElement("div");
+        wrapper.innerHTML = `
+          <label data-en="Subject ${i+1} Grade" data-zh="科目 ${i+1} 成绩">Subject ${i+1} Grade</label>
+          <select class="grade-select">
+            ${gradeOptions.map(opt => `<option value="${opt}">${opt}</option>`).join("")}
+          </select>
+        `;
+        container.appendChild(wrapper);
+      }
+    }
+
+    function gradeToGPA(grade) {
+      switch (grade.toUpperCase()) {
+        case 'A': return 4.0;
+        case 'B': return 3.0;
+        case 'C': return 2.0;
+        case 'D': return 1.0;
+        case 'F': return 0.0;
+        default: return null;
+      }
     }
 
     function calculateGPA() {
-      const rows = document.querySelectorAll("#courseTable tbody tr");
-      let totalCredits = 0;
-      let totalPoints = 0;
-
-      rows.forEach(row => {
-        const credits = parseFloat(row.cells[1].querySelector("input").value) || 0;
-        const grade = parseFloat(row.cells[2].querySelector("input").value) || 0;
-        totalCredits += credits;
-        totalPoints += credits * grade;
-      });
-
-      const gpa = totalCredits ? (totalPoints / totalCredits).toFixed(2) : 0;
-      document.getElementById("gpaResult").innerText =
-        `→ GPA: ${gpa}`;
+      const selects = document.querySelectorAll(".grade-select");
+      let total = 0;
+      let count = 0;
+      for (const sel of selects) {
+        const g = gradeToGPA(sel.value);
+        if (g !== null) {
+          total += g;
+          count++;
+        }
+      }
+      const result = document.getElementById("gpaResult");
+      if (count === 0) {
+        result.innerText = "Please enter valid grades.";
+      } else {
+        const avg = (total / count).toFixed(2);
+        result.innerText = `Your GPA is: ${avg}`;
+      }
     }
-
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en]").forEach(el => {
-        el.innerText = el.dataset[lang];
-      });
-      document.documentElement.lang = lang;
-    }
-
-    // Add initial row
-    window.onload = addRow;
   </script>
 </body>
 </html>
