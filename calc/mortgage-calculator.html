@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilivy - Loan Calculator</title>
+  <title>Utilivy - Mortgage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
@@ -11,9 +11,7 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -125,7 +123,7 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Loan Calculator" data-zh="Utilivy - 贷款计算器">Utilivy - Loan Calculator</h1>
+    <h1 data-en="Utilivy - Mortgage Calculator" data-zh="Utilivy - 房贷计算器">Utilivy - Mortgage Calculator</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -136,22 +134,26 @@
   </header>
 
   <div class="container">
-    <label data-en="Loan Amount" data-zh="贷款金额">Loan Amount</label>
-    <input type="number" id="amount" value="300000" />
+    <label data-en="Property Price" data-zh="房产总价">Property Price</label>
+    <input type="number" id="propertyPrice" value="500000" />
 
-    <label data-en="Interest Rate (%)" data-zh="利率 (%)">Interest Rate (%)</label>
-    <input type="number" id="rate" value="4.5" step="0.01" />
+    <label data-en="Down Payment" data-zh="首付金额">Down Payment</label>
+    <input type="number" id="downPayment" value="100000" />
 
     <label data-en="Loan Term (Years)" data-zh="贷款年限">Loan Term (Years)</label>
-    <input type="number" id="years" value="30" />
+    <input type="number" id="loanTerm" value="30" />
+
+    <label data-en="Interest Rate (%)" data-zh="利率 (%)">Interest Rate (%)</label>
+    <input type="number" id="interestRate" value="4.5" step="0.01" />
 
     <label data-en="Extra Payment per Month (Optional)" data-zh="每月额外还款 (可选)">Extra Payment per Month (Optional)</label>
-    <input type="number" id="extra" value="0" />
+    <input type="number" id="extraPayment" value="0" />
 
-    <button class="calculate" onclick="calculateLoan()">Calculate</button>
+    <button class="calculate" onclick="calculateMortgage()">Calculate</button>
 
-    <div class="result" id="monthly"></div>
-    <table id="schedule" style="display:none">
+    <div class="result" id="monthlyPayment"></div>
+
+    <table id="scheduleTable" style="display:none">
       <thead>
         <tr>
           <th data-en="Month" data-zh="月份">Month</th>
@@ -168,41 +170,45 @@
   <footer>© 2025 Utilivy</footer>
 
   <script>
-    function calculateLoan() {
-      const amount = parseFloat(document.getElementById('amount').value);
-      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-      const years = parseInt(document.getElementById('years').value);
-      const extra = parseFloat(document.getElementById('extra').value || 0);
+    function calculateMortgage() {
+      const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
+      const downPayment = parseFloat(document.getElementById('downPayment').value);
+      const loanAmount = propertyPrice - downPayment;
 
-      const totalMonths = years * 12;
-      const monthlyPayment = amount * rate * Math.pow(1 + rate, totalMonths) / (Math.pow(1 + rate, totalMonths) - 1);
+      const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
+      const loanTerm = parseInt(document.getElementById('loanTerm').value);
+      const extraPayment = parseFloat(document.getElementById('extraPayment').value || 0);
 
-      document.getElementById('monthly').innerText = `Monthly Payment: $${(monthlyPayment + extra).toFixed(2)}`;
-      const tbody = document.querySelector("#schedule tbody");
+      const totalMonths = loanTerm * 12;
+      const monthlyBase = loanAmount * interestRate * Math.pow(1 + interestRate, totalMonths) / (Math.pow(1 + interestRate, totalMonths) - 1);
+
+      const monthlyTotal = monthlyBase + extraPayment;
+      document.getElementById("monthlyPayment").innerText = `Monthly Payment: $${monthlyTotal.toFixed(2)}`;
+
+      let balance = loanAmount;
+      let month = 0;
+      const tbody = document.querySelector("#scheduleTable tbody");
       tbody.innerHTML = "";
 
-      let balance = amount;
-      let month = 0;
-
       while (balance > 0 && month < 1000) {
-        const interest = balance * rate;
-        let principal = monthlyPayment - interest;
-        principal += extra;
+        const interest = balance * interestRate;
+        let principal = monthlyBase - interest + extraPayment;
         if (principal > balance) principal = balance;
 
         balance -= principal;
         tbody.innerHTML += `
           <tr>
             <td>${month + 1}</td>
-            <td>${(principal - extra).toFixed(2)}</td>
+            <td>${(principal - extraPayment).toFixed(2)}</td>
             <td>${interest.toFixed(2)}</td>
-            <td>${extra.toFixed(2)}</td>
+            <td>${extraPayment.toFixed(2)}</td>
             <td>${balance.toFixed(2)}</td>
-          </tr>`;
+          </tr>
+        `;
         month++;
       }
 
-      document.getElementById('schedule').style.display = "table";
+      document.getElementById("scheduleTable").style.display = "table";
     }
 
     function setLanguage(lang) {
