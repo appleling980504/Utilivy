@@ -3,128 +3,185 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Percentage Calculator / 百分比计算器</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Percentage Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    select, button {
+      width: 100%;
+      padding: 0.75rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      margin-top: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
-  <div class="max-w-xl mx-auto p-6 bg-white rounded shadow my-10">
-    <h1 class="text-2xl font-bold text-center mb-6">Percentage Calculator / 百分比计算器</h1>
-
-    <div class="mb-4">
-      <label class="font-semibold block mb-1">Language / 语言</label>
-      <select id="lang" class="w-full border rounded px-3 py-2">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Percentage Calculator" data-zh="Utilivy - 百分比计算器">Utilivy - Percentage Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div class="mb-6">
-      <label class="block font-semibold mb-1" id="mode-label">Choose Mode / 选择模式</label>
-      <select id="mode" class="w-full border rounded px-3 py-2">
-        <option value="discount">Discount Calculation / 折扣计算</option>
-        <option value="increase">Increase or Decrease % / 增减百分比</option>
-        <option value="percentOf">What % is A of B / A 是 B 的百分之几</option>
-        <option value="reverse">Reverse Percentage / 反推原数</option>
-      </select>
-    </div>
+  <div class="container">
+    <label data-en="Choose a calculation type" data-zh="选择计算类型">Choose a calculation type</label>
+    <select id="type">
+      <option value="percentageOf">What is X% of Y?</option>
+      <option value="percentChange">What is the % change from X to Y?</option>
+      <option value="whatPercent">X is what percent of Y?</option>
+    </select>
 
-    <div id="inputs" class="space-y-4"></div>
+    <label for="value1" data-en="Value X" data-zh="数值 X">Value X</label>
+    <input type="number" id="value1" />
 
-    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold">
-      Calculate / 计算
-    </button>
+    <label for="value2" data-en="Value Y" data-zh="数值 Y">Value Y</label>
+    <input type="number" id="value2" />
 
-    <div id="result" class="mt-6 text-center text-lg font-bold text-green-600"></div>
+    <button class="calculate" onclick="calculate()" data-en="Calculate" data-zh="计算">Calculate</button>
+
+    <div class="result" id="result"></div>
   </div>
 
+  <footer>
+    © 2025 Utilivy.com
+  </footer>
+
   <script>
-    const $ = (id) => document.getElementById(id);
-
-    const langText = {
-      en: {
-        labels: {
-          discount: ["Original Price", "Discount %"],
-          increase: ["Old Value", "New Value"],
-          percentOf: ["A", "B"],
-          reverse: ["Percentage %", "Final Value"]
-        },
-        result: {
-          discount: (a, b, r) => `Final Price: ${r}`,
-          increase: (a, b, r) => `Change: ${r}%`,
-          percentOf: (a, b, r) => `${a} is ${r}% of ${b}`,
-          reverse: (a, b, r) => `Original Value: ${r}`
-        }
-      },
-      zh: {
-        labels: {
-          discount: ["原价", "折扣百分比"],
-          increase: ["原值", "新值"],
-          percentOf: ["A", "B"],
-          reverse: ["百分比", "结果值"]
-        },
-        result: {
-          discount: (a, b, r) => `最终价格为：${r}`,
-          increase: (a, b, r) => `变化百分比：${r}%`,
-          percentOf: (a, b, r) => `${a} 是 ${b} 的 ${r}%`,
-          reverse: (a, b, r) => `原始值为：${r}`
-        }
-      }
-    };
-
-    function renderInputs() {
-      const lang = $('lang').value;
-      const mode = $('mode').value;
-      const [label1, label2] = langText[lang].labels[mode];
-
-      $('inputs').innerHTML = `
-        <div>
-          <label class="block font-medium mb-1">${label1}</label>
-          <input type="number" id="input1" class="w-full border rounded px-3 py-2" />
-        </div>
-        <div>
-          <label class="block font-medium mb-1">${label2}</label>
-          <input type="number" id="input2" class="w-full border rounded px-3 py-2" />
-        </div>
-      `;
-    }
-
     function calculate() {
-      const lang = $('lang').value;
-      const mode = $('mode').value;
-      const val1 = parseFloat($('input1').value);
-      const val2 = parseFloat($('input2').value);
-      let result = '';
+      const type = document.getElementById('type').value;
+      const x = parseFloat(document.getElementById('value1').value);
+      const y = parseFloat(document.getElementById('value2').value);
+      const resultDiv = document.getElementById('result');
 
-      if (isNaN(val1) || isNaN(val2)) {
-        $('result').innerText = lang === 'en' ? 'Please fill in valid numbers.' : '请输入有效数字。';
+      if (isNaN(x) || isNaN(y) || y === 0) {
+        resultDiv.textContent = 'Please enter valid numbers.';
         return;
       }
 
-      switch (mode) {
-        case 'discount':
-          const discounted = val1 * (1 - val2 / 100);
-          result = langText[lang].result.discount(val1, val2, discounted.toFixed(2));
+      let result;
+      switch (type) {
+        case 'percentageOf':
+          result = `${x}% of ${y} is ${(x / 100) * y}`;
           break;
-        case 'increase':
-          const change = ((val2 - val1) / val1) * 100;
-          result = langText[lang].result.increase(val1, val2, change.toFixed(2));
+        case 'percentChange':
+          result = `The change from ${x} to ${y} is ${(((y - x) / x) * 100).toFixed(2)}%`;
           break;
-        case 'percentOf':
-          const perc = (val1 / val2) * 100;
-          result = langText[lang].result.percentOf(val1, val2, perc.toFixed(2));
-          break;
-        case 'reverse':
-          const origin = (val2 * 100) / val1;
-          result = langText[lang].result.reverse(val1, val2, origin.toFixed(2));
+        case 'whatPercent':
+          result = `${x} is ${(x / y * 100).toFixed(2)}% of ${y}`;
           break;
       }
 
-      $('result').innerText = result;
+      resultDiv.textContent = result;
     }
 
-    $('lang').addEventListener('change', renderInputs);
-    $('mode').addEventListener('change', renderInputs);
-    window.onload = renderInputs;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
   </script>
 </body>
 </html>
