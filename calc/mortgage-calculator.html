@@ -29,16 +29,10 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
     header h1 { margin: 0; font-size: 1.5rem; }
-    .header-right { display: flex; align-items: center; gap: 1rem; }
-    .lang-switch { display: flex; gap: 0.4rem; }
     .lang-switch button {
       padding:0.4rem 0.8rem; font-size:0.85rem; border:none; border-radius:6px;
       cursor:pointer; background:var(--primary-color); color:white;
       width:42px; height:32px;
-    }
-    header a {
-      text-decoration:none; color:var(--primary-color); font-weight:500;
-      font-size:0.95rem;
     }
     .container {
       max-width:800px; margin:2rem auto; padding:2rem;
@@ -46,7 +40,7 @@
       box-shadow:0 2px 8px rgba(0,0,0,0.05);
     }
     label { display:block; margin-top:1rem; font-weight:500;}
-    input, textarea {
+    input {
       width:100%; padding:0.75rem; margin-top:0.5rem;
       border:1px solid #d1d5db; border-radius:8px; font-size:1rem;
     }
@@ -67,13 +61,6 @@
 <body>
   <header>
     <h1>Utilivy - Mortgage Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
-      </div>
-      <a href="/">← Back to Home</a>
-    </div>
   </header>
 
   <div class="container">
@@ -89,8 +76,8 @@
     <label>MRTA / MLTA Insurance (% of loan):</label>
     <input type="number" id="mrta" value="5" />
 
-    <label>Early Repayment Schedule (month:amount, e.g. 12:5000, 24:10000):</label>
-    <input type="text" id="early" placeholder="12:10000, 36:5000"/>
+    <label>Early Repayment Schedule<br><small>(e.g. 12:5000, 24-33:1000)</small></label>
+    <input type="text" id="early" placeholder="12-21:1000, 36:5000"/>
 
     <button class="calculate" onclick="calculate()">Calculate</button>
 
@@ -100,21 +87,33 @@
   </div>
 
   <script>
+    function parseEarlyRepayment(input) {
+      const early = {};
+      input.split(',').forEach(part => {
+        const [range, amountStr] = part.trim().split(':');
+        const amount = parseFloat(amountStr);
+        if (!range || isNaN(amount)) return;
+
+        if (range.includes('-')) {
+          const [start, end] = range.split('-').map(Number);
+          for (let i = start; i <= end; i++) {
+            early[i] = (early[i] || 0) + amount;
+          }
+        } else {
+          const m = parseInt(range);
+          early[m] = (early[m] || 0) + amount;
+        }
+      });
+      return early;
+    }
+
     function calculate() {
       const loan = +document.getElementById('loan').value;
       const annualRate = +document.getElementById('rate').value;
       const rateM = annualRate / 100 / 12;
       const months = +document.getElementById('years').value * 12;
       const mrtaPct = +document.getElementById('mrta').value / 100;
-      const earlyInput = document.getElementById('early').value.trim();
-
-      const early = {};
-      if (earlyInput) {
-        earlyInput.split(',').forEach(pair => {
-          const [m,a] = pair.split(':').map(Number);
-          if (m > 0 && a > 0) early[m] = a;
-        });
-      }
+      const early = parseEarlyRepayment(document.getElementById('early').value.trim());
 
       const mrtaCost = loan * mrtaPct;
       const monthlyBase = rateM
@@ -208,10 +207,6 @@
       });
       html += '</table>';
       document.getElementById('schedule').innerHTML = html;
-    }
-
-    function setLanguage(lang) {
-      // 可拓展双语功能
     }
   </script>
 </body>
