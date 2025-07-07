@@ -11,7 +11,9 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -62,13 +64,19 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
+    .adsense-banner, .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
@@ -78,12 +86,12 @@
     input {
       width: 100%;
       padding: 0.75rem;
-      margin-top: 0.5rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
+      margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -94,21 +102,34 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    .result, table {
-      margin-top: 2rem;
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.9rem;
+      margin-top: 1.5rem;
+    }
+    table, th, td {
+      border: 1px solid #e5e7eb;
     }
     th, td {
       padding: 0.5rem;
-      border: 1px solid #ccc;
-      text-align: right;
+      text-align: center;
     }
     th {
       background-color: #f9fafb;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
@@ -124,78 +145,103 @@
     </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <label>Loan Amount (e.g. 10000):</label>
+    <label for="amount">Loan Amount (e.g. 100000):</label>
     <input type="number" id="amount" />
 
-    <label>Annual Interest Rate (%):</label>
+    <label for="interest">Annual Interest Rate (%):</label>
     <input type="number" id="interest" step="0.01" />
 
-    <label>Loan Term (years):</label>
+    <label for="years">Loan Term (Years):</label>
     <input type="number" id="years" />
 
-    <label>Monthly Extra Repayment (optional):</label>
+    <label for="extra">Extra Monthly Repayment (Optional):</label>
     <input type="number" id="extra" value="0" />
 
-    <button onclick="calculateLoan()">Calculate</button>
+    <button class="calculate" onclick="calculateLoan()">Calculate</button>
 
-    <div class="result" id="summary"></div>
-    <div id="amortization"></div>
+    <div class="result" id="monthlyPayment"></div>
+    <div class="result" id="totalPayment"></div>
+    <div class="result" id="totalInterest"></div>
+
+    <table id="schedule" style="display:none;">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Principal</th>
+          <th>Interest</th>
+          <th>Extra Payment</th>
+          <th>Balance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
+
+  <footer class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </footer>
 
   <script>
     function calculateLoan() {
-      const amount = parseFloat(document.getElementById('amount').value);
-      const interest = parseFloat(document.getElementById('interest').value) / 100 / 12;
-      const years = parseInt(document.getElementById('years').value);
-      const extra = parseFloat(document.getElementById('extra').value || 0);
-
+      const amount = parseFloat(document.getElementById("amount").value);
+      const interestRate = parseFloat(document.getElementById("interest").value) / 100 / 12;
+      const years = parseInt(document.getElementById("years").value);
+      const extra = parseFloat(document.getElementById("extra").value || 0);
       const months = years * 12;
-      let monthly = amount * interest / (1 - Math.pow(1 + interest, -months));
+
+      const monthlyPayment = amount * interestRate / (1 - Math.pow(1 + interestRate, -months));
+      const totalMonthly = monthlyPayment + extra;
+
       let balance = amount;
       let totalInterest = 0;
-      let totalPayment = 0;
-      let schedule = '';
-      let month = 0;
+      let totalPrincipal = 0;
+      let scheduleRows = '';
+      let month = 1;
 
-      schedule += '<table><thead><tr><th>Month</th><th>Principal</th><th>Interest</th><th>Total Payment</th><th>Balance</th></tr></thead><tbody>';
+      while (balance > 0 && month <= 1000) {
+        let interest = balance * interestRate;
+        let principal = totalMonthly - interest;
 
-      while (balance > 0 && month < 1000) {
-        const interestPayment = balance * interest;
-        let principalPayment = monthly - interestPayment + extra;
-
-        if (principalPayment > balance) {
-          principalPayment = balance;
+        if (principal > balance) {
+          principal = balance;
+          interest = totalMonthly - principal;
         }
 
-        const payment = principalPayment + interestPayment;
-        balance -= principalPayment;
-        totalInterest += interestPayment;
-        totalPayment += payment;
-        month++;
+        balance -= principal;
+        totalInterest += interest;
+        totalPrincipal += principal;
 
-        schedule += `<tr>
-          <td>${month}</td>
-          <td>${principalPayment.toFixed(2)}</td>
-          <td>${interestPayment.toFixed(2)}</td>
-          <td>${payment.toFixed(2)}</td>
-          <td>${balance.toFixed(2)}</td>
-        </tr>`;
+        scheduleRows += `
+          <tr>
+            <td>${month}</td>
+            <td>${principal.toFixed(2)}</td>
+            <td>${interest.toFixed(2)}</td>
+            <td>${extra.toFixed(2)}</td>
+            <td>${balance.toFixed(2)}</td>
+          </tr>
+        `;
+
+        month++;
       }
 
-      schedule += '</tbody></table>';
-      document.getElementById('summary').innerHTML = `
-        <p><strong>Monthly Payment:</strong> ${monthly.toFixed(2)}</p>
-        <p><strong>Total Payments:</strong> ${totalPayment.toFixed(2)}</p>
-        <p><strong>Total Interest:</strong> ${totalInterest.toFixed(2)}</p>
-        <p><strong>Loan Duration:</strong> ${month} months</p>
-      `;
-      document.getElementById('amortization').innerHTML = schedule;
+      document.getElementById("monthlyPayment").innerText = `Monthly Payment (Excl. Extra): $${monthlyPayment.toFixed(2)}`;
+      document.getElementById("totalPayment").innerText = `Total Payment: $${(totalPrincipal + totalInterest).toFixed(2)}`;
+      document.getElementById("totalInterest").innerText = `Total Interest: $${totalInterest.toFixed(2)}`;
+
+      const scheduleTable = document.getElementById("schedule");
+      scheduleTable.style.display = "table";
+      scheduleTable.querySelector("tbody").innerHTML = scheduleRows;
     }
 
     function setLanguage(lang) {
-      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        if (lang === 'en') el.textContent = el.getAttribute("data-en");
+        if (lang === 'zh') el.textContent = el.getAttribute("data-zh");
       });
     }
   </script>
