@@ -64,6 +64,13 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
     .container {
       max-width: 600px;
       margin: 2rem auto;
@@ -74,7 +81,7 @@
     }
     label {
       display: block;
-      margin-top: 1.2rem;
+      margin-top: 1rem;
       font-weight: 500;
     }
     input, select {
@@ -85,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -93,17 +100,16 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
-      margin-top: 2rem;
+      margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
-      margin-top: 2rem;
-      font-size: 1.2rem;
-      text-align: center;
+      margin-top: 1.5rem;
       font-weight: bold;
+      font-size: 1.2rem;
     }
     footer {
       text-align: center;
@@ -125,66 +131,60 @@
     </div>
   </header>
 
-  <div class="container">
-    <label data-en="Weight" data-zh="体重">Weight</label>
-    <input type="number" id="weight" placeholder="e.g. 70" />
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-    <label data-en="Unit" data-zh="单位">Unit</label>
-    <select id="unit">
-      <option value="kg">kg</option>
-      <option value="lb">lb</option>
-    </select>
+  <div class="container">
+    <label data-en="Your Weight (kg)" data-zh="你的体重（公斤）">Your Weight (kg)</label>
+    <input type="number" id="weight" placeholder="e.g. 60" />
 
     <label data-en="Activity Level" data-zh="活动水平">Activity Level</label>
     <select id="activity">
       <option value="low" data-en="Low (sedentary)" data-zh="低（久坐）">Low (sedentary)</option>
-      <option value="medium" data-en="Medium (light exercise)" data-zh="中（轻度锻炼）">Medium (light exercise)</option>
-      <option value="high" data-en="High (active lifestyle)" data-zh="高（活跃）">High (active lifestyle)</option>
+      <option value="moderate" data-en="Moderate" data-zh="中等">Moderate</option>
+      <option value="high" data-en="High" data-zh="高">High</option>
     </select>
 
-    <button onclick="calculate()" data-en="Calculate" data-zh="计算">Calculate</button>
+    <button class="calculate" onclick="calculateWaterIntake()" data-en="Calculate" data-zh="计算">Calculate</button>
 
-    <div class="result" id="resultArea"></div>
+    <div class="result" id="result"></div>
+    <p id="recommendation" style="margin-top:1rem;"></p>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
-    © 2025 Utilivy. All rights reserved.
+    <span data-en="This tool estimates your daily water intake based on weight and activity." data-zh="该工具根据体重和活动水平估算你的每日饮水量。">This tool estimates your daily water intake based on weight and activity.</span>
   </footer>
 
   <script>
-    function calculate() {
-      let weight = parseFloat(document.getElementById("weight").value);
-      const unit = document.getElementById("unit").value;
+    function calculateWaterIntake() {
+      const weight = parseFloat(document.getElementById("weight").value);
       const activity = document.getElementById("activity").value;
-      const result = document.getElementById("resultArea");
+      let multiplier = 35;
+
+      if (activity === "moderate") multiplier = 40;
+      else if (activity === "high") multiplier = 45;
 
       if (isNaN(weight) || weight <= 0) {
-        result.textContent = "Please enter a valid weight.";
+        document.getElementById("result").innerText = "Please enter a valid weight.";
         return;
       }
 
-      if (unit === "lb") {
-        weight = weight * 0.453592; // Convert lb to kg
-      }
-
-      // Base intake: 35ml/kg
-      let ml = weight * 35;
-
-      // Adjust for activity
-      if (activity === "medium") ml *= 1.1;
-      else if (activity === "high") ml *= 1.25;
-
-      const cups = ml / 250;
-
-      result.innerHTML = `
-        💧 Recommended: <strong>${Math.round(ml)} ml</strong><br/>
-        ≈ <strong>${cups.toFixed(1)} cups</strong> (1 cup = 250ml)
-      `;
+      const intake = weight * multiplier; // in ml
+      document.getElementById("result").innerText =
+        `→ Recommended Water Intake: ${(intake / 1000).toFixed(2)} liters/day`;
+      
+      document.getElementById("recommendation").innerText =
+        "Note: You may need more water in hot climates or during intense exercise.";
     }
 
     function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-zh');
+      document.querySelectorAll("[data-en]").forEach(el => {
+        el.innerText = el.dataset[lang];
       });
     }
   </script>
