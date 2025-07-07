@@ -3,111 +3,203 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Number to Words Converter</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Number to Words Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      word-break: break-word;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen p-6 text-gray-800">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded-lg shadow">
-    <h1 class="text-2xl font-bold mb-4 text-center">🔢 Number to Words 转换器</h1>
-    <input id="numberInput" type="text" placeholder="请输入数字，例如 123456.78"
-           class="w-full border px-4 py-2 rounded mb-4 text-lg" />
-    
-    <button onclick="convert()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold mb-4">
-      🔄 Convert / 转换
-    </button>
-
-    <div class="mb-3">
-      <h2 class="font-bold">📘 English:</h2>
-      <p id="englishResult" class="text-blue-700 mt-1 break-words"></p>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Number to Words Converter" data-zh="Utilivy - 数字转文字">Utilivy - Number to Words Converter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div>
-      <h2 class="font-bold">📙 中文大写:</h2>
-      <p id="chineseResult" class="text-red-700 mt-1 break-words"></p>
-    </div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="numberInput" data-en="Enter a number" data-zh="请输入数字">Enter a number</label>
+    <input type="number" id="numberInput" placeholder="e.g. 123456" />
+
+    <button class="calculate" onclick="convertNumber()" data-en="Convert" data-zh="转换">Convert</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy.com
+  </footer>
+
   <script>
-    function convert() {
-      const val = document.getElementById('numberInput').value.trim();
-      const num = parseFloat(val);
-      if (isNaN(num)) {
-        alert("请输入有效的数字");
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
+
+    function convertNumber() {
+      const number = parseInt(document.getElementById("numberInput").value);
+      const resultEl = document.getElementById("result");
+
+      if (isNaN(number)) {
+        resultEl.textContent = "Please enter a valid number.";
         return;
       }
-      document.getElementById('englishResult').textContent = numberToEnglish(num);
-      document.getElementById('chineseResult').textContent = numberToChinese(num);
+
+      resultEl.textContent = numberToWords(number);
     }
 
-    // 英文转换
-    function numberToEnglish(n) {
-      if (n === 0) return 'Zero';
-      const ones = ['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine'];
-      const teens = ['Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-      const tens = ['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-      const thousands = ['','Thousand','Million','Billion','Trillion'];
+    function numberToWords(n) {
+      const a = ["", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten",
+        "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen",
+        "seventeen", "eighteen", "nineteen"];
+      const b = ["", "", "twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"];
+      const g = ["", "thousand", "million", "billion"];
 
-      function chunkToWords(num) {
-        let str = '';
-        const hundred = Math.floor(num / 100);
-        const rem = num % 100;
-        if (hundred) str += ones[hundred] + ' Hundred ';
-        if (rem < 10) str += ones[rem];
-        else if (rem < 20) str += teens[rem - 10];
-        else str += tens[Math.floor(rem / 10)] + (rem % 10 ? '-' + ones[rem % 10] : '');
-        return str.trim();
-      }
+      if (n === 0) return "zero";
 
-      let intPart = Math.floor(n);
-      const cents = Math.round((n - intPart) * 100);
+      let words = "", group = 0;
 
-      let result = '';
-      let i = 0;
-      while (intPart > 0) {
-        const chunk = intPart % 1000;
-        if (chunk) result = chunkToWords(chunk) + ' ' + thousands[i] + ' ' + result;
-        intPart = Math.floor(intPart / 1000);
-        i++;
-      }
+      while (n > 0) {
+        const chunk = n % 1000;
+        if (chunk) {
+          let str = "";
+          const hundreds = Math.floor(chunk / 100);
+          const tensUnits = chunk % 100;
 
-      result = result.trim();
-      if (cents > 0) {
-        result += ` and ${chunkToWords(cents)} Cent${cents === 1 ? '' : 's'}`;
-      }
+          if (hundreds) str += a[hundreds] + " hundred ";
+          if (tensUnits) {
+            if (tensUnits < 20) str += a[tensUnits];
+            else str += b[Math.floor(tensUnits / 10)] + (a[tensUnits % 10] ? "-" + a[tensUnits % 10] : "");
+          }
 
-      return result;
-    }
-
-    // 中文转换
-    function numberToChinese(n) {
-      const fraction = ['角', '分'];
-      const digit = ['零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖'];
-      const unit = [['元', '万', '亿'], ['', '拾', '佰', '仟']];
-      let head = n < 0 ? '负' : '';
-      n = Math.abs(n);
-
-      let s = '';
-      for (let i = 0; i < fraction.length; i++) {
-        s += (digit[Math.floor(n * 10 * Math.pow(10, i)) % 10] + fraction[i]).replace(/零./, '');
-      }
-      s = s || '整';
-      n = Math.floor(n);
-
-      for (let i = 0; i < unit[0].length && n > 0; i++) {
-        let p = '';
-        for (let j = 0; j < unit[1].length && n > 0; j++) {
-          p = digit[n % 10] + unit[1][j] + p;
-          n = Math.floor(n / 10);
+          words = str.trim() + " " + g[group] + " " + words;
         }
-        s = p.replace(/(零.)*零$/, '').replace(/^$/, '零') + unit[0][i] + s;
+
+        n = Math.floor(n / 1000);
+        group++;
       }
 
-      return head + s
-        .replace(/(零.)*零元/, '元')
-        .replace(/(零.)+/g, '零')
-        .replace(/^整$/, '零元整')
-        .replace(/零角零分$/, '整')
-        .replace(/零分$/, '整');
+      return words.trim();
     }
   </script>
 </body>
