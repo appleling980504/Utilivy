@@ -2,215 +2,176 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ovulation & Fertility Calculator</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Ovulation Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      padding: 20px;
-      max-width: 700px;
-      margin: auto;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    h1, h2 {
-      text-align: center;
-      color: #333;
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
-      margin-top: 20px;
-      font-weight: bold;
+      margin-top: 1rem;
+      font-weight: 500;
     }
-    input, button {
+    input {
       width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
     }
-    button {
-      background-color: #28a745;
+    button.calculate {
+      background: var(--primary-color);
       color: white;
-      margin-top: 20px;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
-    #result, #tips, #tracking, #warnings {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #fff;
-      border-left: 6px solid #28a745;
-      font-size: 16px;
-    }
-    #lang-switch {
-      text-align: right;
-      margin-bottom: 10px;
-    }
-    #lang-switch button {
-      margin-left: 10px;
-      padding: 6px 12px;
-      font-size: 14px;
-    }
-    canvas {
-      margin-top: 30px;
-    }
-    ul {
-      margin-top: 10px;
-      padding-left: 20px;
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div id="lang-switch">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('zh')">中</button>
+  <header>
+    <h1 data-en="Utilivy - Ovulation Calculator" data-zh="Utilivy - 排卵计算器">Utilivy - Ovulation Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
+
+  <div class="container">
+    <p data-en="Enter the first day of your last period and your average cycle length to estimate your ovulation date."
+       data-zh="输入你上次月经的第一天和平均周期长度，以估算排卵日。">
+       Enter the first day of your last period and your average cycle length to estimate your ovulation date.
+    </p>
+
+    <label for="lastPeriod" data-en="First Day of Last Period" data-zh="上次月经第一天">First Day of Last Period</label>
+    <input type="date" id="lastPeriod" />
+
+    <label for="cycleLength" data-en="Average Cycle Length (days)" data-zh="平均月经周期（天）">Average Cycle Length (days)</label>
+    <input type="number" id="cycleLength" value="28" min="20" max="45" />
+
+    <button class="calculate" onclick="calculateOvulation()" data-en="Calculate" data-zh="计算">Calculate</button>
+
+    <div class="result" id="result"></div>
   </div>
 
-  <h1 id="title">Ovulation & Fertility Calculator</h1>
-
-  <label id="label-lmp">First Day of Last Menstrual Period (LMP):</label>
-  <input type="date" id="lmp" />
-
-  <label id="label-cycle">Average Cycle Length (days):</label>
-  <input type="number" id="cycle" value="28" />
-
-  <button onclick="calculateOvulation()" id="calc-btn">Calculate</button>
-
-  <div id="result"></div>
-  <div id="warnings"></div>
-  <canvas id="fertilityChart" width="400" height="200"></canvas>
-  <div id="tips"></div>
-  <div id="tracking"></div>
+  <footer>
+    © 2025 Utilivy.com
+  </footer>
 
   <script>
-    let lang = 'en';
-
-    const texts = {
-      en: {
-        title: 'Ovulation & Fertility Calculator',
-        lmp: 'First Day of Last Menstrual Period (LMP):',
-        cycle: 'Average Cycle Length (days):',
-        button: 'Calculate',
-        result: 'Estimated Ovulation Day: ',
-        fertile: 'Fertile Window: ',
-        chartLabel: 'Fertility Level (%)',
-        tipsTitle: 'Preconception Tips',
-        tips: [
-          'Take folic acid supplements daily (400 mcg).',
-          'Maintain a healthy weight and balanced diet.',
-          'Avoid smoking, alcohol, and excessive caffeine.',
-          'Track your cycle regularly for better prediction.',
-          'Consider medical check-ups to rule out fertility issues.'
-        ],
-        warning: 'Your cycle length is unusual. Please consult a doctor if irregularities persist.',
-        trackingTitle: 'Cycle Tracking Log',
-        trackingNote: 'Based on your current input:'
-      },
-      zh: {
-        title: '排卵期与受孕期计算器',
-        lmp: '末次月经的第一天：',
-        cycle: '平均月经周期长度（天）：',
-        button: '计算',
-        result: '预计排卵日：',
-        fertile: '易孕期：',
-        chartLabel: '受孕概率（%）',
-        tipsTitle: '备孕建议',
-        tips: [
-          '每天补充叶酸（400 微克）。',
-          '保持健康体重，均衡饮食。',
-          '避免吸烟、饮酒和过量咖啡因。',
-          '定期记录月经周期以更准确预测排卵。',
-          '考虑做孕前检查排除不孕问题。'
-        ],
-        warning: '您的周期长度异常。如长期不规律，请咨询医生。',
-        trackingTitle: '月经记录',
-        trackingNote: '根据您目前输入的记录：'
-      }
-    };
-
-    function setLang(selectedLang) {
-      lang = selectedLang;
-      document.getElementById('title').innerText = texts[lang].title;
-      document.getElementById('label-lmp').innerText = texts[lang].lmp;
-      document.getElementById('label-cycle').innerText = texts[lang].cycle;
-      document.getElementById('calc-btn').innerText = texts[lang].button;
-      document.getElementById('result').innerText = '';
-      document.getElementById('fertilityChart').style.display = 'none';
-      document.getElementById('tips').innerText = '';
-      document.getElementById('warnings').innerText = '';
-      document.getElementById('tracking').innerText = '';
-    }
-
     function calculateOvulation() {
-      const lmp = new Date(document.getElementById('lmp').value);
-      const cycleLength = parseInt(document.getElementById('cycle').value);
-      const result = document.getElementById('result');
-      const warningBox = document.getElementById('warnings');
-      const tracking = document.getElementById('tracking');
+      const lastPeriod = document.getElementById('lastPeriod').value;
+      const cycleLength = parseInt(document.getElementById('cycleLength').value);
+      const resultDiv = document.getElementById('result');
 
-      if (!lmp || isNaN(cycleLength)) {
-        result.innerText = lang === 'zh' ? '请输入所有信息。' : 'Please enter all fields.';
+      if (!lastPeriod || isNaN(cycleLength)) {
+        resultDiv.textContent = 'Please fill all fields.';
         return;
       }
 
-      if (cycleLength < 21 || cycleLength > 35) {
-        warningBox.innerText = texts[lang].warning;
-      } else {
-        warningBox.innerText = '';
-      }
+      const startDate = new Date(lastPeriod);
+      const ovulationDate = new Date(startDate);
+      ovulationDate.setDate(startDate.getDate() + cycleLength - 14);
 
-      const ovulation = new Date(lmp);
-      ovulation.setDate(ovulation.getDate() + cycleLength - 14);
-
-      const fertileStart = new Date(ovulation);
-      fertileStart.setDate(fertileStart.getDate() - 4);
-
-      const fertileEnd = new Date(ovulation);
-      fertileEnd.setDate(fertileEnd.getDate() + 1);
+      const fertileStart = new Date(ovulationDate);
+      fertileStart.setDate(ovulationDate.getDate() - 5);
+      const fertileEnd = new Date(ovulationDate);
 
       const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      const ovulationStr = ovulation.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US', options);
-      const fertileStr = `${fertileStart.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US')} - ${fertileEnd.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US')}`;
-
-      result.innerHTML = `
-        <strong>${texts[lang].result}</strong>${ovulationStr}<br><br>
-        <strong>${texts[lang].fertile}</strong>${fertileStr}
-      `;
-
-      const ctx = document.getElementById('fertilityChart').getContext('2d');
-      document.getElementById('fertilityChart').style.display = 'block';
-      new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: ['-5', '-4', '-3', '-2', '-1', '0', '+1', '+2'],
-          datasets: [{
-            label: texts[lang].chartLabel,
-            data: [10, 20, 40, 70, 90, 100, 60, 30],
-            fill: true,
-            borderColor: '#ff6384',
-            backgroundColor: 'rgba(255,99,132,0.2)',
-            tension: 0.3
-          }]
-        },
-        options: {
-          scales: {
-            y: { beginAtZero: true, max: 100 }
-          }
-        }
-      });
-
-      const tipBox = [`<h2>${texts[lang].tipsTitle}</h2><ul>`];
-      for (const tip of texts[lang].tips) {
-        tipBox.push(`<li>${tip}</li>`);
-      }
-      tipBox.push('</ul>');
-      document.getElementById('tips').innerHTML = tipBox.join('');
-
-      tracking.innerHTML = `<h2>${texts[lang].trackingTitle}</h2><p>${texts[lang].trackingNote}</p><ul><li>LMP: ${lmp.toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US')}</li><li>Cycle Length: ${cycleLength} days</li><li>Ovulation: ${ovulationStr}</li></ul>`;
+      resultDiv.innerHTML = `
+        <div data-en="Estimated Ovulation Date: ${ovulationDate.toLocaleDateString(undefined, options)}"
+             data-zh="预测排卵日：${ovulationDate.toLocaleDateString(undefined, options)}">
+          Estimated Ovulation Date: ${ovulationDate.toLocaleDateString(undefined, options)}
+        </div>
+        <div data-en="Fertile Window: ${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}"
+             data-zh="易孕期：${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}">
+          Fertile Window: ${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}
+        </div>`;
     }
 
-    setLang('en');
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
   </script>
 </body>
 </html>
