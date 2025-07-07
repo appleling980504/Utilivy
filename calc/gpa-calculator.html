@@ -72,7 +72,7 @@
       display: none;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
@@ -84,7 +84,7 @@
       margin-top: 1rem;
       font-weight: 500;
     }
-    input[type="number"] {
+    input {
       width: 100%;
       padding: 0.75rem;
       border: 1px solid #d1d5db;
@@ -92,7 +92,7 @@
       margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -103,13 +103,26 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .result {
       margin-top: 1.5rem;
       font-weight: bold;
       font-size: 1.2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 2rem;
+    }
+    th, td {
+      border: 1px solid #d1d5db;
+      padding: 0.75rem;
+      text-align: center;
+    }
+    th {
+      background-color: #eef2ff;
     }
     footer {
       text-align: center;
@@ -131,71 +144,70 @@
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
   <div class="container">
-    <label data-en="Number of Subjects" data-zh="科目数量">Number of Subjects</label>
-    <input type="number" id="subjectCount" min="1" value="5" />
+    <label data-en="Enter GPA values (0.0 - 4.0) for each course, separated by commas:" data-zh="输入每门课程的 GPA 值（0.0 - 4.0），用逗号分隔：">
+      Enter GPA values (0.0 - 4.0) for each course, separated by commas:
+    </label>
+    <input type="text" id="gpaInput" placeholder="e.g. 4.0, 3.7, 3.3" />
 
-    <div id="gradesContainer"></div>
-
-    <button onclick="calculateGPA()" data-en="Calculate GPA" data-zh="计算 GPA">Calculate GPA</button>
+    <button class="calculate" onclick="calculateGPA()" data-en="Calculate GPA" data-zh="计算 GPA">Calculate GPA</button>
 
     <div class="result" id="gpaResult"></div>
+
+    <h3 data-en="GPA Reference Table" data-zh="GPA 对照表">GPA Reference Table</h3>
+    <table>
+      <thead>
+        <tr>
+          <th data-en="Grade" data-zh="等级">Grade</th>
+          <th data-en="GPA" data-zh="绩点">GPA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>A</td><td>4.0</td></tr>
+        <tr><td>A−</td><td>3.7</td></tr>
+        <tr><td>B+</td><td>3.3</td></tr>
+        <tr><td>B</td><td>3.0</td></tr>
+        <tr><td>B−</td><td>2.7</td></tr>
+        <tr><td>C+</td><td>2.3</td></tr>
+        <tr><td>C</td><td>2.0</td></tr>
+        <tr><td>C−</td><td>1.7</td></tr>
+        <tr><td>D+</td><td>1.3</td></tr>
+        <tr><td>D</td><td>1.0</td></tr>
+        <tr><td>F</td><td>0.0</td></tr>
+      </tbody>
+    </table>
   </div>
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
   <footer>
-    <p>&copy; 2025 Utilivy.com</p>
+    <p data-en="Utilivy GPA Calculator helps you easily average your GPA." data-zh="Utilivy GPA 计算器帮助你轻松计算平均绩点。">
+      Utilivy GPA Calculator helps you easily average your GPA.
+    </p>
   </footer>
 
   <script>
+    function calculateGPA() {
+      const input = document.getElementById("gpaInput").value;
+      const grades = input.split(',').map(g => parseFloat(g.trim())).filter(n => !isNaN(n) && n >= 0 && n <= 4);
+      const resultDiv = document.getElementById("gpaResult");
+
+      if (grades.length === 0) {
+        resultDiv.innerText = "Please enter valid GPA values between 0.0 and 4.0.";
+        return;
+      }
+
+      const total = grades.reduce((sum, g) => sum + g, 0);
+      const avg = total / grades.length;
+      resultDiv.innerText = `Your average GPA is: ${avg.toFixed(2)}`;
+    }
+
     function setLanguage(lang) {
       document.querySelectorAll("[data-en]").forEach(el => {
         el.innerText = lang === "zh" ? el.getAttribute("data-zh") : el.getAttribute("data-en");
       });
-    }
-
-    document.getElementById("subjectCount").addEventListener("input", renderInputs);
-    renderInputs();
-
-    function renderInputs() {
-      const count = parseInt(document.getElementById("subjectCount").value);
-      const container = document.getElementById("gradesContainer");
-      container.innerHTML = "";
-      for (let i = 0; i < count; i++) {
-        const wrapper = document.createElement("div");
-        wrapper.innerHTML = `
-          <label data-en="Subject ${i+1} GPA (0.0 - 4.0)" data-zh="科目 ${i+1} 的 GPA（0.0 - 4.0）">Subject ${i+1} GPA (0.0 - 4.0)</label>
-          <input type="number" class="gpa-input" step="0.01" min="0" max="4" />
-        `;
-        container.appendChild(wrapper);
-      }
-    }
-
-    function calculateGPA() {
-      const inputs = document.querySelectorAll(".gpa-input");
-      let total = 0;
-      let count = 0;
-      for (const input of inputs) {
-        const val = parseFloat(input.value);
-        if (!isNaN(val) && val >= 0 && val <= 4) {
-          total += val;
-          count++;
-        }
-      }
-      const resultEl = document.getElementById("gpaResult");
-      if (count === 0) {
-        resultEl.innerText = "Please enter valid GPA values.";
-      } else {
-        const avg = (total / count).toFixed(2);
-        resultEl.innerText = `Your GPA is: ${avg}`;
-      }
     }
   </script>
 </body>
