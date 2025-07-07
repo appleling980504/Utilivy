@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilivy - Mortgage Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <title>Utilivy - Loan Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -27,54 +27,93 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 500;
     }
-    input[type="number"] {
+    input {
       width: 100%;
       padding: 0.75rem;
-      margin-top: 0.5rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
+      margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1rem;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       margin-top: 1.5rem;
+      width: 100%;
     }
-    button:hover {
-      background-color: #4338ca;
+    table {
+      width: 100%;
+      margin-top: 1.5rem;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #d1d5db;
+      text-align: right;
+    }
+    th {
+      background-color: #f9fafb;
     }
     .result {
-      margin-top: 2rem;
+      margin-top: 1.5rem;
+      font-weight: bold;
       font-size: 1.2rem;
-      font-weight: 500;
     }
     footer {
       text-align: center;
@@ -82,60 +121,95 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    @media (max-width: 600px) {
-      .container {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.25rem;
-      }
-    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>Utilivy - Mortgage Calculator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - Loan Calculator" data-zh="Utilivy - 贷款计算器">Utilivy - Loan Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
   <div class="container">
-    <h2>Mortgage Calculator</h2>
-    <p>Estimate your monthly mortgage payment.</p>
+    <label data-en="Loan Amount" data-zh="贷款金额">Loan Amount</label>
+    <input type="number" id="amount" value="300000" />
 
-    <label for="principal">Loan Amount (RM)</label>
-    <input type="number" id="principal" placeholder="e.g. 300000">
+    <label data-en="Interest Rate (%)" data-zh="利率 (%)">Interest Rate (%)</label>
+    <input type="number" id="rate" value="4.5" step="0.01" />
 
-    <label for="interest">Annual Interest Rate (%)</label>
-    <input type="number" id="interest" placeholder="e.g. 3.5">
+    <label data-en="Loan Term (Years)" data-zh="贷款年限">Loan Term (Years)</label>
+    <input type="number" id="years" value="30" />
 
-    <label for="years">Loan Term (Years)</label>
-    <input type="number" id="years" placeholder="e.g. 30">
+    <label data-en="Extra Payment per Month (Optional)" data-zh="每月额外还款 (可选)">Extra Payment per Month (Optional)</label>
+    <input type="number" id="extra" value="0" />
 
-    <button onclick="calculateMortgage()">Calculate</button>
-    <div id="result" class="result"></div>
+    <button class="calculate" onclick="calculateLoan()">Calculate</button>
+
+    <div class="result" id="monthly"></div>
+    <table id="schedule" style="display:none">
+      <thead>
+        <tr>
+          <th data-en="Month" data-zh="月份">Month</th>
+          <th data-en="Principal" data-zh="本金">Principal</th>
+          <th data-en="Interest" data-zh="利息">Interest</th>
+          <th data-en="Extra Payment" data-zh="额外还款">Extra Payment</th>
+          <th data-en="Balance" data-zh="余额">Balance</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
-  <footer>
-    &copy; 2025 Utilivy. All rights reserved.
-  </footer>
+  <footer>© 2025 Utilivy</footer>
 
   <script>
-    function calculateMortgage() {
-      const P = parseFloat(document.getElementById("principal").value);
-      const r = parseFloat(document.getElementById("interest").value) / 100 / 12;
-      const n = parseInt(document.getElementById("years").value) * 12;
+    function calculateLoan() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+      const years = parseInt(document.getElementById('years').value);
+      const extra = parseFloat(document.getElementById('extra').value || 0);
 
-      if (!P || !r || !n) {
-        document.getElementById("result").innerText = "Please fill all fields correctly.";
-        return;
+      const totalMonths = years * 12;
+      const monthlyPayment = amount * rate * Math.pow(1 + rate, totalMonths) / (Math.pow(1 + rate, totalMonths) - 1);
+
+      document.getElementById('monthly').innerText = `Monthly Payment: $${(monthlyPayment + extra).toFixed(2)}`;
+      const tbody = document.querySelector("#schedule tbody");
+      tbody.innerHTML = "";
+
+      let balance = amount;
+      let month = 0;
+
+      while (balance > 0 && month < 1000) {
+        const interest = balance * rate;
+        let principal = monthlyPayment - interest;
+        principal += extra;
+        if (principal > balance) principal = balance;
+
+        balance -= principal;
+        tbody.innerHTML += `
+          <tr>
+            <td>${month + 1}</td>
+            <td>${(principal - extra).toFixed(2)}</td>
+            <td>${interest.toFixed(2)}</td>
+            <td>${extra.toFixed(2)}</td>
+            <td>${balance.toFixed(2)}</td>
+          </tr>`;
+        month++;
       }
 
-      const monthly = (P * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-      document.getElementById("result").innerText = `Monthly Payment: RM ${monthly.toFixed(2)}`;
+      document.getElementById('schedule').style.display = "table";
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.innerText = el.getAttribute(`data-${lang}`);
+      });
     }
   </script>
-
 </body>
 </html>
