@@ -22,99 +22,46 @@
     header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
       gap: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
+    header h1 { margin: 0; font-size: 1.5rem; }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-switch { display: flex; gap: 0.4rem; }
     .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      padding:0.4rem 0.8rem; font-size:0.85rem; border:none; border-radius:6px;
+      cursor:pointer; background:var(--primary-color); color:white;
+      width:42px; height:32px;
     }
     header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+      text-decoration:none; color:var(--primary-color); font-weight:500;
+      font-size:0.95rem;
     }
     .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      max-width:800px; margin:2rem auto; padding:2rem;
+      background:#fff; border-radius:12px;
+      box-shadow:0 2px 8px rgba(0,0,0,0.05);
     }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
+    label { display:block; margin-top:1rem; font-weight:500;}
+    input, textarea {
+      width:100%; padding:0.75rem; margin-top:0.5rem;
+      border:1px solid #d1d5db; border-radius:8px; font-size:1rem;
     }
     button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
+      background:var(--primary-color); color:white; border:none;
+      padding:0.75rem 1rem; border-radius:8px; cursor:pointer;
+      font-size:1rem; margin-top:1.5rem; width:100%;
     }
-    .result, table, canvas {
-      margin-top: 1.5rem;
-      width: 100%;
+    .result, canvas, table { margin-top:1.5rem; width:100%; }
+    table { border-collapse:collapse; font-size:0.9rem; }
+    th, td {
+      border:1px solid #d1d5db; text-align:right; padding:0.5rem;
     }
-    table {
-      border-collapse: collapse;
-      font-size: 0.9rem;
-    }
-    table th, table td {
-      border: 1px solid #d1d5db;
-      padding: 0.5rem;
-      text-align: right;
-    }
-    table th {
-      background: #f9fafb;
-    }
-    .summary {
-      margin-top: 1rem;
-      font-weight: 500;
-    }
+    th { background:#f9fafb; }
+    .summary { margin-top:1rem; font-weight:500; }
   </style>
 </head>
 <body>
@@ -130,76 +77,93 @@
   </header>
 
   <div class="container">
-    <label>Loan Amount (RM):</label>
+    <label>Property Price (RM):</label>
     <input type="number" id="loan" value="500000" />
 
-    <label>Interest Rate (% per year):</label>
+    <label>Interest Rate (% per annum):</label>
     <input type="number" id="rate" value="4.5" step="0.01" />
 
     <label>Loan Term (years):</label>
     <input type="number" id="years" value="30" />
 
-    <label>MRTA / MLTA Insurance (% of loan, optional):</label>
+    <label>MRTA / MLTA Insurance (% of loan):</label>
     <input type="number" id="mrta" value="5" />
+
+    <label>Early Repayment Schedule (month:amount, e.g. 12:5000, 24:10000):</label>
+    <input type="text" id="early" placeholder="12:10000, 36:5000"/>
 
     <button class="calculate" onclick="calculate()">Calculate</button>
 
     <div class="result" id="result"></div>
-    <canvas id="chart" height="100"></canvas>
+    <canvas id="chart"></canvas>
     <div id="schedule"></div>
   </div>
 
   <script>
     function calculate() {
-      const loan = parseFloat(document.getElementById('loan').value);
-      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
-      const years = parseFloat(document.getElementById('years').value);
-      const months = years * 12;
-      const mrta = parseFloat(document.getElementById('mrta').value || 0) / 100;
+      const loan = +document.getElementById('loan').value;
+      const annualRate = +document.getElementById('rate').value;
+      const rateM = annualRate / 100 / 12;
+      const months = +document.getElementById('years').value * 12;
+      const mrtaPct = +document.getElementById('mrta').value / 100;
+      const earlyInput = document.getElementById('early').value.trim();
 
-      let monthlyPayment = 0;
-      if (rate === 0) {
-        monthlyPayment = loan / months;
-      } else {
-        monthlyPayment = loan * rate * Math.pow(1 + rate, months) / (Math.pow(1 + rate, months) - 1);
+      const early = {};
+      if (earlyInput) {
+        earlyInput.split(',').forEach(pair => {
+          const [m,a] = pair.split(':').map(Number);
+          if (m > 0 && a > 0) early[m] = a;
+        });
       }
 
-      const totalPayment = monthlyPayment * months;
-      const totalInterest = totalPayment - loan;
-      const mrtaCost = loan * mrta;
-      const grandTotal = totalPayment + mrtaCost;
+      const mrtaCost = loan * mrtaPct;
+      const monthlyBase = rateM
+        ? loan * rateM * Math.pow(1 + rateM, months) / (Math.pow(1 + rateM, months) - 1)
+        : loan / months;
+
+      let balance = loan, totalInterest = 0, totalPayment = 0;
+      const schedule = [];
+      let month = 0;
+
+      while (balance > 0 && month < 1000) {
+        month++;
+        const interest = balance * rateM;
+        let principal = monthlyBase - interest;
+        let extra = early[month] || 0;
+
+        if (principal + extra > balance) {
+          extra = balance - principal;
+        }
+
+        balance -= (principal + extra);
+        if (balance < 0.01) balance = 0;
+
+        totalInterest += interest;
+        totalPayment += (monthlyBase + extra);
+
+        schedule.push({
+          month,
+          principal: principal,
+          interest: interest,
+          extra: extra,
+          balance: balance
+        });
+
+        if (balance <= 0) break;
+      }
+
+      const total = totalPayment + mrtaCost;
 
       document.getElementById('result').innerHTML = `
-        <p>Monthly Payment: <strong>RM ${monthlyPayment.toFixed(2)}</strong></p>
-        <p>Total Interest: <strong>RM ${totalInterest.toFixed(2)}</strong></p>
-        <p>Total Payment (without insurance): <strong>RM ${totalPayment.toFixed(2)}</strong></p>
-        <p>MRTA / MLTA Cost: <strong>RM ${mrtaCost.toFixed(2)}</strong></p>
-        <p><strong>Grand Total: RM ${grandTotal.toFixed(2)}</strong></p>
+        <div class="summary">Monthly Payment (before early repayment): RM ${monthlyBase.toFixed(2)}</div>
+        <div class="summary">Total Interest Paid: RM ${totalInterest.toFixed(2)}</div>
+        <div class="summary">MRTA/MLTA Cost: RM ${mrtaCost.toFixed(2)}</div>
+        <div class="summary">Total Payment: RM ${total.toFixed(2)}</div>
+        <div class="summary">Loan Fully Repaid in: ${month} months (${(month/12).toFixed(1)} years)</div>
       `;
 
       drawChart(loan, totalInterest);
-
-      // Repayment schedule
-      let balance = loan;
-      let schedule = `
-        <h3>Repayment Schedule</h3>
-        <table>
-          <tr><th>Month</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
-      `;
-      for (let i = 1; i <= months; i++) {
-        const interest = balance * rate;
-        const principal = monthlyPayment - interest;
-        balance -= principal;
-        schedule += `<tr>
-          <td>${i}</td>
-          <td>${principal.toFixed(2)}</td>
-          <td>${interest.toFixed(2)}</td>
-          <td>${balance > 0 ? balance.toFixed(2) : '0.00'}</td>
-        </tr>`;
-        if (i > 360) break; // Prevent browser overload
-      }
-      schedule += `</table>`;
-      document.getElementById('schedule').innerHTML = schedule;
+      renderSchedule(schedule);
     }
 
     function drawChart(principal, interest) {
@@ -216,16 +180,38 @@
         },
         options: {
           plugins: {
-            legend: {
-              position: 'bottom'
-            }
+            legend: { position: 'bottom' }
           }
         }
       });
     }
 
+    function renderSchedule(rows) {
+      let html = `
+        <table>
+          <tr>
+            <th>Month</th>
+            <th>Principal</th>
+            <th>Interest</th>
+            <th>Early Repayment</th>
+            <th>Remaining Balance</th>
+          </tr>
+      `;
+      rows.forEach(r => {
+        html += `<tr>
+          <td>${r.month}</td>
+          <td>${r.principal.toFixed(2)}</td>
+          <td>${r.interest.toFixed(2)}</td>
+          <td>${r.extra.toFixed(2)}</td>
+          <td>${r.balance.toFixed(2)}</td>
+        </tr>`;
+      });
+      html += '</table>';
+      document.getElementById('schedule').innerHTML = html;
+    }
+
     function setLanguage(lang) {
-      // 预留语言切换逻辑
+      // 可拓展双语功能
     }
   </script>
 </body>
