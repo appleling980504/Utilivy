@@ -143,6 +143,14 @@
       <option value="female" data-en="Female" data-zh="女性">Female</option>
     </select>
 
+    <label data-en="Formula" data-zh="计算公式">Formula</label>
+    <select id="formula">
+      <option value="devine" data-en="Devine" data-zh="Devine">Devine</option>
+      <option value="robinson" data-en="Robinson" data-zh="Robinson">Robinson</option>
+      <option value="miller" data-en="Miller" data-zh="Miller">Miller</option>
+      <option value="hamwi" data-en="Hamwi" data-zh="Hamwi">Hamwi</option>
+    </select>
+
     <button class="calculate" onclick="calculateIdealWeight()" data-en="Calculate Ideal Weight" data-zh="计算理想体重">Calculate Ideal Weight</button>
 
     <div class="result" id="result"></div>
@@ -151,37 +159,56 @@
   <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
   <footer>
-    <p data-en="Based on Devine formula. For reference only." data-zh="基于 Devine 公式，仅供参考。">
-      Based on Devine formula. For reference only.
-    </p>
+    <p data-en="Based on selected formula. Results are for reference only." data-zh="基于所选公式，结果仅供参考。">Based on selected formula. Results are for reference only.</p>
   </footer>
 
   <script>
     function calculateIdealWeight() {
-      const height = parseFloat(document.getElementById('height').value);
+      const heightCm = parseFloat(document.getElementById('height').value);
       const gender = document.getElementById('gender').value;
+      const formula = document.getElementById('formula').value;
       const result = document.getElementById('result');
 
-      if (isNaN(height) || height < 100) {
-        result.innerText = "Please enter a valid height (in cm).";
+      if (isNaN(heightCm) || heightCm <= 0) {
+        result.innerText = "Please enter a valid height.";
         return;
       }
 
-      let idealWeight;
-      if (height <= 152.4) {
-        idealWeight = gender === 'male' ? 50 : 45.5;
-      } else {
-        const extraCm = height - 152.4;
-        idealWeight = (gender === 'male' ? 50 : 45.5) + (2.3 * (extraCm / 2.54));
+      const heightIn = heightCm / 2.54;
+      const baseHeight = 60;
+      const extraInches = heightIn - baseHeight;
+      let weight = 0;
+
+      switch (formula) {
+        case "devine":
+          weight = gender === "male" ? 50 + 2.3 * extraInches : 45.5 + 2.3 * extraInches;
+          break;
+        case "robinson":
+          weight = gender === "male" ? 52 + 1.9 * extraInches : 49 + 1.7 * extraInches;
+          break;
+        case "miller":
+          weight = gender === "male" ? 56.2 + 1.41 * extraInches : 53.1 + 1.36 * extraInches;
+          break;
+        case "hamwi":
+          weight = gender === "male" ? 48 + 2.7 * extraInches : 45.5 + 2.2 * extraInches;
+          break;
       }
 
-      result.innerText = `Your ideal weight is approximately ${idealWeight.toFixed(1)} kg.`;
+      weight = weight < 0 ? 0 : weight;
+      result.innerText = `Ideal Weight (${capitalize(formula)}): ${weight.toFixed(1)} kg`;
     }
 
     function setLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.innerText = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
+      document.querySelectorAll('option').forEach(opt => {
+        opt.innerText = lang === 'zh' ? opt.getAttribute('data-zh') : opt.getAttribute('data-en');
+      });
+    }
+
+    function capitalize(s) {
+      return s.charAt(0).toUpperCase() + s.slice(1);
     }
   </script>
 </body>
