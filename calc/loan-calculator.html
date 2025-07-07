@@ -11,9 +11,7 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -64,20 +62,13 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     label {
       display: block;
@@ -87,12 +78,12 @@
     input {
       width: 100%;
       padding: 0.75rem;
+      margin-top: 0.5rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      margin-top: 0.5rem;
       font-size: 1rem;
     }
-    button.calculate {
+    button {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -103,19 +94,21 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
+    .result, table {
+      margin-top: 2rem;
     }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
+    table {
+      width: 100%;
+      border-collapse: collapse;
       font-size: 0.9rem;
-      color: #6b7280;
+    }
+    th, td {
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      text-align: right;
+    }
+    th {
+      background-color: #f9fafb;
     }
   </style>
 </head>
@@ -131,51 +124,78 @@
     </div>
   </header>
 
-  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
-
   <div class="container">
-    <label data-en="Loan Amount (Principal)" data-zh="贷款金额">Loan Amount (Principal)</label>
-    <input type="number" id="amount" placeholder="e.g. 100000" />
+    <label>Loan Amount (e.g. 10000):</label>
+    <input type="number" id="amount" />
 
-    <label data-en="Annual Interest Rate (%)" data-zh="年利率（%）">Annual Interest Rate (%)</label>
-    <input type="number" id="rate" placeholder="e.g. 5" />
+    <label>Annual Interest Rate (%):</label>
+    <input type="number" id="interest" step="0.01" />
 
-    <label data-en="Loan Term (Years)" data-zh="贷款年限">Loan Term (Years)</label>
-    <input type="number" id="years" placeholder="e.g. 10" />
+    <label>Loan Term (years):</label>
+    <input type="number" id="years" />
 
-    <button class="calculate" onclick="calculateLoan()" data-en="Calculate Monthly Payment" data-zh="计算每月还款">Calculate Monthly Payment</button>
+    <label>Monthly Extra Repayment (optional):</label>
+    <input type="number" id="extra" value="0" />
 
-    <div class="result" id="result"></div>
+    <button onclick="calculateLoan()">Calculate</button>
+
+    <div class="result" id="summary"></div>
+    <div id="amortization"></div>
   </div>
-
-  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
-
-  <footer>
-    <p data-en="Results are for reference only." data-zh="结果仅供参考。">Results are for reference only.</p>
-  </footer>
 
   <script>
     function calculateLoan() {
       const amount = parseFloat(document.getElementById('amount').value);
-      const annualRate = parseFloat(document.getElementById('rate').value);
-      const years = parseFloat(document.getElementById('years').value);
-      const result = document.getElementById('result');
+      const interest = parseFloat(document.getElementById('interest').value) / 100 / 12;
+      const years = parseInt(document.getElementById('years').value);
+      const extra = parseFloat(document.getElementById('extra').value || 0);
 
-      if (isNaN(amount) || isNaN(annualRate) || isNaN(years) || amount <= 0 || annualRate <= 0 || years <= 0) {
-        result.innerText = "Please enter valid inputs.";
-        return;
+      const months = years * 12;
+      let monthly = amount * interest / (1 - Math.pow(1 + interest, -months));
+      let balance = amount;
+      let totalInterest = 0;
+      let totalPayment = 0;
+      let schedule = '';
+      let month = 0;
+
+      schedule += '<table><thead><tr><th>Month</th><th>Principal</th><th>Interest</th><th>Total Payment</th><th>Balance</th></tr></thead><tbody>';
+
+      while (balance > 0 && month < 1000) {
+        const interestPayment = balance * interest;
+        let principalPayment = monthly - interestPayment + extra;
+
+        if (principalPayment > balance) {
+          principalPayment = balance;
+        }
+
+        const payment = principalPayment + interestPayment;
+        balance -= principalPayment;
+        totalInterest += interestPayment;
+        totalPayment += payment;
+        month++;
+
+        schedule += `<tr>
+          <td>${month}</td>
+          <td>${principalPayment.toFixed(2)}</td>
+          <td>${interestPayment.toFixed(2)}</td>
+          <td>${payment.toFixed(2)}</td>
+          <td>${balance.toFixed(2)}</td>
+        </tr>`;
       }
 
-      const monthlyRate = annualRate / 100 / 12;
-      const totalMonths = years * 12;
-      const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
-
-      result.innerText = `Estimated Monthly Payment: $${monthlyPayment.toFixed(2)}`;
+      schedule += '</tbody></table>';
+      document.getElementById('summary').innerHTML = `
+        <p><strong>Monthly Payment:</strong> ${monthly.toFixed(2)}</p>
+        <p><strong>Total Payments:</strong> ${totalPayment.toFixed(2)}</p>
+        <p><strong>Total Interest:</strong> ${totalInterest.toFixed(2)}</p>
+        <p><strong>Loan Duration:</strong> ${month} months</p>
+      `;
+      document.getElementById('amortization').innerHTML = schedule;
     }
 
     function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.innerText = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
       });
     }
   </script>
