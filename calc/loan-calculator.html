@@ -2,198 +2,180 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Loan Calculator - Toolnest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Loan Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: sans-serif;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f9fafb;
-      color: #111;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 24px;
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
-    label {
-      display: block;
-      margin-top: 16px;
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
     }
-    input, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 16px;
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    button {
-      margin-top: 20px;
-      padding: 12px 20px;
-      background-color: #4f46e5;
-      color: white;
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-    .lang-switch {
-      text-align: right;
-      margin-bottom: 10px;
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
     }
     .result {
-      margin-top: 30px;
-      background: #eef2ff;
-      padding: 16px;
-      border-radius: 6px;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <div class="lang-switch">
-    <button onclick="toggleLanguage()"><span id="lang-btn">中文</span></button>
+  <header>
+    <h1 data-en="Utilivy - Loan Calculator" data-zh="Utilivy - 贷款计算器">Utilivy - Loan Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
+
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
+
+  <div class="container">
+    <label data-en="Loan Amount (Principal)" data-zh="贷款金额">Loan Amount (Principal)</label>
+    <input type="number" id="amount" placeholder="e.g. 100000" />
+
+    <label data-en="Annual Interest Rate (%)" data-zh="年利率（%）">Annual Interest Rate (%)</label>
+    <input type="number" id="rate" placeholder="e.g. 5" />
+
+    <label data-en="Loan Term (Years)" data-zh="贷款年限">Loan Term (Years)</label>
+    <input type="number" id="years" placeholder="e.g. 10" />
+
+    <button class="calculate" onclick="calculateLoan()" data-en="Calculate Monthly Payment" data-zh="计算每月还款">Calculate Monthly Payment</button>
+
+    <div class="result" id="result"></div>
   </div>
 
-  <h1 id="title">Loan Calculator</h1>
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
-  <label for="currency" id="label-currency">Currency</label>
-  <select id="currency">
-    <option value="USD">$ USD</option>
-    <option value="MYR">RM MYR</option>
-    <option value="CNY">¥ CNY</option>
-    <option value="EUR">€ EUR</option>
-    <option value="JPY">¥ JPY</option>
-  </select>
-
-  <label for="amount" id="label-amount">Loan Amount</label>
-  <input type="number" id="amount" placeholder="e.g. 50000" />
-
-  <label for="rate" id="label-rate">Annual Interest Rate (%)</label>
-  <input type="number" id="rate" placeholder="e.g. 5" step="0.01" />
-
-  <label for="years" id="label-years">Loan Term (Years)</label>
-  <input type="number" id="years" placeholder="e.g. 10" />
-
-  <label for="frequency" id="label-frequency">Repayment Frequency</label>
-  <select id="frequency">
-    <option value="12">Monthly</option>
-    <option value="1">Annually</option>
-  </select>
-
-  <button onclick="calculate()" id="calc-btn">Calculate</button>
-
-  <div id="output" class="result" style="display:none;"></div>
-
-  <canvas id="chart" height="300"></canvas>
+  <footer>
+    <p data-en="Results are for reference only." data-zh="结果仅供参考。">Results are for reference only.</p>
+  </footer>
 
   <script>
-    const labels = {
-      en: {
-        title: "Loan Calculator",
-        currency: "Currency",
-        amount: "Loan Amount",
-        rate: "Annual Interest Rate (%)",
-        years: "Loan Term (Years)",
-        frequency: "Repayment Frequency",
-        calc: "Calculate",
-        total: "Total Repayment",
-        monthly: "Per Payment",
-        interest: "Total Interest"
-      },
-      zh: {
-        title: "贷款计算器",
-        currency: "货币",
-        amount: "贷款金额",
-        rate: "年利率 (%)",
-        years: "贷款年限",
-        frequency: "还款频率",
-        calc: "计算",
-        total: "总还款金额",
-        monthly: "每期还款额",
-        interest: "总利息"
-      }
-    };
-
-    let currentLang = "en";
-    let chart;
-
-    function toggleLanguage() {
-      currentLang = currentLang === "en" ? "zh" : "en";
-      const lang = labels[currentLang];
-      document.getElementById("title").innerText = lang.title;
-      document.getElementById("label-currency").innerText = lang.currency;
-      document.getElementById("label-amount").innerText = lang.amount;
-      document.getElementById("label-rate").innerText = lang.rate;
-      document.getElementById("label-years").innerText = lang.years;
-      document.getElementById("label-frequency").innerText = lang.frequency;
-      document.getElementById("calc-btn").innerText = lang.calc;
-      document.getElementById("lang-btn").innerText = currentLang === "en" ? "中文" : "English";
-    }
-
-    function getCurrencySymbol(code) {
-      return {
-        USD: "$",
-        MYR: "RM",
-        CNY: "¥",
-        EUR: "€",
-        JPY: "¥"
-      }[code] || "$";
-    }
-
-    function formatMoney(num, code) {
-      return getCurrencySymbol(code) + num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-    }
-
-    function calculate() {
+    function calculateLoan() {
       const amount = parseFloat(document.getElementById('amount').value);
-      const rate = parseFloat(document.getElementById('rate').value) / 100;
-      const years = parseInt(document.getElementById('years').value);
-      const freq = parseInt(document.getElementById('frequency').value);
-      const currency = document.getElementById('currency').value;
-      const lang = labels[currentLang];
+      const annualRate = parseFloat(document.getElementById('rate').value);
+      const years = parseFloat(document.getElementById('years').value);
+      const result = document.getElementById('result');
 
-      if (isNaN(amount) || isNaN(rate) || isNaN(years)) {
-        alert("Please fill in all fields correctly.");
+      if (isNaN(amount) || isNaN(annualRate) || isNaN(years) || amount <= 0 || annualRate <= 0 || years <= 0) {
+        result.innerText = "Please enter valid inputs.";
         return;
       }
 
-      const n = years * freq;
-      const i = rate / freq;
-      const payment = amount * i / (1 - Math.pow(1 + i, -n));
-      const total = payment * n;
-      const interest = total - amount;
+      const monthlyRate = annualRate / 100 / 12;
+      const totalMonths = years * 12;
+      const monthlyPayment = (amount * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -totalMonths));
 
-      document.getElementById("output").style.display = "block";
-      document.getElementById("output").innerHTML = `
-        <strong>${lang.monthly}:</strong> ${formatMoney(payment, currency)}<br>
-        <strong>${lang.total}:</strong> ${formatMoney(total, currency)}<br>
-        <strong>${lang.interest}:</strong> ${formatMoney(interest, currency)}
-      `;
+      result.innerText = `Estimated Monthly Payment: $${monthlyPayment.toFixed(2)}`;
+    }
 
-      // Draw chart
-      const payments = Array.from({length: n}, () => payment);
-      const ctx = document.getElementById("chart").getContext("2d");
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: 'line',
-        data: {
-          labels: payments.map((_, i) => `#${i + 1}`),
-          datasets: [{
-            label: lang.monthly,
-            data: payments,
-            borderColor: "#4f46e5",
-            backgroundColor: "rgba(79,70,229,0.1)",
-            fill: true,
-            tension: 0.3
-          }]
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true
-            }
-          }
-        }
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.innerText = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
     }
   </script>
