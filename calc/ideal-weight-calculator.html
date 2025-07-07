@@ -2,229 +2,187 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ideal Weight Calculator</title>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Ideal Weight Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f7ff;
-      padding: 20px;
-      max-width: 700px;
-      margin: auto;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    h1 {
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
       text-align: center;
-      color: #333;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
-      margin-top: 20px;
-      font-weight: bold;
+      margin-top: 1rem;
+      font-weight: 500;
     }
-    input, select, button {
+    input, select {
       width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 16px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
     }
-    button {
-      background-color: #007bff;
+    button.calculate {
+      background: var(--primary-color);
       color: white;
-      margin-top: 20px;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
-    #result {
-      margin-top: 30px;
-      padding: 20px;
-      background-color: #fff;
-      border-left: 6px solid #007bff;
+    button.calculate:hover {
+      background-color: #4338ca;
     }
-    #lang-switch {
-      text-align: right;
-      margin-bottom: 10px;
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
     }
-    #lang-switch button {
-      margin-left: 10px;
-      padding: 6px 12px;
-      font-size: 14px;
-    }
-    #gender-icon {
-      font-size: 30px;
-      margin-left: 10px;
-    }
-    canvas {
-      margin-top: 30px;
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <div id="lang-switch">
-    <button onclick="setLang('en')">EN</button>
-    <button onclick="setLang('zh')">中</button>
+  <header>
+    <h1 data-en="Utilivy - Ideal Weight Calculator" data-zh="Utilivy - 理想体重计算器">Utilivy - Ideal Weight Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
+
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
+
+  <div class="container">
+    <label data-en="Height (cm)" data-zh="身高（厘米）">Height (cm)</label>
+    <input type="number" id="height" placeholder="e.g. 170" />
+
+    <label data-en="Gender" data-zh="性别">Gender</label>
+    <select id="gender">
+      <option value="male" data-en="Male" data-zh="男性">Male</option>
+      <option value="female" data-en="Female" data-zh="女性">Female</option>
+    </select>
+
+    <button class="calculate" onclick="calculateIdealWeight()" data-en="Calculate Ideal Weight" data-zh="计算理想体重">Calculate Ideal Weight</button>
+
+    <div class="result" id="result"></div>
   </div>
 
-  <h1 id="title">Ideal Weight Calculator</h1>
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
-  <label id="label-gender">Gender:</label>
-  <select id="gender" onchange="updateGenderIcon()">
-    <option value="male">Male</option>
-    <option value="female">Female</option>
-  </select>
-  <div id="gender-icon">♂</div>
-
-  <label id="label-height">Height:</label>
-  <div style="display: flex; gap: 10px;">
-    <input type="number" id="height" placeholder="cm" />
-    <input type="number" id="feet" placeholder="ft" />
-    <input type="number" id="inches" placeholder="in" />
-  </div>
-
-  <label id="label-actual-weight">Actual Weight (kg):</label>
-  <input type="number" id="actual-weight" placeholder="kg" oninput="updateBMI()" />
-
-  <button onclick="calculateIdealWeight()" id="calc-btn">Calculate</button>
-
-  <div id="result"></div>
-  <canvas id="bmiChart" width="400" height="200"></canvas>
+  <footer>
+    <p data-en="Based on Devine formula. For reference only." data-zh="基于 Devine 公式，仅供参考。">
+      Based on Devine formula. For reference only.
+    </p>
+  </footer>
 
   <script>
-    let lang = 'en';
-
-    const texts = {
-      en: {
-        title: 'Ideal Weight Calculator',
-        gender: 'Gender:',
-        height: 'Height:',
-        button: 'Calculate',
-        result: 'Your ideal weight is:',
-        range: 'Ideal weight range:',
-        bmi: 'Estimated BMI:',
-        advice: 'Health Advice:',
-        healthy: 'Your weight is within the healthy range.',
-        underweight: 'You are underweight. Consider consulting a healthcare provider.',
-        overweight: 'You are overweight. Consider a healthy lifestyle and consult a doctor if needed.',
-        chartLabel: 'BMI Range',
-        actualWeight: 'Actual Weight (kg):',
-        difference: 'Your weight difference from ideal is:'
-      },
-      zh: {
-        title: '理想体重计算器',
-        gender: '性别：',
-        height: '身高：',
-        button: '计算',
-        result: '您的理想体重是：',
-        range: '理想体重范围：',
-        bmi: '估算BMI：',
-        advice: '健康建议：',
-        healthy: '您的体重处于健康范围。',
-        underweight: '您偏瘦，建议咨询专业医生。',
-        overweight: '您超重，建议保持健康生活方式并咨询医生。',
-        chartLabel: 'BMI 区间',
-        actualWeight: '实际体重（kg）：',
-        difference: '与理想体重的差距为：'
-      }
-    };
-
-    function setLang(selectedLang) {
-      lang = selectedLang;
-      document.getElementById('title').innerText = texts[lang].title;
-      document.getElementById('label-gender').innerText = texts[lang].gender;
-      document.getElementById('label-height').innerText = texts[lang].height;
-      document.getElementById('label-actual-weight').innerText = texts[lang].actualWeight;
-      document.getElementById('calc-btn').innerText = texts[lang].button;
-      document.getElementById('result').innerText = '';
-      document.getElementById('bmiChart').style.display = 'none';
-    }
-
-    function updateGenderIcon() {
-      const icon = document.getElementById('gender-icon');
-      icon.innerText = document.getElementById('gender').value === 'male' ? '♂' : '♀';
-    }
-
     function calculateIdealWeight() {
+      const height = parseFloat(document.getElementById('height').value);
       const gender = document.getElementById('gender').value;
-      let height = parseFloat(document.getElementById('height').value);
-      const feet = parseFloat(document.getElementById('feet').value);
-      const inches = parseFloat(document.getElementById('inches').value);
-      const actualWeight = parseFloat(document.getElementById('actual-weight').value);
+      const result = document.getElementById('result');
 
-      if (!height && (feet || inches)) {
-        height = (feet || 0) * 30.48 + (inches || 0) * 2.54;
-        document.getElementById('height').value = height.toFixed(1);
-      }
-
-      if (!height || height < 100 || height > 250) {
-        document.getElementById('result').innerText = lang === 'zh' ? '请输入有效身高。' : 'Please enter a valid height.';
+      if (isNaN(height) || height < 100) {
+        result.innerText = "Please enter a valid height (in cm).";
         return;
       }
 
-      const heightInInches = height / 2.54;
-      const ideal = gender === 'male'
-        ? 50 + 2.3 * (heightInInches - 60)
-        : 45.5 + 2.3 * (heightInInches - 60);
-
-      const rangeMin = ideal * 0.9;
-      const rangeMax = ideal * 1.1;
-      const bmi = ideal / ((height / 100) ** 2);
-
-      let advice = texts[lang].healthy;
-      if (bmi < 18.5) advice = texts[lang].underweight;
-      else if (bmi >= 25) advice = texts[lang].overweight;
-
-      let diffText = '';
-      if (actualWeight) {
-        const diff = actualWeight - ideal;
-        const sign = diff >= 0 ? '+' : '';
-        diffText = `<br><strong>${texts[lang].difference}</strong> ${sign}${diff.toFixed(1)} kg`;
+      let idealWeight;
+      if (height <= 152.4) {
+        idealWeight = gender === 'male' ? 50 : 45.5;
+      } else {
+        const extraCm = height - 152.4;
+        idealWeight = (gender === 'male' ? 50 : 45.5) + (2.3 * (extraCm / 2.54));
       }
 
-      document.getElementById('result').innerHTML = `
-        <strong>${texts[lang].result}</strong> ${ideal.toFixed(1)} kg<br>
-        <strong>${texts[lang].range}</strong> ${rangeMin.toFixed(1)} - ${rangeMax.toFixed(1)} kg<br>
-        <strong>${texts[lang].bmi}</strong> ${bmi.toFixed(1)}<br>
-        <strong>${texts[lang].advice}</strong> ${advice}
-        ${diffText}
-      `;
-
-      drawBMIChart();
+      result.innerText = `Your ideal weight is approximately ${idealWeight.toFixed(1)} kg.`;
     }
 
-    function updateBMI() {
-      const height = parseFloat(document.getElementById('height').value);
-      const actualWeight = parseFloat(document.getElementById('actual-weight').value);
-      if (!height || !actualWeight) return;
-      const bmi = actualWeight / ((height / 100) ** 2);
-      document.getElementById('result').innerHTML += `<br><strong>Current BMI:</strong> ${bmi.toFixed(1)}`;
-    }
-
-    function drawBMIChart() {
-      const ctx = document.getElementById('bmiChart').getContext('2d');
-      document.getElementById('bmiChart').style.display = 'block';
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Underweight', 'Normal', 'Overweight', 'Obese'],
-          datasets: [{
-            label: texts[lang].chartLabel,
-            data: [18.4, 24.9, 29.9, 35],
-            backgroundColor: ['#5bc0de', '#5cb85c', '#f0ad4e', '#d9534f']
-          }]
-        },
-        options: {
-          plugins: { legend: { display: false } },
-          scales: {
-            y: { beginAtZero: true, max: 40 },
-            x: { title: { display: true, text: 'BMI Category' } }
-          }
-        }
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.innerText = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
     }
-
-    setLang('en');
-    updateGenderIcon();
   </script>
 </body>
 </html>
