@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Mortgage Calculator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -63,7 +64,7 @@
       font-size: 0.95rem;
     }
     .container {
-      max-width: 700px;
+      max-width: 800px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
@@ -94,127 +95,137 @@
       margin-top: 1.5rem;
       width: 100%;
     }
-    table {
-      width: 100%;
+    .result, table, canvas {
       margin-top: 1.5rem;
+      width: 100%;
+    }
+    table {
       border-collapse: collapse;
       font-size: 0.9rem;
     }
-    th, td {
-      padding: 0.5rem;
+    table th, table td {
       border: 1px solid #d1d5db;
+      padding: 0.5rem;
       text-align: right;
     }
-    th {
-      background-color: #f9fafb;
+    table th {
+      background: #f9fafb;
     }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    .summary {
+      margin-top: 1rem;
+      font-weight: 500;
     }
   </style>
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Mortgage Calculator" data-zh="Utilivy - 房贷计算器">Utilivy - Mortgage Calculator</h1>
+    <h1>Utilivy - Mortgage Calculator</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
         <button onclick="setLanguage('zh')">中</button>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <a href="/">← Back to Home</a>
     </div>
   </header>
 
   <div class="container">
-    <label data-en="Property Price" data-zh="房产总价">Property Price</label>
-    <input type="number" id="propertyPrice" value="500000" />
+    <label>Loan Amount (RM):</label>
+    <input type="number" id="loan" value="500000" />
 
-    <label data-en="Down Payment" data-zh="首付金额">Down Payment</label>
-    <input type="number" id="downPayment" value="100000" />
+    <label>Interest Rate (% per year):</label>
+    <input type="number" id="rate" value="4.5" step="0.01" />
 
-    <label data-en="Loan Term (Years)" data-zh="贷款年限">Loan Term (Years)</label>
-    <input type="number" id="loanTerm" value="30" />
+    <label>Loan Term (years):</label>
+    <input type="number" id="years" value="30" />
 
-    <label data-en="Interest Rate (%)" data-zh="利率 (%)">Interest Rate (%)</label>
-    <input type="number" id="interestRate" value="4.5" step="0.01" />
+    <label>MRTA / MLTA Insurance (% of loan, optional):</label>
+    <input type="number" id="mrta" value="5" />
 
-    <label data-en="Extra Payment per Month (Optional)" data-zh="每月额外还款 (可选)">Extra Payment per Month (Optional)</label>
-    <input type="number" id="extraPayment" value="0" />
+    <button class="calculate" onclick="calculate()">Calculate</button>
 
-    <button class="calculate" onclick="calculateMortgage()">Calculate</button>
-
-    <div class="result" id="monthlyPayment"></div>
-
-    <table id="scheduleTable" style="display:none">
-      <thead>
-        <tr>
-          <th data-en="Month" data-zh="月份">Month</th>
-          <th data-en="Principal" data-zh="本金">Principal</th>
-          <th data-en="Interest" data-zh="利息">Interest</th>
-          <th data-en="Extra Payment" data-zh="额外还款">Extra Payment</th>
-          <th data-en="Balance" data-zh="余额">Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div class="result" id="result"></div>
+    <canvas id="chart" height="100"></canvas>
+    <div id="schedule"></div>
   </div>
 
-  <footer>© 2025 Utilivy</footer>
-
   <script>
-    function calculateMortgage() {
-      const propertyPrice = parseFloat(document.getElementById('propertyPrice').value);
-      const downPayment = parseFloat(document.getElementById('downPayment').value);
-      const loanAmount = propertyPrice - downPayment;
+    function calculate() {
+      const loan = parseFloat(document.getElementById('loan').value);
+      const rate = parseFloat(document.getElementById('rate').value) / 100 / 12;
+      const years = parseFloat(document.getElementById('years').value);
+      const months = years * 12;
+      const mrta = parseFloat(document.getElementById('mrta').value || 0) / 100;
 
-      const interestRate = parseFloat(document.getElementById('interestRate').value) / 100 / 12;
-      const loanTerm = parseInt(document.getElementById('loanTerm').value);
-      const extraPayment = parseFloat(document.getElementById('extraPayment').value || 0);
-
-      const totalMonths = loanTerm * 12;
-      const monthlyBase = loanAmount * interestRate * Math.pow(1 + interestRate, totalMonths) / (Math.pow(1 + interestRate, totalMonths) - 1);
-
-      const monthlyTotal = monthlyBase + extraPayment;
-      document.getElementById("monthlyPayment").innerText = `Monthly Payment: $${monthlyTotal.toFixed(2)}`;
-
-      let balance = loanAmount;
-      let month = 0;
-      const tbody = document.querySelector("#scheduleTable tbody");
-      tbody.innerHTML = "";
-
-      while (balance > 0 && month < 1000) {
-        const interest = balance * interestRate;
-        let principal = monthlyBase - interest + extraPayment;
-        if (principal > balance) principal = balance;
-
-        balance -= principal;
-        tbody.innerHTML += `
-          <tr>
-            <td>${month + 1}</td>
-            <td>${(principal - extraPayment).toFixed(2)}</td>
-            <td>${interest.toFixed(2)}</td>
-            <td>${extraPayment.toFixed(2)}</td>
-            <td>${balance.toFixed(2)}</td>
-          </tr>
-        `;
-        month++;
+      let monthlyPayment = 0;
+      if (rate === 0) {
+        monthlyPayment = loan / months;
+      } else {
+        monthlyPayment = loan * rate * Math.pow(1 + rate, months) / (Math.pow(1 + rate, months) - 1);
       }
 
-      document.getElementById("scheduleTable").style.display = "table";
+      const totalPayment = monthlyPayment * months;
+      const totalInterest = totalPayment - loan;
+      const mrtaCost = loan * mrta;
+      const grandTotal = totalPayment + mrtaCost;
+
+      document.getElementById('result').innerHTML = `
+        <p>Monthly Payment: <strong>RM ${monthlyPayment.toFixed(2)}</strong></p>
+        <p>Total Interest: <strong>RM ${totalInterest.toFixed(2)}</strong></p>
+        <p>Total Payment (without insurance): <strong>RM ${totalPayment.toFixed(2)}</strong></p>
+        <p>MRTA / MLTA Cost: <strong>RM ${mrtaCost.toFixed(2)}</strong></p>
+        <p><strong>Grand Total: RM ${grandTotal.toFixed(2)}</strong></p>
+      `;
+
+      drawChart(loan, totalInterest);
+
+      // Repayment schedule
+      let balance = loan;
+      let schedule = `
+        <h3>Repayment Schedule</h3>
+        <table>
+          <tr><th>Month</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
+      `;
+      for (let i = 1; i <= months; i++) {
+        const interest = balance * rate;
+        const principal = monthlyPayment - interest;
+        balance -= principal;
+        schedule += `<tr>
+          <td>${i}</td>
+          <td>${principal.toFixed(2)}</td>
+          <td>${interest.toFixed(2)}</td>
+          <td>${balance > 0 ? balance.toFixed(2) : '0.00'}</td>
+        </tr>`;
+        if (i > 360) break; // Prevent browser overload
+      }
+      schedule += `</table>`;
+      document.getElementById('schedule').innerHTML = schedule;
+    }
+
+    function drawChart(principal, interest) {
+      const ctx = document.getElementById('chart').getContext('2d');
+      if (window.myChart) window.myChart.destroy();
+      window.myChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Principal', 'Interest'],
+          datasets: [{
+            data: [principal, interest],
+            backgroundColor: ['#4f46e5', '#60a5fa']
+          }]
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }
+      });
     }
 
     function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.innerText = el.getAttribute(`data-${lang}`);
-      });
+      // 预留语言切换逻辑
     }
   </script>
 </body>
