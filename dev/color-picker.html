@@ -6,16 +6,24 @@
   <title data-en="Utilivy - Color Picker" data-zh="Utilivy - 颜色选择器">Utilivy - Color Picker</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
-    header, footer {
+    header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -25,78 +33,103 @@
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
     }
     .header-right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
     .lang-switch button {
       padding: 0.4rem 0.8rem;
       font-size: 0.85rem;
-      background-color: #4f46e5;
-      color: white;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
       width: 42px;
       height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
-    .adsense-banner, .adsense-footer {
-      display: none;
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .adsense-banner,
+    .adsense-footer {
       text-align: center;
       margin: 1rem 0;
       color: gray;
+      display: none;
     }
+
     .container {
-      max-width: 640px;
+      max-width: 600px;
       margin: 2rem auto;
-      background: white;
       padding: 2rem;
+      background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    .color-values {
-      margin-top: 1rem;
-    }
-    .color-values div {
-      margin-bottom: 0.5rem;
-    }
-    .color-sample {
+
+    input[type="color"] {
       width: 100%;
-      height: 100px;
-      border-radius: 8px;
-      margin-top: 1rem;
-      border: 1px solid #ccc;
+      height: 60px;
+      border: none;
+      cursor: pointer;
+      margin-bottom: 1.5rem;
     }
-    button.calculate {
-      background-color: #4f46e5;
+
+    .color-info {
+      margin-bottom: 1.5rem;
+    }
+
+    .color-info p {
+      margin: 0.5rem 0;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .buttons button {
+      background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.6rem 1rem;
-      margin-top: 1rem;
+      padding: 0.5rem 1rem;
       border-radius: 6px;
       cursor: pointer;
       font-size: 0.95rem;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    ul#favorites {
-      list-style: none;
-      padding: 0;
-      margin-top: 1rem;
+
+    .swatches {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 1rem;
     }
-    ul#favorites li {
+
+    .swatch {
       width: 40px;
       height: 40px;
-      border-radius: 4px;
-      border: 1px solid #ccc;
+      border-radius: 6px;
+      border: 1px solid #ddd;
       cursor: pointer;
     }
+
     footer {
       text-align: center;
       padding: 1rem;
@@ -107,7 +140,7 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Color Picker" data-zh="Utilivy - 颜色选择器">Utilivy - Color Picker</h1>
+    <h1 data-en="Color Picker" data-zh="颜色选择器">Color Picker</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -117,54 +150,50 @@
     </div>
   </header>
 
-  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
-
-  <div class="container">
-    <label data-en="Pick a Color:" data-zh="选择颜色：">Pick a Color:</label>
-    <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()" />
-
-    <div class="color-sample" id="sampleBox"></div>
-
-    <div class="color-values">
-      <div><strong>HEX:</strong> <span id="hexValue">#4f46e5</span> <button class="calculate" onclick="copy('hexValue')">📋</button></div>
-      <div><strong>RGB:</strong> <span id="rgbValue"></span> <button class="calculate" onclick="copy('rgbValue')">📋</button></div>
-      <div><strong>HSL:</strong> <span id="hslValue"></span> <button class="calculate" onclick="copy('hslValue')">📋</button></div>
-    </div>
-
-    <button class="calculate" onclick="saveColor()">❤️ <span data-en="Save Color" data-zh="收藏颜色">Save Color</span></button>
-    <button class="calculate" onclick="exportPalette()">📤 <span data-en="Export Palette" data-zh="导出调色板">Export Palette</span></button>
-
-    <ul id="favorites"></ul>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
-  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
+  <div class="container">
+    <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()">
+
+    <div class="color-info">
+      <p><strong>HEX:</strong> <span id="hexValue">#4f46e5</span></p>
+      <p><strong>RGB:</strong> <span id="rgbValue">rgb(79,70,229)</span></p>
+      <p><strong>HSL:</strong> <span id="hslValue">hsl(241, 75%, 59%)</span></p>
+    </div>
+
+    <div class="buttons">
+      <button onclick="copyText('hexValue')">Copy HEX</button>
+      <button onclick="copyText('rgbValue')">Copy RGB</button>
+      <button onclick="copyText('hslValue')">Copy HSL</button>
+      <button onclick="addToFavorites()">Add to Favorites</button>
+      <button onclick="exportPalette()">Export Palette</button>
+    </div>
+
+    <div id="favorites" class="swatches"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
 
   <footer>
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        el.textContent = el.getAttribute("data-" + lang);
-      });
-      document.documentElement.lang = lang;
-    }
-
     function updateColor() {
-      const color = document.getElementById("colorPicker").value;
-      document.getElementById("sampleBox").style.backgroundColor = color;
-      document.getElementById("hexValue").textContent = color;
-
+      const color = document.getElementById('colorPicker').value;
+      document.getElementById('hexValue').textContent = color;
       const rgb = hexToRgb(color);
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      document.getElementById("rgbValue").textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-      document.getElementById("hslValue").textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+      document.getElementById('rgbValue').textContent = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
+      document.getElementById('hslValue').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
     }
 
     function hexToRgb(hex) {
-      hex = hex.replace('#', '');
-      let bigint = parseInt(hex, 16);
+      const bigint = parseInt(hex.slice(1), 16);
       return {
         r: (bigint >> 16) & 255,
         g: (bigint >> 8) & 255,
@@ -173,69 +202,66 @@
     }
 
     function rgbToHsl(r, g, b) {
-      r /= 255, g /= 255, b /= 255;
-      let max = Math.max(r, g, b), min = Math.min(r, g, b);
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r, g, b), min = Math.min(r, g, b);
       let h, s, l = (max + min) / 2;
 
-      if (max === min) {
+      if(max === min){
         h = s = 0;
       } else {
-        let d = max - min;
+        const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
+        switch(max){
           case r: h = (g - b) / d + (g < b ? 6 : 0); break;
           case g: h = (b - r) / d + 2; break;
           case b: h = (r - g) / d + 4; break;
         }
         h /= 6;
       }
-      return {
-        h: Math.round(h * 360),
-        s: Math.round(s * 100),
-        l: Math.round(l * 100)
-      };
+      return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
     }
 
-    function copy(id) {
+    function copyText(id) {
       const text = document.getElementById(id).textContent;
-      navigator.clipboard.writeText(text).then(() => alert("✅ Copied: " + text));
+      navigator.clipboard.writeText(text).then(() => alert("✅ Copied!"));
     }
 
-    const favorites = [];
-
-    function saveColor() {
-      const color = document.getElementById("colorPicker").value;
-      if (!favorites.includes(color)) {
-        favorites.push(color);
-        renderFavorites();
-      }
-    }
-
-    function renderFavorites() {
-      const list = document.getElementById("favorites");
-      list.innerHTML = "";
-      favorites.forEach(color => {
-        const li = document.createElement("li");
-        li.style.backgroundColor = color;
-        li.title = color;
-        li.onclick = () => {
-          document.getElementById("colorPicker").value = color;
-          updateColor();
-        };
-        list.appendChild(li);
-      });
+    function addToFavorites() {
+      const hex = document.getElementById('hexValue').textContent;
+      const div = document.createElement('div');
+      div.className = 'swatch';
+      div.style.backgroundColor = hex;
+      div.title = hex;
+      div.onclick = () => navigator.clipboard.writeText(hex).then(() => alert("✅ Copied " + hex));
+      document.getElementById('favorites').appendChild(div);
     }
 
     function exportPalette() {
-      const blob = new Blob([JSON.stringify(favorites, null, 2)], { type: "application/json" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "palette.json";
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const swatches = document.querySelectorAll('#favorites .swatch');
+      const count = swatches.length;
+      canvas.width = count * 40;
+      canvas.height = 40;
+
+      swatches.forEach((swatch, i) => {
+        ctx.fillStyle = swatch.style.backgroundColor;
+        ctx.fillRect(i * 40, 0, 40, 40);
+      });
+
+      const link = document.createElement('a');
+      link.download = 'palette.png';
+      link.href = canvas.toDataURL();
       link.click();
     }
 
-    // Init
-    updateColor();
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', updateColor);
   </script>
 </body>
 </html>
