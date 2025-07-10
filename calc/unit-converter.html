@@ -2,86 +2,149 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unit Converter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Unit Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f8f9fa;
-      padding: 20px;
-      max-width: 700px;
-      margin: auto;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    h1 {
-      text-align: center;
-      color: #333;
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .category-buttons {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      justify-content: center;
-      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
     }
     .category-buttons button {
-      padding: 12px 8px;
-      border: none;
+      padding: 0.5rem 1rem;
+      border: 1px solid #d1d5db;
       border-radius: 8px;
-      background-color: #007bff;
-      color: white;
-      font-size: 15px;
+      background: #fff;
       cursor: pointer;
-      transition: background-color 0.2s ease-in-out;
     }
-    .category-buttons button.active,
-    .category-buttons button:hover {
-      background-color: #0056b3;
-    }
-    .converter-section {
-      display: none;
-      flex-direction: column;
-    }
-    .converter-section.active {
-      display: flex;
-    }
-    select, input, button {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      box-sizing: border-box;
-      font-size: 16px;
-    }
-    button.convert-btn {
-      background-color: #28a745;
+    .category-buttons button.active {
+      background: var(--primary-color);
       color: white;
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+    .convert-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1.5rem;
+      width: 100%;
+      font-size: 1rem;
+    }
+    .convert-btn:hover {
+      background-color: #4338ca;
     }
     #result {
-      margin-top: 20px;
-      background: #e9ecef;
-      padding: 15px;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    footer {
       text-align: center;
-      font-size: 18px;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <h1>Unit Converter</h1>
+  <header>
+    <h1 data-en="Utilivy - Unit Converter" data-zh="Utilivy - 单位换算器">Utilivy - Unit Converter</h1>
+    <div class="lang-switch">
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中</button>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-  <div class="category-buttons" id="categoryButtons"></div>
+  <div class="container">
+    <div class="category-buttons" id="categoryButtons"></div>
 
-  <div class="converter-section" id="converterSection">
-    <label for="value">Enter value:</label>
-    <input type="number" id="value" placeholder="e.g., 100" />
+    <div class="converter-section" id="converterSection">
+      <label data-en="Enter value:" data-zh="输入数值：">Enter value:</label>
+      <input type="number" id="value" placeholder="e.g., 100" />
 
-    <label for="fromUnit">From:</label>
-    <select id="fromUnit"></select>
+      <label data-en="From:" data-zh="从单位：">From:</label>
+      <select id="fromUnit"></select>
 
-    <label for="toUnit">To:</label>
-    <select id="toUnit"></select>
+      <label data-en="To:" data-zh="到单位：">To:</label>
+      <select id="toUnit"></select>
 
-    <button class="convert-btn" onclick="convert()">Convert</button>
-    <div id="result"></div>
+      <button class="convert-btn" onclick="convert()">Convert / 转换</button>
+      <div id="result"></div>
+    </div>
   </div>
+
+  <footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
 
   <script>
     const units = {
@@ -103,6 +166,7 @@
     const fromUnit = document.getElementById('fromUnit');
     const toUnit = document.getElementById('toUnit');
     let currentCategory = '';
+    let currentLang = 'en';
 
     for (const category in units) {
       const btn = document.createElement('button');
@@ -112,7 +176,6 @@
         btn.classList.add('active');
         currentCategory = category;
         populateUnits(category);
-        converterSection.classList.add('active');
       };
       categoryButtons.appendChild(btn);
     }
@@ -121,10 +184,8 @@
       fromUnit.innerHTML = '';
       toUnit.innerHTML = '';
       for (const key in units[category]) {
-        const optionFrom = new Option(key, key);
-        const optionTo = new Option(key, key);
-        fromUnit.appendChild(optionFrom);
-        toUnit.appendChild(optionTo);
+        fromUnit.appendChild(new Option(key, key));
+        toUnit.appendChild(new Option(key, key));
       }
     }
 
@@ -134,7 +195,9 @@
       const to = toUnit.value;
 
       if (isNaN(value)) {
-        document.getElementById('result').innerText = 'Please enter a valid number.';
+        document.getElementById('result').innerText = currentLang === 'zh'
+          ? '请输入有效数字。'
+          : 'Please enter a valid number.';
         return;
       }
 
@@ -159,6 +222,15 @@
       else if (to === 'F') return celsius * 9 / 5 + 32;
       else if (to === 'K') return celsius + 273.15;
     }
+
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
+
+    setLang('en');
   </script>
 </body>
 </html>
