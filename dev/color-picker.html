@@ -64,7 +64,6 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-
     .adsense-banner,
     .adsense-footer {
       text-align: center;
@@ -72,7 +71,6 @@
       color: gray;
       display: none;
     }
-
     .container {
       max-width: 600px;
       margin: 2rem auto;
@@ -81,55 +79,36 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-
-    input[type="color"] {
-      width: 100%;
-      height: 60px;
-      border: none;
-      cursor: pointer;
-      margin-bottom: 1.5rem;
+    h2 {
+      margin-top: 1.5rem;
+      font-size: 1.1rem;
     }
-
-    .color-info {
-      margin-bottom: 1.5rem;
-    }
-
-    .color-info p {
-      margin: 0.5rem 0;
-    }
-
-    .buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .buttons button {
+    button {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1rem;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
+      transition: background 0.2s;
     }
-
+    button:hover {
+      background-color: #4338ca;
+    }
     .swatches {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 1rem;
+      gap: 8px;
+      margin-top: 0.5rem;
     }
-
     .swatch {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 6px;
-      border: 1px solid #ddd;
+      border: 1px solid #ccc;
       cursor: pointer;
     }
-
     footer {
       text-align: center;
       padding: 1rem;
@@ -154,25 +133,35 @@
     <p>[Ad Placeholder - Top]</p>
   </div>
 
-  <div class="container">
-    <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()">
+  <main class="container">
+    <section>
+      <label for="colorPicker"><strong>🎨 Pick a Color:</strong></label><br/>
+      <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()" style="margin-top: 1rem;"/>
+    </section>
 
-    <div class="color-info">
+    <section>
+      <h2>📋 Color Values</h2>
       <p><strong>HEX:</strong> <span id="hexValue">#4f46e5</span></p>
-      <p><strong>RGB:</strong> <span id="rgbValue">rgb(79,70,229)</span></p>
+      <p><strong>RGB:</strong> <span id="rgbValue">rgb(79, 70, 229)</span></p>
       <p><strong>HSL:</strong> <span id="hslValue">hsl(241, 75%, 59%)</span></p>
-    </div>
+    </section>
 
-    <div class="buttons">
-      <button onclick="copyText('hexValue')">Copy HEX</button>
-      <button onclick="copyText('rgbValue')">Copy RGB</button>
-      <button onclick="copyText('hslValue')">Copy HSL</button>
-      <button onclick="addToFavorites()">Add to Favorites</button>
-      <button onclick="exportPalette()">Export Palette</button>
-    </div>
+    <section>
+      <h2>⚙️ Actions</h2>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+        <button onclick="copyText('hexValue')">Copy HEX</button>
+        <button onclick="copyText('rgbValue')">Copy RGB</button>
+        <button onclick="copyText('hslValue')">Copy HSL</button>
+        <button onclick="addToFavorites()">Add to Favorites</button>
+        <button onclick="exportPalette()">Export Palette</button>
+      </div>
+    </section>
 
-    <div id="favorites" class="swatches"></div>
-  </div>
+    <section>
+      <h2>🌈 Favorite Colors</h2>
+      <div id="favorites" class="swatches"></div>
+    </section>
+  </main>
 
   <div class="adsense-footer">
     <p>[Ad Placeholder - Bottom]</p>
@@ -183,22 +172,30 @@
   </footer>
 
   <script>
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        if (lang === "en") el.textContent = el.getAttribute("data-en");
+        if (lang === "zh") el.textContent = el.getAttribute("data-zh");
+      });
+    }
+
     function updateColor() {
-      const color = document.getElementById('colorPicker').value;
-      document.getElementById('hexValue').textContent = color;
+      const color = document.getElementById("colorPicker").value;
+      document.getElementById("hexValue").textContent = color;
+
       const rgb = hexToRgb(color);
       const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-      document.getElementById('rgbValue').textContent = `rgb(${rgb.r},${rgb.g},${rgb.b})`;
-      document.getElementById('hslValue').textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+
+      document.getElementById("rgbValue").textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+      document.getElementById("hslValue").textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
     }
 
     function hexToRgb(hex) {
-      const bigint = parseInt(hex.slice(1), 16);
-      return {
-        r: (bigint >> 16) & 255,
-        g: (bigint >> 8) & 255,
-        b: bigint & 255
-      };
+      const bigint = parseInt(hex.replace("#", ""), 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return { r, g, b };
     }
 
     function rgbToHsl(r, g, b) {
@@ -206,62 +203,46 @@
       const max = Math.max(r, g, b), min = Math.min(r, g, b);
       let h, s, l = (max + min) / 2;
 
-      if(max === min){
+      if (max === min) {
         h = s = 0;
       } else {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch(max){
+        switch (max) {
           case r: h = (g - b) / d + (g < b ? 6 : 0); break;
           case g: h = (b - r) / d + 2; break;
           case b: h = (r - g) / d + 4; break;
         }
-        h /= 6;
+        h *= 60;
       }
-      return { h: Math.round(h*360), s: Math.round(s*100), l: Math.round(l*100) };
+      return { h: Math.round(h), s: Math.round(s * 100), l: Math.round(l * 100) };
     }
 
     function copyText(id) {
       const text = document.getElementById(id).textContent;
-      navigator.clipboard.writeText(text).then(() => alert("✅ Copied!"));
+      navigator.clipboard.writeText(text).then(() => {
+        alert(`Copied: ${text}`);
+      });
     }
 
     function addToFavorites() {
-      const hex = document.getElementById('hexValue').textContent;
-      const div = document.createElement('div');
-      div.className = 'swatch';
-      div.style.backgroundColor = hex;
-      div.title = hex;
-      div.onclick = () => navigator.clipboard.writeText(hex).then(() => alert("✅ Copied " + hex));
-      document.getElementById('favorites').appendChild(div);
+      const color = document.getElementById("colorPicker").value;
+      const swatch = document.createElement("div");
+      swatch.className = "swatch";
+      swatch.style.backgroundColor = color;
+      swatch.title = color;
+      document.getElementById("favorites").appendChild(swatch);
     }
 
     function exportPalette() {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-      const swatches = document.querySelectorAll('#favorites .swatch');
-      const count = swatches.length;
-      canvas.width = count * 40;
-      canvas.height = 40;
-
-      swatches.forEach((swatch, i) => {
-        ctx.fillStyle = swatch.style.backgroundColor;
-        ctx.fillRect(i * 40, 0, 40, 40);
-      });
-
-      const link = document.createElement('a');
-      link.download = 'palette.png';
-      link.href = canvas.toDataURL();
+      const swatches = document.querySelectorAll(".swatch");
+      const colors = Array.from(swatches).map(el => el.title);
+      const blob = new Blob([colors.join("\n")], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "palette.txt";
       link.click();
     }
-
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
-      });
-    }
-
-    window.addEventListener('DOMContentLoaded', updateColor);
   </script>
 </body>
 </html>
