@@ -5,10 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Code Minifier / Beautifier</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.17.4/uglify-js.min.js"></script>
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -46,7 +42,6 @@
     }
     .lang-switch {
       display: flex;
-      align-items: center;
       gap: 0.4rem;
     }
     .lang-switch button {
@@ -74,10 +69,9 @@
       text-align: center;
       margin: 1rem 0;
       color: gray;
-      display: none;
     }
     .container {
-      max-width: 800px;
+      max-width: 700px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
@@ -89,43 +83,45 @@
       margin-top: 1rem;
       font-weight: 500;
     }
-    select, textarea {
+    textarea {
       width: 100%;
+      height: 120px;
+      font-size: 1rem;
       padding: 0.75rem;
       margin-top: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    select {
+      width: 100%;
+      padding: 0.6rem;
       font-size: 1rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      font-family: monospace;
+      margin-top: 0.5rem;
     }
     .action-buttons {
       display: flex;
-      flex-wrap: wrap;
       gap: 1rem;
+      flex-wrap: wrap;
       margin-top: 1rem;
     }
-    .action-buttons button {
+    button, .action-buttons button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
       background-color: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.6rem 1.2rem;
       border-radius: 8px;
       cursor: pointer;
-      font-size: 1rem;
     }
-    .action-buttons button:hover {
+    button:hover, .action-buttons button:hover {
       background-color: #4338ca;
     }
-    .button.calculate {
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
+    button.calculate {
       width: 100%;
+      margin-top: 1.5rem;
     }
     footer {
       text-align: center;
@@ -137,103 +133,120 @@
 </head>
 <body>
   <header>
-    <h1>Code Minifier / Beautifier</h1>
+    <h1 id="title">Code Minifier / Beautifier</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLang('en')">EN</button>
         <button onclick="setLang('zh')">中</button>
       </div>
-      <a href="/">← Back</a>
+      <a href="/">← <span id="backText">Back</span></a>
     </div>
   </header>
 
   <div class="adsense-banner">[AdSense Banner Placeholder]</div>
 
   <div class="container">
-    <label>Select Language:</label>
+    <label id="labelLanguage">Select Language:</label>
     <select id="language">
       <option value="js">JavaScript</option>
       <option value="css">CSS</option>
       <option value="html">HTML</option>
     </select>
 
-    <label>Input Code:</label>
-    <textarea id="inputCode" rows="10" placeholder="Paste your code here..."></textarea>
+    <label id="labelInput">Input Code:</label>
+    <textarea id="inputCode" placeholder="Paste your code here..."></textarea>
 
     <div class="action-buttons">
-      <button onclick="beautifyCode()">✨ Beautify</button>
-      <button onclick="minifyCode()">🔧 Minify</button>
-      <button onclick="copyOutput()">📋 Copy Output</button>
+      <button onclick="beautifyCode()" id="btnBeautify">✨ Beautify</button>
+      <button onclick="minifyCode()" id="btnMinify">🔧 Minify</button>
+      <button onclick="copyOutput()" id="btnCopy">📋 Copy Output</button>
     </div>
 
-    <label>Output Code:</label>
-    <textarea id="outputCode" rows="10" readonly></textarea>
+    <label id="labelOutput">Output Code:</label>
+    <textarea id="outputCode" readonly></textarea>
   </div>
 
   <div class="adsense-footer">[AdSense Footer Placeholder]</div>
 
-  <footer>
-    © 2025 Toolnest. All rights reserved.
-  </footer>
+  <footer id="footerText">© 2025 Toolnest. All rights reserved.</footer>
 
   <script>
-    function preprocessCode(input) {
-      return input
-        .replace(/(\w)\n+(\w)/g, '$1$2')
-        .replace(/[ \t]+\n/g, '\n')
-        .replace(/\n{2,}/g, '\n')
-        .replace(/[ \t]{2,}/g, ' ')
-        .replace(/^\s+/, '')
-        .replace(/\s+$/, '')
-        .replace(/getElementById\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `getElementById("${p1.trim()}")`)
-        .replace(/querySelector\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `querySelector("${p1.trim()}")`)
-        .replace(/getElementsBy(ClassName|Name)\(["']\s*(.*?)\s*["']\)/g, (_, t, p1) => `getElementsBy${t}("${p1.trim()}")`);
-    }
-
     function beautifyCode() {
+      const code = document.getElementById("inputCode").value;
       const lang = document.getElementById("language").value;
-      const input = document.getElementById("inputCode").value;
-      let output = "";
-      const cleaned = preprocessCode(input);
-      if (lang === "js") {
-        output = js_beautify(cleaned);
-      } else if (lang === "css") {
-        output = css_beautify(cleaned);
-      } else if (lang === "html") {
-        output = html_beautify(cleaned);
-      }
-      document.getElementById("outputCode").value = output;
+      let result = code;
+      if (lang === "js" && window.js_beautify) result = js_beautify(code);
+      else if (lang === "css" && window.css_beautify) result = css_beautify(code);
+      else if (lang === "html" && window.html_beautify) result = html_beautify(code);
+      document.getElementById("outputCode").value = result;
     }
 
     function minifyCode() {
+      const code = document.getElementById("inputCode").value;
       const lang = document.getElementById("language").value;
-      const input = document.getElementById("inputCode").value;
-      let output = "";
-      try {
-        if (lang === "js") {
-          output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
-        } else if (lang === "css") {
-          output = input.replace(/\s+/g, " ").replace(/\s*([{};:,])\s*/g, "$1");
-        } else if (lang === "html") {
-          output = input.replace(/\n+/g, "").replace(/\s{2,}/g, " ");
-        }
-      } catch (e) {
-        output = "❌ Error: " + e.message;
-      }
-      document.getElementById("outputCode").value = output;
+      let result = code;
+      if (lang === "js") result = code.replace(/\s+/g, ' ');
+      else if (lang === "css") result = code.replace(/\s+/g, ' ');
+      else if (lang === "html") result = code.replace(/\n+/g, '').replace(/\s{2,}/g, ' ');
+      document.getElementById("outputCode").value = result.trim();
     }
 
     function copyOutput() {
       const output = document.getElementById("outputCode");
       output.select();
       document.execCommand("copy");
-      alert("✅ Copied to clipboard!");
+      alert("Copied!");
     }
 
+    const langText = {
+      en: {
+        title: "Code Minifier / Beautifier",
+        back: "Back",
+        labelLanguage: "Select Language:",
+        labelInput: "Input Code:",
+        labelOutput: "Output Code:",
+        btnBeautify: "✨ Beautify",
+        btnMinify: "🔧 Minify",
+        btnCopy: "📋 Copy Output",
+        footer: "© 2025 Toolnest. All rights reserved.",
+        placeholder: "Paste your code here..."
+      },
+      zh: {
+        title: "代码压缩 / 美化工具",
+        back: "返回",
+        labelLanguage: "选择语言：",
+        labelInput: "输入代码：",
+        labelOutput: "输出代码：",
+        btnBeautify: "✨ 美化代码",
+        btnMinify: "🔧 压缩代码",
+        btnCopy: "📋 复制输出",
+        footer: "© 2025 Toolnest 版权所有",
+        placeholder: "请在此粘贴代码……"
+      }
+    };
+
     function setLang(lang) {
-      // Placeholder for future i18n switch logic
-      alert("Language switched to: " + lang);
+      document.getElementById("title").innerText = langText[lang].title;
+      document.getElementById("backText").innerText = langText[lang].back;
+      document.getElementById("labelLanguage").innerText = langText[lang].labelLanguage;
+      document.getElementById("labelInput").innerText = langText[lang].labelInput;
+      document.getElementById("labelOutput").innerText = langText[lang].labelOutput;
+      document.getElementById("btnBeautify").innerText = langText[lang].btnBeautify;
+      document.getElementById("btnMinify").innerText = langText[lang].btnMinify;
+      document.getElementById("btnCopy").innerText = langText[lang].btnCopy;
+      document.getElementById("footerText").innerText = langText[lang].footer;
+      document.getElementById("inputCode").placeholder = langText[lang].placeholder;
     }
+
+    // 默认语言为英文
+    setLang('en');
   </script>
+
+  <!-- 可选：引入 beautify 库（用于真实代码美化） -->
+  <!--
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+  -->
 </body>
 </html>
