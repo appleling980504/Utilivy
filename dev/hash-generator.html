@@ -3,52 +3,205 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hash Generator - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js"></script>
+  <title>Utilivy - Hash Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner, .adsense-footer {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .button-group button {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .button-group button:hover {
+      background: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 8px;
+      word-break: break-all;
+      border: 1px solid #d1d5db;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">🔐 Hash Generator</h1>
-    <p class="mb-4 text-gray-600">Generate MD5, SHA-1, SHA-256 hashes for any input text.</p>
-
-    <label class="block font-medium mb-1" for="inputText">Input Text</label>
-    <textarea id="inputText" rows="4" class="w-full border px-3 py-2 rounded mb-4"></textarea>
-
-    <div class="flex flex-wrap gap-2 mb-4">
-      <button onclick="generateMD5()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate MD5</button>
-      <button onclick="generateHash('SHA-1')" class="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700">Generate SHA-1</button>
-      <button onclick="generateHash('SHA-256')" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Generate SHA-256</button>
-      <button onclick="clearFields()" class="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700">Clear</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Hash Generator" data-zh="Utilivy - 哈希生成器">Utilivy - Hash Generator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <label class="block font-medium mb-1" for="outputHash">Hash Result</label>
-    <textarea id="outputHash" rows="3" class="w-full border px-3 py-2 rounded" readonly></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="hashAlgo" data-en="Hash Algorithm" data-zh="哈希算法">Hash Algorithm</label>
+    <select id="hashAlgo">
+      <option value="MD5">MD5</option>
+      <option value="SHA-1">SHA-1</option>
+      <option value="SHA-256" selected>SHA-256</option>
+      <option value="SHA-512">SHA-512</option>
+    </select>
+
+    <label for="inputText" data-en="Text to Hash" data-zh="输入文字">Text to Hash</label>
+    <textarea id="inputText" rows="4" placeholder="Type or paste text here..."></textarea>
+
+    <div class="button-group">
+      <button onclick="generateHash()" data-en="Generate Hash" data-zh="生成哈希值">Generate Hash</button>
+      <button onclick="copyHash()" data-en="Copy Result" data-zh="复制结果">Copy Result</button>
+    </div>
+
+    <div class="result" id="hashOutput" data-en="Your hash will appear here." data-zh="哈希值将显示在这里。">
+      Your hash will appear here.
+    </div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function generateMD5() {
+    async function generateHash() {
       const text = document.getElementById('inputText').value;
-      if (!text) return;
+      const algo = document.getElementById('hashAlgo').value;
 
-      const md5hex = SparkMD5.hash(text);
-      document.getElementById('outputHash').value = md5hex;
+      if (algo === 'MD5') {
+        document.getElementById('hashOutput').textContent = md5(text);
+        return;
+      }
+
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const buffer = await crypto.subtle.digest(algo.replace('-', ''), data);
+      const hashArray = Array.from(new Uint8Array(buffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      document.getElementById('hashOutput').textContent = hashHex;
     }
 
-    async function generateHash(algo) {
-      const text = document.getElementById('inputText').value;
-      if (!text) return;
-
-      const buf = new TextEncoder().encode(text);
-      const hash = await crypto.subtle.digest(algo, buf);
-      const hex = Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-      document.getElementById('outputHash').value = hex;
+    function copyHash() {
+      const output = document.getElementById('hashOutput').textContent;
+      navigator.clipboard.writeText(output).then(() => {
+        alert("✅ Copied to clipboard!");
+      });
     }
 
-    function clearFields() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputHash').value = '';
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setLanguage('en');
+    });
+
+    // MD5 fallback (pure JS)
+    function md5(str) {
+      return CryptoJS.MD5(str).toString();
     }
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 </body>
 </html>
