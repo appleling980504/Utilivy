@@ -1,46 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>HTML Entities Encoder / Decoder - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Utilivy - HTML Entities Encoder / Decoder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .output-group {
+      margin-bottom: 1.5rem;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .button-group button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .button-group button:hover {
+      background-color: #4338ca;
+    }
+    .adsense-banner, .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">🔣 HTML Entities Encoder / Decoder</h1>
-    <p class="mb-4 text-gray-600">Convert between plain text and HTML-encoded entities.</p>
-
-    <label for="inputText" class="block font-medium mb-1">Input</label>
-    <textarea id="inputText" rows="6" class="w-full border px-3 py-2 rounded mb-4" placeholder="Enter HTML or text..."></textarea>
-
-    <div class="flex flex-wrap gap-2 mb-4">
-      <button onclick="encodeHtml()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Encode to Entities</button>
-      <button onclick="decodeHtml()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Decode to Text</button>
-      <button onclick="clearFields()" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600">Clear</button>
+<body>
+  <header>
+    <h1 data-en="HTML Entities Tool" data-zh="HTML 实体工具">HTML Entities Tool</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <label for="outputText" class="block font-medium mb-1">Output</label>
-    <textarea id="outputText" rows="6" class="w-full border px-3 py-2 rounded" readonly></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="inputText" class="label" data-en="Enter Text" data-zh="输入文本">Enter Text</label>
+    <textarea id="inputText" rows="4" placeholder="Type or paste text here..."></textarea>
+
+    <div class="output-group">
+      <label class="label" data-en="Encoded (HTML Entities)" data-zh="编码结果">Encoded (HTML Entities)</label>
+      <textarea id="encodedOutput" rows="3" readonly></textarea>
+      <div class="button-group">
+        <button onclick="copyText('encodedOutput')" data-en="Copy" data-zh="复制">Copy</button>
+      </div>
+    </div>
+
+    <div class="output-group">
+      <label class="label" data-en="Decoded (Plain Text)" data-zh="解码结果">Decoded (Plain Text)</label>
+      <textarea id="decodedOutput" rows="3" readonly></textarea>
+      <div class="button-group">
+        <button onclick="copyText('decodedOutput')" data-en="Copy" data-zh="复制">Copy</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function encodeHtml() {
-      const div = document.createElement('div');
-      div.textContent = document.getElementById('inputText').value;
-      document.getElementById('outputText').value = div.innerHTML;
+    function encodeHTML(str) {
+      const div = document.createElement("div");
+      div.innerText = str;
+      return div.innerHTML;
     }
 
-    function decodeHtml() {
-      const div = document.createElement('div');
-      div.innerHTML = document.getElementById('inputText').value;
-      document.getElementById('outputText').value = div.textContent || div.innerText || '';
+    function decodeHTML(str) {
+      const div = document.createElement("div");
+      div.innerHTML = str;
+      return div.innerText;
     }
 
-    function clearFields() {
-      document.getElementById('inputText').value = '';
-      document.getElementById('outputText').value = '';
+    function updateResults() {
+      const input = document.getElementById("inputText").value;
+      document.getElementById("encodedOutput").value = encodeHTML(input);
+      document.getElementById("decodedOutput").value = decodeHTML(input);
+    }
+
+    function copyText(id) {
+      const el = document.getElementById(id);
+      el.select();
+      document.execCommand("copy");
+      alert("Copied!");
+    }
+
+    document.getElementById("inputText").addEventListener("input", updateResults);
+
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
     }
   </script>
+</body>
+</html>
 </body>
 </html>
