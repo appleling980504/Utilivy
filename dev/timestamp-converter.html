@@ -3,58 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Timestamp Converter - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Timestamp Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.convert {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.convert:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🕒 Timestamp Converter</h1>
-    <p class="mb-4 text-gray-600">Convert between Unix timestamps and human-readable date formats.</p>
-
-    <div class="mb-6">
-      <label for="timestampInput" class="block text-sm font-medium mb-1">Unix Timestamp</label>
-      <input type="number" id="timestampInput" class="w-full border rounded p-2 mb-2" placeholder="e.g. 1718947200" />
-      <button onclick="convertToDate()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Convert to Date</button>
-      <p id="dateOutput" class="mt-2 text-green-700"></p>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Timestamp Converter" data-zh="Utilivy - 时间戳转换器">Utilivy - Timestamp Converter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <hr class="my-6" />
-
-    <div>
-      <label for="dateInput" class="block text-sm font-medium mb-1">Human-readable Date</label>
-      <input type="datetime-local" id="dateInput" class="w-full border rounded p-2 mb-2" />
-      <button onclick="convertToTimestamp()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Convert to Timestamp</button>
-      <p id="timestampOutput" class="mt-2 text-green-700"></p>
-    </div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
+
+  <div class="container">
+    <label data-en="Unix Timestamp (seconds):" data-zh="Unix 时间戳（秒）">Unix Timestamp (seconds):</label>
+    <input type="number" id="timestampInput" placeholder="e.g. 1720608000" />
+
+    <button class="convert" onclick="convertToDate()">➤ <span data-en="Convert to Date" data-zh="转换为日期">Convert to Date</span></button>
+
+    <div class="result" id="dateResult"></div>
+
+    <hr style="margin: 2rem 0; border: none; border-top: 1px solid #e5e7eb;"/>
+
+    <label data-en="Date & Time:" data-zh="日期时间：">Date & Time:</label>
+    <input type="datetime-local" id="datetimeInput" />
+
+    <button class="convert" onclick="convertToTimestamp()">➤ <span data-en="Convert to Timestamp" data-zh="转换为时间戳">Convert to Timestamp</span></button>
+
+    <div class="result" id="timestampResult"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
     function convertToDate() {
-      const input = document.getElementById("timestampInput").value;
-      if (!input) return;
-
-      const date = new Date(parseInt(input) * 1000);
-      if (isNaN(date.getTime())) {
-        document.getElementById("dateOutput").textContent = "❌ Invalid timestamp.";
+      const ts = parseInt(document.getElementById("timestampInput").value, 10);
+      const resultEl = document.getElementById("dateResult");
+      if (isNaN(ts)) {
+        resultEl.textContent = "Invalid timestamp";
         return;
       }
-
-      document.getElementById("dateOutput").textContent = `📅 ${date.toUTCString()}`;
+      const date = new Date(ts * 1000);
+      resultEl.textContent = date.toLocaleString();
     }
 
     function convertToTimestamp() {
-      const input = document.getElementById("dateInput").value;
-      if (!input) return;
-
-      const date = new Date(input);
-      const timestamp = Math.floor(date.getTime() / 1000);
-
-      if (isNaN(timestamp)) {
-        document.getElementById("timestampOutput").textContent = "❌ Invalid date.";
+      const input = document.getElementById("datetimeInput").value;
+      const resultEl = document.getElementById("timestampResult");
+      if (!input) {
+        resultEl.textContent = "Invalid datetime";
         return;
       }
+      const date = new Date(input);
+      const timestamp = Math.floor(date.getTime() / 1000);
+      resultEl.textContent = timestamp;
+    }
 
-      document.getElementById("timestampOutput").textContent = `🕓 Unix Timestamp: ${timestamp}`;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
   </script>
 </body>
