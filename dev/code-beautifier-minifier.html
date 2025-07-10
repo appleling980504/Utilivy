@@ -3,18 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title data-en="Code Minifier / Beautifier - Utilivy" data-zh="代码压缩/美化工具 - Utilivy">Code Minifier / Beautifier - Utilivy</title>
+  <title>Utilivy - Code Minifier / Beautifier</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.17.4/uglify-js.min.js"></script>
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
     header {
       background: white;
@@ -46,7 +54,7 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
-      background-color: #4f46e5;
+      background-color: var(--primary-color);
       color: white;
       width: 42px;
       height: 32px;
@@ -56,7 +64,7 @@
     }
     header a {
       text-decoration: none;
-      color: #4f46e5;
+      color: var(--primary-color);
       font-weight: 500;
       font-size: 0.95rem;
     }
@@ -68,44 +76,43 @@
       display: none;
     }
     .container {
-      max-width: 720px;
+      max-width: 800px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
+    select, textarea, button {
+      font-family: 'Inter', sans-serif;
+      font-size: 1rem;
     }
     select, textarea {
       width: 100%;
       padding: 0.75rem;
+      margin-top: 0.5rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      font-family: monospace;
-      font-size: 0.95rem;
-      margin-top: 0.5rem;
     }
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-top: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+    }
+    button.beautify { background-color: #10b981; }
+    button.minify { background-color: #3b82f6; }
+    button.copy { background-color: #374151; }
+    button:hover { opacity: 0.9; }
     .btn-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      margin: 1.5rem 0;
+      gap: 1rem;
+      margin-top: 1rem;
     }
-    .btn-group button {
-      padding: 0.6rem 1rem;
-      border: none;
-      border-radius: 6px;
-      color: white;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    .btn-green { background-color: #16a34a; }
-    .btn-blue { background-color: #2563eb; }
-    .btn-gray { background-color: #1f2937; }
     footer {
       text-align: center;
       padding: 1rem;
@@ -116,7 +123,7 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Code Minifier / Beautifier - Utilivy" data-zh="代码压缩/美化工具 - Utilivy">Code Minifier / Beautifier - Utilivy</h1>
+    <h1 data-en="Utilivy - Code Minifier / Beautifier" data-zh="Utilivy - 代码压缩 / 美化工具">Utilivy - Code Minifier / Beautifier</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -142,9 +149,9 @@
     <textarea id="inputCode" rows="10" placeholder="Paste your code here..."></textarea>
 
     <div class="btn-group">
-      <button onclick="beautifyCode()" class="btn-green" data-en="✨ Beautify" data-zh="✨ 美化">✨ Beautify</button>
-      <button onclick="minifyCode()" class="btn-blue" data-en="🔧 Minify" data-zh="🔧 压缩">🔧 Minify</button>
-      <button onclick="copyOutput()" class="btn-gray" data-en="📋 Copy Output" data-zh="📋 复制输出">📋 Copy Output</button>
+      <button onclick="beautifyCode()" class="beautify" data-en="✨ Beautify" data-zh="✨ 美化">✨ Beautify</button>
+      <button onclick="minifyCode()" class="minify" data-en="🔧 Minify" data-zh="🔧 压缩">🔧 Minify</button>
+      <button onclick="copyOutput()" class="copy" data-en="📋 Copy Output" data-zh="📋 复制输出">📋 Copy Output</button>
     </div>
 
     <label data-en="Output Code:" data-zh="输出代码：">Output Code:</label>
@@ -161,38 +168,24 @@
 
   <script>
     function setLanguage(lang) {
-      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
-        el.textContent = el.getAttribute('data-' + lang);
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.innerText = el.getAttribute(`data-${lang}`);
       });
-      document.documentElement.lang = lang;
-    }
-
-    function preprocessCode(input) {
-      return input
-        .replace(/(\w)\n+(\w)/g, '$1$2')
-        .replace(/[ \t]+\n/g, '\n')
-        .replace(/\n{2,}/g, '\n')
-        .replace(/[ \t]{2,}/g, ' ')
-        .replace(/^\s+/, '')
-        .replace(/\s+$/, '')
-        .replace(/getElementById\(["']\s*(.*?)\s*["']\)/g, (m, p1) => getElementById("${p1.trim()}"))
-        .replace(/querySelector\(["']\s*(.*?)\s*["']\)/g, (m, p1) => querySelector("${p1.trim()}"))
-        .replace(/getElementsBy(ClassName|Name)\(["']\s*(.*?)\s*["']\)/g, (_, t, p1) => getElementsBy${t}("${p1.trim()}"));
     }
 
     function beautifyCode() {
       const lang = document.getElementById("language").value;
-      const input = document.getElementById("inputCode").value;
-      const cleaned = preprocessCode(input);
+      const input = document.getElementById("inputCode").value.trim();
       let output = "";
 
       if (lang === "js") {
-        output = js_beautify(cleaned);
+        output = js_beautify(input);
       } else if (lang === "css") {
-        output = css_beautify(cleaned);
+        output = css_beautify(input);
       } else if (lang === "html") {
-        output = html_beautify(cleaned);
+        output = html_beautify(input);
       }
+
       document.getElementById("outputCode").value = output;
     }
 
