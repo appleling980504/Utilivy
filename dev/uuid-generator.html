@@ -3,39 +3,159 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>UUID Generator - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - UUID Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .uuid-result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+      word-break: break-all;
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🔑 UUID Generator</h1>
-    <p class="mb-4 text-gray-600">Generate universally unique identifiers (UUID v4).</p>
-
-    <div class="flex items-center mb-4">
-      <input id="uuidOutput" type="text" readonly class="flex-1 border px-3 py-2 rounded bg-gray-50 text-gray-800 font-mono mr-2"/>
-      <button onclick="copyUUID()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">📋 Copy</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - UUID Generator" data-zh="Utilivy - UUID 生成器">Utilivy - UUID Generator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <button onclick="generateUUID()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">🔄 Generate New UUID</button>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
+
+  <div class="container">
+    <button class="calculate" onclick="generateUUID()">🎲 <span data-en="Generate UUID" data-zh="生成 UUID">Generate UUID</span></button>
+    <div class="uuid-result" id="uuidDisplay">UUID will appear here</div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
     function generateUUID() {
-      const uuid = ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-      );
-      document.getElementById('uuidOutput').value = uuid;
+      const uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+      });
+      document.getElementById('uuidDisplay').textContent = uuid;
     }
 
-    function copyUUID() {
-      const uuidField = document.getElementById('uuidOutput');
-      uuidField.select();
-      uuidField.setSelectionRange(0, 99999); // Mobile support
-      document.execCommand("copy");
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
-
-    // Generate one on load
-    window.onload = generateUUID;
   </script>
 </body>
 </html>
