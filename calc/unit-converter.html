@@ -11,6 +11,9 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -30,10 +33,16 @@
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
     .lang-switch {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
     }
     .lang-switch button {
       padding: 0.4rem 0.8rem;
@@ -45,65 +54,59 @@
       color: white;
       width: 42px;
       height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: 2rem auto;
+      padding: 2rem;
       background: white;
       border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    .category-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    .category-buttons button {
-      padding: 0.5rem 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      background: #fff;
-      cursor: pointer;
-    }
-    .category-buttons button.active {
-      background: var(--primary-color);
-      color: white;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     label {
       display: block;
       margin-top: 1rem;
       font-weight: 500;
     }
-    input, select {
+    input {
       width: 100%;
-      padding: 0.6rem;
+      padding: 0.75rem;
       border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 1rem;
+      border-radius: 8px;
       margin-top: 0.5rem;
+      font-size: 1rem;
     }
-    .convert-btn {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.75rem;
+      padding: 0.75rem 1rem;
       border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
       margin-top: 1.5rem;
       width: 100%;
-      font-size: 1rem;
     }
-    .convert-btn:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
-    #result {
+    .result {
       margin-top: 1.5rem;
       font-weight: bold;
       font-size: 1.2rem;
