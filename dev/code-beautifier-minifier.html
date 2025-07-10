@@ -3,52 +3,188 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Code Minifier / Beautifier - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <title>Utilivy - Code Minifier / Beautifier</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/uglify-js/3.17.4/uglify-js.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    select, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .action-buttons button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .action-buttons button:hover {
+      background-color: #4338ca;
+    }
+    .button.calculate {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">🛠️ Code Minifier / Beautifier</h1>
+<body>
+  <header>
+    <h1>Code Minifier / Beautifier</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLang('en')">EN</button>
+        <button onclick="setLang('zh')">中</button>
+      </div>
+      <a href="/">← Back</a>
+    </div>
+  </header>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Select Language:</label>
-      <select id="language" class="border p-2 rounded w-full">
-        <option value="js">JavaScript</option>
-        <option value="css">CSS</option>
-        <option value="html">HTML</option>
-      </select>
+  <div class="adsense-banner">[AdSense Banner Placeholder]</div>
+
+  <div class="container">
+    <label>Select Language:</label>
+    <select id="language">
+      <option value="js">JavaScript</option>
+      <option value="css">CSS</option>
+      <option value="html">HTML</option>
+    </select>
+
+    <label>Input Code:</label>
+    <textarea id="inputCode" rows="10" placeholder="Paste your code here..."></textarea>
+
+    <div class="action-buttons">
+      <button onclick="beautifyCode()">✨ Beautify</button>
+      <button onclick="minifyCode()">🔧 Minify</button>
+      <button onclick="copyOutput()">📋 Copy Output</button>
     </div>
 
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Input Code:</label>
-      <textarea id="inputCode" rows="10" class="w-full p-3 border rounded font-mono" placeholder="Paste your code here..."></textarea>
-    </div>
-
-    <div class="flex flex-wrap gap-3 mb-4">
-      <button onclick="beautifyCode()" class="bg-green-600 text-white px-4 py-2 rounded">✨ Beautify</button>
-      <button onclick="minifyCode()" class="bg-blue-600 text-white px-4 py-2 rounded">🔧 Minify</button>
-      <button onclick="copyOutput()" class="bg-gray-800 text-white px-4 py-2 rounded">📋 Copy Output</button>
-    </div>
-
-    <div>
-      <label class="block font-medium mb-1">Output Code:</label>
-      <textarea id="outputCode" rows="10" class="w-full p-3 border rounded font-mono" readonly></textarea>
-    </div>
+    <label>Output Code:</label>
+    <textarea id="outputCode" rows="10" readonly></textarea>
   </div>
+
+  <div class="adsense-footer">[AdSense Footer Placeholder]</div>
+
+  <footer>
+    © 2025 Toolnest. All rights reserved.
+  </footer>
 
   <script>
     function preprocessCode(input) {
       return input
-        .replace(/(\w)\n+(\w)/g, '$1$2') // merge broken words
-        .replace(/[ \t]+\n/g, '\n') // trim line-end space
-        .replace(/\n{2,}/g, '\n') // collapse multiple newlines
-        .replace(/[ \t]{2,}/g, ' ') // collapse multiple spaces
-        .replace(/^\s+/, '') // trim leading
-        .replace(/\s+$/, '') // trim trailing
+        .replace(/(\w)\n+(\w)/g, '$1$2')
+        .replace(/[ \t]+\n/g, '\n')
+        .replace(/\n{2,}/g, '\n')
+        .replace(/[ \t]{2,}/g, ' ')
+        .replace(/^\s+/, '')
+        .replace(/\s+$/, '')
         .replace(/getElementById\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `getElementById("${p1.trim()}")`)
         .replace(/querySelector\(["']\s*(.*?)\s*["']\)/g, (m, p1) => `querySelector("${p1.trim()}")`)
         .replace(/getElementsBy(ClassName|Name)\(["']\s*(.*?)\s*["']\)/g, (_, t, p1) => `getElementsBy${t}("${p1.trim()}")`);
@@ -58,9 +194,7 @@
       const lang = document.getElementById("language").value;
       const input = document.getElementById("inputCode").value;
       let output = "";
-
       const cleaned = preprocessCode(input);
-
       if (lang === "js") {
         output = js_beautify(cleaned);
       } else if (lang === "css") {
@@ -75,7 +209,6 @@
       const lang = document.getElementById("language").value;
       const input = document.getElementById("inputCode").value;
       let output = "";
-
       try {
         if (lang === "js") {
           output = UglifyJS.minify(input).code || "⚠️ Minify failed.";
@@ -95,6 +228,11 @@
       output.select();
       document.execCommand("copy");
       alert("✅ Copied to clipboard!");
+    }
+
+    function setLang(lang) {
+      // Placeholder for future i18n switch logic
+      alert("Language switched to: " + lang);
     }
   </script>
 </body>
