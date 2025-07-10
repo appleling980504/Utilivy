@@ -3,123 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Case + Word Counter</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Case & Word Counter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: monospace;
+      margin-bottom: 1rem;
+    }
+    .stats {
+      background: #f9fafb;
+      padding: 1rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold" id="title">Case Converter & Word Counter</h1>
-      <select id="lang" class="border rounded px-2 py-1 text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Case & Word Counter" data-zh="Utilivy - 字符与单词统计">Utilivy - Case & Word Counter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <textarea id="textInput" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Enter your text here..."></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
-      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm" onclick="convert('upper')">UPPERCASE</button>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm" onclick="convert('lower')">lowercase</button>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm" onclick="convert('title')">Title Case</button>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm" onclick="convert('sentence')">Sentence case</button>
-      <button class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2 text-sm" onclick="convert('capitalize')">Capitalize Each Word</button>
-      <button class="bg-green-500 hover:bg-green-600 text-white rounded px-3 py-2 text-sm" onclick="copyOutput()">Copy</button>
-    </div>
+  <div class="container">
+    <label for="inputText" data-en="Input your text:" data-zh="输入文本：">Input your text:</label>
+    <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
 
-    <textarea id="textOutput" rows="10" class="w-full border rounded p-3 text-sm mb-6" placeholder="Output will appear here..."></textarea>
+    <button class="calculate" onclick="analyzeText()">🔍 <span data-en="Analyze" data-zh="分析">Analyze</span></button>
 
-    <div class="bg-gray-50 border p-4 rounded">
-      <h2 class="font-semibold text-lg mb-2" id="statsTitle">Text Statistics</h2>
-      <ul class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm" id="statsList">
-        <li id="charCount">Characters: 0</li>
-        <li id="wordCount">Words: 0</li>
-        <li id="zhWordCount">Chinese Words: 0</li>
-        <li id="sentenceCount">Sentences: 0</li>
-        <li id="paragraphCount">Paragraphs: 0</li>
-        <li id="lineCount">Lines: 0</li>
-        <li id="spaceCount">Spaces: 0</li>
-      </ul>
+    <div class="stats" id="statsOutput">
+      <p><em data-en="Stats will appear here." data-zh="结果将显示在此处。">Stats will appear here.</em></p>
     </div>
   </div>
 
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const input = document.getElementById('textInput');
-    const output = document.getElementById('textOutput');
-    const lang = document.getElementById('lang');
-
-    function convert(type) {
-      let text = input.value;
-      switch (type) {
-        case 'upper':
-          output.value = text.toUpperCase();
-          break;
-        case 'lower':
-          output.value = text.toLowerCase();
-          break;
-        case 'title':
-          output.value = text.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-          break;
-        case 'sentence':
-          output.value = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, l => l.toUpperCase());
-          break;
-        case 'capitalize':
-          output.value = text.replace(/\b\w/g, l => l.toUpperCase());
-          break;
-      }
-    }
-
-    function copyOutput() {
-      output.select();
-      document.execCommand('copy');
-    }
-
-    function countStats(text) {
-      const zhWordCount = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+    function analyzeText() {
+      const text = document.getElementById("inputText").value;
+      const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
       const charCount = text.length;
-      const wordCount = (text.trim().match(/\b\w+\b/g) || []).length;
-      const sentenceCount = (text.match(/[.!?]+/g) || []).length;
-      const paragraphCount = (text.trim().split(/\n\s*\n/) || []).filter(p => p.trim() !== "").length;
-      const lineCount = text.split('\n').length;
-      const spaceCount = (text.match(/\s/g) || []).length;
+      const charNoSpace = text.replace(/\s/g, '').length;
+      const upperCount = (text.match(/[A-Z]/g) || []).length;
+      const lowerCount = (text.match(/[a-z]/g) || []).length;
+      const digitCount = (text.match(/\d/g) || []).length;
 
-      document.getElementById("charCount").textContent = currentLang === 'zh' ? `字符数：${charCount}` : `Characters: ${charCount}`;
-      document.getElementById("wordCount").textContent = currentLang === 'zh' ? `英文词数：${wordCount}` : `Words: ${wordCount}`;
-      document.getElementById("zhWordCount").textContent = currentLang === 'zh' ? `中文词数：${zhWordCount}` : `Chinese Words: ${zhWordCount}`;
-      document.getElementById("sentenceCount").textContent = currentLang === 'zh' ? `句子数：${sentenceCount}` : `Sentences: ${sentenceCount}`;
-      document.getElementById("paragraphCount").textContent = currentLang === 'zh' ? `段落数：${paragraphCount}` : `Paragraphs: ${paragraphCount}`;
-      document.getElementById("lineCount").textContent = currentLang === 'zh' ? `行数：${lineCount}` : `Lines: ${lineCount}`;
-      document.getElementById("spaceCount").textContent = currentLang === 'zh' ? `空格数：${spaceCount}` : `Spaces: ${spaceCount}`;
+      const output = `
+        <strong data-en="Character count:" data-zh="字符总数：">Character count:</strong> ${charCount}<br>
+        <strong data-en="Characters (excluding spaces):" data-zh="字符（不含空格）：">Characters (excluding spaces):</strong> ${charNoSpace}<br>
+        <strong data-en="Word count:" data-zh="单词数：">Word count:</strong> ${wordCount}<br>
+        <strong data-en="Uppercase letters:" data-zh="大写字母：">Uppercase letters:</strong> ${upperCount}<br>
+        <strong data-en="Lowercase letters:" data-zh="小写字母：">Lowercase letters:</strong> ${lowerCount}<br>
+        <strong data-en="Digits:" data-zh="数字：">Digits:</strong> ${digitCount}
+      `;
+
+      const statsEl = document.getElementById("statsOutput");
+      statsEl.innerHTML = output;
+
+      // 支持多语言切换后的更新
+      setLanguage(currentLang);
     }
-
-    input.addEventListener("input", () => {
-      countStats(input.value);
-    });
 
     let currentLang = 'en';
-    lang.addEventListener('change', () => {
-      currentLang = lang.value;
-      updateLang(currentLang);
-      countStats(input.value);
-    });
-
-    function updateLang(l) {
-      const btns = document.querySelectorAll('button');
-      const labels = {
-        en: ['UPPERCASE', 'lowercase', 'Title Case', 'Sentence case', 'Capitalize Each Word', 'Copy'],
-        zh: ['全部大写', '全部小写', '标题格式', '句子格式', '每词首字母大写', '复制']
-      }[l];
-      const titles = {
-        en: ['Case Converter & Word Counter', 'Text Statistics'],
-        zh: ['字母转换器 + 字数统计器', '文本统计']
-      };
-      btns.forEach((btn, i) => btn.textContent = labels[i]);
-      document.getElementById('title').textContent = titles[l][0];
-      document.getElementById('statsTitle').textContent = titles[l][1];
+    function setLanguage(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.innerHTML = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
-
-    updateLang('en');
-    countStats('');
   </script>
 </body>
 </html>
