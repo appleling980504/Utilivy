@@ -11,6 +11,9 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -25,15 +28,21 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
     .lang-switch {
       display: flex;
-      gap: 0.5rem;
-      align-items: center;
+      gap: 0.4rem;
     }
     .lang-switch button {
       padding: 0.4rem 0.8rem;
@@ -43,19 +52,37 @@
       cursor: pointer;
       background-color: var(--primary-color);
       color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: 2rem auto;
+      padding: 2rem;
       background: white;
       border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
     }
     textarea {
       width: 100%;
@@ -66,11 +93,6 @@
       border: 1px solid #d1d5db;
       border-radius: 8px;
       resize: vertical;
-    }
-    label {
-      margin-top: 1rem;
-      display: block;
-      font-weight: 500;
     }
     button {
       margin-top: 1rem;
@@ -103,13 +125,19 @@
 </head>
 <body>
   <header>
-    <h1 data-en="URL ↔ Base64 Converter" data-zh="URL ↔ Base64 转换器">URL ↔ Base64 Converter</h1>
-    <div class="lang-switch">
-      <button onclick="setLang('en')">EN</button>
-      <button onclick="setLang('zh')">中</button>
+    <h1 data-en="Utilivy - URL ↔ Base64 Converter" data-zh="Utilivy - URL ↔ Base64 转换器">Utilivy - URL ↔ Base64 Converter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
       <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
   </header>
+
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
   <div class="container">
     <label for="inputText" data-en="Enter your text:" data-zh="输入内容：">Enter your text:</label>
@@ -126,7 +154,13 @@
     </div>
   </div>
 
-  <footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
     function convertBoth() {
@@ -144,14 +178,14 @@
       document.getElementById('base64Output').innerText = base64Encoded;
     }
 
-    let currentLang = 'en';
-    function setLang(lang) {
-      currentLang = lang;
+    function setLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
     }
-    setLang('en');
+
+    // default language
+    setLanguage('en');
   </script>
 </body>
 </html>
