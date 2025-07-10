@@ -3,60 +3,215 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Regex Tester - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Regex Tester</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    .match { background-color: #d1fae5; font-weight: bold; }
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-family: monospace;
+    }
+    button.test {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.test:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    mark {
+      background-color: #fde68a;
+      padding: 0 2px;
+      border-radius: 3px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🧪 Regex Tester</h1>
-    <p class="text-gray-700 mb-4">Test your regular expressions on the fly with instant match highlighting.</p>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Regex Tester" data-zh="Utilivy - 正则表达式测试器">Utilivy - Regex Tester</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-    <label class="block font-medium mb-1">Regular Expression</label>
-    <input type="text" id="regex" placeholder="/your-regex/" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()" />
-
-    <label class="block font-medium mb-1">Flags (e.g. g, i, m)</label>
-    <input type="text" id="flags" placeholder="gim" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()" />
-
-    <label class="block font-medium mb-1">Test String</label>
-    <textarea id="testString" rows="6" class="border px-3 py-2 rounded w-full mb-4" oninput="testRegex()"></textarea>
-
-    <h2 class="text-xl font-semibold mb-2">🔍 Matches</h2>
-    <pre id="output" class="bg-gray-100 p-4 rounded text-sm whitespace-pre-wrap break-words"></pre>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
-  <script>
-    function escapeHTML(str) {
-      return str.replace(/[&<>"']/g, tag =>
-        ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[tag] || tag)
-      );
-    }
+  <div class="container">
+    <label for="regexInput" data-en="Regular Expression:" data-zh="正则表达式：">Regular Expression:</label>
+    <input type="text" id="regexInput" placeholder="e.g. \\b\\w+\\b" />
 
-    function testRegex() {
-      const pattern = document.getElementById("regex").value;
-      const flags = document.getElementById("flags").value;
-      const inputText = document.getElementById("testString").value;
-      const output = document.getElementById("output");
+    <label for="flagsInput" data-en="Flags (optional):" data-zh="标志位（可选）：">Flags (optional):</label>
+    <input type="text" id="flagsInput" placeholder="e.g. gi" />
+
+    <label for="textInput" data-en="Test Text:" data-zh="测试文本：">Test Text:</label>
+    <textarea id="textInput" rows="6" placeholder="Enter your test string here..."></textarea>
+
+    <button class="test" onclick="runRegex()">Test Regex</button>
+
+    <div class="result" id="resultOutput"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
+  <script>
+    function runRegex() {
+      const pattern = document.getElementById('regexInput').value;
+      const flags = document.getElementById('flagsInput').value;
+      const text = document.getElementById('textInput').value;
+      const output = document.getElementById('resultOutput');
 
       try {
         const regex = new RegExp(pattern, flags);
-        const matches = [...inputText.matchAll(regex)];
-        if (matches.length === 0) {
-          output.innerHTML = "❌ No matches found.";
-        } else {
-          let highlighted = inputText;
-          matches.reverse().forEach(match => {
-            const start = match.index;
-            const end = start + match[0].length;
-            highlighted = highlighted.slice(0, start) + `<span class="match">${escapeHTML(match[0])}</span>` + highlighted.slice(end);
-          });
-          output.innerHTML = highlighted;
+        let resultText = '';
+        let lastIndex = 0;
+        let match;
+
+        // Highlight each match using <mark>
+        while ((match = regex.exec(text)) !== null) {
+          resultText += escapeHtml(text.slice(lastIndex, match.index));
+          resultText += '<mark>' + escapeHtml(match[0]) + '</mark>';
+          lastIndex = match.index + match[0].length;
+
+          if (!regex.global) break; // Prevent infinite loop for non-global regex
         }
-      } catch (err) {
-        output.innerHTML = `⚠️ Invalid regex: ${err.message}`;
+        resultText += escapeHtml(text.slice(lastIndex));
+        output.innerHTML = resultText || '<span style="color: gray;" data-en="No match found." data-zh="未找到匹配。">No match found.</span>';
+      } catch (e) {
+        output.innerHTML = `<span style="color: red;">${e.message}</span>`;
       }
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function (m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[m];
+      });
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
   </script>
 </body>
