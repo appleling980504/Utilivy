@@ -1,125 +1,182 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>QR Code Generator - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  <title>Utilivy - QR Code Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.generate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.generate:hover {
+      background-color: #4338ca;
+    }
+    .qr-output {
+      text-align: center;
+      margin-top: 1.5rem;
+    }
+    .qr-output img {
+      max-width: 100%;
+      height: auto;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white dark:bg-gray-900 dark:text-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-bold">🔳 QR Code Generator</h1>
-      <button onclick="toggleTheme()" class="text-sm border px-3 py-1 rounded">🌓 Toggle Theme</button>
-    </div>
-
-    <div class="mb-4">
-      <label class="block font-medium mb-1">Enter Text or URL:</label>
-      <input id="qrInput" type="text" class="border p-2 rounded w-full" placeholder="https://example.com" oninput="generateQR()" />
-    </div>
-
-    <div class="grid grid-cols-2 gap-4 mb-4">
-      <div>
-        <label class="block mb-1">Size (px)</label>
-        <input id="qrSize" type="number" class="border p-1 rounded w-full" value="256" onchange="generateQR()" />
+<body>
+  <header>
+    <h1 data-en="Utilivy - QR Code Generator" data-zh="Utilivy - 二维码生成器">Utilivy - QR Code Generator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
       </div>
-      <div>
-        <label class="block mb-1">Margin</label>
-        <input id="qrMargin" type="number" class="border p-1 rounded w-full" value="4" onchange="generateQR()" />
-      </div>
-      <div>
-        <label class="block mb-1">Foreground Color</label>
-        <input id="qrFg" type="color" class="w-full" value="#000000" onchange="generateQR()" />
-      </div>
-      <div>
-        <label class="block mb-1">Background Color</label>
-        <input id="qrBg" type="color" class="w-full" value="#ffffff" onchange="generateQR()" />
-      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div class="mb-4">
-      <label class="block mb-1">Error Correction Level</label>
-      <select id="qrEC" class="border p-2 rounded w-full" onchange="generateQR()">
-        <option value="L">L (Low)</option>
-        <option value="M" selected>M (Medium)</option>
-        <option value="Q">Q (Quartile)</option>
-        <option value="H">H (High)</option>
-      </select>
-    </div>
-
-    <div class="mb-4">
-      <label class="block mb-1">Logo (Optional)</label>
-      <input type="file" accept="image/*" id="qrLogo" class="w-full" onchange="generateQR()" />
-    </div>
-
-    <div class="flex flex-wrap items-center gap-3 mb-4">
-      <button onclick="downloadQR('png')" class="bg-blue-600 text-white px-4 py-2 rounded">⬇️ Download PNG</button>
-      <button onclick="downloadQR('svg')" class="bg-green-600 text-white px-4 py-2 rounded">⬇️ Download SVG</button>
-    </div>
-
-    <div class="bg-white dark:bg-gray-800 p-4 rounded shadow text-center">
-      <div id="qrCode" class="inline-block"></div>
-    </div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="qrInput" data-en="Enter text or URL:" data-zh="输入文本或网址：">Enter text or URL:</label>
+    <input type="text" id="qrInput" placeholder="https://example.com" />
+
+    <button class="generate" onclick="generateQRCode()">Generate QR Code</button>
+
+    <div class="qr-output" id="qrOutput"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function generateQR() {
-      const text = document.getElementById("qrInput").value || " ";
-      const size = parseInt(document.getElementById("qrSize").value) || 256;
-      const margin = parseInt(document.getElementById("qrMargin").value) || 4;
-      const colorDark = document.getElementById("qrFg").value;
-      const colorLight = document.getElementById("qrBg").value;
-      const ecLevel = document.getElementById("qrEC").value;
+    function generateQRCode() {
+      const input = document.getElementById('qrInput').value.trim();
+      const output = document.getElementById('qrOutput');
 
-      const qrContainer = document.getElementById("qrCode");
-      qrContainer.innerHTML = "";
+      if (input === "") {
+        output.innerHTML = '<p style="color: gray;" data-en="Please enter something." data-zh="请输入内容。">Please enter something.</p>';
+        return;
+      }
 
-      const qr = new QRCode(qrContainer, {
-        text,
-        width: size,
-        height: size,
-        colorDark,
-        colorLight,
-        correctLevel: QRCode.CorrectLevel[ecLevel]
+      const encoded = encodeURIComponent(input);
+      const imageUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encoded}&size=200x200`;
+
+      output.innerHTML = `<img src="${imageUrl}" alt="QR Code" />`;
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
-
-      // Add logo if present
-      const logoInput = document.getElementById("qrLogo");
-      if (logoInput.files[0]) {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = qrContainer.querySelector("canvas");
-          const ctx = canvas.getContext("2d");
-          const logoSize = size * 0.2;
-          ctx.drawImage(img, (size - logoSize) / 2, (size - logoSize) / 2, logoSize, logoSize);
-        };
-        img.src = URL.createObjectURL(logoInput.files[0]);
-      }
     }
-
-    function downloadQR(type) {
-      const qrContainer = document.getElementById("qrCode");
-      const canvas = qrContainer.querySelector("canvas");
-      const link = document.createElement("a");
-
-      if (type === "png" && canvas) {
-        link.download = "qr-code.png";
-        link.href = canvas.toDataURL("image/png");
-        link.click();
-      } else if (type === "svg") {
-        alert("SVG export not supported by qrcodejs directly. Please use PNG for now.");
-      }
-    }
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      const current = html.getAttribute("data-theme");
-      html.setAttribute("data-theme", current === "dark" ? "light" : "dark");
-      document.body.classList.toggle("dark");
-    }
-
-    window.onload = generateQR;
   </script>
 </body>
 </html>
+
