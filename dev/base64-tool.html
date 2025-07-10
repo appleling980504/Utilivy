@@ -34,8 +34,6 @@
       margin: 0;
       font-size: 1.5rem;
       line-height: 1;
-      align-items: center;
-      justify-content: center;
     }
     .header-right {
       display: flex;
@@ -97,17 +95,18 @@
       border-radius: 8px;
       resize: vertical;
     }
-    button {
-      margin-top: 1rem;
-      padding: 0.6rem 1.2rem;
-      font-size: 1rem;
-      background-color: var(--primary-color);
+    button.calculate {
+      background: var(--primary-color);
       color: white;
       border: none;
+      padding: 0.75rem 1rem;
       border-radius: 8px;
       cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
-    button:hover {
+    button.calculate:hover {
       background-color: #4338ca;
     }
     .output {
