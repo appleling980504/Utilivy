@@ -1,53 +1,169 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>文本差异对比编辑器（支持上传）</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Text Diff Editor</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/diff-match-patch"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    body { font-family: sans-serif; margin: 20px; background: #f9f9f9; }
-    textarea { width: 100%; height: 150px; margin-bottom: 10px; padding: 10px; }
-    .diff-output { border: 1px solid #ccc; padding: 10px; background: #fff; white-space: pre-wrap; margin-bottom: 10px; }
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    textarea {
+      width: 100%; height: 150px; margin-bottom: 10px; padding: 10px;
+      font-family: monospace;
+    }
+    .diff-output {
+      border: 1px solid #ccc;
+      padding: 10px;
+      background: #fff;
+      white-space: pre-wrap;
+      margin-bottom: 10px;
+    }
     ins { background: #a6f3a6; text-decoration: none; }
     del { background: #f7a6a6; text-decoration: line-through; }
-    button, input[type="file"] { margin-right: 10px; margin-bottom: 5px; }
-    .nav-links { margin-bottom: 10px; }
-    .version-list { margin-top: 10px; font-size: 14px; }
-    .version-item { cursor: pointer; text-decoration: underline; color: blue; margin-bottom: 5px; }
+    button, input[type="file"] {
+      margin-right: 10px;
+      margin-bottom: 5px;
+      padding: 8px 12px;
+      border-radius: 6px;
+      border: none;
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+    }
+    .nav-links, .version-list {
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .version-item {
+      cursor: pointer;
+      text-decoration: underline;
+      color: blue;
+      margin-bottom: 5px;
+    }
   </style>
 </head>
 <body>
-  <h2>文本差异对比 / 可编辑导出</h2>
+  <header>
+    <h1 data-en="Utilivy - Text Diff Editor" data-zh="Utilivy - 文本差异编辑器">Utilivy - Text Diff Editor</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-  <label>原始文本：</label>
-  <div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
+  <div class="container">
+    <label data-en="Original Text:" data-zh="原始文本：">Original Text:</label>
     <input type="file" accept=".txt" onchange="loadFile(event, 'text1')" />
-  </div>
-  <textarea id="text1" placeholder="输入或上传原始文本..."></textarea>
+    <textarea id="text1" placeholder="Enter or upload original text..."></textarea>
 
-  <label>修改文本：</label>
-  <div>
+    <label data-en="Modified Text:" data-zh="修改文本：">Modified Text:</label>
     <input type="file" accept=".txt" onchange="loadFile(event, 'text2')" />
+    <textarea id="text2" placeholder="Enter or upload modified text..."></textarea>
+
+    <div>
+      <button onclick="compareTexts()">Compare</button>
+      <button onclick="exportModified('txt')">Export TXT</button>
+      <button onclick="exportModified('docx')">Export DOCX</button>
+      <button onclick="exportModified('pdf')">Export PDF</button>
+      <button onclick="saveVersion()">Save Version</button>
+    </div>
+
+    <h3 data-en="Comparison Result:" data-zh="差异对比结果：">Comparison Result:</h3>
+    <div class="diff-output" id="diffOutput" contenteditable="true"></div>
+
+    <div class="nav-links" id="navLinks"></div>
+
+    <h3 data-en="Version History:" data-zh="历史版本：">Version History:</h3>
+    <div class="version-list" id="versionList"></div>
   </div>
-  <textarea id="text2" placeholder="输入或上传修改文本..."></textarea>
 
-  <div>
-    <button onclick="compareTexts()">比对差异</button>
-    <button onclick="exportModified('txt')">导出 TXT</button>
-    <button onclick="exportModified('docx')">导出 DOCX</button>
-    <button onclick="exportModified('pdf')">导出 PDF</button>
-    <button onclick="saveVersion()">保存当前版本</button>
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
-  <h3>差异对比结果：</h3>
-  <div class="diff-output" id="diffOutput" contenteditable="true"></div>
-
-  <div class="nav-links" id="navLinks"></div>
-
-  <h3>历史版本：</h3>
-  <div class="version-list" id="versionList"></div>
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
     const dmp = new diff_match_patch();
@@ -71,13 +187,12 @@
       const output = document.getElementById("diffOutput");
       output.innerHTML = html;
 
-      // 创建段落导航
       const navLinks = document.getElementById("navLinks");
       navLinks.innerHTML = '';
       const matches = output.querySelectorAll("ins, del");
       matches.forEach((node, i) => {
         const btn = document.createElement('button');
-        btn.textContent = `${node.tagName === "INS" ? "新增" : "删除"} ${i + 1}`;
+        btn.textContent = `${node.tagName === "INS" ? "Add" : "Del"} ${i + 1}`;
         btn.onclick = () => node.scrollIntoView({ behavior: 'smooth', block: 'center' });
         navLinks.appendChild(btn);
       });
@@ -85,14 +200,12 @@
 
     async function exportModified(type) {
       const text = document.getElementById("diffOutput").innerText.trim();
-
       if (type === 'txt') {
         const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
         saveAs(blob, "modified.txt");
       } else if (type === 'docx') {
         const zip = new JSZip();
-        const content = `Modified Text:\n\n${text}`;
-        zip.file("modified.docx", content);
+        zip.file("modified.docx", text);
         const blob = await zip.generateAsync({type: "blob"});
         saveAs(blob, "modified.docx");
       } else if (type === 'pdf') {
@@ -108,7 +221,6 @@
       const versionContent = document.getElementById("diffOutput").innerHTML;
       const timestamp = new Date().toLocaleString();
       versionHistory.push({ time: timestamp, content: versionContent });
-
       updateVersionList();
     }
 
@@ -118,11 +230,17 @@
       versionHistory.forEach((v, i) => {
         const div = document.createElement("div");
         div.className = "version-item";
-        div.textContent = `版本 ${i + 1} - ${v.time}`;
+        div.textContent = `Version ${i + 1} - ${v.time}`;
         div.onclick = () => {
           document.getElementById("diffOutput").innerHTML = v.content;
         };
         list.appendChild(div);
+      });
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
     }
   </script>
