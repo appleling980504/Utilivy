@@ -4,46 +4,108 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - JSON Formatter</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: #f3f4f6;
+      color: #111827;
     }
     header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
-      color: var(--primary-color);
+      color: #4f46e5;
       font-weight: 500;
+      font-size: 0.95rem;
     }
     .container {
       max-width: 800px;
       margin: 2rem auto;
-      padding: 2rem;
       background: white;
+      padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    textarea {
+      width: 100%;
+      padding: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    .button-group button {
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    .button-group button:hover {
+      background-color: #4338ca;
+    }
+    .adsense-banner, .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .error {
+      color: red;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
     }
     footer {
       text-align: center;
@@ -51,71 +113,86 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: monospace;
-      resize: vertical;
-    }
-    button {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-    button:hover {
-      background-color: #4338ca;
-    }
-    @media (max-width: 600px) {
-      .container {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.25rem;
-      }
-    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>Utilivy - JSON Formatter</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - JSON Formatter" data-zh="Utilivy - JSON 格式化工具">Utilivy - JSON Formatter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <h2>JSON Formatter</h2>
-    <p>Paste your JSON below and click "Format".</p>
-    <textarea id="input" rows="10" placeholder="Paste your JSON here..."></textarea>
-    <button onclick="formatJSON()">Format</button>
-    <textarea id="output" rows="10" placeholder="Formatted JSON will appear here..." readonly></textarea>
+    <label for="inputJSON" class="label" data-en="Enter JSON" data-zh="输入 JSON">Enter JSON</label>
+    <textarea id="inputJSON" rows="10" placeholder='{"name":"Utilivy","tools":99}'></textarea>
+
+    <div class="button-group">
+      <button onclick="formatJSON()" data-en="Format" data-zh="格式化">Format</button>
+      <button onclick="minifyJSON()" data-en="Minify" data-zh="压缩">Minify</button>
+      <button onclick="copyText()" data-en="Copy Output" data-zh="复制输出">Copy Output</button>
+    </div>
+
+    <label class="label" data-en="Output" data-zh="输出结果">Output</label>
+    <textarea id="outputJSON" rows="10" readonly></textarea>
+    <div id="errorMsg" class="error"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
   </div>
 
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
     function formatJSON() {
-      const input = document.getElementById('input').value;
+      const input = document.getElementById("inputJSON").value;
       try {
         const obj = JSON.parse(input);
-        document.getElementById('output').value = JSON.stringify(obj, null, 2);
-      } catch (err) {
-        document.getElementById('output').value = 'Invalid JSON ❌';
+        const formatted = JSON.stringify(obj, null, 2);
+        document.getElementById("outputJSON").value = formatted;
+        document.getElementById("errorMsg").textContent = "";
+      } catch (e) {
+        document.getElementById("outputJSON").value = "";
+        document.getElementById("errorMsg").textContent = "❌ Invalid JSON: " + e.message;
       }
     }
-  </script>
 
+    function minifyJSON() {
+      const input = document.getElementById("inputJSON").value;
+      try {
+        const obj = JSON.parse(input);
+        const minified = JSON.stringify(obj);
+        document.getElementById("outputJSON").value = minified;
+        document.getElementById("errorMsg").textContent = "";
+      } catch (e) {
+        document.getElementById("outputJSON").value = "";
+        document.getElementById("errorMsg").textContent = "❌ Invalid JSON: " + e.message;
+      }
+    }
+
+    function copyText() {
+      const output = document.getElementById("outputJSON");
+      output.select();
+      document.execCommand("copy");
+      alert("✅ Copied!");
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
+  </script>
 </body>
 </html>
