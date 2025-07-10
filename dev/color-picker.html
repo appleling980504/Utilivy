@@ -3,98 +3,164 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Color Picker - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Color Picker - Utilivy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    input[type="color"] {
+      width: 100%;
+      height: 60px;
+      border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .color-info {
+      font-size: 1rem;
+      margin-top: 1rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🎨 Color Picker</h1>
-    <p class="mb-4 text-gray-600">Pick a color and click to copy its HEX, RGB, or HSL value.</p>
-
-    <input type="color" id="colorInput" class="w-24 h-12 p-0 border rounded mb-4" onchange="updateColor()" />
-
-    <div class="space-y-4 mt-6">
-      <div>
-        <strong>HEX:</strong>
-        <button onclick="copyToClipboard(hexText)" class="text-blue-600 hover:underline" id="hexText"></button>
+<body>
+  <header>
+    <h1 data-en="Color Picker" data-zh="颜色选择器">Color Picker</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
       </div>
-      <div>
-        <strong>RGB:</strong>
-        <button onclick="copyToClipboard(rgbText)" class="text-green-600 hover:underline" id="rgbText"></button>
-      </div>
-      <div>
-        <strong>HSL:</strong>
-        <button onclick="copyToClipboard(hslText)" class="text-purple-600 hover:underline" id="hslText"></button>
-      </div>
+      <a href="/"><span data-en="← Back to Home" data-zh="← 返回首页">← Back to Home</span></a>
     </div>
+  </header>
 
-    <p id="copyMsg" class="text-sm text-gray-500 mt-4"></p>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="colorPicker" data-en="Choose a color:" data-zh="选择颜色：">Choose a color:</label>
+    <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()" />
+
+    <div class="color-info">
+      <div><strong data-en="HEX:" data-zh="十六进制：">HEX:</strong> <span id="hexValue">#4f46e5</span></div>
+      <div><strong data-en="RGB:" data-zh="RGB：">RGB:</strong> <span id="rgbValue">rgb(79, 70, 229)</span></div>
+    </div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const hexText = document.getElementById("hexText");
-    const rgbText = document.getElementById("rgbText");
-    const hslText = document.getElementById("hslText");
-    const copyMsg = document.getElementById("copyMsg");
-
-    function updateColor() {
-      const color = document.getElementById("colorInput").value;
-      hexText.textContent = color.toUpperCase();
-
-      const rgb = hexToRgb(color);
-      const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-
-      rgbText.textContent = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-      hslText.textContent = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
-    }
-
-    function hexToRgb(hex) {
-      hex = hex.replace(/^#/, "");
-      const bigint = parseInt(hex, 16);
-      const r = (bigint >> 16) & 255;
-      const g = (bigint >> 8) & 255;
-      const b = bigint & 255;
-      return { r, g, b };
-    }
-
-    function rgbToHsl(r, g, b) {
-      r /= 255;
-      g /= 255;
-      b /= 255;
-
-      const max = Math.max(r, g, b), min = Math.min(r, g, b);
-      let h, s, l = (max + min) / 2;
-
-      if (max === min) {
-        h = s = 0;
-      } else {
-        const d = max - min;
-        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-        switch (max) {
-          case r: h = ((g - b) / d + (g < b ? 6 : 0)); break;
-          case g: h = ((b - r) / d + 2); break;
-          case b: h = ((r - g) / d + 4); break;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        const text = el.getAttribute(`data-${lang}`);
+        if (el.tagName === 'INPUT' && el.type === 'button') {
+          el.value = text;
+        } else {
+          el.innerText = text;
         }
-        h /= 6;
-      }
-
-      return {
-        h: Math.round(h * 360),
-        s: Math.round(s * 100),
-        l: Math.round(l * 100)
-      };
-    }
-
-    function copyToClipboard(element) {
-      const text = element.textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        copyMsg.textContent = `✅ Copied: ${text}`;
-        setTimeout(() => copyMsg.textContent = '', 2000);
-      }).catch(() => {
-        copyMsg.textContent = '❌ Failed to copy!';
       });
     }
 
+    function updateColor() {
+      const color = document.getElementById('colorPicker').value;
+      document.getElementById('hexValue').innerText = color;
+
+      const rgb = hexToRgb(color);
+      document.getElementById('rgbValue').innerText = rgb;
+    }
+
+    function hexToRgb(hex) {
+      const r = parseInt(hex.slice(1, 3), 16);
+      const g = parseInt(hex.slice(3, 5), 16);
+      const b = parseInt(hex.slice(5, 7), 16);
+      return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    // 初始化显示
     window.onload = updateColor;
   </script>
 </body>
