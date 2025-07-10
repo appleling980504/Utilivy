@@ -3,76 +3,219 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Text Diff Checker - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Text Diff Checker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    .added { background-color: #d1fae5; }
-    .removed { background-color: #fee2e2; text-decoration: line-through; }
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-family: monospace;
+    }
+    button.compare {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.compare:hover {
+      background-color: #4338ca;
+    }
+    .diff-result {
+      margin-top: 1.5rem;
+      padding: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background-color: #f9fafb;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: monospace;
+    }
+    .added {
+      background-color: #d1fae5;
+    }
+    .removed {
+      background-color: #fee2e2;
+      text-decoration: line-through;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">📝 Text Diff Checker</h1>
-    <p class="mb-4 text-gray-600">Compare two blocks of text to highlight added and removed content.</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-      <div>
-        <label for="text1" class="block text-sm font-medium mb-1">Original Text</label>
-        <textarea id="text1" class="w-full border rounded p-2 h-40"></textarea>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Text Diff Checker" data-zh="Utilivy - 文本对比工具">Utilivy - Text Diff Checker</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
       </div>
-      <div>
-        <label for="text2" class="block text-sm font-medium mb-1">Modified Text</label>
-        <textarea id="text2" class="w-full border rounded p-2 h-40"></textarea>
-      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <button onclick="diffText()" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Compare</button>
-
-    <div id="diffResult" class="mt-6 whitespace-pre-wrap text-base"></div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="text1" data-en="Original Text:" data-zh="原始文本：">Original Text:</label>
+    <textarea id="text1" placeholder="Type original text here..."></textarea>
+
+    <label for="text2" data-en="Modified Text:" data-zh="修改后文本：">Modified Text:</label>
+    <textarea id="text2" placeholder="Type modified text here..."></textarea>
+
+    <button class="compare" onclick="compareText()">Compare</button>
+
+    <div class="diff-result" id="diffOutput"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function diffText() {
-      const a = document.getElementById("text1").value.split(/\s+/);
-      const b = document.getElementById("text2").value.split(/\s+/);
-      const dp = Array.from({ length: a.length + 1 }, () =>
-        Array(b.length + 1).fill(0)
-      );
+    function compareText() {
+      const a = document.getElementById('text1').value;
+      const b = document.getElementById('text2').value;
+      const output = document.getElementById('diffOutput');
 
-      for (let i = 1; i <= a.length; i++) {
-        for (let j = 1; j <= b.length; j++) {
-          dp[i][j] = a[i - 1] === b[j - 1]
-            ? dp[i - 1][j - 1] + 1
-            : Math.max(dp[i - 1][j], dp[i][j - 1]);
-        }
-      }
+      const aWords = a.split(/(\s+)/); // preserve spaces
+      const bWords = b.split(/(\s+)/);
 
-      let i = a.length, j = b.length;
-      const result = [];
+      let result = '';
+      let i = 0, j = 0;
 
-      while (i > 0 && j > 0) {
-        if (a[i - 1] === b[j - 1]) {
-          result.unshift(a[i - 1]);
-          i--; j--;
-        } else if (dp[i - 1][j] >= dp[i][j - 1]) {
-          result.unshift(`<span class="removed">${a[i - 1]}</span>`);
-          i--;
+      while (i < aWords.length || j < bWords.length) {
+        if (aWords[i] === bWords[j]) {
+          result += escapeHtml(aWords[i] || '');
+          i++; j++;
+        } else if (bWords[j] && !aWords.includes(bWords[j])) {
+          result += '<span class="added">' + escapeHtml(bWords[j]) + '</span>';
+          j++;
+        } else if (aWords[i] && !bWords.includes(aWords[i])) {
+          result += '<span class="removed">' + escapeHtml(aWords[i]) + '</span>';
+          i++;
         } else {
-          result.unshift(`<span class="added">${b[j - 1]}</span>`);
-          j--;
+          result += escapeHtml(bWords[j] || '');
+          i++; j++;
         }
       }
 
-      while (i > 0) {
-        result.unshift(`<span class="removed">${a[i - 1]}</span>`);
-        i--;
-      }
-      while (j > 0) {
-        result.unshift(`<span class="added">${b[j - 1]}</span>`);
-        j--;
-      }
+      output.innerHTML = result || '<span style="color: gray;" data-en="No difference found." data-zh="未发现差异。">No difference found.</span>';
+    }
 
-      document.getElementById("diffResult").innerHTML = result.join(" ");
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, function (m) {
+        return ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+        })[m];
+      });
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
   </script>
 </body>
