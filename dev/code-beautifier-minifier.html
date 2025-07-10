@@ -94,6 +94,15 @@
       border: 1px solid #d1d5db;
       border-radius: 8px;
     }
+    button {
+      padding: 0.6rem 1.2rem;
+      margin-top: 0.8rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+    }
     button.calculate {
       padding: 0.6rem 1.2rem;
       margin-top: 0.8rem;
@@ -149,9 +158,9 @@
     <textarea id="inputCode" rows="10" placeholder="Paste your code here..."></textarea>
 
     <div class="btn-group">
-      <button class="calculate" onclick="beautifyCode()" class="beautify" data-en="✨ Beautify" data-zh="✨ 美化">✨ Beautify</button>
-      <button class="calculate" onclick="minifyCode()" class="minify" data-en="🔧 Minify" data-zh="🔧 压缩">🔧 Minify</button>
-      <button class="calculate" onclick="copyOutput()" class="copy" data-en="📋 Copy Output" data-zh="📋 复制输出">📋 Copy Output</button>
+      <button onclick="beautifyCode()" class="beautify" data-en="✨ Beautify" data-zh="✨ 美化">✨ Beautify</button>
+      <button onclick="minifyCode()" class="minify" data-en="🔧 Minify" data-zh="🔧 压缩">🔧 Minify</button>
+      <button onclick="copyOutput()" class="copy" data-en="📋 Copy Output" data-zh="📋 复制输出">📋 Copy Output</button>
     </div>
 
     <label data-en="Output Code:" data-zh="输出代码：">Output Code:</label>
