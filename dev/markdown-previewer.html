@@ -3,159 +3,139 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Markdown Previewer - Toolnest</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
+  <title>Utilivy - Markdown Previewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.1.1/dist/dom-to-image-more.min.js"></script>
   <style>
     body {
-      font-family: system-ui, sans-serif;
       margin: 0;
-      padding: 1rem;
+      font-family: 'Inter', sans-serif;
       background-color: #f9fafb;
       color: #111827;
-      transition: background-color 0.3s, color 0.3s;
     }
-    .dark-mode {
-      background-color: #1f2937;
-      color: #f3f4f6;
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    .dark-mode .markdown-body {
-      background: #111827;
-      color: #f3f4f6;
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      background: #4f46e5;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    header a {
+      text-decoration: none;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .container {
+      max-width: 960px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
     textarea {
       width: 100%;
-      height: 300px;
       padding: 1rem;
+      font-size: 1rem;
       font-family: monospace;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin-bottom: 1rem;
       resize: vertical;
     }
-    .toolbar {
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      align-items: center;
-    }
-    button {
-      padding: 0.5rem 1rem;
-      border: none;
-      border-radius: 0.375rem;
-      background-color: #3b82f6;
-      color: white;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #2563eb;
-    }
-    .markdown-body {
+    .preview-box {
+      border: 1px solid #ccc;
       padding: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 0.375rem;
-      background: white;
+      border-radius: 6px;
+      background: #f9f9f9;
       overflow: auto;
     }
-    label {
+    .label {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .adsense-banner, .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    footer {
+      text-align: center;
       font-size: 0.9rem;
+      padding: 1rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <h1 class="text-2xl font-bold mb-2">📝 Markdown Previewer</h1>
-  <p>Write Markdown on the left and see live preview on the right.</p>
+  <header>
+    <h1 data-en="Utilivy - Markdown Previewer" data-zh="Utilivy - Markdown 预览工具">Utilivy - Markdown Previewer</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-  <div>
-    <textarea id="markdownInput" placeholder="Write your Markdown here..."></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
-  <div class="toolbar">
-    <button onclick="downloadMarkdown()">⬇️ Download .md</button>
-    <button onclick="downloadHTML()">⬇️ Download HTML</button>
-    <button onclick="copyHTML()">📋 Copy HTML</button>
-    <button onclick="toggleTheme()">🌓 Toggle Theme</button>
-    <button onclick="clearEditor()">🧹 Clear</button>
+  <div class="container">
+    <label class="label" for="markdownInput" data-en="Enter Markdown" data-zh="输入 Markdown 文本">Enter Markdown</label>
+    <textarea id="markdownInput" rows="10" placeholder="# Hello Markdown" oninput="updatePreview()"></textarea>
 
-    <label style="margin-left: 1rem;">
-      <input type="checkbox" id="breaksCheckbox" onchange="updatePreview()" />
-      Convert line breaks to &lt;br&gt;
-    </label>
+    <label class="label" data-en="Preview" data-zh="预览效果">Preview</label>
+    <div class="preview-box" id="preview"></div>
   </div>
 
-  <div class="markdown-body" id="preview"></div>
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
-    const input = document.getElementById('markdownInput');
-    const preview = document.getElementById('preview');
-    const breaksCheckbox = document.getElementById('breaksCheckbox');
+    function updatePreview() {
+      const input = document.getElementById('markdownInput').value;
+      document.getElementById('preview').innerHTML = marked.parse(input);
+    }
 
-    const updatePreview = () => {
-      const markdownText = input.value;
-      const useBreaks = breaksCheckbox.checked;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
 
-      marked.setOptions({ breaks: useBreaks });
-      localStorage.setItem('markdownCache', markdownText);
-      localStorage.setItem('markdownBreaks', useBreaks ? '1' : '0');
-
-      preview.innerHTML = marked.parse(markdownText);
-    };
-
-    input.addEventListener('input', updatePreview);
-
-    const copyHTML = () => {
-      navigator.clipboard.writeText(preview.innerHTML)
-        .then(() => alert('✅ HTML copied to clipboard!'))
-        .catch(err => alert('❌ Copy failed.'));
-    };
-
-    const downloadMarkdown = () => {
-      const blob = new Blob([input.value], { type: 'text/markdown' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'document.md';
-      a.click();
-    };
-
-    const downloadHTML = () => {
-      const html = `
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="UTF-8" />
-          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.5.1/github-markdown.min.css">
-          <title>Exported Markdown</title>
-        </head>
-        <body class="markdown-body">${preview.innerHTML}</body>
-        </html>`;
-      const blob = new Blob([html], { type: 'text/html' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'preview.html';
-      a.click();
-    };
-
-    const toggleTheme = () => {
-      document.body.classList.toggle('dark-mode');
-    };
-
-    const clearEditor = () => {
-      if (confirm("Clear all markdown content?")) {
-        input.value = '';
-        updatePreview();
-      }
-    };
-
-    // Load cache on start
-    window.onload = () => {
-      const cache = localStorage.getItem('markdownCache');
-      const breaks = localStorage.getItem('markdownBreaks') === '1';
-      if (cache !== null) input.value = cache;
-      if (breaks) breaksCheckbox.checked = true;
-      updatePreview();
-    };
+    // Init
+    updatePreview();
   </script>
 </body>
 </html>
