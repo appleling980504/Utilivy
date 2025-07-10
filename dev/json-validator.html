@@ -6,77 +6,114 @@
   <title>Utilivy - JSON Validator</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background-color: #f3f4f6;
+      color: #111827;
     }
     header {
       background: white;
       padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
-      color: var(--primary-color);
+      color: #4f46e5;
       font-weight: 500;
+      font-size: 0.95rem;
     }
     .container {
-      max-width: 700px;
+      max-width: 800px;
       margin: 2rem auto;
-      padding: 2rem;
       background: white;
+      padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     textarea {
       width: 100%;
-      margin-top: 1rem;
       padding: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
       border: 1px solid #d1d5db;
       border-radius: 8px;
-      font-size: 1rem;
-      min-height: 200px;
-      font-family: monospace;
+      margin-bottom: 1rem;
     }
-    button {
-      background: var(--primary-color);
+    .label {
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .button-group {
+      margin-bottom: 1rem;
+    }
+    .button-group button {
+      background-color: #4f46e5;
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
+      font-size: 0.95rem;
     }
-    button:hover {
+    .button-group button:hover {
       background-color: #4338ca;
     }
     .result {
-      margin-top: 1rem;
-      font-weight: bold;
+      font-weight: 500;
+      padding: 0.75rem 1rem;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      display: none;
+      margin-top: 0.5rem;
     }
-    .valid {
-      color: green;
+    .result.success {
+      background-color: #d1fae5;
+      color: #065f46;
     }
-    .invalid {
-      color: red;
+    .result.error {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+    .adsense-banner, .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     footer {
       text-align: center;
@@ -84,46 +121,64 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    @media (max-width: 600px) {
-      .container {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.25rem;
-      }
-    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Utilivy - JSON Validator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - JSON Validator" data-zh="Utilivy - JSON 校验工具">Utilivy - JSON Validator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <h2>JSON Validator</h2>
-    <textarea id="jsonInput" placeholder="Paste your JSON here..."></textarea>
-    <button onclick="validateJSON()">Validate</button>
+    <label for="jsonInput" class="label" data-en="Enter JSON" data-zh="输入 JSON">Enter JSON</label>
+    <textarea id="jsonInput" rows="10" placeholder='{"valid": true}'></textarea>
+
+    <div class="button-group">
+      <button onclick="validateJSON()" data-en="Validate JSON" data-zh="验证 JSON">Validate JSON</button>
+    </div>
+
     <div id="result" class="result"></div>
   </div>
 
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
     function validateJSON() {
       const input = document.getElementById("jsonInput").value;
       const result = document.getElementById("result");
+
       try {
         JSON.parse(input);
-        result.textContent = "Valid JSON ✅";
-        result.className = "result valid";
+        result.className = "result success";
+        result.textContent = "✅ Valid JSON!";
+        result.style.display = "block";
       } catch (e) {
-        result.textContent = "Invalid JSON ❌";
-        result.className = "result invalid";
+        result.className = "result error";
+        result.textContent = "❌ Invalid JSON: " + e.message;
+        result.style.display = "block";
       }
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
     }
   </script>
 </body>
