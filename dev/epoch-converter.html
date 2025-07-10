@@ -3,51 +3,192 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Epoch Converter - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Epoch Converter - Utilivy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
+      color: #111827;
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #4f46e5;
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: #4f46e5;
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner, .adsense-footer {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .button-group button {
+      background: #4f46e5;
+      color: white;
+      border: none;
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    .button-group button:hover {
+      background: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">🕒 Epoch Converter</h1>
-    <p class="mb-4 text-gray-600">Convert between Unix timestamp (Epoch time) and human-readable date.</p>
-
-    <div class="mb-6">
-      <label for="timestamp" class="block font-medium mb-1">🔢 Unix Timestamp (seconds):</label>
-      <input type="number" id="timestamp" class="w-full px-4 py-2 border rounded" placeholder="e.g. 1718952580" oninput="convertToDate()" />
-      <p class="text-sm text-gray-500 mt-1">Epoch time = seconds since Jan 1, 1970 (UTC)</p>
+<body>
+  <header>
+    <h1 data-en="Epoch Converter" data-zh="时间戳转换器">Epoch Converter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div class="mb-6">
-      <label for="dateInput" class="block font-medium mb-1">📅 Human Date:</label>
-      <input type="datetime-local" id="dateInput" class="w-full px-4 py-2 border rounded" onchange="convertToTimestamp()" />
-    </div>
-
-    <div class="mt-6 text-blue-700 font-medium" id="result"></div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label data-en="Unix Timestamp (seconds)" data-zh="Unix 时间戳（秒）">Unix Timestamp (seconds)</label>
+    <input type="number" id="epochInput" placeholder="e.g. 1720598400" />
+
+    <label data-en="Local Time" data-zh="本地时间">Local Time</label>
+    <input type="datetime-local" id="datetimeInput" />
+
+    <div class="button-group">
+      <button onclick="convertToDatetime()" data-en="Convert to Local Time" data-zh="转换为本地时间">Convert to Local Time</button>
+      <button onclick="convertToEpoch()" data-en="Convert to Timestamp" data-zh="转换为时间戳">Convert to Timestamp</button>
+      <button onclick="getNow()" data-en="Now" data-zh="当前时间">Now</button>
+    </div>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function convertToDate() {
-      const ts = document.getElementById('timestamp').value;
-      if (!ts) return;
-      const date = new Date(ts * 1000);
-      const iso = date.toISOString().slice(0, 16);
-      document.getElementById('dateInput').value = iso;
-      document.getElementById('result').textContent = "🕓 UTC Date: " + date.toUTCString();
+    function convertToDatetime() {
+      const epoch = parseInt(document.getElementById('epochInput').value);
+      if (!isNaN(epoch)) {
+        const date = new Date(epoch * 1000);
+        const iso = date.toISOString().slice(0, 16);
+        document.getElementById('datetimeInput').value = iso;
+        document.getElementById('result').textContent = date.toString();
+      }
     }
 
-    function convertToTimestamp() {
-      const input = document.getElementById('dateInput').value;
-      if (!input) return;
-      const ts = Math.floor(new Date(input).getTime() / 1000);
-      document.getElementById('timestamp').value = ts;
-      document.getElementById('result').textContent = "🔢 Unix Timestamp: " + ts;
+    function convertToEpoch() {
+      const datetime = document.getElementById('datetimeInput').value;
+      if (datetime) {
+        const epoch = Math.floor(new Date(datetime).getTime() / 1000);
+        document.getElementById('epochInput').value = epoch;
+        document.getElementById('result').textContent = epoch + ' seconds';
+      }
     }
 
-    window.onload = () => {
-      const now = Math.floor(Date.now() / 1000);
-      document.getElementById('timestamp').value = now;
-      convertToDate();
-    };
+    function getNow() {
+      const now = new Date();
+      document.getElementById('epochInput').value = Math.floor(now.getTime() / 1000);
+      document.getElementById('datetimeInput').value = now.toISOString().slice(0, 16);
+      document.getElementById('result').textContent = now.toString();
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+    }
+
+    // Default language sync
+    document.addEventListener('DOMContentLoaded', () => {
+      setLanguage('en');
+    });
   </script>
 </body>
 </html>
