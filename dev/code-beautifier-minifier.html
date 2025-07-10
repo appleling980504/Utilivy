@@ -165,11 +165,26 @@
   </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.innerText = el.getAttribute(`data-${lang}`);
-      });
-    }
+    let currentLang = 'en';
+
+  function setLanguage(lang) {
+    currentLang = lang;
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.innerText = el.getAttribute(`data-${lang}`);
+    });
+
+    // 高亮当前按钮（可选）
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+      btn.classList.remove('active');
+      if (btn.textContent.trim().toLowerCase() === lang) {
+        btn.classList.add('active');
+      }
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    setLanguage(currentLang);
+  });
 
     function preprocessCode(input) {
       return input
