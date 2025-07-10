@@ -64,8 +64,7 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-    .adsense-banner,
-    .adsense-footer {
+    .adsense-banner, .adsense-footer {
       text-align: center;
       margin: 1rem 0;
       color: gray;
@@ -131,31 +130,30 @@
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
   <div class="container">
-    <label id="label-goal">Saving Goal Amount</label>
-    <input type="number" id="goal" placeholder="e.g. 100000" />
+    <label id="label-goal">Goal Amount ($)</label>
+    <input type="number" id="goal" />
 
-    <label id="label-current">Current Savings</label>
-    <input type="number" id="current" placeholder="e.g. 5000" />
+    <label id="label-current">Current Savings ($)</label>
+    <input type="number" id="current" />
 
-    <label id="label-monthly">Monthly Saving</label>
-    <input type="number" id="monthly" placeholder="e.g. 1000 (leave blank to calculate required)" />
+    <label id="label-interest">Expected Annual Interest Rate (%)</label>
+    <input type="number" id="interest" />
 
-    <label id="label-rate">Annual Interest Rate (%)</label>
-    <input type="number" id="rate" placeholder="e.g. 5" />
+    <label id="label-monthly">Monthly Contribution ($) <span style="font-weight: normal;">(optional)</span></label>
+    <input type="number" id="monthly" />
 
-    <button class="calculate" onclick="calculate()" id="calcBtn">Calculate</button>
+    <label id="label-years">Years to Save <span style="font-weight: normal;">(optional)</span></label>
+    <input type="number" id="years" />
+
+    <button class="calculate" onclick="calculateSaving()">Calculate</button>
 
     <div class="result" id="result"></div>
   </div>
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
   <footer>
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
@@ -163,85 +161,74 @@
 
   <script>
     let lang = 'en';
-    const labels = {
+    const texts = {
       en: {
-        goal: "Saving Goal Amount",
-        current: "Current Savings",
-        monthly: "Monthly Saving",
-        rate: "Annual Interest Rate (%)",
-        calcBtn: "Calculate",
-        resultTime: (years) => `You will reach your goal in approximately <strong>${years}</strong> years.`,
-        resultRequired: (amount) => `To reach your goal in time, you need to save approximately <strong>${amount}</strong> per month.`,
-        resultInvalid: "❗ Please enter a valid goal amount, current savings and interest rate."
+        title: "Utilivy - Saving Goal Calculator",
+        goal: "Goal Amount ($)",
+        current: "Current Savings ($)",
+        interest: "Expected Annual Interest Rate (%)",
+        monthly: "Monthly Contribution ($) (optional)",
+        years: "Years to Save (optional)",
+        result1: (months) => `You will reach your goal in approximately ${months} months.`,
+        result2: (amount) => `You need to save approximately $${amount.toFixed(2)} per month.`,
+        error: "Please fill at least: Goal, Current, Interest, and either Monthly or Years."
       },
       zh: {
-        goal: "储蓄目标金额",
-        current: "目前已储蓄金额",
-        monthly: "每月储蓄金额",
-        rate: "年利率 (%)",
-        calcBtn: "计算",
-        resultTime: (years) => `你大约需要 <strong>${years}</strong> 年才能达到储蓄目标。`,
-        resultRequired: (amount) => `要达到目标，你每月需要储蓄约 <strong>${amount}</strong>。`,
-        resultInvalid: "❗ 请输入有效的目标金额、当前储蓄和利率。"
+        title: "Utilivy - 储蓄目标计算器",
+        goal: "目标金额（$）",
+        current: "当前储蓄（$）",
+        interest: "预期年利率（%）",
+        monthly: "每月储蓄金额（可选）",
+        years: "希望达成目标所需年数（可选）",
+        result1: (months) => `你大约需要 ${months} 个月达到目标。`,
+        result2: (amount) => `你每月需要储蓄约 $${amount.toFixed(2)}。`,
+        error: "请至少填写：目标金额、当前储蓄、利率，并选择填写每月金额或希望年限。"
       }
     };
 
     function setLanguage(l) {
       lang = l;
-      const t = labels[lang];
-      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
-      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
+      const t = texts[lang];
+      document.querySelector("h1").innerText = t.title;
       document.getElementById("label-goal").innerText = t.goal;
       document.getElementById("label-current").innerText = t.current;
-      document.getElementById("label-monthly").innerText = t.monthly;
-      document.getElementById("label-rate").innerText = t.rate;
-      document.getElementById("calcBtn").innerText = t.calcBtn;
-      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
+      document.getElementById("label-interest").innerText = t.interest;
+      document.getElementById("label-monthly").innerHTML = t.monthly;
+      document.getElementById("label-years").innerHTML = t.years;
+      document.querySelector("footer span").innerText = lang === 'zh' ? '保留所有权利。' : 'All rights reserved.';
     }
 
-    function calculate() {
+    function calculateSaving() {
       const goal = parseFloat(document.getElementById("goal").value);
       const current = parseFloat(document.getElementById("current").value);
+      const annualRate = parseFloat(document.getElementById("interest").value);
       const monthly = parseFloat(document.getElementById("monthly").value);
-      const rate = parseFloat(document.getElementById("rate").value);
-      const t = labels[lang];
-      let result = "";
+      const years = parseFloat(document.getElementById("years").value);
+      const result = document.getElementById("result");
 
-      if (isNaN(goal) || isNaN(current) || isNaN(rate) || goal <= current) {
-        result = `<span style="color:red;">${t.resultInvalid}</span>`;
-      } else if (!isNaN(monthly)) {
-        // Calculate time to reach goal
-        let balance = current;
-        let months = 0;
-        const monthlyRate = rate / 100 / 12;
-        while (balance < goal && months < 1000 * 12) {
-          balance += monthly;
-          balance *= (1 + monthlyRate);
-          months++;
-        }
-        const years = (months / 12).toFixed(1);
-        result = t.resultTime(years);
-      } else {
-        // Calculate required monthly saving
-        const n = 360; // assume max 30 years
-        const monthlyRate = rate / 100 / 12;
-        let requiredMonthly = 0;
-        let balance = current;
-        while (balance < goal && requiredMonthly < 1e5) {
-          balance = current;
-          for (let i = 0; i < n; i++) {
-            balance += requiredMonthly;
-            balance *= (1 + monthlyRate);
-          }
-          requiredMonthly += 10;
-        }
-        result = t.resultRequired(requiredMonthly.toFixed(2));
+      if (isNaN(goal) || isNaN(current) || isNaN(annualRate) || (isNaN(monthly) && isNaN(years))) {
+        result.innerText = texts[lang].error;
+        return;
       }
 
-      document.getElementById("result").innerHTML = result;
+      const r = annualRate / 12 / 100;
+      if (!isNaN(monthly)) {
+        let total = current;
+        let months = 0;
+        while (total < goal && months < 1000) {
+          total *= (1 + r);
+          total += monthly;
+          months++;
+        }
+        result.innerText = texts[lang].result1(months);
+      } else {
+        const totalMonths = years * 12;
+        const requiredMonthly = (goal - current * (1 + r) ** totalMonths) * r / ((1 + r) ** totalMonths - 1);
+        result.innerText = texts[lang].result2(requiredMonthly);
+      }
     }
 
-    setLanguage(lang);
+    setLanguage('en');
   </script>
 </body>
 </html>
