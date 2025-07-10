@@ -72,7 +72,7 @@
       display: none;
     }
     .container {
-      max-width: 600px;
+      max-width: 700px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
@@ -108,9 +108,9 @@
       background-color: #4338ca;
     }
     .output {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
       font-weight: 500;
-      word-break: break-all;
+      word-break: break-word;
       background: #f9fafb;
       padding: 1rem;
       border-radius: 8px;
@@ -143,14 +143,19 @@
     <label for="inputText" data-en="Enter your text:" data-zh="输入内容：">Enter your text:</label>
     <textarea id="inputText" placeholder="Paste or type your text here..."></textarea>
 
-    <button onclick="convertBoth()">🔄 <span data-en="Convert" data-zh="转换">Convert</span></button>
+    <button onclick="convertToUrlBase64()">🔁 <span data-en="Convert to URL & Base64" data-zh="转换为 URL & Base64">Convert to URL & Base64</span></button>
+
+    <button onclick="decodeFromBase64Url()">🔁 <span data-en="Decode from Base64 & URL" data-zh="从 Base64 & URL 解码">Decode from Base64 & URL</span></button>
 
     <div class="output">
       <div><strong data-en="URL Encoded:" data-zh="URL 编码：">URL Encoded:</strong></div>
-      <div id="urlOutput"></div>
+      <div id="urlEncoded"></div>
       <br/>
       <div><strong data-en="Base64 Encoded:" data-zh="Base64 编码：">Base64 Encoded:</strong></div>
-      <div id="base64Output"></div>
+      <div id="base64Encoded"></div>
+      <br/>
+      <div><strong data-en="Decoded Text:" data-zh="解码后内容：">Decoded Text:</strong></div>
+      <div id="decodedText"></div>
     </div>
   </div>
 
@@ -163,19 +168,35 @@
   </footer>
 
   <script>
-    function convertBoth() {
+    function convertToUrlBase64() {
       const text = document.getElementById('inputText').value;
-      let urlEncoded = '';
-      let base64Encoded = '';
+      let urlEncoded = '', base64Encoded = '';
       try {
         urlEncoded = encodeURIComponent(text);
         base64Encoded = btoa(unescape(encodeURIComponent(text)));
       } catch (e) {
-        urlEncoded = 'Error encoding URL';
-        base64Encoded = 'Error encoding Base64';
+        urlEncoded = 'Error encoding';
+        base64Encoded = 'Error encoding';
       }
-      document.getElementById('urlOutput').innerText = urlEncoded;
-      document.getElementById('base64Output').innerText = base64Encoded;
+      document.getElementById('urlEncoded').innerText = urlEncoded;
+      document.getElementById('base64Encoded').innerText = base64Encoded;
+    }
+
+    function decodeFromBase64Url() {
+      const text = document.getElementById('inputText').value;
+      let decoded = '';
+      try {
+        // Try Base64 decoding
+        decoded = decodeURIComponent(escape(atob(text)));
+      } catch (e1) {
+        try {
+          // Try URL decoding
+          decoded = decodeURIComponent(text);
+        } catch (e2) {
+          decoded = 'Decoding failed';
+        }
+      }
+      document.getElementById('decodedText').innerText = decoded;
     }
 
     function setLanguage(lang) {
