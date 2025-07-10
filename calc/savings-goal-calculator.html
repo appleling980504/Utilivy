@@ -2,85 +2,246 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Savings Goal Calculator - Toolnest</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Saving Goal Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: sans-serif;
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 20px;
-      background-color: #f9fafb;
-      color: #111;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
-    h1 {
-      text-align: center;
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
-    label {
-      display: block;
-      margin-top: 16px;
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
     }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      font-size: 16px;
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
     }
-    button {
-      margin-top: 20px;
-      padding: 12px;
-      background-color: #4f46e5;
-      color: white;
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
     }
     .result {
-      margin-top: 24px;
-      background: #eef2ff;
-      padding: 16px;
-      border-radius: 6px;
-      font-size: 18px;
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
-  <h1>Savings Goal Calculator</h1>
+  <header>
+    <h1 data-en="Utilivy - Saving Goal Calculator" data-zh="Utilivy - 储蓄目标计算器">Utilivy - Saving Goal Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-  <label>Target Amount</label>
-  <input type="number" id="targetAmount" value="10000" />
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-  <label>Monthly Contribution</label>
-  <input type="number" id="monthlyContribution" value="200" />
+  <div class="container">
+    <label id="label-goal">Saving Goal Amount</label>
+    <input type="number" id="goal" placeholder="e.g. 100000" />
 
-  <label>Annual Interest Rate (%)</label>
-  <input type="number" id="annualRate" value="5" />
+    <label id="label-current">Current Savings</label>
+    <input type="number" id="current" placeholder="e.g. 5000" />
 
-  <button onclick="calculateSavingsGoal()">Calculate</button>
+    <label id="label-monthly">Monthly Saving</label>
+    <input type="number" id="monthly" placeholder="e.g. 1000 (leave blank to calculate required)" />
 
-  <div class="result" id="result" style="display:none;"></div>
+    <label id="label-rate">Annual Interest Rate (%)</label>
+    <input type="number" id="rate" placeholder="e.g. 5" />
+
+    <button class="calculate" onclick="calculate()" id="calcBtn">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
-    function calculateSavingsGoal() {
-      const target = parseFloat(document.getElementById("targetAmount").value);
-      const monthly = parseFloat(document.getElementById("monthlyContribution").value);
-      const rate = parseFloat(document.getElementById("annualRate").value) / 100 / 12;
+    let lang = 'en';
+    const labels = {
+      en: {
+        goal: "Saving Goal Amount",
+        current: "Current Savings",
+        monthly: "Monthly Saving",
+        rate: "Annual Interest Rate (%)",
+        calcBtn: "Calculate",
+        resultTime: (years) => `You will reach your goal in approximately <strong>${years}</strong> years.`,
+        resultRequired: (amount) => `To reach your goal in time, you need to save approximately <strong>${amount}</strong> per month.`,
+        resultInvalid: "❗ Please enter a valid goal amount, current savings and interest rate."
+      },
+      zh: {
+        goal: "储蓄目标金额",
+        current: "目前已储蓄金额",
+        monthly: "每月储蓄金额",
+        rate: "年利率 (%)",
+        calcBtn: "计算",
+        resultTime: (years) => `你大约需要 <strong>${years}</strong> 年才能达到储蓄目标。`,
+        resultRequired: (amount) => `要达到目标，你每月需要储蓄约 <strong>${amount}</strong>。`,
+        resultInvalid: "❗ 请输入有效的目标金额、当前储蓄和利率。"
+      }
+    };
 
-      let months = 0;
-      let balance = 0;
+    function setLanguage(l) {
+      lang = l;
+      const t = labels[lang];
+      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
+      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
+      document.getElementById("label-goal").innerText = t.goal;
+      document.getElementById("label-current").innerText = t.current;
+      document.getElementById("label-monthly").innerText = t.monthly;
+      document.getElementById("label-rate").innerText = t.rate;
+      document.getElementById("calcBtn").innerText = t.calcBtn;
+      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
+    }
 
-      while (balance < target) {
-        balance = balance * (1 + rate) + monthly;
-        months++;
+    function calculate() {
+      const goal = parseFloat(document.getElementById("goal").value);
+      const current = parseFloat(document.getElementById("current").value);
+      const monthly = parseFloat(document.getElementById("monthly").value);
+      const rate = parseFloat(document.getElementById("rate").value);
+      const t = labels[lang];
+      let result = "";
+
+      if (isNaN(goal) || isNaN(current) || isNaN(rate) || goal <= current) {
+        result = `<span style="color:red;">${t.resultInvalid}</span>`;
+      } else if (!isNaN(monthly)) {
+        // Calculate time to reach goal
+        let balance = current;
+        let months = 0;
+        const monthlyRate = rate / 100 / 12;
+        while (balance < goal && months < 1000 * 12) {
+          balance += monthly;
+          balance *= (1 + monthlyRate);
+          months++;
+        }
+        const years = (months / 12).toFixed(1);
+        result = t.resultTime(years);
+      } else {
+        // Calculate required monthly saving
+        const n = 360; // assume max 30 years
+        const monthlyRate = rate / 100 / 12;
+        let requiredMonthly = 0;
+        let balance = current;
+        while (balance < goal && requiredMonthly < 1e5) {
+          balance = current;
+          for (let i = 0; i < n; i++) {
+            balance += requiredMonthly;
+            balance *= (1 + monthlyRate);
+          }
+          requiredMonthly += 10;
+        }
+        result = t.resultRequired(requiredMonthly.toFixed(2));
       }
 
-      const years = Math.floor(months / 12);
-      const remainingMonths = months % 12;
-
-      document.getElementById("result").style.display = 'block';
-      document.getElementById("result").innerText =
-        `You will reach your goal in ${years} years and ${remainingMonths} months.`;
+      document.getElementById("result").innerHTML = result;
     }
+
+    setLanguage(lang);
   </script>
 </body>
 </html>
