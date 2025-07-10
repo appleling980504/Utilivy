@@ -3,61 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Base64 Encoder / Decoder - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - URL ↔ Base64 Converter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+    textarea {
+      width: 100%;
+      height: 120px;
+      font-size: 1rem;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      resize: vertical;
+    }
+    label {
+      margin-top: 1rem;
+      display: block;
+      font-weight: 500;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    .output {
+      margin-top: 1rem;
+      font-weight: 500;
+      word-break: break-all;
+      background: #f9fafb;
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🔤 Base64 Encoder / Decoder</h1>
-    <p class="mb-4 text-gray-600">Quickly encode or decode text using Base64.</p>
-
-    <label for="inputText" class="block text-sm font-medium text-gray-700 mb-1">Input Text</label>
-    <textarea id="inputText" class="w-full h-32 p-3 border rounded font-mono text-sm mb-4" placeholder="Enter your text or base64 string here..."></textarea>
-
-    <div class="flex flex-wrap gap-3 mb-4">
-      <button onclick="encodeBase64()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">🔐 Encode</button>
-      <button onclick="decodeBase64()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">🔓 Decode</button>
-      <button onclick="clearAll()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">🧹 Clear</button>
+<body>
+  <header>
+    <h1 data-en="URL ↔ Base64 Converter" data-zh="URL ↔ Base64 转换器">URL ↔ Base64 Converter</h1>
+    <div class="lang-switch">
+      <button onclick="setLang('en')">EN</button>
+      <button onclick="setLang('zh')">中</button>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <label for="outputText" class="block text-sm font-medium text-gray-700 mb-1">Output</label>
-    <textarea id="outputText" class="w-full h-32 p-3 border rounded font-mono text-sm bg-gray-50" readonly></textarea>
+  <div class="container">
+    <label for="inputText" data-en="Enter your text:" data-zh="输入内容：">Enter your text:</label>
+    <textarea id="inputText" placeholder="Paste or type your text here..."></textarea>
 
-    <div id="error" class="text-red-600 font-medium mt-3 hidden"></div>
+    <button onclick="convertBoth()">🔄 <span data-en="Convert" data-zh="转换">Convert</span></button>
+
+    <div class="output">
+      <div><strong data-en="URL Encoded:" data-zh="URL 编码：">URL Encoded:</strong></div>
+      <div id="urlOutput"></div>
+      <br/>
+      <div><strong data-en="Base64 Encoded:" data-zh="Base64 编码：">Base64 Encoded:</strong></div>
+      <div id="base64Output"></div>
+    </div>
   </div>
 
+  <footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
+
   <script>
-    function encodeBase64() {
-      const input = document.getElementById("inputText").value;
-      const errorBox = document.getElementById("error");
+    function convertBoth() {
+      const text = document.getElementById('inputText').value;
+      let urlEncoded = '';
+      let base64Encoded = '';
       try {
-        const encoded = btoa(unescape(encodeURIComponent(input)));
-        document.getElementById("outputText").value = encoded;
-        errorBox.classList.add("hidden");
+        urlEncoded = encodeURIComponent(text);
+        base64Encoded = btoa(unescape(encodeURIComponent(text)));
       } catch (e) {
-        errorBox.textContent = "❌ Encode error: " + e.message;
-        errorBox.classList.remove("hidden");
+        urlEncoded = 'Error encoding URL';
+        base64Encoded = 'Error encoding Base64';
       }
+      document.getElementById('urlOutput').innerText = urlEncoded;
+      document.getElementById('base64Output').innerText = base64Encoded;
     }
 
-    function decodeBase64() {
-      const input = document.getElementById("inputText").value;
-      const errorBox = document.getElementById("error");
-      try {
-        const decoded = decodeURIComponent(escape(atob(input)));
-        document.getElementById("outputText").value = decoded;
-        errorBox.classList.add("hidden");
-      } catch (e) {
-        errorBox.textContent = "❌ Decode error: " + e.message;
-        errorBox.classList.remove("hidden");
-      }
+    let currentLang = 'en';
+    function setLang(lang) {
+      currentLang = lang;
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
     }
-
-    function clearAll() {
-      document.getElementById("inputText").value = "";
-      document.getElementById("outputText").value = "";
-      document.getElementById("error").classList.add("hidden");
-    }
+    setLang('en');
   </script>
 </body>
 </html>
