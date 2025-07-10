@@ -3,52 +3,183 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>URL Encoder / Decoder - Toolnest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - URL Encoder / Decoder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      font-family: monospace;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.1rem;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-3xl font-bold mb-4">🔗 URL Encoder / Decoder</h1>
-    <p class="mb-4 text-gray-700">Easily encode or decode URLs for safe transmission.</p>
-
-    <textarea id="urlInput" class="w-full border rounded p-3 h-40 mb-4" placeholder="Enter text or URL here..."></textarea>
-
-    <div class="flex flex-wrap gap-4 mb-4">
-      <button onclick="encodeURL()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Encode</button>
-      <button onclick="decodeURL()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Decode</button>
-      <button onclick="copyResult()" class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded">Copy</button>
-      <button onclick="clearText()" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Clear</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - URL Encoder / Decoder" data-zh="Utilivy - URL 编码解码器">Utilivy - URL Encoder / Decoder</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <label for="urlOutput" class="block text-sm font-medium text-gray-700 mb-1">Result:</label>
-    <textarea id="urlOutput" class="w-full border rounded p-3 h-40" readonly></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="inputText" data-en="Input Text:" data-zh="输入文本：">Input Text:</label>
+    <textarea id="inputText" placeholder="Enter text to encode or decode..."></textarea>
+
+    <div>
+      <button onclick="encodeText()">🔒 <span data-en="Encode" data-zh="编码">Encode</span></button>
+      <button onclick="decodeText()">🔓 <span data-en="Decode" data-zh="解码">Decode</span></button>
+    </div>
+
+    <div class="result" id="resultArea"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function encodeURL() {
-      const input = document.getElementById("urlInput").value;
-      document.getElementById("urlOutput").value = encodeURIComponent(input);
+    function encodeText() {
+      const input = document.getElementById("inputText").value;
+      const result = encodeURIComponent(input);
+      document.getElementById("resultArea").textContent = result;
     }
 
-    function decodeURL() {
-      const input = document.getElementById("urlInput").value;
+    function decodeText() {
+      const input = document.getElementById("inputText").value;
       try {
-        document.getElementById("urlOutput").value = decodeURIComponent(input);
+        const result = decodeURIComponent(input);
+        document.getElementById("resultArea").textContent = result;
       } catch (e) {
-        document.getElementById("urlOutput").value = "Invalid encoded URL.";
+        document.getElementById("resultArea").textContent = "Invalid URL encoding";
       }
     }
 
-    function copyResult() {
-      const output = document.getElementById("urlOutput");
-      output.select();
-      document.execCommand("copy");
-      alert("✅ Copied to clipboard!");
-    }
-
-    function clearText() {
-      document.getElementById("urlInput").value = "";
-      document.getElementById("urlOutput").value = "";
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
   </script>
 </body>
