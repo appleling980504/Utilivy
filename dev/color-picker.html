@@ -96,6 +96,22 @@
     button:hover {
       background-color: #4338ca;
     }
+    .action-buttons button {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin: 0.3rem;
+    }
+  .action-buttons button:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+    }
     .swatches {
       display: flex;
       flex-wrap: wrap;
@@ -148,13 +164,14 @@
 
     <section>
       <h2>⚙️ Actions</h2>
-      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-        <button onclick="copyText('hexValue')">Copy HEX</button>
-        <button onclick="copyText('rgbValue')">Copy RGB</button>
-        <button onclick="copyText('hslValue')">Copy HSL</button>
-        <button onclick="addToFavorites()">Add to Favorites</button>
-        <button onclick="exportPalette()">Export Palette</button>
-      </div>
+    <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+      <button onclick="copyText('hexValue')">📋 <span data-en="Copy HEX" data-zh="复制 HEX">Copy HEX</span></button>
+      <button onclick="copyText('rgbValue')">📋 <span data-en="Copy RGB" data-zh="复制 RGB">Copy RGB</span></button>
+      <button onclick="copyText('hslValue')">📋 <span data-en="Copy HSL" data-zh="复制 HSL">Copy HSL</span></button>
+      <button onclick="addToFavorites()">⭐ <span data-en="Add to Favorites" data-zh="添加收藏">Add to Favorites</span></button>
+      <button onclick="exportPalette()">📁 <span data-en="Export Palette" data-zh="导出调色板">Export Palette</span></button>
+    </div>
+
     </section>
 
     <section>
