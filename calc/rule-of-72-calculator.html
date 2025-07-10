@@ -1,107 +1,212 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rule of 72 Calculator / 72法则计算器</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Rule of 72 Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result {
+      margin-top: 1.5rem;
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 py-10 px-4">
-  <div class="max-w-lg mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold text-center mb-6">Rule of 72 Calculator / 72法则计算器</h1>
-
-    <div class="mb-4">
-      <label class="block font-semibold mb-1">Language / 语言</label>
-      <select id="lang" class="w-full border px-3 py-2 rounded">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Rule of 72 Calculator" data-zh="Utilivy - 72法则计算器">Utilivy - Rule of 72 Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div class="mb-4">
-      <label id="modeLabel" class="block font-semibold mb-1">Choose Mode / 选择模式</label>
-      <select id="mode" class="w-full border px-3 py-2 rounded">
-        <option value="rate">Know interest rate → Calculate years</option>
-        <option value="years">Know years → Calculate rate</option>
-      </select>
-    </div>
-
-    <div class="mb-4">
-      <label id="inputLabel" class="block font-semibold mb-1">Annual Interest Rate (%)</label>
-      <input type="number" id="input" class="w-full border px-3 py-2 rounded" step="any">
-    </div>
-
-    <button onclick="calculate()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded font-semibold">
-      Calculate / 计算
-    </button>
-
-    <div id="result" class="mt-6 text-center text-lg font-bold text-green-600"></div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label id="label-interest">Annual Interest Rate (%)</label>
+    <input type="number" id="interest" placeholder="e.g. 6" />
+
+    <label id="label-years">Years to Double</label>
+    <input type="number" id="years" placeholder="e.g. 12" />
+
+    <button class="calculate" onclick="calculate()" id="calcBtn">Calculate</button>
+
+    <div class="result" id="result"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const langMap = {
+    let lang = 'en';
+    const labels = {
       en: {
-        modeLabel: "Choose Mode",
-        modes: {
-          rate: "Know interest rate → Calculate years",
-          years: "Know years → Calculate rate"
-        },
-        inputLabels: {
-          rate: "Annual Interest Rate (%)",
-          years: "Number of Years"
-        },
-        results: {
-          rate: (v) => `It will take approximately ${v.toFixed(2)} years to double your money.`,
-          years: (v) => `You need an annual return of approximately ${v.toFixed(2)}% to double in that time.`
-        }
+        interest: "Annual Interest Rate (%)",
+        years: "Years to Double",
+        calcBtn: "Calculate",
+        resultByInterest: (rate, years) => `At ${rate}% interest, it will take approximately <strong>${years}</strong> years to double your money.`,
+        resultByYears: (years, rate) => `To double your money in ${years} years, you need approximately <strong>${rate}%</strong> annual interest rate.`,
+        resultError: "❗ Please enter either interest or years (not both or both empty)."
       },
       zh: {
-        modeLabel: "选择模式",
-        modes: {
-          rate: "知道利率 → 计算翻倍所需年数",
-          years: "知道年数 → 计算年回报率"
-        },
-        inputLabels: {
-          rate: "年回报率 (%)",
-          years: "年数"
-        },
-        results: {
-          rate: (v) => `大约需要 ${v.toFixed(2)} 年资金翻倍。`,
-          years: (v) => `需要年回报率约为 ${v.toFixed(2)}%。`
-        }
+        interest: "年利率 (%)",
+        years: "资金翻倍所需年数",
+        calcBtn: "计算",
+        resultByInterest: (rate, years) => `在 ${rate}% 的利率下，大约需要 <strong>${years}</strong> 年让资金翻倍。`,
+        resultByYears: (years, rate) => `若想在 ${years} 年内资金翻倍，年利率需约为 <strong>${rate}%</strong>。`,
+        resultError: "❗ 请输入利率或年数（只能填一个）。"
       }
     };
 
-    const $ = (id) => document.getElementById(id);
-
-    function updateText() {
-      const lang = $('lang').value;
-      const mode = $('mode').value;
-      $('modeLabel').innerText = langMap[lang].modeLabel;
-      $('mode').options[0].text = langMap[lang].modes.rate;
-      $('mode').options[1].text = langMap[lang].modes.years;
-      $('inputLabel').innerText = langMap[lang].inputLabels[mode];
+    function setLanguage(l) {
+      lang = l;
+      const t = labels[lang];
+      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
+      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
+      document.getElementById("label-interest").innerText = t.interest;
+      document.getElementById("label-years").innerText = t.years;
+      document.getElementById("calcBtn").innerText = t.calcBtn;
+      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
     }
-
-    $('lang').addEventListener('change', updateText);
-    $('mode').addEventListener('change', updateText);
 
     function calculate() {
-      const lang = $('lang').value;
-      const mode = $('mode').value;
-      const val = parseFloat($('input').value);
-      if (isNaN(val) || val <= 0) {
-        $('result').innerText = lang === 'zh' ? '请输入有效数字。' : 'Please enter a valid number.';
-        return;
+      const interest = parseFloat(document.getElementById("interest").value);
+      const years = parseFloat(document.getElementById("years").value);
+      const t = labels[lang];
+      let result = "";
+
+      if (!isNaN(interest) && isNaN(years)) {
+        const y = (72 / interest).toFixed(1);
+        result = t.resultByInterest(interest, y);
+      } else if (isNaN(interest) && !isNaN(years)) {
+        const r = (72 / years).toFixed(2);
+        result = t.resultByYears(years, r);
+      } else {
+        result = `<span style="color:red;">${t.resultError}</span>`;
       }
 
-      const result = mode === 'rate'
-        ? langMap[lang].results.rate(72 / val)
-        : langMap[lang].results.years(72 / val);
-      $('result').innerText = result;
+      document.getElementById("result").innerHTML = result;
     }
 
-    window.onload = updateText;
+    setLanguage(lang);
   </script>
 </body>
 </html>
