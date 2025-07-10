@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Utilivy - Retirement Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <title>Utilivy - Retirement Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -111,6 +111,12 @@
       font-weight: bold;
       font-size: 1.2rem;
     }
+    .quote {
+      margin-top: 1rem;
+      font-style: italic;
+      color: #555;
+      font-size: 0.95rem;
+    }
     footer {
       text-align: center;
       padding: 1rem;
@@ -138,30 +144,33 @@
   <div class="container">
     <div class="quote" id="quoteBox"></div>
 
-    <label id="label-currentAge" for="currentAge">Current Age</label>
+    <label id="label-currentAge">Current Age</label>
     <input type="number" id="currentAge" />
 
-    <label id="label-retirementAge" for="retirementAge">Retirement Age</label>
+    <label id="label-retirementAge">Retirement Age</label>
     <input type="number" id="retirementAge" />
 
-    <label id="label-currentSavings" for="currentSavings">Current Savings ($)</label>
+    <label id="label-lifeExpectancy">Expected Life Expectancy</label>
+    <input type="number" id="lifeExpectancy" />
+
+    <label id="label-currentSavings">Current Savings ($)</label>
     <input type="number" id="currentSavings" />
 
-    <label id="label-monthlyContribution" for="monthlyContribution">Monthly Contribution ($)</label>
+    <label id="label-monthlyContribution">Monthly Contribution ($)</label>
     <input type="number" id="monthlyContribution" />
 
-    <label id="label-annualInterest" for="annualInterest">Expected Annual Interest Rate (%)</label>
+    <label id="label-annualInterest">Expected Annual Interest Rate (%)</label>
     <input type="number" id="annualInterest" />
 
-    <label id="label-retirementMonthlyExpense" for="retirementMonthlyExpense">Expected Monthly Expense After Retirement ($)</label>
+    <label id="label-retirementMonthlyExpense">Expected Monthly Expense After Retirement ($)</label>
     <input type="number" id="retirementMonthlyExpense" />
 
-    <label id="label-retirementGoal" for="retirementGoal">Retirement Goal Amount ($)</label>
+    <label id="label-retirementGoal">Retirement Goal Amount ($) (optional)</label>
     <input type="number" id="retirementGoal" />
 
-    <button id="calculateBtn" onclick="calculateRetirement()">Calculate</button>
+    <button class="calculate" onclick="calculateRetirement()" id="calculateBtn">Calculate</button>
 
-    <div id="result"></div>
+    <div class="result" id="result"></div>
   </div>
 
   <div class="adsense-footer">
@@ -171,10 +180,9 @@
   <footer>
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
-  
+
   <script>
     let lang = 'en';
-
     const quotes = {
       en: [
         "Keep saving – your dream retirement is closer than you think.",
@@ -189,18 +197,16 @@
         "一点一滴的坚持，终将成为退休时的底气。"
       ]
     };
-
     const labels = {
       en: {
-        title: "Retirement Calculator",
-        language: "Language:",
         currentAge: "Current Age",
         retirementAge: "Retirement Age",
+        lifeExpectancy: "Expected Life Expectancy",
         currentSavings: "Current Savings ($)",
         monthlyContribution: "Monthly Contribution ($)",
         annualInterest: "Expected Annual Interest Rate (%)",
         retirementMonthlyExpense: "Expected Monthly Expense After Retirement ($)",
-        retirementGoal: "Retirement Goal Amount ($)",
+        retirementGoal: "Retirement Goal Amount ($) (optional)",
         calculateBtn: "Calculate",
         resultWarning: "⚠️ Warning: You may not reach your retirement goal.",
         resultSuccess: "🎉 Great! You’re on track.",
@@ -208,19 +214,17 @@
         suggestion: "📌 Suggestion: Increase your monthly savings by approx ",
         orDelay: " or delay retirement by about ",
         years: " year(s).",
-        suggestionTitle: "Suggested Retirement Goal: ",
-        backToHome: "Back to Home"
+        suggestionTitle: "Suggested Retirement Goal: "
       },
       zh: {
-        title: "退休计算器",
-        language: "语言：",
         currentAge: "当前年龄",
         retirementAge: "退休年龄",
+        lifeExpectancy: "预期寿命",
         currentSavings: "当前储蓄（$）",
         monthlyContribution: "每月储蓄（$）",
         annualInterest: "预计年利率（%）",
         retirementMonthlyExpense: "退休后的每月支出（$）",
-        retirementGoal: "退休目标金额（$）",
+        retirementGoal: "退休目标金额（$）（可选）",
         calculateBtn: "计算",
         resultWarning: "⚠️ 提示：您的退休目标可能无法实现。",
         resultSuccess: "🎉 太棒了！您已朝着目标稳步前进。",
@@ -228,28 +232,26 @@
         suggestion: "📌 建议：每月多存约 ",
         orDelay: " 或延迟退休约 ",
         years: " 年。",
-        suggestionTitle: "建议的退休目标金额：",
-        backToHome: "返回首页"
+        suggestionTitle: "建议的退休目标金额："
       }
     };
 
     function setLanguage(selectedLang) {
       lang = selectedLang;
       const l = labels[lang];
-      document.getElementById('title').innerText = l.title;
-      document.getElementById('language-label').innerText = l.language;
-      document.getElementById('homeText').innerText = l.backToHome;
-      document.getElementById('label-currentAge').innerText = l.currentAge;
-      document.getElementById('label-retirementAge').innerText = l.retirementAge;
-      document.getElementById('label-currentSavings').innerText = l.currentSavings;
-      document.getElementById('label-monthlyContribution').innerText = l.monthlyContribution;
-      document.getElementById('label-annualInterest').innerText = l.annualInterest;
-      document.getElementById('label-retirementMonthlyExpense').innerText = l.retirementMonthlyExpense;
-      document.getElementById('label-retirementGoal').innerText = l.retirementGoal;
-      document.getElementById('calculateBtn').innerText = l.calculateBtn;
-
-      const quote = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
-      document.getElementById('quoteBox').innerText = quote;
+      document.getElementById("label-currentAge").innerText = l.currentAge;
+      document.getElementById("label-retirementAge").innerText = l.retirementAge;
+      document.getElementById("label-lifeExpectancy").innerText = l.lifeExpectancy;
+      document.getElementById("label-currentSavings").innerText = l.currentSavings;
+      document.getElementById("label-monthlyContribution").innerText = l.monthlyContribution;
+      document.getElementById("label-annualInterest").innerText = l.annualInterest;
+      document.getElementById("label-retirementMonthlyExpense").innerText = l.retirementMonthlyExpense;
+      document.getElementById("label-retirementGoal").innerText = l.retirementGoal;
+      document.getElementById("calculateBtn").innerText = l.calculateBtn;
+      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
+      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
+      document.getElementById("quoteBox").innerText = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
+      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
     }
 
     function formatCurrency(num) {
@@ -257,43 +259,47 @@
     }
 
     function calculateRetirement() {
-      const currentAge = parseInt(document.getElementById('currentAge').value);
-      const retirementAge = parseInt(document.getElementById('retirementAge').value);
-      const currentSavings = parseFloat(document.getElementById('currentSavings').value);
-      const monthlyContribution = parseFloat(document.getElementById('monthlyContribution').value);
-      const annualInterest = parseFloat(document.getElementById('annualInterest').value);
-      const retirementMonthlyExpense = parseFloat(document.getElementById('retirementMonthlyExpense').value);
-      const retirementGoal = parseFloat(document.getElementById('retirementGoal').value);
+      const c = (id) => parseFloat(document.getElementById(id).value);
+      const currentAge = c('currentAge');
+      const retirementAge = c('retirementAge');
+      const lifeExpectancy = c('lifeExpectancy');
+      const currentSavings = c('currentSavings');
+      const monthlyContribution = c('monthlyContribution');
+      const annualInterest = c('annualInterest');
+      const retirementMonthlyExpense = c('retirementMonthlyExpense');
+      let retirementGoal = c('retirementGoal');
 
-      if ([currentAge, retirementAge, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense, retirementGoal].some(isNaN)) {
+      if ([currentAge, retirementAge, lifeExpectancy, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense].some(isNaN)) {
         document.getElementById('result').innerText = labels[lang].resultError;
         return;
       }
 
       const monthsToRetire = (retirementAge - currentAge) * 12;
-      const monthlyRate = annualInterest / 100 / 12;
+      const monthlyInterestRate = annualInterest / 100 / 12;
 
       let totalSavings = currentSavings;
       for (let i = 0; i < monthsToRetire; i++) {
         totalSavings += monthlyContribution;
-        totalSavings *= (1 + monthlyRate);
+        totalSavings *= (1 + monthlyInterestRate);
       }
 
-      const suggestedGoal = retirementMonthlyExpense * 12 * 20;
+      if (isNaN(retirementGoal)) {
+        retirementGoal = retirementMonthlyExpense * 12 * (lifeExpectancy - retirementAge);
+      }
 
-      let result = `${labels[lang].suggestionTitle} <strong>${formatCurrency(suggestedGoal)}</strong><br/><br/>`;
-      result += `${lang === 'zh' ? '到' : 'By'} ${retirementAge} ${lang === 'zh' ? '岁时，您预计将积累约 ' : ', you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
+      const l = labels[lang];
+      let result = `${l.suggestionTitle}<strong>${formatCurrency(retirementGoal)}</strong><br/><br/>`;
+      result += `${lang === 'zh' ? '到' : 'By'} ${retirementAge}, ${lang === 'zh' ? '您预计将积累约 ' : 'you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
 
       if (totalSavings < retirementGoal) {
         const gap = retirementGoal - totalSavings;
         const morePerMonth = gap / monthsToRetire;
-        const moreYears = Math.ceil(gap / (monthlyContribution * 12));
-        result += `<br/><span style="color:red;">${labels[lang].resultWarning}<br/>${labels[lang].suggestion}${formatCurrency(morePerMonth)}${labels[lang].orDelay}${moreYears}${labels[lang].years}</span>`;
+        result += `<br/><span style="color:red;">${l.resultWarning}<br/>${l.suggestion}${formatCurrency(morePerMonth)}${l.orDelay}1${l.years}</span>`;
       } else {
-        result += `<br/><span style="color:green;">${labels[lang].resultSuccess}</span>`;
+        result += `<br/><span style="color:green;">${l.resultSuccess}</span>`;
       }
 
-      document.getElementById('result').innerHTML = result;
+      document.getElementById("result").innerHTML = result;
     }
 
     setLanguage(lang);
