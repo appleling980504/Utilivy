@@ -43,13 +43,23 @@
       display: flex;
       gap: 0.5rem;
     }
-    .lang-switch button{
-      background: var(--primary-color);
-      color:white;
-      border:none;
-      border-radius:6px;
-      padding:0.4rem 0.8rem;
-      cursor:pointer;
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration:none;
@@ -107,11 +117,17 @@
       font-size:1rem;
       margin-top:1rem;
     }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1 data-en="Merge PDF Files" data-zh="合并 PDF 文件">Merge PDF Files</h1>
+    <h1 data-en="Utilivy - Merge PDF Files" data-zh="Utilivy - 合并 PDF 文件">Merge PDF Files</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -120,6 +136,10 @@
       <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
   </header>
+  
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
   <div class="container">
     <div id="dropZone" data-en="Drag & drop PDF files here or click to select" data-zh="拖放 PDF 文件到这里或点击选择">
@@ -130,7 +150,14 @@
     <button class="calculate" onclick="mergePDFs()">Merge & Download PDF</button>
   </div>
 
-  <footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
+  
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+  
+   <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
 
   <script>
     setLanguage('en');
