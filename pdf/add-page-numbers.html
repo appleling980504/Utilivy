@@ -3,46 +3,162 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Page Numbers - ToolNest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Add Page Numbers to PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">🔢 Add Page Numbers to PDF</h1>
-
-    <div class="bg-white p-6 rounded shadow-md space-y-4">
-      <input type="file" id="pdfFile" accept="application/pdf" />
-      <button id="addPageBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Page Numbers</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Add Page Numbers to PDF" data-zh="Utilivy - PDF 添加页码">Utilivy - Add Page Numbers to PDF</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div id="output" class="mt-6"></div>
-  </main>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-  <script type="module">
-    import { PDFDocument, rgb, StandardFonts } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+  <div class="container">
+    <label for="pdfFile" data-en="Choose a PDF file:" data-zh="选择 PDF 文件：">Choose a PDF file:</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
 
+    <button class="calculate" onclick="addPageNumbers()">🧾 <span data-en="Add Page Numbers" data-zh="添加页码">Add Page Numbers</span></button>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
+  <script>
     async function addPageNumbers() {
       const fileInput = document.getElementById('pdfFile');
-      const output = document.getElementById('output');
-      output.innerHTML = '';
-
-      if (!fileInput.files.length) return alert("Please upload a PDF.");
+      if (!fileInput.files.length) {
+        alert('Please select a PDF file.');
+        return;
+      }
 
       const file = fileInput.files[0];
       const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
 
-      pages.forEach((page, i) => {
+      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+
+      pages.forEach((page, index) => {
         const { width, height } = page.getSize();
-        const text = `Page ${i + 1}`;
-        page.drawText(text, {
-          x: width / 2 - font.widthOfTextAtSize(text, 12) / 2,
+        page.drawText(`Page ${index + 1} of ${pages.length}`, {
+          x: width - 120,
           y: 20,
-          size: 12,
-          font,
-          color: rgb(0.3, 0.3, 0.3),
+          size: 10,
+          font: font,
+          color: PDFLib.rgb(0.2, 0.2, 0.2)
         });
       });
 
@@ -50,10 +166,17 @@
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
-      output.innerHTML = `<a href="${url}" download="numbered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Numbered PDF</a>`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'numbered.pdf';
+      link.click();
     }
 
-    document.getElementById('addPageBtn').addEventListener('click', addPageNumbers);
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
   </script>
 </body>
 </html>
