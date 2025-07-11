@@ -33,7 +33,6 @@
     header h1 {
       margin: 0;
       font-size: 1.5rem;
-      line-height: 1;
     }
     .header-right {
       display: flex;
@@ -62,7 +61,6 @@
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
-      font-size: 0.95rem;
     }
     .adsense-banner,
     .adsense-footer {
@@ -79,50 +77,60 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    .drop-zone {
-      border: 2px dashed #ccc;
-      padding: 2rem;
-      text-align: center;
-      margin-bottom: 1rem;
-      border-radius: 10px;
-      cursor: pointer;
-      background: #fafafa;
-    }
-    .preview-grid {
+    #thumbnails {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin: 1rem 0;
     }
-    .page-preview {
-      width: 150px;
-      position: relative;
-      border: 2px solid #ccc;
+    .thumb {
+      width: 120px;
+      text-align: center;
+      border: 2px dashed #ccc;
       border-radius: 8px;
-      overflow: hidden;
-      background: white;
+      padding: 0.5rem;
+      background: #f9f9f9;
       cursor: move;
+      position: relative;
     }
-    .page-preview.dragging {
-      opacity: 0.4;
-    }
-    .page-preview canvas {
+    .thumb img {
       width: 100%;
-      display: block;
+      border-radius: 4px;
+    }
+    .thumb .page-num {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      background: #4f46e5;
+      color: white;
+      font-size: 12px;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+    .thumb .remove-btn {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      background: red;
+      color: white;
+      border: none;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
     }
     button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.75rem 1rem;
+      padding: 0.75rem 1.2rem;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       margin-top: 1rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
+      margin-right: 0.5rem;
     }
     footer {
       text-align: center;
@@ -144,11 +152,123 @@
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
   <div class="container">
-    <div class="drop-zone" onclick="fileInput.click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
-      <p data-en="Click or drop PDF file here" data-zh="点击或拖放 PDF 文件至此">Click or drop PDF file here</p>
-      <input type="
+    <input type="file" id="pdfInput" accept="application/pdf" />
+    <div id="thumbnails"></div>
+    <button class="calculate" onclick="downloadReordered()">Download Reordered PDF</button>
+    <button class="calculate" onclick="resetOrder()">Reset Order</button>
+  </div>
+
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
+  <script>
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
+    setLanguage('en');
+
+    let originalPdfDoc = null;
+    let pageOrder = [];
+    let totalPages = 0;
+
+    document.getElementById('pdfInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const arrayBuffer = await file.arrayBuffer();
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
+      originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+      const container = document.getElementById('thumbnails');
+      container.innerHTML = '';
+      pageOrder = [];
+      totalPages = pdf.numPages;
+
+      for (let i = 0; i < pdf.numPages; i++) {
+        const page = await pdf.getPage(i + 1);
+        const viewport = page.getViewport({ scale: 0.4 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        const context = canvas.getContext('2d');
+        await page.render({ canvasContext: context, viewport }).promise;
+
+        const div = document.createElement('div');
+        div.className = 'thumb';
+        div.draggable = true;
+        div.dataset.index = i;
+        div.innerHTML = `
+          <span class="page-num">${i + 1}</span>
+          <button class="remove-btn" onclick="removePage(event, ${i})">×</button>
+          <img src="${canvas.toDataURL()}" />
+        `;
+        container.appendChild(div);
+        pageOrder.push(i);
+      }
+      makeSortable();
+    });
+
+    function makeSortable() {
+      const container = document.getElementById('thumbnails');
+      let dragged = null;
+
+      container.querySelectorAll('.thumb').forEach(el => {
+        el.addEventListener('dragstart', () => dragged = el);
+        el.addEventListener('dragover', e => e.preventDefault());
+        el.addEventListener('drop', e => {
+          e.preventDefault();
+          if (dragged && dragged !== el) {
+            container.insertBefore(dragged, el);
+            updateOrder();
+          }
+        });
+      });
+    }
+
+    function updateOrder() {
+      const thumbs = document.querySelectorAll('.thumb');
+      pageOrder = Array.from(thumbs).map(div => parseInt(div.dataset.index));
+    }
+
+    function removePage(event, index) {
+      event.stopPropagation();
+      const thumb = event.target.closest('.thumb');
+      thumb.remove();
+      pageOrder = pageOrder.filter(i => i !== index);
+    }
+
+    async function downloadReordered() {
+      if (!originalPdfDoc || pageOrder.length === 0) return alert('Please upload a PDF first.');
+      const newPdf = await PDFLib.PDFDocument.create();
+      const copiedPages = await newPdf.copyPages(originalPdfDoc, pageOrder);
+      copiedPages.forEach(p => newPdf.addPage(p));
+      const bytes = await newPdf.save();
+
+      const blob = new Blob([bytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'reordered.pdf';
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function resetOrder() {
+      if (!originalPdfDoc || totalPages === 0) return;
+      pageOrder = Array.from({ length: totalPages }, (_, i) => i);
+      const thumbs = Array.from(document.querySelectorAll('.thumb'));
+      thumbs.sort((a, b) => parseInt(a.dataset.index) - parseInt(b.dataset.index));
+      const container = document.getElementById('thumbnails');
+      thumbs.forEach(thumb => container.appendChild(thumb));
+    }
+  </script>
+</body>
+</html>
