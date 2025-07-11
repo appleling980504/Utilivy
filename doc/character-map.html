@@ -1,114 +1,230 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>字符映射表 - Character Map</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet"/>
+  <title>Utilivy - Character Map</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
-    .symbol-grid {
-      display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      grid-auto-rows: 64px;
-      gap: 8px;
-      max-height: 660px;
-      overflow-y: auto;
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    .symbol-btn {
-      font-size: 1.75rem;
-      border: 1px solid #ddd;
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
       display: flex;
       align-items: center;
-      justify-content: center;
-      border-radius: 0.5rem;
-      background: #fff;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
       cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    h2 {
+      font-size: 1.2rem;
+      margin-top: 2rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+    }
+    .char-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+      gap: 8px;
+      margin: 1rem 0;
+    }
+    .char-cell {
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: #f9fafb;
+      font-size: 1.2rem;
       transition: background 0.2s;
     }
-    .symbol-btn:hover {
-      background: #f3f4f6;
+    .char-cell:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    .copied {
+      color: green;
+      font-size: 0.9rem;
+      text-align: center;
+      margin-top: 0.5rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-800 p-4 min-h-screen">
-  <div class="max-w-6xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">字符映射表 / Character Map</h1>
-
-    <!-- 分类按钮 -->
-    <div class="flex flex-wrap gap-2 mb-4">
-      <button onclick="switchCategory('all')" class="bg-blue-200 hover:bg-blue-300 px-3 py-1 rounded">全部</button>
-      <button onclick="switchCategory('emoji')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">Emoji</button>
-      <button onclick="switchCategory('punctuation')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">标点</button>
-      <button onclick="switchCategory('math')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">数学</button>
-      <button onclick="switchCategory('currency')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">货币</button>
-      <button onclick="switchCategory('arrows')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">箭头</button>
-      <button onclick="switchCategory('logic')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">逻辑</button>
-      <button onclick="switchCategory('academic')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">学术</button>
-      <button onclick="switchCategory('units')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">单位</button>
-      <button onclick="switchCategory('astrology')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">星座</button>
-      <button onclick="switchCategory('pictographs')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">象形</button>
-      <button onclick="switchCategory('fancy')" class="bg-blue-100 hover:bg-blue-200 px-3 py-1 rounded">装饰</button>
-      <button onclick="switchCategory('favorites')" class="bg-yellow-200 hover:bg-yellow-300 px-3 py-1 rounded">⭐ 收藏</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Character Map" data-zh="Utilivy - 字符映射表">Utilivy - Character Map</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <!-- 符号网格 -->
-    <div id="symbolGrid" class="symbol-grid mb-6"></div>
-
-    <!-- 输入框 -->
-    <textarea id="copyBox" rows="3" class="w-full p-3 border rounded" placeholder="点击上方符号后自动复制，可粘贴在此或其他地方"></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container" id="charMapContainer">
+    <div id="output" class="copied"></div>
+
+    <h2>🔤 Letters & Numbers</h2>
+    <div class="char-grid">
+      ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
+        .split('').map(c => `<div class="char-cell" onclick="copyChar('${c}')">${c}</div>`).join('')
+    </div>
+
+    <h2>➕ Math Symbols</h2>
+    <div class="char-grid">
+      <div class="char-cell" onclick="copyChar('±')">±</div>
+      <div class="char-cell" onclick="copyChar('÷')">÷</div>
+      <div class="char-cell" onclick="copyChar('×')">×</div>
+      <div class="char-cell" onclick="copyChar('√')">√</div>
+      <div class="char-cell" onclick="copyChar('∑')">∑</div>
+      <div class="char-cell" onclick="copyChar('∏')">∏</div>
+      <div class="char-cell" onclick="copyChar('∫')">∫</div>
+      <div class="char-cell" onclick="copyChar('∞')">∞</div>
+      <div class="char-cell" onclick="copyChar('≈')">≈</div>
+    </div>
+
+    <h2>💱 Currency</h2>
+    <div class="char-grid">
+      <div class="char-cell" onclick="copyChar('$')">$</div>
+      <div class="char-cell" onclick="copyChar('€')">€</div>
+      <div class="char-cell" onclick="copyChar('£')">£</div>
+      <div class="char-cell" onclick="copyChar('¥')">¥</div>
+      <div class="char-cell" onclick="copyChar('₩')">₩</div>
+      <div class="char-cell" onclick="copyChar('₹')">₹</div>
+    </div>
+
+    <h2>➡️ Arrows</h2>
+    <div class="char-grid">
+      <div class="char-cell" onclick="copyChar('→')">→</div>
+      <div class="char-cell" onclick="copyChar('←')">←</div>
+      <div class="char-cell" onclick="copyChar('↑')">↑</div>
+      <div class="char-cell" onclick="copyChar('↓')">↓</div>
+      <div class="char-cell" onclick="copyChar('↔')">↔</div>
+      <div class="char-cell" onclick="copyChar('⇒')">⇒</div>
+      <div class="char-cell" onclick="copyChar('⇔')">⇔</div>
+    </div>
+
+    <h2>✨ Decorations</h2>
+    <div class="char-grid">
+      <div class="char-cell" onclick="copyChar('★')">★</div>
+      <div class="char-cell" onclick="copyChar('☆')">☆</div>
+      <div class="char-cell" onclick="copyChar('♥')">♥</div>
+      <div class="char-cell" onclick="copyChar('♦')">♦</div>
+      <div class="char-cell" onclick="copyChar('♣')">♣</div>
+      <div class="char-cell" onclick="copyChar('♠')">♠</div>
+      <div class="char-cell" onclick="copyChar('☀')">☀</div>
+      <div class="char-cell" onclick="copyChar('☁')">☁</div>
+      <div class="char-cell" onclick="copyChar('☂')">☂</div>
+    </div>
+
+    <h2>😃 Emoji</h2>
+    <div class="char-grid">
+      <div class="char-cell" onclick="copyChar('😀')">😀</div>
+      <div class="char-cell" onclick="copyChar('😂')">😂</div>
+      <div class="char-cell" onclick="copyChar('😍')">😍</div>
+      <div class="char-cell" onclick="copyChar('👍')">👍</div>
+      <div class="char-cell" onclick="copyChar('🙏')">🙏</div>
+      <div class="char-cell" onclick="copyChar('🎉')">🎉</div>
+      <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
+      <div class="char-cell" onclick="copyChar('💯')">💯</div>
+    </div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const symbols = {
-      punctuation: ['•', '‽', '…', '—', '–', '·', '※', '§', '¶', '„', '“', '”', '‘', '’', '‚', '‹', '›', '«', '»', '¡'],
-      math: ['±', '×', '÷', '≈', '≠', '≤', '≥', '√', '∞', '∑', '∏', '∫', '∂', '∇', '∈', '∩', '∪', '∅', '⊂', '⊃'],
-      currency: ['$', '€', '£', '¥', '₹', '₩', '₱', '₽', '฿', '₴', '₦', '₪', '₫', '₭', '₡', '₲', '₵', '₮', '₠', '₳'],
-      arrows: ['→', '←', '↑', '↓', '↔', '↕', '⇒', '⇐', '⇑', '⇓', '⟶', '⟵', '⟹', '⟸', '⇄', '⇆', '↻', '↺', '↩', '↪'],
-      emoji: ['☺️', '😂', '❤️', '😍', '🤔', '👍', '🔥', '🎉', '😎', '😢', '😡', '🙏', '🤯', '🤗', '🥳', '😭', '👀', '💡', '😴', '👑'],
-      academic: ['∴', '∵', '∝', '⊕', '⊗', '⊥', '⋅', '∇', 'ℏ', 'ℓ', '℮', '⊙', '⊚', '⊛', '◉', '⦿', '≜', '≝', '≞'],
-      logic: ['⊤', '⊥', '⊢', '⊨', '¬', '∧', '∨', '⊻', '⇒', '⇔', '∃', '∀', '∴', '⊕', '⊗', '⊂', '⊃', '∈', '∉', '∅'],
-      units: ['℃', '℉', 'ℓ', '‰', '‱', 'Ω', '℧', 'µ', 'Å', '㎜', '㎝', '㎞', '㎎', '㎏', '㏄', '㏏', '㎐', '㎲', '㎍'],
-      astrology: ['♈', '♉', '♊', '♋', '♌', '♍', '♎', '♏', '♐', '♑', '♒', '♓', '☉', '☽', '♁', '☿', '♀', '♂', '♃', '♄'],
-      pictographs: ['☀', '☁', '☂', '☃', '☕', '♨', '⚠', '⚡', '✈', '☠', '☣', '☯', '☮', '⚓', '⚖', '⚔', '⚙', '♻', '☘', '⚰'],
-      fancy: ['❀', '❁', '✿', '❃', '❄', '❆', '✪', '✯', '✰', '✶', '✷', '✸', '✹', '❈', '❉', '❊', '✧', '✦', '✩', '✫'],
-      favorites: []
-    };
-
-    let current = 'emoji';
-    const grid = document.getElementById('symbolGrid');
-    const copyBox = document.getElementById('copyBox');
-
-    function render(list) {
-      grid.innerHTML = '';
-      list.forEach(symbol => {
-        const btn = document.createElement('div');
-        btn.className = 'symbol-btn';
-        btn.textContent = symbol;
-        btn.title = '点击复制';
-        btn.onclick = () => {
-          navigator.clipboard.writeText(symbol);
-          copyBox.value += symbol;
-          if (!symbols.favorites.includes(symbol)) {
-            symbols.favorites.push(symbol);
-          }
-        };
-        grid.appendChild(btn);
+    function copyChar(char) {
+      navigator.clipboard.writeText(char).then(() => {
+        const output = document.getElementById('output');
+        output.textContent = `Copied: ${char}`;
+        setTimeout(() => { output.textContent = ''; }, 1500);
       });
     }
 
-    function switchCategory(cat) {
-      current = cat;
-      if (cat === 'all') {
-        const merged = Object.keys(symbols)
-          .filter(k => k !== 'favorites')
-          .flatMap(k => symbols[k]);
-        render(merged);
-      } else {
-        render(symbols[cat]);
-      }
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
     }
-
-    switchCategory('emoji');
   </script>
 </body>
 </html>
