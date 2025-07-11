@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Extract Images from PDF</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+  </script>
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -80,14 +83,18 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    input[type="file"] {
+    canvas {
+      max-width: 100%;
       margin: 1rem 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
     }
     img {
       max-width: 100%;
-      height: auto;
-      margin: 0.5rem 0;
-      border: 1px solid #ccc;
+      margin-top: 0.5rem;
       border-radius: 8px;
     }
     footer {
@@ -138,38 +145,29 @@
     document.getElementById('pdfFile').addEventListener('change', async function (e) {
       const file = e.target.files[0];
       if (!file) return;
+
       const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const images = [];
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
 
-      for (const page of pdfDoc.getPages()) {
-        const xObjects = page.node.Resources().XObject();
-        if (!xObjects) continue;
-        const keys = xObjects.keys();
-        for (const key of keys) {
-          const xObject = xObjects.get(key);
-          const dict = xObject.dict || xObject;
-          const subtype = dict.get(PDFLib.PDFName.of('Subtype'));
-          if (subtype && subtype.name === 'Image') {
-            const imgBytes = await xObject.decode();
-            const base64 = URL.createObjectURL(new Blob([imgBytes]));
-            images.push(base64);
-          }
-        }
-      }
+      const imageContainer = document.getElementById('imageContainer');
+      imageContainer.innerHTML = '';
 
-      const container = document.getElementById('imageContainer');
-      container.innerHTML = '';
-      if (images.length === 0) {
-        container.innerHTML = '<p>No images found in PDF.</p>';
-        return;
-      }
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const scale = 2;
+        const viewport = page.getViewport({ scale });
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
 
-      images.forEach(src => {
+        await page.render({ canvasContext: context, viewport }).promise;
+
         const img = document.createElement('img');
-        img.src = src;
-        container.appendChild(img);
-      });
+        img.src = canvas.toDataURL('image/jpeg');
+        imageContainer.appendChild(img);
+      }
     });
   </script>
 </body>
