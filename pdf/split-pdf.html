@@ -165,18 +165,27 @@ function addTask(){
 }
 
 function parseRanges(text){
-  const parts=text.split(',');
-  const res=[];
-  const total=pdfDoc.getPageCount();
+  const parts = text.split(',');
+  const res = [];
+  const total = pdfDoc.getPageCount();
   for(const p of parts){
-    const m=p.match(/^(\\d+)(?:-(\\d+))?$/);
-    if(m){
-      const a=+m[1], b=m[2]?+m[2]:a;
-      if(a>=1 && b<=total && a<=b) res.push([a-1,b-1]);
+    const match = p.match(/^(\d+)(?:-(\d+))?$/);
+    if(match){
+      const a = parseInt(match[1], 10);
+      const b = match[2] ? parseInt(match[2], 10) : a;
+      if (a < 1 || b > total || a > b) {
+        alert(`Invalid range: ${p} (PDF has ${total} pages)`);
+        return [];
+      }
+      res.push([a-1, b-1]); // zero-based index for pdf-lib
+    } else {
+      alert(`Invalid format: ${p}`);
+      return [];
     }
   }
   return res;
 }
+
 
 function renderTasks(){
   const ul=document.getElementById('taskList');
