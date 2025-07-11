@@ -12,7 +12,9 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -22,61 +24,147 @@
     header {
       background: white;
       padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
       gap: 1rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    header h1 { margin: 0; font-size: 1.5rem; }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
     .lang-switch button {
-      padding:0.4rem 0.8rem; font-size:0.85rem; border:none; border-radius:6px;
-      cursor:pointer; background:var(--primary-color); color:white;
-      width:42px; height:32px;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width:800px; margin:2rem auto; padding:2rem;
-      background:#fff; border-radius:12px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    label { display:block; margin-top:1rem; font-weight:500;}
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
     input {
-      width:100%; padding:0.75rem; margin-top:0.5rem;
-      border:1px solid #d1d5db; border-radius:8px; font-size:1rem;
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
     }
     button.calculate {
-      background:var(--primary-color); color:white; border:none;
-      padding:0.75rem 1rem; border-radius:8px; cursor:pointer;
-      font-size:1rem; margin-top:1.5rem; width:100%;
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+      width: 100%;
     }
-    .result, canvas, table { margin-top:1.5rem; width:100%; }
-    table { border-collapse:collapse; font-size:0.9rem; }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    .result, canvas, table {
+      margin-top: 1.5rem;
+      width: 100%;
+    }
+    table {
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
     th, td {
-      border:1px solid #d1d5db; text-align:right; padding:0.5rem;
+      border: 1px solid #d1d5db;
+      text-align: right;
+      padding: 0.5rem;
     }
-    th { background:#f9fafb; }
-    .summary { margin-top:1rem; font-weight:500; }
+    th {
+      background: #f9fafb;
+    }
+    .summary {
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
   </style>
 </head>
 <body>
   <header>
-    <h1>Utilivy - Mortgage Calculator</h1>
+    <h1 data-en="Utilivy - Mortgage Calculator" data-zh="Utilivy - 房贷计算器">Utilivy - Mortgage Calculator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <label>Property Price (RM):</label>
+    <label data-en="Property Price (RM):" data-zh="房产总价 (RM)：">Property Price (RM):</label>
     <input type="number" id="loan" value="500000" />
 
-    <label>Interest Rate (% per annum):</label>
+    <label data-en="Interest Rate (% per annum):" data-zh="年利率（％）：">Interest Rate (% per annum):</label>
     <input type="number" id="rate" value="4.5" step="0.01" />
 
-    <label>Loan Term (years):</label>
+    <label data-en="Loan Term (years):" data-zh="贷款期限（年）：">Loan Term (years):</label>
     <input type="number" id="years" value="30" />
 
-    <label>MRTA / MLTA Insurance (% of loan):</label>
+    <label data-en="MRTA / MLTA Insurance (% of loan):" data-zh="保险（贷款百分比）：">MRTA / MLTA Insurance (% of loan):</label>
     <input type="number" id="mrta" value="5" />
 
-    <label>Early Repayment Schedule (month:amount, e.g. 12:5000, 24-33:1000)：</label>
+    <label data-en="Early Repayment Schedule (e.g. 12-24:1000):" data-zh="提前还款计划（如12-24:1000）：">Early Repayment Schedule (e.g. 12-24:1000):</label>
     <input type="text" id="early" placeholder="12-21:1000, 36:5000"/>
 
     <button class="calculate" onclick="calculate()">Calculate</button>
@@ -86,7 +174,21 @@
     <div id="schedule"></div>
   </div>
 
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+        el.textContent = el.dataset[lang];
+      });
+    }
+
     function parseEarlyRepayment(input) {
       const early = {};
       input.split(',').forEach(part => {
