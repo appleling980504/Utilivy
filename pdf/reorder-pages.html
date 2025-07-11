@@ -178,14 +178,16 @@
     let pageOrder = [];
     let totalPages = 0;
 
-    document.getElementById('pdfInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+   document.getElementById('pdfInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdf = await loadingTask.promise;
-      originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+  const arrayBuffer = await file.arrayBuffer();  // ✅ 只调用一次
+
+  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+  const pdf = await loadingTask.promise;
+  originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer); // ✅ 使用相同 buffer
+
 
       const container = document.getElementById('thumbnails');
       container.innerHTML = '';
