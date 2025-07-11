@@ -3,62 +3,185 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Split PDF by Pages - Toolnest</title>
+  <title>Utilivy - Split PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 600px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input[type="number"], input[type="file"] {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+    .output-links a {
+      display: block;
+      margin-top: 1rem;
+      color: var(--primary-color);
+      font-weight: bold;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans p-6">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">📄 Split PDF by Pages</h1>
-    <input type="file" id="pdfFile" accept="application/pdf" class="mb-4"/>
-    <div id="pageCountInfo" class="mb-4"></div>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Split PDF" data-zh="Utilivy - 拆分 PDF">Utilivy - Split PDF</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-    <label class="block mb-2">Enter page range (e.g., 1-3):</label>
-    <input type="text" id="pageRange" class="border p-2 w-full mb-4" placeholder="1-3" />
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
-    <button onclick="splitPDF()" class="bg-blue-600 text-white px-4 py-2 rounded">Split PDF</button>
+  <div class="container">
+    <label for="pdfFile" data-en="Select PDF file" data-zh="选择 PDF 文件">Select PDF file</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
+
+    <label for="range" data-en="Split every N pages" data-zh="每 N 页拆分">Split every N pages</label>
+    <input type="number" id="range" min="1" value="1" />
+
+    <button class="calculate" onclick="splitPDF()">Split PDF</button>
+
+    <div class="output-links" id="outputLinks"></div>
   </div>
 
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    let originalPdfBytes;
-
-    document.getElementById('pdfFile').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      originalPdfBytes = await file.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(originalPdfBytes);
-      const totalPages = pdfDoc.getPageCount();
-
-      document.getElementById('pageCountInfo').textContent = `Total pages: ${totalPages}`;
-    });
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
+    setLanguage('en');
 
     async function splitPDF() {
-      const range = document.getElementById('pageRange').value.trim();
-      if (!range || !originalPdfBytes) {
-        alert("Please select a PDF and enter page range.");
+      const fileInput = document.getElementById('pdfFile');
+      const range = parseInt(document.getElementById('range').value);
+      const output = document.getElementById('outputLinks');
+      output.innerHTML = '';
+
+      if (!fileInput.files[0] || range < 1) {
+        alert("Please upload a PDF and enter a valid number.");
         return;
       }
 
-      const [startStr, endStr] = range.split('-');
-      const start = parseInt(startStr, 10) - 1;
-      const end = parseInt(endStr, 10) - 1;
+      const arrayBuffer = await fileInput.files[0].arrayBuffer();
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const totalPages = pdfDoc.getPageCount();
 
-      const sourcePdf = await PDFLib.PDFDocument.load(originalPdfBytes);
-      const newPdf = await PDFLib.PDFDocument.create();
+      let part = 1;
+      for (let i = 0; i < totalPages; i += range) {
+        const newPdf = await PDFLib.PDFDocument.create();
+        const pagesToCopy = await newPdf.copyPages(pdfDoc, [...Array(range).keys()].map(j => i + j).filter(p => p < totalPages));
+        pagesToCopy.forEach(p => newPdf.addPage(p));
 
-      for (let i = start; i <= end; i++) {
-        const [copiedPage] = await newPdf.copyPages(sourcePdf, [i]);
-        newPdf.addPage(copiedPage);
+        const pdfBytes = await newPdf.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `split-part-${part++}.pdf`;
+        link.textContent = `Download split-part-${part - 1}.pdf`;
+        output.appendChild(link);
       }
-
-      const newPdfBytes = await newPdf.save();
-      const blob = new Blob([newPdfBytes], { type: "application/pdf" });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "split.pdf";
-      link.click();
     }
   </script>
 </body>
