@@ -95,7 +95,7 @@
       resize: vertical;
       margin-top: 1rem;
     }
-    select, button {
+    select {
       padding: 0.5rem 1rem;
       margin-top: 1rem;
       font-size: 1rem;
@@ -146,7 +146,7 @@
     <label for="inputText" data-en="Paste Your Code:" data-zh="粘贴你的代码：">Paste Your Code:</label>
     <textarea id="inputText" placeholder="Paste or type your content..."></textarea>
 
-    <button onclick="formatContent()" data-en="Format" data-zh="格式化">Format</button>
+    <button class="calculate" onclick="formatContent()" data-en="Format" data-zh="格式化">Format</button>
 
     <label for="outputText" data-en="Formatted Output:" data-zh="格式化输出：">Formatted Output:</label>
     <textarea id="outputText" readonly></textarea>
