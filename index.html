@@ -107,14 +107,17 @@
     </div>
   </footer>
 
-  <script>
-function setLang(lang) {
-  document.querySelectorAll('[data-en]').forEach(el => {
-    el.textContent = el.getAttribute(`data-${lang}`);
+<script>
+  function setLang(lang) {
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = el.getAttribute(`data-${lang}`);
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setLang('en'); // 初始语言
   });
-}
-    
-    setLang('en');
-  </script>
+</script>
+
 </body>
 </html>
