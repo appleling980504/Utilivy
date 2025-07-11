@@ -231,8 +231,8 @@ async function processTasks(){
     const li=document.createElement('li');
     const chk=document.createElement('input'); chk.type='checkbox'; chk.checked=true;
     const a=document.createElement('a'); a.href=url;
-    a.textContent=\`Part \${i+1} (\${tasks[i].map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')})\`;
-    a.download=\`part-\${i+1}.pdf\`;
+    a.textContent=`Part ${i+1} (${tasks[i].map(p=>`${p[0]+1}-${p[1]+1}`).join(', ')})`;
+    a.download=`part-${i+1}.pdf`;
     li.appendChild(chk); li.appendChild(a);
     preview.appendChild(li);
   }
