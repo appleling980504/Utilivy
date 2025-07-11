@@ -3,92 +3,194 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Document Formatter / 清洁器</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Document Formatter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    textarea {
+      width: 100%;
+      height: 250px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: monospace;
+      resize: vertical;
+    }
+    select, button {
+      padding: 0.5rem 1rem;
+      margin-top: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+    }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      cursor: pointer;
+      border: none;
+    }
+    button:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 min-h-screen p-4">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-2xl font-bold" id="title">Document Formatter / 清洁器</h1>
-      <select id="lang" class="border rounded px-2 py-1 text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Document Formatter" data-zh="Utilivy - 文本格式化工具">Utilivy - Document Formatter</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <textarea id="inputText" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Paste your content here..."></textarea>
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-sm">
-      <button onclick="cleanHTML()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Remove HTML Tags</button>
-      <button onclick="cleanSpaces()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Trim Whitespace</button>
-      <button onclick="cleanInvisible()" class="bg-blue-500 hover:bg-blue-600 text-white rounded px-3 py-2">Remove Invisible Chars</button>
-      <button onclick="copyOutput()" class="bg-green-500 hover:bg-green-600 text-white rounded px-3 py-2">Copy Output</button>
-    </div>
+  <div class="container">
+    <label for="formatType" data-en="Select Document Type:" data-zh="选择文档类型：">Select Document Type:</label>
+    <select id="formatType">
+      <option value="json">JSON</option>
+      <option value="html">HTML</option>
+      <option value="xml">XML</option>
+      <option value="css">CSS</option>
+      <option value="js">JavaScript</option>
+    </select>
 
-    <textarea id="outputText" rows="10" class="w-full border rounded p-3 text-sm mb-4" placeholder="Formatted result will appear here..."></textarea>
-    
-    <button onclick="downloadText()" class="bg-purple-500 hover:bg-purple-600 text-white rounded px-4 py-2 text-sm">Download as TXT</button>
+    <label for="inputText" data-en="Paste Your Code:" data-zh="粘贴你的代码：">Paste Your Code:</label>
+    <textarea id="inputText" placeholder="Paste or type your content..."></textarea>
+
+    <button onclick="formatContent()" data-en="Format" data-zh="格式化">Format</button>
+
+    <label for="outputText" data-en="Formatted Output:" data-zh="格式化输出：">Formatted Output:</label>
+    <textarea id="outputText" readonly></textarea>
   </div>
 
+  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const langTexts = {
-      en: {
-        title: "Document Formatter / Cleaner",
-        placeholder: "Paste your content here...",
-        outputPlaceholder: "Formatted result will appear here...",
-        buttons: ["Remove HTML Tags", "Trim Whitespace", "Remove Invisible Chars", "Copy Output", "Download as TXT"]
-      },
-      zh: {
-        title: "文档清洁器",
-        placeholder: "粘贴你的内容...",
-        outputPlaceholder: "格式化后的结果将在此显示...",
-        buttons: ["清除 HTML 标签", "清除空格", "删除不可见字符", "复制结果", "下载 TXT"]
-      }
-    };
-
-    function cleanHTML() {
-      const input = document.getElementById("inputText").value;
-      const output = input.replace(/<[^>]+>/g, "");
-      document.getElementById("outputText").value = output;
-    }
-
-    function cleanSpaces() {
-      const input = document.getElementById("inputText").value;
-      const output = input.replace(/\s+/g, " ").trim();
-      document.getElementById("outputText").value = output;
-    }
-
-    function cleanInvisible() {
-      const input = document.getElementById("inputText").value;
-      const output = input.replace(/[\u200B-\u200D\uFEFF]/g, '');
-      document.getElementById("outputText").value = output;
-    }
-
-    function copyOutput() {
-      const output = document.getElementById("outputText");
-      output.select();
-      document.execCommand("copy");
-    }
-
-    function downloadText() {
-      const text = document.getElementById("outputText").value;
-      const blob = new Blob([text], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "cleaned_text.txt";
-      link.click();
-    }
-
-    document.getElementById("lang").addEventListener("change", (e) => {
-      const l = e.target.value;
-      const t = langTexts[l];
-      document.getElementById("title").innerText = t.title;
-      document.getElementById("inputText").placeholder = t.placeholder;
-      document.getElementById("outputText").placeholder = t.outputPlaceholder;
-      document.querySelectorAll("button").forEach((btn, i) => {
-        if (t.buttons[i]) btn.innerText = t.buttons[i];
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
       });
-    });
+    }
+
+    function formatContent() {
+      const type = document.getElementById("formatType").value;
+      const input = document.getElementById("inputText").value;
+      let output = '';
+
+      try {
+        if (type === 'json') {
+          output = JSON.stringify(JSON.parse(input), null, 2);
+        } else if (type === 'html' || type === 'xml') {
+          output = vkbeautify[type](input, 2);
+        } else if (type === 'css') {
+          output = vkbeautify.css(input, 2);
+        } else if (type === 'js') {
+          output = js_beautify(input);
+        }
+      } catch (e) {
+        output = '⚠️ Error formatting document: ' + e.message;
+      }
+
+      document.getElementById("outputText").value = output;
+    }
   </script>
+
+  <!-- vkBeautify and js-beautify CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vkbeautify@0.99.00/vkbeautify.min.js"></script>
 </body>
 </html>
