@@ -83,7 +83,7 @@
       gap: 1rem;
     }
     .thumb {
-      width: 120px;
+      width: 223px;
       text-align: center;
       border: 2px dashed #ccc;
       border-radius: 8px;
@@ -121,7 +121,7 @@
     input[type="file"] {
       margin-bottom: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -158,8 +158,8 @@
     <input type="file" id="pdfInput" accept="application/pdf" />
     <div id="thumbnails"></div>
     <div>
-      <button onclick="downloadReordered()">Download Reordered PDF</button>
-      <button onclick="resetToOriginal()">Reset to Original Order</button>
+      <button class="calculate" onclick="downloadReordered()">Download Reordered PDF</button>
+      <button class="calculate" onclick="resetToOriginal()">Reset to Original Order</button>
     </div>
   </div>
 
