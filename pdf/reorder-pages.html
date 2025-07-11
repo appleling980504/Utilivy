@@ -70,7 +70,7 @@
       display: none;
     }
     .container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
@@ -96,32 +96,32 @@
       width: 100%;
       border-radius: 4px;
     }
-    .thumb .page-num {
+    .thumb .page-number {
       position: absolute;
-      top: 4px;
+      top: 2px;
       left: 4px;
-      background: #4f46e5;
-      color: white;
       font-size: 12px;
-      padding: 2px 5px;
+      background: rgba(0,0,0,0.5);
+      color: white;
+      padding: 2px 6px;
       border-radius: 4px;
     }
-    .thumb .remove-btn {
+    .thumb .delete-btn {
       position: absolute;
-      top: 4px;
+      top: 2px;
       right: 4px;
+      font-size: 14px;
       background: red;
       color: white;
+      padding: 0 6px;
       border: none;
-      font-size: 12px;
-      padding: 2px 6px;
       border-radius: 50%;
       cursor: pointer;
     }
     input[type="file"] {
       margin-bottom: 1rem;
     }
-    button.calculate {
+    button {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -157,11 +157,14 @@
   <div class="container">
     <input type="file" id="pdfInput" accept="application/pdf" />
     <div id="thumbnails"></div>
-    <button class="calculate" onclick="downloadReordered()">Download Reordered PDF</button>
-    <button class="calculate" onclick="resetOrder()">Reset Order</button>
+    <div>
+      <button onclick="downloadReordered()">Download Reordered PDF</button>
+      <button onclick="resetToOriginal()">Reset to Original Order</button>
+    </div>
   </div>
 
   <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
+
   <footer>
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
@@ -175,28 +178,27 @@
     setLanguage('en');
 
     let originalPdfDoc = null;
+    let originalOrder = [];
     let pageOrder = [];
-    let totalPages = 0;
 
-   document.getElementById('pdfInput').addEventListener('change', async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
+    document.getElementById('pdfInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
 
-  const arrayBuffer = await file.arrayBuffer();  // ✅ 只调用一次
-
-  const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-  const pdf = await loadingTask.promise;
-  originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer); // ✅ 使用相同 buffer
-
+      const arrayBuffer = await file.arrayBuffer();
+      originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+      const pdf = await loadingTask.promise;
 
       const container = document.getElementById('thumbnails');
       container.innerHTML = '';
       pageOrder = [];
-      totalPages = pdf.numPages;
+      originalOrder = [];
 
       for (let i = 0; i < pdf.numPages; i++) {
         const page = await pdf.getPage(i + 1);
         const viewport = page.getViewport({ scale: 0.4 });
+
         const canvas = document.createElement('canvas');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
@@ -207,16 +209,26 @@
         div.className = 'thumb';
         div.draggable = true;
         div.dataset.index = i;
+
         div.innerHTML = `
-          <span class="page-num">${i + 1}</span>
-          <button class="remove-btn" onclick="removePage(event, ${i})">×</button>
+          <span class="page-number">${i + 1}</span>
+          <button class="delete-btn" onclick="deletePage(this)">×</button>
           <img src="${canvas.toDataURL()}" />
         `;
+
         container.appendChild(div);
         pageOrder.push(i);
+        originalOrder.push(i);
       }
+
       makeSortable();
     });
+
+    function deletePage(btn) {
+      const thumb = btn.closest('.thumb');
+      thumb.remove();
+      updateOrder();
+    }
 
     function makeSortable() {
       const container = document.getElementById('thumbnails');
@@ -227,8 +239,9 @@
         el.addEventListener('dragover', e => e.preventDefault());
         el.addEventListener('drop', e => {
           e.preventDefault();
-          if (dragged && dragged !== el) {
-            container.insertBefore(dragged, el);
+          const target = e.target.closest('.thumb');
+          if (dragged && target && dragged !== target) {
+            container.insertBefore(dragged, target);
             updateOrder();
           }
         });
@@ -240,11 +253,15 @@
       pageOrder = Array.from(thumbs).map(div => parseInt(div.dataset.index));
     }
 
-    function removePage(event, index) {
-      event.stopPropagation();
-      const thumb = event.target.closest('.thumb');
-      thumb.remove();
-      pageOrder = pageOrder.filter(i => i !== index);
+    function resetToOriginal() {
+      const container = document.getElementById('thumbnails');
+      const thumbs = Array.from(container.querySelectorAll('.thumb'));
+
+      const reordered = originalOrder.map(i => thumbs.find(t => parseInt(t.dataset.index) === i)).filter(Boolean);
+
+      container.innerHTML = '';
+      reordered.forEach(t => container.appendChild(t));
+      pageOrder = [...originalOrder];
     }
 
     async function downloadReordered() {
@@ -261,15 +278,6 @@
       link.download = 'reordered.pdf';
       link.click();
       URL.revokeObjectURL(url);
-    }
-
-    function resetOrder() {
-      if (!originalPdfDoc || totalPages === 0) return;
-      pageOrder = Array.from({ length: totalPages }, (_, i) => i);
-      const thumbs = Array.from(document.querySelectorAll('.thumb'));
-      thumbs.sort((a, b) => parseInt(a.dataset.index) - parseInt(b.dataset.index));
-      const container = document.getElementById('thumbnails');
-      thumbs.forEach(thumb => container.appendChild(thumb));
     }
   </script>
 </body>
