@@ -5,10 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Images to PDF</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-  <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
-  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -148,7 +145,7 @@
     }
 
     async function generatePDF() {
-      const { jsPDF } = window.jspdf;
+      const jsPDF = window.jspdf.jsPDF; 
       const input = document.getElementById("images");
       const preview = document.getElementById("preview");
       preview.innerHTML = "";
