@@ -11,9 +11,7 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -64,8 +62,7 @@
       font-weight: 500;
       font-size: 0.95rem;
     }
-    .adsense-banner,
-    .adsense-footer {
+    .adsense-banner, .adsense-footer {
       text-align: center;
       margin: 1rem 0;
       color: gray;
@@ -97,20 +94,20 @@
       background-color: #4338ca;
     }
     .action-buttons button {
-    background: var(--primary-color);
-    color: white;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    margin: 0.3rem;
+      background: var(--primary-color);
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      margin: 0.3rem;
     }
-  .action-buttons button:hover {
-    background: #4338ca;
-    transform: translateY(-1px);
+    .action-buttons button:hover {
+      background: #4338ca;
+      transform: translateY(-1px);
     }
     .swatches {
       display: flex;
@@ -151,31 +148,32 @@
 
   <main class="container">
     <section>
-      <label for="colorPicker"><strong>🎨 Pick a Color:</strong></label><br/>
+      <label for="colorPicker">
+        <strong data-en="🎨 Pick a Color:" data-zh="🎨 选择颜色：">🎨 Pick a Color:</strong>
+      </label><br/>
       <input type="color" id="colorPicker" value="#4f46e5" onchange="updateColor()" style="margin-top: 1rem;"/>
     </section>
 
     <section>
-      <h2>📋 Color Values</h2>
+      <h2 data-en="📋 Color Values" data-zh="📋 颜色数值">📋 Color Values</h2>
       <p><strong>HEX:</strong> <span id="hexValue">#4f46e5</span></p>
       <p><strong>RGB:</strong> <span id="rgbValue">rgb(79, 70, 229)</span></p>
       <p><strong>HSL:</strong> <span id="hslValue">hsl(241, 75%, 59%)</span></p>
     </section>
 
     <section>
-      <h2>⚙️ Actions</h2>
-    <div class="action-buttons" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
-      <button onclick="copyText('hexValue')">📋 <span data-en="Copy HEX" data-zh="复制 HEX">Copy HEX</span></button>
-      <button onclick="copyText('rgbValue')">📋 <span data-en="Copy RGB" data-zh="复制 RGB">Copy RGB</span></button>
-      <button onclick="copyText('hslValue')">📋 <span data-en="Copy HSL" data-zh="复制 HSL">Copy HSL</span></button>
-      <button onclick="addToFavorites()">⭐ <span data-en="Add to Favorites" data-zh="添加收藏">Add to Favorites</span></button>
-      <button onclick="exportPalette()">📁 <span data-en="Export Palette" data-zh="导出调色板">Export Palette</span></button>
-    </div>
-
+      <h2 data-en="⚙️ Actions" data-zh="⚙️ 操作">⚙️ Actions</h2>
+      <div class="action-buttons">
+        <button onclick="copyText('hexValue')">📋 <span data-en="Copy HEX" data-zh="复制 HEX">Copy HEX</span></button>
+        <button onclick="copyText('rgbValue')">📋 <span data-en="Copy RGB" data-zh="复制 RGB">Copy RGB</span></button>
+        <button onclick="copyText('hslValue')">📋 <span data-en="Copy HSL" data-zh="复制 HSL">Copy HSL</span></button>
+        <button onclick="addToFavorites()">⭐ <span data-en="Add to Favorites" data-zh="添加收藏">Add to Favorites</span></button>
+        <button onclick="exportPalette()">📁 <span data-en="Export Palette" data-zh="导出调色板">Export Palette</span></button>
+      </div>
     </section>
 
     <section>
-      <h2>🌈 Favorite Colors</h2>
+      <h2 data-en="🌈 Favorite Colors" data-zh="🌈 收藏颜色">🌈 Favorite Colors</h2>
       <div id="favorites" class="swatches"></div>
     </section>
   </main>
@@ -189,10 +187,11 @@
   </footer>
 
   <script>
+    let currentLang = 'en';
     function setLanguage(lang) {
+      currentLang = lang;
       document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        if (lang === "en") el.textContent = el.getAttribute("data-en");
-        if (lang === "zh") el.textContent = el.getAttribute("data-zh");
+        el.textContent = el.getAttribute(`data-${lang}`);
       });
     }
 
@@ -219,7 +218,6 @@
       r /= 255; g /= 255; b /= 255;
       const max = Math.max(r, g, b), min = Math.min(r, g, b);
       let h, s, l = (max + min) / 2;
-
       if (max === min) {
         h = s = 0;
       } else {
@@ -238,7 +236,7 @@
     function copyText(id) {
       const text = document.getElementById(id).textContent;
       navigator.clipboard.writeText(text).then(() => {
-        alert(`Copied: ${text}`);
+        alert(currentLang === 'zh' ? `已复制：${text}` : `Copied: ${text}`);
       });
     }
 
@@ -260,6 +258,8 @@
       link.download = "palette.txt";
       link.click();
     }
+
+    setLanguage('en');
   </script>
 </body>
 </html>
