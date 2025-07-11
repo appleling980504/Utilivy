@@ -3,67 +3,152 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🔀 Reorder PDF Pages - ToolNest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <title>Utilivy - Reorder PDF Pages</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    .drop-zone {
+      border: 2px dashed #ccc;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      background: #fafafa;
+    }
+    .preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .page-preview {
+      width: 150px;
+      position: relative;
+      border: 2px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+      background: white;
+      cursor: move;
+    }
+    .page-preview.dragging {
+      opacity: 0.4;
+    }
+    .page-preview canvas {
+      width: 100%;
+      display: block;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">🔀 Reorder PDF Pages</h1>
-    <div class="bg-white p-6 rounded shadow-md">
-      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
-      <label for="order" class="block mb-2">Enter page order (comma-separated, e.g. 3,1,2):</label>
-      <input type="text" id="order" placeholder="1,2,3" class="mb-4 w-full p-2 border rounded" />
-      <button id="reorderBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Reorder</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Reorder PDF Pages" data-zh="Utilivy - PDF 页面重排">Utilivy - Reorder PDF Pages</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
-    <div id="output" class="mt-6"></div>
-  </main>
+  </header>
 
-  <script>
-    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-    document.getElementById('reorderBtn').addEventListener('click', async () => {
-      const fileInput = document.getElementById('pdfFile');
-      const orderInput = document.getElementById('order').value.trim();
-      const output = document.getElementById('output');
-      output.innerHTML = '';
-
-      if (!fileInput.files[0] || !orderInput) {
-        alert('Please select a file and enter a page order.');
-        return;
-      }
-
-      const file = fileInput.files[0];
-      const order = orderInput.split(',').map(n => parseInt(n.trim())).filter(n => !isNaN(n));
-      const buffer = await file.arrayBuffer();
-      const pdf = await pdfjsLib.getDocument({ data: buffer }).promise;
-      const { jsPDF } = window.jspdf;
-      const outputPDF = new jsPDF({ unit: 'pt', format: 'a4' });
-
-      for (let i = 0; i < order.length; i++) {
-        const pageNumber = order[i];
-        if (pageNumber < 1 || pageNumber > pdf.numPages) continue;
-
-        const page = await pdf.getPage(pageNumber);
-        const viewport = page.getViewport({ scale: 2 });
-        const canvas = document.createElement('canvas');
-        const context = canvas.getContext('2d');
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        const imgData = canvas.toDataURL('image/jpeg');
-
-        if (i > 0) outputPDF.addPage();
-        outputPDF.addImage(imgData, 'JPEG', 0, 0, outputPDF.internal.pageSize.getWidth(), outputPDF.internal.pageSize.getHeight());
-      }
-
-      const blob = outputPDF.output('blob');
-      const url = URL.createObjectURL(blob);
-      output.innerHTML = `<a href="${url}" download="reordered.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download Reordered PDF</a>`;
-    });
-  </script>
-</body>
-</html>
+  <div class="container">
+    <div class="drop-zone" onclick="fileInput.click()" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+      <p data-en="Click or drop PDF file here" data-zh="点击或拖放 PDF 文件至此">Click or drop PDF file here</p>
+      <input type="
