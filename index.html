@@ -5,21 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title data-en="Utilivy - All-in-One Online Tools" data-zh="Utilivy - 多功能在线工具">Utilivy - All-in-One Online Tools</title>
   <meta name="description" content="Utilivy provides free online tools including PDF, document, calculators, developer tools." />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Inter', sans-serif;
     }
-    .lang-switch button {
-      @apply bg-blue-100 text-blue-700 border border-blue-300 rounded px-2 py-1 hover:bg-blue-200 transition;
+    .switch {
+      position: relative;
+      display: inline-block;
+      margin-left: 1rem;
+    }
+    .switch > span {
+      position: absolute;
+      top: 8px;
+      font-weight: bold;
+      font-size: 12px;
+      text-transform: uppercase;
+      width: 50%;
+      text-align: center;
+      pointer-events: none;
+    }
+    .switch > span.on { left: 0; padding-left: 2px; }
+    .switch > span.off { right: 0; padding-right: 4px; }
+
+    input.check-toggle-round-flat ~ .on {
+      color: rgb(30 58 138 / 1);
+      font-weight: bolder;
+    }
+    input.check-toggle-round-flat ~ .off {
+      color: #d3d3d3;
+    }
+    input.check-toggle-round-flat:checked ~ .on {
+      color: #d3d3d3;
+    }
+    input.check-toggle-round-flat:checked ~ .off {
+      color: rgb(30 58 138 / 1);
+    }
+
+    .check-toggle {
+      position: absolute;
+      margin-left: -9999px;
+      visibility: hidden;
+    }
+    input.check-toggle-round-flat + label {
+      display: block;
+      position: relative;
+      width: 80px;
+      height: 32px;
+      background-color: rgb(239 246 255 / 1);
+      border-radius: 60px;
+      cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    input.check-toggle-round-flat + label:after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      bottom: 4px;
+      width: 36px;
+      background-color: #fff;
+      border-radius: 52px;
+      transition: margin 0.2s;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    input.check-toggle-round-flat:checked + label:after {
+      margin-left: 40px;
+      left: 0;
     }
   </style>
 </head>
 <body class="bg-blue-50 text-blue-900">
   <header class="bg-white shadow">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
-      <h1 class="text-xl font-bold">Utilivy</h1>
+      <h1 class="text-xl font-bold text-2xl">Utilivy</h1>
       <nav class="flex items-center gap-6 flex-wrap">
         <ul class="flex space-x-4 text-sm">
           <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="hover:underline">PDF Tools</a></li>
@@ -27,9 +87,11 @@
           <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="hover:underline">Calculators</a></li>
           <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="hover:underline">Developer Tools</a></li>
         </ul>
-        <div class="lang-switch space-x-2 text-sm">
-          <button onclick="setLang('en')">EN</button>
-          <button onclick="setLang('zh')">中</button>
+        <div class="switch relative text-sm">
+          <input id="language-toggle" class="check-toggle check-toggle-round-flat" type="checkbox">
+          <label for="language-toggle"></label>
+          <span class="on">EN</span>
+          <span class="off">中</span>
         </div>
       </nav>
     </div>
@@ -109,6 +171,7 @@
     </section>
   </main>
 
+
   <footer class="bg-white border-t mt-12">
     <div class="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
       <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">
@@ -118,12 +181,20 @@
   </footer>
 
   <script>
+    const toggle = document.getElementById('language-toggle');
     function setLang(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
     }
-    setLang('en'); // default
+
+    toggle.addEventListener('change', () => {
+      setLang(toggle.checked ? 'zh' : 'en');
+    });
+
+    // 默认语言
+    setLang('en');
+    toggle.checked = false;
   </script>
 </body>
 </html>
