@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,7 +99,6 @@
       border: 1px solid #ccc;
     }
     input[type="file"] {
-      margin-top: 0.25rem;
       margin-bottom: 1rem;
       font-size: 1rem;
     }
@@ -111,6 +111,7 @@
       cursor: pointer;
       font-size: 1rem;
       margin-top: 1.5rem;
+      margin-right: 0.5rem;
     }
     button.calculate:hover {
       background-color: #4338ca;
@@ -146,26 +147,26 @@
   </div>
 
   <div class="container">
-    <label data-en="Upload a PDF file:" data-zh="上传 PDF 文件：">Upload a PDF file:</label>
-    <input type="file" id="pdfFile" accept="application/pdf" onchange="previewPDF()" />
+    <label>Upload PDF:</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
 
-    <label data-en="Watermark text:" data-zh="水印文字：">Watermark text:</label>
-    <input type="text" id="watermarkText" value="Confidential" oninput="previewPDF()" />
+    <label>Watermark Text:</label>
+    <input type="text" id="watermarkText" value="Confidential" />
 
-    <label data-en="Font size:" data-zh="字体大小：">Font size:</label>
-    <input type="number" id="fontSize" value="36" oninput="previewPDF()" />
+    <label>Font Size:</label>
+    <input type="number" id="fontSize" value="36" />
 
-    <label data-en="Color:" data-zh="颜色：">Color:</label>
-    <input type="color" id="colorPicker" value="#d11a1a" oninput="previewPDF()" />
+    <label>Color:</label>
+    <input type="color" id="colorPicker" value="#d11a1a" />
 
-    <label data-en="Opacity (0-1):" data-zh="不透明度 (0-1)：">Opacity (0-1):</label>
-    <input type="number" id="opacity" value="0.2" step="0.1" min="0" max="1" oninput="previewPDF()" />
+    <label>Opacity (0-1):</label>
+    <input type="number" id="opacity" value="0.2" step="0.1" min="0" max="1" />
 
-    <label data-en="Rotation (degrees):" data-zh="旋转角度：">Rotation (degrees):</label>
-    <input type="number" id="angle" value="45" oninput="previewPDF()" />
+    <label>Rotation (degrees):</label>
+    <input type="number" id="angle" value="45" />
 
-    <label data-en="Position:" data-zh="位置：">Position:</label>
-    <select id="position" onchange="previewPDF()">
+    <label>Position:</label>
+    <select id="position">
       <option value="center">Center</option>
       <option value="topleft">Top Left</option>
       <option value="topright">Top Right</option>
@@ -173,7 +174,11 @@
       <option value="bottomright">Bottom Right</option>
     </select>
 
-    <button class="calculate" onclick="addWatermark()">💧 <span data-en="Add Watermark" data-zh="添加水印">Add Watermark</span></button>
+    <div>
+      <button class="calculate" onclick="applyWatermark()">Add Watermark</button>
+      <button class="calculate" onclick="previewWatermark()">Preview</button>
+      <button class="calculate" onclick="downloadPDF()">Download PDF</button>
+    </div>
 
     <canvas id="previewCanvas"></canvas>
   </div>
@@ -187,6 +192,8 @@
   </footer>
 
   <script>
+    let watermarkedPdfBytes = null;
+
     function setLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
@@ -201,81 +208,25 @@
       return [r, g, b];
     }
 
-    async function previewPDF() {
-      const file = document.getElementById("pdfFile").files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async function () {
-        const { getDocument } = window['pdfjsLib'];
-        const loadingTask = getDocument({ data: reader.result });
-        const pdf = await loadingTask.promise;
-        const page = await pdf.getPage(1);
-
-        const viewport = page.getViewport({ scale: 1.5 });
-        const canvas = document.getElementById("previewCanvas");
-        const context = canvas.getContext("2d");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        drawWatermarkOverlay(context, canvas.width, canvas.height);
-      };
-      reader.readAsArrayBuffer(file);
-    }
-
-    function drawWatermarkOverlay(ctx, width, height) {
-      const text = document.getElementById("watermarkText").value;
-      const size = parseFloat(document.getElementById("fontSize").value);
-      const angle = parseFloat(document.getElementById("angle").value);
-      const color = document.getElementById("colorPicker").value;
-      const opacity = parseFloat(document.getElementById("opacity").value);
-      const pos = document.getElementById("position").value;
-
-      ctx.save();
-      ctx.globalAlpha = opacity;
-      ctx.fillStyle = color;
-      ctx.font = `${size}px sans-serif`;
-      ctx.translate(width / 2, height / 2);
-      ctx.rotate(angle * Math.PI / 180);
-
-      let x = 0, y = 0;
-      if (pos === "topleft")     { x = -width / 2 + 50; y = -height / 2 + 50; }
-      if (pos === "topright")    { x = width / 2 - 200; y = -height / 2 + 50; }
-      if (pos === "bottomleft")  { x = -width / 2 + 50; y = height / 2 - 50; }
-      if (pos === "bottomright") { x = width / 2 - 200; y = height / 2 - 50; }
-      if (pos === "center")      { x = -ctx.measureText(text).width / 2; y = 0; }
-
-      ctx.fillText(text, x, y);
-      ctx.restore();
-    }
-
-    async function addWatermark() {
+    async function applyWatermark() {
       const file = document.getElementById('pdfFile').files[0];
-      if (!file) {
-        alert("Please upload a PDF file.");
-        return;
-      }
-
+      if (!file) return alert("Upload a PDF first.");
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
       const pages = pdfDoc.getPages();
 
-      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
       const text = document.getElementById("watermarkText").value;
       const size = parseFloat(document.getElementById("fontSize").value);
       const color = document.getElementById("colorPicker").value;
-      const angle = parseFloat(document.getElementById("angle").value) * (Math.PI / 180);
+      const angle = parseFloat(document.getElementById("angle").value);
       const opacity = parseFloat(document.getElementById("opacity").value);
       const position = document.getElementById("position").value;
-
       const [r, g, b] = hexToRgb(color);
 
       pages.forEach(page => {
         const { width, height } = page.getSize();
         let x = width / 2, y = height / 2;
-
         if (position === "topleft")     { x = 50; y = height - 50; }
         if (position === "topright")    { x = width - 150; y = height - 50; }
         if (position === "bottomleft")  { x = 50; y = 50; }
@@ -284,19 +235,36 @@
         page.drawText(text, {
           x, y,
           size,
-          rotate: PDFLib.degrees(angle * 180 / Math.PI),
+          rotate: PDFLib.degrees(angle),
           font,
           color: PDFLib.rgb(r, g, b),
           opacity,
         });
       });
 
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
+      watermarkedPdfBytes = await pdfDoc.save();
+      alert("Watermark applied. You can now preview or download.");
+    }
 
+    async function previewWatermark() {
+      if (!watermarkedPdfBytes) return alert("Please apply watermark first.");
+      const { getDocument } = window['pdfjsLib'];
+      const loadingTask = getDocument({ data: watermarkedPdfBytes });
+      const pdf = await loadingTask.promise;
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.5 });
+      const canvas = document.getElementById("previewCanvas");
+      const context = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+      await page.render({ canvasContext: context, viewport }).promise;
+    }
+
+    function downloadPDF() {
+      if (!watermarkedPdfBytes) return alert("No watermarked PDF available.");
+      const blob = new Blob([watermarkedPdfBytes], { type: 'application/pdf' });
       const link = document.createElement('a');
-      link.href = url;
+      link.href = URL.createObjectURL(blob);
       link.download = 'watermarked.pdf';
       link.click();
     }
