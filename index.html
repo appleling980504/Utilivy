@@ -8,59 +8,61 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
 </head>
 <body class="bg-blue-50 text-blue-900">
+  <!-- Header -->
   <header class="bg-white shadow">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
-      <h1 class="text-xl font-bold">Utilivy</h1>
-      <nav class="flex items-center gap-4">
-        <ul class="flex space-x-4 text-sm">
-          <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
-          <li><a href="#doc" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
-          <li><a href="#calc" data-en="Calculators" data-zh="计算器">Calculators</a></li>
-          <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
+      <h1 class="text-xl font-bold text-blue-800">Utilivy</h1>
+      <nav class="flex items-center gap-4 flex-wrap">
+        <ul class="flex space-x-4 text-sm font-medium">
+          <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="hover:underline">PDF Tools</a></li>
+          <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="hover:underline">Document Tools</a></li>
+          <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="hover:underline">Calculators</a></li>
+          <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="hover:underline">Developer Tools</a></li>
         </ul>
-        <div class="lang-switch space-x-2 text-sm">
-          <button onclick="setLang('en')" class="text-blue-700 font-medium">EN</button>
-          <button onclick="setLang('zh')" class="text-blue-700 font-medium">中</button>
+        <div class="lang-switch flex gap-2">
+          <button onclick="setLang('en')" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded font-semibold border border-blue-300">EN</button>
+          <button onclick="setLang('zh')" class="bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-1 rounded font-semibold border border-blue-300">中</button>
         </div>
       </nav>
     </div>
   </header>
 
+  <!-- Main content -->
   <main class="container mx-auto px-4 py-8 space-y-12">
-    <!-- PDF Tools -->
-    <section id="pdf">
+    <!-- Section Template -->
+    <section id="pdf" data-en="PDF Tools" data-zh="PDF 工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="📄 PDF Tools" data-zh="📄 PDF 工具">📄 PDF Tools</h2>
       <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/pdf/split-pdf.html" data-en="Split PDF" data-zh="拆分 PDF">Split PDF</a></li>
-        <li><a href="/pdf/merge-pdf.html" data-en="Merge PDFs" data-zh="合并 PDF">Merge PDFs</a></li>
-        <li><a href="/pdf/extract-text.html" data-en="Extract Text from PDF" data-zh="提取 PDF 文字">Extract Text from PDF</a></li>
-        <li><a href="/pdf/view-rotate-pdf.html" data-en="View or Rotate PDF" data-zh="查看或旋转 PDF">View or Rotate PDF</a></li>
-        <li><a href="/pdf/image-to-pdf.html" data-en="Image to PDF" data-zh="图片转 PDF">Image to PDF</a></li>
-        <li><a href="/pdf/reorder-pages.html" data-en="Reorder PDF Pages" data-zh="重排 PDF 页面">Reorder PDF Pages</a></li>
-        <li><a href="/pdf/add-watermark.html" data-en="Add Watermark to PDF" data-zh="添加水印到 PDF">Add Watermark to PDF</a></li>
-        <li><a href="/pdf/add-page-numbers.html" data-en="Add Page Numbers to PDF" data-zh="添加页码到 PDF">Add Page Numbers to PDF</a></li>
+        <li><a href="/pdf/split-pdf.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Split PDF" data-zh="拆分 PDF">Split PDF</a></li>
+        <li><a href="/pdf/merge-pdf.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Merge PDFs" data-zh="合并 PDF">Merge PDFs</a></li>
+        <li><a href="/pdf/extract-text.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Extract Text" data-zh="提取文字">Extract Text</a></li>
+        <li><a href="/pdf/view-rotate-pdf.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="View or Rotate PDF" data-zh="查看或旋转 PDF">View or Rotate PDF</a></li>
+        <li><a href="/pdf/image-to-pdf.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Image to PDF" data-zh="图片转 PDF">Image to PDF</a></li>
+        <li><a href="/pdf/reorder-pages.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Reorder PDF Pages" data-zh="重排 PDF 页面">Reorder PDF Pages</a></li>
+        <li><a href="/pdf/add-watermark.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Add Watermark" data-zh="添加水印">Add Watermark</a></li>
+        <li><a href="/pdf/add-page-numbers.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Add Page Numbers" data-zh="添加页码">Add Page Numbers</a></li>
       </ul>
     </section>
 
-    <!-- Document Tools -->
-    <section id="doc">
+    <!-- 文档工具 / Document Tools -->
+    <section id="doc" data-en="Document Tools" data-zh="文档工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="📝 Document Tools" data-zh="📝 文档工具">📝 Document Tools</h2>
       <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/text/lorem-ipsum.html" data-en="Lorem Ipsum Generator" data-zh="假文生成器">Lorem Ipsum Generator</a></li>
-        <li><a href="/doc/docx-to-txt.html" data-en="DOCX to TXT" data-zh="DOCX 转 TXT">DOCX to TXT</a></li>
-        <li><a href="/doc/case-word-counter.html" data-en="Case & Word Counter" data-zh="字母 & 字数统计器">Case & Word Counter</a></li>
-        <li><a href="/doc/remove-line-breaks.html" data-en="Remove Line Breaks" data-zh="删除换行符">Remove Line Breaks</a></li>
-        <li><a href="/doc/text-diff-checker.html" data-en="Text Diff Checker" data-zh="文本差异对比工具">Text Diff Checker</a></li>
-        <li><a href="/doc/character-map.html" data-en="Character Map" data-zh="特殊符号表">Character Map</a></li>
-        <li><a href="/doc/text-to-ascii.html" data-en="Text to ASCII / Binary" data-zh="文本转编码">Text to ASCII / Binary</a></li>
-        <li><a href="/doc/text-to-pdf.html" data-en="Plain Text to PDF" data-zh="文本转 PDF">Plain Text to PDF</a></li>
-        <li><a href="/doc/document-formatter.html" data-en="Document Formatter" data-zh="清洁器">Document Formatter</a></li>
-        <li><a href="/doc/text-case-converter.html" data-en="Text Case Converter" data-zh="大小写转换器">Text Case Converter</a></li>
+        <li><a href="/text/lorem-ipsum.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Lorem Ipsum Generator" data-zh="假文生成器">Lorem Ipsum Generator</a></li>
+        <li><a href="/doc/docx-to-txt.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="DOCX to TXT" data-zh="DOCX 转 TXT">DOCX to TXT</a></li>
+        <li><a href="/doc/case-word-counter.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Case & Word Counter" data-zh="字母 & 字数统计器">Case & Word Counter</a></li>
+        <li><a href="/doc/remove-line-breaks.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Remove Line Breaks" data-zh="删除换行符">Remove Line Breaks</a></li>
+        <li><a href="/doc/text-diff-checker.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Text Diff Checker" data-zh="文本差异对比">Text Diff Checker</a></li>
+        <li><a href="/doc/character-map.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Character Map" data-zh="特殊符号表">Character Map</a></li>
+        <li><a href="/doc/text-to-ascii.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Text to ASCII/Binary" data-zh="文本转编码">Text to ASCII/Binary</a></li>
+        <li><a href="/doc/text-to-pdf.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Plain Text to PDF" data-zh="文本转 PDF">Plain Text to PDF</a></li>
+        <li><a href="/doc/document-formatter.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Document Formatter" data-zh="文档格式清理器">Document Formatter</a></li>
+        <li><a href="/doc/text-case-converter.html" class="block px-4 py-2 bg-white shadow rounded hover:bg-blue-100 text-center font-medium" data-en="Text Case Converter" data-zh="大小写转换器">Text Case Converter</a></li>
       </ul>
     </section>
 
-    <!-- Calculators -->
-    <section id="calc">
+    <!-- Calculator Tools -->
+    <section id="calc" data-en="Calculators" data-zh="计算器">
       <h2 class="text-2xl font-semibold mb-4" data-en="🧮 Calculators" data-zh="🧮 计算器">🧮 Calculators</h2>
       <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
         <li><a href="/calc/bmi-calculator.html" data-en="BMI Calculator" data-zh="身体质量指数计算器">BMI Calculator</a></li>
@@ -77,9 +79,9 @@
     </section>
 
     <!-- Developer Tools -->
-    <section id="dev">
+    <section id="dev" data-en="Developer Tools" data-zh="开发者工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="💻 Developer Tools" data-zh="💻 开发者工具">💻 Developer Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+       <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
         <li><a href="/dev/json-formatter.html" data-en="JSON Formatter" data-zh="JSON 格式化工具">JSON Formatter</a></li>
         <li><a href="/dev/json-validator.html" data-en="JSON Validator" data-zh="JSON 校验工具">JSON Validator</a></li>
         <li><a href="/dev/jwt-decoder.html" data-en="JWT Decoder" data-zh="JWT 解码器">JWT Decoder</a></li>
@@ -109,14 +111,10 @@
   <script>
     function setLang(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
-        const value = el.getAttribute(`data-${lang}`);
-        if (value !== null) el.textContent = value;
+        el.textContent = el.getAttribute(`data-${lang}`);
       });
     }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      setLang('en');
-    });
+    setLang('en'); // Default language
   </script>
 </body>
 </html>
