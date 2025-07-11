@@ -3,52 +3,217 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Add Watermark - ToolNest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <title>Utilivy - Add Watermark to PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: 500;
+    }
+    input[type="text"],
+    input[type="number"],
+    input[type="color"],
+    select {
+      width: 100%;
+      padding: 0.5rem;
+      font-size: 1rem;
+      margin-top: 0.25rem;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1.5rem;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">💧 Add Watermark to PDF</h1>
-
-    <div class="bg-white p-6 rounded shadow-md">
-      <input type="file" id="pdfFile" accept="application/pdf" class="mb-4" />
-      <input type="text" id="watermarkText" placeholder="Enter watermark text" class="mb-4 block w-full border px-2 py-1 rounded" />
-      <button id="addWatermarkBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Add Watermark</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Add Watermark to PDF" data-zh="Utilivy - 添加 PDF 水印">Utilivy - Add Watermark to PDF</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div id="output" class="mt-6"></div>
-  </main>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
 
-  <script type="module">
-    import { PDFDocument, rgb, degrees, StandardFonts } from 'https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/+esm';
+  <div class="container">
+    <label data-en="Upload a PDF file:" data-zh="上传 PDF 文件：">Upload a PDF file:</label>
+    <input type="file" id="pdfFile" accept="application/pdf" />
 
+    <label data-en="Watermark text:" data-zh="水印文字：">Watermark text:</label>
+    <input type="text" id="watermarkText" value="Confidential" />
+
+    <label data-en="Font size:" data-zh="字体大小：">Font size:</label>
+    <input type="number" id="fontSize" value="36" />
+
+    <label data-en="Color:" data-zh="颜色：">Color:</label>
+    <input type="color" id="colorPicker" value="#d11a1a" />
+
+    <label data-en="Opacity (0-1):" data-zh="不透明度 (0-1)：">Opacity (0-1):</label>
+    <input type="number" id="opacity" value="0.2" step="0.1" min="0" max="1" />
+
+    <label data-en="Rotation (degrees):" data-zh="旋转角度：">Rotation (degrees):</label>
+    <input type="number" id="angle" value="45" />
+
+    <label data-en="Position:" data-zh="位置：">Position:</label>
+    <select id="position">
+      <option value="center">Center</option>
+      <option value="topleft">Top Left</option>
+      <option value="topright">Top Right</option>
+      <option value="bottomleft">Bottom Left</option>
+      <option value="bottomright">Bottom Right</option>
+    </select>
+
+    <button class="calculate" onclick="addWatermark()">💧 <span data-en="Add Watermark" data-zh="添加水印">Add Watermark</span></button>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
+  <script>
     async function addWatermark() {
-      const fileInput = document.getElementById('pdfFile');
-      const watermarkText = document.getElementById('watermarkText').value;
-      const output = document.getElementById('output');
-
-      if (!fileInput.files.length || !watermarkText.trim()) {
-        alert("Please select a PDF and enter watermark text.");
+      const file = document.getElementById('pdfFile').files[0];
+      if (!file) {
+        alert("Please upload a PDF file.");
         return;
       }
 
-      const file = fileInput.files[0];
       const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFDocument.load(arrayBuffer);
+      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
       const pages = pdfDoc.getPages();
 
-      const font = await pdfDoc.embedFont(StandardFonts.Helvetica); // 修正这里的字体加载
+      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const text = document.getElementById("watermarkText").value;
+      const size = parseFloat(document.getElementById("fontSize").value);
+      const color = document.getElementById("colorPicker").value;
+      const angle = parseFloat(document.getElementById("angle").value) * (Math.PI / 180);
+      const opacity = parseFloat(document.getElementById("opacity").value);
+      const position = document.getElementById("position").value;
+
+      const [r, g, b] = hexToRgb(color);
 
       pages.forEach(page => {
         const { width, height } = page.getSize();
-        page.drawText(watermarkText, {
-          x: width / 4,
-          y: height / 2,
-          size: 40,
+        let x = width / 2, y = height / 2;
+
+        if (position === "topleft")     { x = 50; y = height - 50; }
+        if (position === "topright")    { x = width - 150; y = height - 50; }
+        if (position === "bottomleft")  { x = 50; y = 50; }
+        if (position === "bottomright") { x = width - 150; y = 50; }
+
+        page.drawText(text, {
+          x, y,
+          size,
+          rotate: PDFLib.degrees(angle * 180 / Math.PI),
           font,
-          rotate: degrees(-45),
-          color: rgb(0.75, 0.75, 0.75),
-          opacity: 0.5,
+          color: PDFLib.rgb(r, g, b),
+          opacity,
         });
       });
 
@@ -56,10 +221,25 @@
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
       const url = URL.createObjectURL(blob);
 
-      output.innerHTML = `<a href="${url}" download="watermarked.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download PDF</a>`;
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'watermarked.pdf';
+      link.click();
     }
 
-    document.getElementById('addWatermarkBtn').addEventListener('click', addWatermark);
+    function hexToRgb(hex) {
+      const bigint = parseInt(hex.slice(1), 16);
+      const r = ((bigint >> 16) & 255) / 255;
+      const g = ((bigint >> 8) & 255) / 255;
+      const b = (bigint & 255) / 255;
+      return [r, g, b];
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
+    }
   </script>
 </body>
 </html>
