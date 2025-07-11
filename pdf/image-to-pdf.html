@@ -2,67 +2,187 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Image to PDF - ToolNest</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-  <main class="container mx-auto px-4 py-8">
-    <h1 class="text-2xl font-semibold mb-6">🖼️ Image to PDF</h1>
-    <div class="bg-white p-6 rounded shadow-md">
-      <input type="file" id="imageFiles" accept="image/*" multiple class="mb-4" />
-      <button id="convertBtn" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Convert to PDF</button>
-    </div>
-    <div id="output" class="mt-6"></div>
-  </main>
-
-  <script type="module">
-    import { jsPDF } from 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/+esm';
-
-    async function convertToPDF() {
-      const input = document.getElementById('imageFiles');
-      const files = Array.from(input.files);
-      if (files.length === 0) {
-        alert('Please select one or more image files.');
-        return;
-      }
-
-      const pdf = new jsPDF();
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const imgData = await readImageFile(file);
-        const img = new Image();
-
-        await new Promise(resolve => {
-          img.onload = () => {
-            const ratio = img.width / img.height;
-            const pageWidth = 210; // A4 width in mm
-            const pageHeight = pageWidth / ratio;
-
-            if (i > 0) pdf.addPage();
-            pdf.addImage(img, 'JPEG', 0, 0, pageWidth, pageHeight);
-            resolve();
-          };
-          img.src = imgData;
-        });
-      }
-
-      const output = document.getElementById('output');
-      const pdfBlob = pdf.output('blob');
-      const blobUrl = URL.createObjectURL(pdfBlob);
-      output.innerHTML = `<a href="${blobUrl}" download="images.pdf" class="inline-block mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Download PDF</a>`;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Images to PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    input[type="file"] {
+      margin-bottom: 1rem;
+    }
+    img {
+      max-width: 100%;
+      margin: 10px 0;
+      border-radius: 8px;
+    }
+    button.calculate {
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Images to PDF" data-zh="Utilivy - 图片转 PDF">Utilivy - Images to PDF</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
+  </header>
 
-    function readImageFile(file) {
-      return new Promise(resolve => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.readAsDataURL(file);
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
+  <div class="container">
+    <label for="images">Upload Images:</label>
+    <input type="file" id="images" accept="image/*" multiple />
+    <button class="calculate" onclick="generatePDF()">Convert to PDF</button>
+    <div id="preview"></div>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
+  <script>
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
     }
 
-    document.getElementById('convertBtn').addEventListener('click', convertToPDF);
+    async function generatePDF() {
+      const { jsPDF } = window.jspdf;
+      const input = document.getElementById("images");
+      const preview = document.getElementById("preview");
+      preview.innerHTML = "";
+
+      if (!input.files.length) return alert("Please upload at least one image.");
+
+      const pdf = new jsPDF();
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        const imgData = await readFileAsDataURL(file);
+        const img = new Image();
+        img.src = imgData;
+        await new Promise(res => img.onload = res);
+
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const ratio = img.height / img.width;
+        const imgHeight = imgWidth * ratio;
+
+        if (i > 0) pdf.addPage();
+        pdf.addImage(img, 'JPEG', 0, 0, imgWidth, imgHeight);
+
+        const imgPreview = document.createElement("img");
+        imgPreview.src = imgData;
+        preview.appendChild(imgPreview);
+      }
+
+      pdf.save("converted.pdf");
+    }
+
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
   </script>
 </body>
 </html>
