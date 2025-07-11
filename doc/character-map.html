@@ -137,70 +137,328 @@
   <div class="container" id="charMapContainer">
     <div id="output" class="copied"></div>
 
-    <h2>🔤 Letters & Numbers</h2>
-    <div class="char-grid">
-      ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789
-        .split('').map(c => `<div class="char-cell" onclick="copyChar('${c}')">${c}</div>`).join('')
-    </div>
+<h2>🔤 Letters & Numbers</h2>
+<div class="char-grid">
+  <!-- Uppercase -->
+  <div class="char-cell" onclick="copyChar('A')">A</div>
+  <div class="char-cell" onclick="copyChar('B')">B</div>
+  <div class="char-cell" onclick="copyChar('C')">C</div>
+  <div class="char-cell" onclick="copyChar('D')">D</div>
+  <div class="char-cell" onclick="copyChar('E')">E</div>
+  <div class="char-cell" onclick="copyChar('F')">F</div>
+  <div class="char-cell" onclick="copyChar('G')">G</div>
+  <div class="char-cell" onclick="copyChar('H')">H</div>
+  <div class="char-cell" onclick="copyChar('I')">I</div>
+  <div class="char-cell" onclick="copyChar('J')">J</div>
+  <div class="char-cell" onclick="copyChar('K')">K</div>
+  <div class="char-cell" onclick="copyChar('L')">L</div>
+  <div class="char-cell" onclick="copyChar('M')">M</div>
+  <div class="char-cell" onclick="copyChar('N')">N</div>
+  <div class="char-cell" onclick="copyChar('O')">O</div>
+  <div class="char-cell" onclick="copyChar('P')">P</div>
+  <div class="char-cell" onclick="copyChar('Q')">Q</div>
+  <div class="char-cell" onclick="copyChar('R')">R</div>
+  <div class="char-cell" onclick="copyChar('S')">S</div>
+  <div class="char-cell" onclick="copyChar('T')">T</div>
+  <div class="char-cell" onclick="copyChar('U')">U</div>
+  <div class="char-cell" onclick="copyChar('V')">V</div>
+  <div class="char-cell" onclick="copyChar('W')">W</div>
+  <div class="char-cell" onclick="copyChar('X')">X</div>
+  <div class="char-cell" onclick="copyChar('Y')">Y</div>
+  <div class="char-cell" onclick="copyChar('Z')">Z</div>
 
-    <h2>➕ Math Symbols</h2>
-    <div class="char-grid">
-      <div class="char-cell" onclick="copyChar('±')">±</div>
-      <div class="char-cell" onclick="copyChar('÷')">÷</div>
-      <div class="char-cell" onclick="copyChar('×')">×</div>
-      <div class="char-cell" onclick="copyChar('√')">√</div>
-      <div class="char-cell" onclick="copyChar('∑')">∑</div>
-      <div class="char-cell" onclick="copyChar('∏')">∏</div>
-      <div class="char-cell" onclick="copyChar('∫')">∫</div>
-      <div class="char-cell" onclick="copyChar('∞')">∞</div>
-      <div class="char-cell" onclick="copyChar('≈')">≈</div>
-    </div>
+  <!-- Lowercase -->
+  <div class="char-cell" onclick="copyChar('a')">a</div>
+  <div class="char-cell" onclick="copyChar('b')">b</div>
+  <div class="char-cell" onclick="copyChar('c')">c</div>
+  <div class="char-cell" onclick="copyChar('d')">d</div>
+  <div class="char-cell" onclick="copyChar('e')">e</div>
+  <div class="char-cell" onclick="copyChar('f')">f</div>
+  <div class="char-cell" onclick="copyChar('g')">g</div>
+  <div class="char-cell" onclick="copyChar('h')">h</div>
+  <div class="char-cell" onclick="copyChar('i')">i</div>
+  <div class="char-cell" onclick="copyChar('j')">j</div>
+  <div class="char-cell" onclick="copyChar('k')">k</div>
+  <div class="char-cell" onclick="copyChar('l')">l</div>
+  <div class="char-cell" onclick="copyChar('m')">m</div>
+  <div class="char-cell" onclick="copyChar('n')">n</div>
+  <div class="char-cell" onclick="copyChar('o')">o</div>
+  <div class="char-cell" onclick="copyChar('p')">p</div>
+  <div class="char-cell" onclick="copyChar('q')">q</div>
+  <div class="char-cell" onclick="copyChar('r')">r</div>
+  <div class="char-cell" onclick="copyChar('s')">s</div>
+  <div class="char-cell" onclick="copyChar('t')">t</div>
+  <div class="char-cell" onclick="copyChar('u')">u</div>
+  <div class="char-cell" onclick="copyChar('v')">v</div>
+  <div class="char-cell" onclick="copyChar('w')">w</div>
+  <div class="char-cell" onclick="copyChar('x')">x</div>
+  <div class="char-cell" onclick="copyChar('y')">y</div>
+  <div class="char-cell" onclick="copyChar('z')">z</div>
 
-    <h2>💱 Currency</h2>
-    <div class="char-grid">
-      <div class="char-cell" onclick="copyChar('$')">$</div>
-      <div class="char-cell" onclick="copyChar('€')">€</div>
-      <div class="char-cell" onclick="copyChar('£')">£</div>
-      <div class="char-cell" onclick="copyChar('¥')">¥</div>
-      <div class="char-cell" onclick="copyChar('₩')">₩</div>
-      <div class="char-cell" onclick="copyChar('₹')">₹</div>
-    </div>
+  <!-- Numbers -->
+  <div class="char-cell" onclick="copyChar('0')">0</div>
+  <div class="char-cell" onclick="copyChar('1')">1</div>
+  <div class="char-cell" onclick="copyChar('2')">2</div>
+  <div class="char-cell" onclick="copyChar('3')">3</div>
+  <div class="char-cell" onclick="copyChar('4')">4</div>
+  <div class="char-cell" onclick="copyChar('5')">5</div>
+  <div class="char-cell" onclick="copyChar('6')">6</div>
+  <div class="char-cell" onclick="copyChar('7')">7</div>
+  <div class="char-cell" onclick="copyChar('8')">8</div>
+  <div class="char-cell" onclick="copyChar('9')">9</div>
+</div>
 
-    <h2>➡️ Arrows</h2>
-    <div class="char-grid">
-      <div class="char-cell" onclick="copyChar('→')">→</div>
-      <div class="char-cell" onclick="copyChar('←')">←</div>
-      <div class="char-cell" onclick="copyChar('↑')">↑</div>
-      <div class="char-cell" onclick="copyChar('↓')">↓</div>
-      <div class="char-cell" onclick="copyChar('↔')">↔</div>
-      <div class="char-cell" onclick="copyChar('⇒')">⇒</div>
-      <div class="char-cell" onclick="copyChar('⇔')">⇔</div>
-    </div>
+<h2>➗ Math Symbols</h2>
+<div class="char-grid">
+  <!-- Basic Operators -->
+  <div class="char-cell" onclick="copyChar('+')">+</div>
+  <div class="char-cell" onclick="copyChar('-')">−</div>
+  <div class="char-cell" onclick="copyChar('×')">×</div>
+  <div class="char-cell" onclick="copyChar('÷')">÷</div>
+  <div class="char-cell" onclick="copyChar('=')">=</div>
+  <div class="char-cell" onclick="copyChar('≠')">≠</div>
+  <div class="char-cell" onclick="copyChar('≈')">≈</div>
+  <div class="char-cell" onclick="copyChar('≡')">≡</div>
+  <div class="char-cell" onclick="copyChar('∓')">∓</div>
 
-    <h2>✨ Decorations</h2>
-    <div class="char-grid">
-      <div class="char-cell" onclick="copyChar('★')">★</div>
-      <div class="char-cell" onclick="copyChar('☆')">☆</div>
-      <div class="char-cell" onclick="copyChar('♥')">♥</div>
-      <div class="char-cell" onclick="copyChar('♦')">♦</div>
-      <div class="char-cell" onclick="copyChar('♣')">♣</div>
-      <div class="char-cell" onclick="copyChar('♠')">♠</div>
-      <div class="char-cell" onclick="copyChar('☀')">☀</div>
-      <div class="char-cell" onclick="copyChar('☁')">☁</div>
-      <div class="char-cell" onclick="copyChar('☂')">☂</div>
-    </div>
+  <!-- Comparison -->
+  <div class="char-cell" onclick="copyChar('<')">&lt;</div>
+  <div class="char-cell" onclick="copyChar('>')">&gt;</div>
+  <div class="char-cell" onclick="copyChar('≤')">≤</div>
+  <div class="char-cell" onclick="copyChar('≥')">≥</div>
+  <div class="char-cell" onclick="copyChar('∝')">∝</div>
 
-    <h2>😃 Emoji</h2>
-    <div class="char-grid">
-      <div class="char-cell" onclick="copyChar('😀')">😀</div>
-      <div class="char-cell" onclick="copyChar('😂')">😂</div>
-      <div class="char-cell" onclick="copyChar('😍')">😍</div>
-      <div class="char-cell" onclick="copyChar('👍')">👍</div>
-      <div class="char-cell" onclick="copyChar('🙏')">🙏</div>
-      <div class="char-cell" onclick="copyChar('🎉')">🎉</div>
-      <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
-      <div class="char-cell" onclick="copyChar('💯')">💯</div>
-    </div>
+  <!-- Sets & Logic -->
+  <div class="char-cell" onclick="copyChar('∈')">∈</div>
+  <div class="char-cell" onclick="copyChar('∉')">∉</div>
+  <div class="char-cell" onclick="copyChar('⊂')">⊂</div>
+  <div class="char-cell" onclick="copyChar('⊃')">⊃</div>
+  <div class="char-cell" onclick="copyChar('⊆')">⊆</div>
+  <div class="char-cell" onclick="copyChar('⊇')">⊇</div>
+  <div class="char-cell" onclick="copyChar('∪')">∪</div>
+  <div class="char-cell" onclick="copyChar('∩')">∩</div>
+  <div class="char-cell" onclick="copyChar('¬')">¬</div>
+  <div class="char-cell" onclick="copyChar('∧')">∧</div>
+  <div class="char-cell" onclick="copyChar('∨')">∨</div
+  >
+  <div class="char-cell" onclick="copyChar('∴')">∴</div>
+  <div class="char-cell" onclick="copyChar('∵')">∵</div>
+
+  <!-- Calculus & Greek -->
+  <div class="char-cell" onclick="copyChar('∞')">∞</div>
+  <div class="char-cell" onclick="copyChar('∫')">∫</div>
+  <div class="char-cell" onclick="copyChar('∬')">∬</div>
+  <div class="char-cell" onclick="copyChar('∇')">∇</div>
+  <div class="char-cell" onclick="copyChar('∂')">∂</div>
+  <div class="char-cell" onclick="copyChar('Σ')">Σ</div>
+  <div class="char-cell" onclick="copyChar('π')">π</div>
+  <div class="char-cell" onclick="copyChar('θ')">θ</div>
+  <div class="char-cell" onclick="copyChar('λ')">λ</div>
+
+  <!-- Geometry -->
+  <div class="char-cell" onclick="copyChar('∠')">∠</div>
+  <div class="char-cell" onclick="copyChar('⊥')">⊥</div>
+  <div class="char-cell" onclick="copyChar('‖')">‖</div>
+  <div class="char-cell" onclick="copyChar('△')">△</div>
+  <div class="char-cell" onclick="copyChar('◯')">◯</div>
+
+  <!-- Special -->
+  <div class="char-cell" onclick="copyChar('√')">√</div>
+  <div class="char-cell" onclick="copyChar('∛')">∛</div>
+  <div class="char-cell" onclick="copyChar('∜')">∜</div>
+  <div class="char-cell" onclick="copyChar('%')">%</div>
+  <div class="char-cell" onclick="copyChar('‰')">‰</div>
+</div>
+
+   <h2>💱 Currency Symbols</h2>
+<div class="char-grid">
+  <!-- Common Symbols -->
+  <div class="char-cell" onclick="copyChar('$')">$</div>
+  <div class="char-cell" onclick="copyChar('¢')">¢</div>
+  <div class="char-cell" onclick="copyChar('£')">£</div>
+  <div class="char-cell" onclick="copyChar('€')">€</div>
+  <div class="char-cell" onclick="copyChar('¥')">¥</div>
+  <div class="char-cell" onclick="copyChar('₩')">₩</div>
+  <div class="char-cell" onclick="copyChar('₨')">₨</div>
+  <div class="char-cell" onclick="copyChar('₱')">₱</div>
+  <div class="char-cell" onclick="copyChar('₹')">₹</div>
+  <div class="char-cell" onclick="copyChar('₦')">₦</div>
+  <div class="char-cell" onclick="copyChar('₴')">₴</div>
+  <div class="char-cell" onclick="copyChar('₭')">₭</div>
+  <div class="char-cell" onclick="copyChar('₮')">₮</div>
+  <div class="char-cell" onclick="copyChar('₺')">₺</div>
+  <div class="char-cell" onclick="copyChar('₡')">₡</div>
+  <div class="char-cell" onclick="copyChar('₢')">₢</div>
+  <div class="char-cell" onclick="copyChar('₳')">₳</div>
+  <div class="char-cell" onclick="copyChar('₥')">₥</div>
+  <div class="char-cell" onclick="copyChar('₰')">₰</div
+  >
+  <!-- Crypto symbols -->
+  <div class="char-cell" onclick="copyChar('₿')">₿</div>
+  <div class="char-cell" onclick="copyChar('Ξ')">Ξ</div>
+</div>
+
+
+<h2>➡️ Arrow Symbols</h2>
+<div class="char-grid">
+  <!-- Basic Directions -->
+  <div class="char-cell" onclick="copyChar('←')">←</div>
+  <div class="char-cell" onclick="copyChar('↑')">↑</div>
+  <div class="char-cell" onclick="copyChar('→')">→</div>
+  <div class="char-cell" onclick="copyChar('↓')">↓</div>
+  <div class="char-cell" onclick="copyChar('↔')">↔</div>
+  <div class="char-cell" onclick="copyChar('↕')">↕</div>
+
+  <!-- Curved Arrows -->
+  <div class="char-cell" onclick="copyChar('↩')">↩</div>
+  <div class="char-cell" onclick="copyChar('↪')">↪</div>
+  <div class="char-cell" onclick="copyChar('⤴')">⤴</div>
+  <div class="char-cell" onclick="copyChar('⤵')">⤵</div>
+  <div class="char-cell" onclick="copyChar('↻')">↻</div>
+  <div class="char-cell" onclick="copyChar('↺')">↺</div>
+
+  <!-- Double Arrows -->
+  <div class="char-cell" onclick="copyChar('⇐')">⇐</div>
+  <div class="char-cell" onclick="copyChar('⇑')">⇑</div>
+  <div class="char-cell" onclick="copyChar('⇒')">⇒</div>
+  <div class="char-cell" onclick="copyChar('⇓')">⇓</div>
+  <div class="char-cell" onclick="copyChar('⇔')">⇔</div>
+  <div class="char-cell" onclick="copyChar('⇕')">⇕</div>
+
+  <!-- Fancy/Block Arrows -->
+  <div class="char-cell" onclick="copyChar('➔')">➔</div>
+  <div class="char-cell" onclick="copyChar('➜')">➜</div>
+  <div class="char-cell" onclick="copyChar('➝')">➝</div>
+  <div class="char-cell" onclick="copyChar('➞')">➞</div>
+  <div class="char-cell" onclick="copyChar('➟')">➟</div>
+  <div class="char-cell" onclick="copyChar('➠')">➠</div>
+  <div class="char-cell" onclick="copyChar('➡')">➡</div>
+  <div class="char-cell" onclick="copyChar('➢')">➢</div>
+  <div class="char-cell" onclick="copyChar('➣')">➣</div>
+  <div class="char-cell" onclick="copyChar('➤')">➤</div>
+  <div class="char-cell" onclick="copyChar('➥')">➥</div>
+  <div class="char-cell" onclick="copyChar('➦')">➦</div>
+  <div class="char-cell" onclick="copyChar('➧')">➧</div>
+  <div class="char-cell" onclick="copyChar('➨')">➨</div>
+
+  <!-- Other Arrows -->
+  <div class="char-cell" onclick="copyChar('⟵')">⟵</div>
+  <div class="char-cell" onclick="copyChar('⟶')">⟶</div>
+  <div class="char-cell" onclick="copyChar('⟷')">⟷</div>
+  <div class="char-cell" onclick="copyChar('⟹')">⟹</div>
+  <div class="char-cell" onclick="copyChar('⟺')">⟺</div>
+</div>
+
+
+   <h2>✨ Decoration Symbols</h2>
+<div class="char-grid">
+  <!-- Stars & Sparkles -->
+  <div class="char-cell" onclick="copyChar('★')">★</div>
+  <div class="char-cell" onclick="copyChar('☆')">☆</div>
+  <div class="char-cell" onclick="copyChar('✦')">✦</div>
+  <div class="char-cell" onclick="copyChar('✧')">✧</div>
+  <div class="char-cell" onclick="copyChar('✨')">✨</div>
+  <div class="char-cell" onclick="copyChar('✪')">✪</div>
+  <div class="char-cell" onclick="copyChar('🌟')">🌟</div>
+
+  <!-- Lines & Separators -->
+  <div class="char-cell" onclick="copyChar('━')">━</div>
+  <div class="char-cell" onclick="copyChar('┉')">┉</div>
+  <div class="char-cell" onclick="copyChar('╍')">╍</div>
+  <div class="char-cell" onclick="copyChar('═')">═</div>
+  <div class="char-cell" onclick="copyChar('▪')">▪</div>
+  <div class="char-cell" onclick="copyChar('▫')">▫</div>
+  <div class="char-cell" onclick="copyChar('•')">•</div>
+  <div class="char-cell" onclick="copyChar('‣')">‣</div>
+  <div class="char-cell" onclick="copyChar('※')">※</div>
+  <div class="char-cell" onclick="copyChar('⁂')">⁂</div>
+  <div class="char-cell" onclick="copyChar('⁎')">⁎</div>
+
+  <!-- Hearts & Love -->
+  <div class="char-cell" onclick="copyChar('♥')">♥</div>
+  <div class="char-cell" onclick="copyChar('♡')">♡</div>
+  <div class="char-cell" onclick="copyChar('❤')">❤</div>
+  <div class="char-cell" onclick="copyChar('💖')">💖</div>
+  <div class="char-cell" onclick="copyChar('❣')">❣</div>
+  <div class="char-cell" onclick="copyChar('💕')">💕</div>
+
+  <!-- Crowns, Ribbons, Arrows -->
+  <div class="char-cell" onclick="copyChar('👑')">👑</div>
+  <div class="char-cell" onclick="copyChar('🎀')">🎀</div>
+  <div class="char-cell" onclick="copyChar('➶')">➶</div>
+  <div class="char-cell" onclick="copyChar('➴')">➴</div>
+
+  <!-- Music / Notes -->
+  <div class="char-cell" onclick="copyChar('♪')">♪</div>
+  <div class="char-cell" onclick="copyChar('♫')">♫</div>
+  <div class="char-cell" onclick="copyChar('♩')">♩</div>
+  <div class="char-cell" onclick="copyChar('♬')">♬</div>
+
+  <!-- Emo-flair -->
+  <div class="char-cell" onclick="copyChar('☀')">☀</div>
+  <div class="char-cell" onclick="copyChar('☁')">☁</div>
+  <div class="char-cell" onclick="copyChar('☂')">☂</div>
+  <div class="char-cell" onclick="copyChar('☃')">☃</div>
+  <div class="char-cell" onclick="copyChar('❄')">❄</div>
+  <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
+  <div class="char-cell" onclick="copyChar('💫')">💫</div>
+</div>
+
+<h2>😄 Emoji Symbols</h2>
+<div class="char-grid">
+  <!-- Faces -->
+  <div class="char-cell" onclick="copyChar('😀')">😀</div>
+  <div class="char-cell" onclick="copyChar('😃')">😃</div>
+  <div class="char-cell" onclick="copyChar('😄')">😄</div>
+  <div class="char-cell" onclick="copyChar('😁')">😁</div>
+  <div class="char-cell" onclick="copyChar('😆')">😆</div>
+  <div class="char-cell" onclick="copyChar('😅')">😅</div>
+  <div class="char-cell" onclick="copyChar('😂')">😂</div>
+  <div class="char-cell" onclick="copyChar('🤣')">🤣</div>
+  <div class="char-cell" onclick="copyChar('😊')">😊</div>
+  <div class="char-cell" onclick="copyChar('😇')">😇</div>
+  <div class="char-cell" onclick="copyChar('😉')">😉</div>
+  <div class="char-cell" onclick="copyChar('😍')">😍</div>
+  <div class="char-cell" onclick="copyChar('😘')">😘</div>
+  <div class="char-cell" onclick="copyChar('😜')">😜</div>
+
+  <!-- Hands -->
+  <div class="char-cell" onclick="copyChar('👍')">👍</div>
+  <div class="char-cell" onclick="copyChar('👎')">👎</div>
+  <div class="char-cell" onclick="copyChar('👊')">👊</div>
+  <div class="char-cell" onclick="copyChar('✊')">✊</div>
+  <div class="char-cell" onclick="copyChar('🤛')">🤛</div>
+  <div class="char-cell" onclick="copyChar('🤜')">🤜</div>
+  <div class="char-cell" onclick="copyChar('👏')">👏</div>
+  <div class="char-cell" onclick="copyChar('🙌')">🙌</div>
+  <div class="char-cell" onclick="copyChar('👐')">👐</div>
+  <div class="char-cell" onclick="copyChar('🤲')">🤲</div>
+
+  <!-- Hearts -->
+  <div class="char-cell" onclick="copyChar('❤️')">❤️</div>
+  <div class="char-cell" onclick="copyChar('🧡')">🧡</div>
+  <div class="char-cell" onclick="copyChar('💛')">💛</div>
+  <div class="char-cell" onclick="copyChar('💚')">💚</div>
+  <div class="char-cell" onclick="copyChar('💙')">💙</div>
+  <div class="char-cell" onclick="copyChar('💜')">💜</div>
+  <div class="char-cell" onclick="copyChar('🖤')">🖤</div>
+  <div class="char-cell" onclick="copyChar('🤍')">🤍</div>
+  <div class="char-cell" onclick="copyChar('💖')">💖</div>
+  <div class="char-cell" onclick="copyChar('💗')">💗</div>
+
+  <!-- Symbols -->
+  <div class="char-cell" onclick="copyChar('⚠️')">⚠️</div>
+  <div class="char-cell" onclick="copyChar('❗')">❗</div>
+  <div class="char-cell" onclick="copyChar('❓')">❓</div>
+  <div class="char-cell" onclick="copyChar('✅')">✅</div>
+  <div class="char-cell" onclick="copyChar('❌')">❌</div>
+  <div class="char-cell" onclick="copyChar('💯')">💯</div>
+  <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
+  <div class="char-cell" onclick="copyChar('🌈')">🌈</div>
+  <div class="char-cell" onclick="copyChar('🎉')">🎉</div>
+  <div class="char-cell" onclick="copyChar('🧸')">🧸</div>
+</div>
+
   </div>
 
   <div class="adsense-footer">
