@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Utilivy - Lorem Ipsum Generator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -27,58 +27,93 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     header h1 {
       margin: 0;
       font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: 2rem auto;
       padding: 2rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
-    label, p {
+    label {
       display: block;
       margin-top: 1rem;
       font-weight: 500;
     }
-    input[type="number"], select {
+    input, select {
       width: 100%;
       padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
       margin-top: 0.5rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
       font-size: 1rem;
     }
-    textarea {
-      width: 100%;
-      margin-top: 1rem;
-      padding: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      min-height: 200px;
-    }
-    button {
+    button.generate {
       background: var(--primary-color);
       color: white;
       border: none;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1rem;
       border-radius: 8px;
       cursor: pointer;
       font-size: 1rem;
       margin-top: 1.5rem;
+      width: 100%;
     }
-    button:hover {
+    button.generate:hover {
       background-color: #4338ca;
+    }
+    textarea {
+      width: 100%;
+      margin-top: 1.5rem;
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #d1d5db;
+      height: 200px;
     }
     footer {
       text-align: center;
@@ -86,65 +121,80 @@
       font-size: 0.9rem;
       color: #6b7280;
     }
-    @media (max-width: 600px) {
-      .container {
-        margin: 1rem;
-        padding: 1rem;
-      }
-      header h1 {
-        font-size: 1.25rem;
-      }
-    }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>Utilivy - Lorem Ipsum Generator</h1>
-    <a href="/">← Back to Home</a>
+    <h1 data-en="Utilivy - Lorem Ipsum Generator" data-zh="Utilivy - 假文生成器">Utilivy - Lorem Ipsum Generator</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+    </div>
   </header>
 
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
+  </div>
+
   <div class="container">
-    <h2>Lorem Ipsum Generator</h2>
-    <label for="type">Type:</label>
+    <label data-en="Paragraphs" data-zh="段落数">Paragraphs</label>
+    <input type="number" id="paragraphs" value="3" min="1" max="20"/>
+
+    <label data-en="Text Type" data-zh="文本类型">Text Type</label>
     <select id="type">
-      <option value="paragraphs">Paragraphs</option>
-      <option value="sentences">Sentences</option>
-      <option value="words">Words</option>
+      <option value="lorem">Classic Lorem Ipsum</option>
+      <option value="hipster">Hipster Ipsum</option>
+      <option value="tech">Tech Jargon Ipsum</option>
     </select>
 
-    <label for="amount">Amount:</label>
-    <input type="number" id="amount" value="3" min="1">
-
-    <button onclick="generateLorem()">Generate</button>
+    <button class="generate" onclick="generateLorem()">Generate</button>
 
     <textarea id="output" readonly></textarea>
   </div>
 
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
   <footer>
-    &copy; 2025 Utilivy. All rights reserved.
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
     function generateLorem() {
+      const paras = parseInt(document.getElementById("paragraphs").value);
       const type = document.getElementById("type").value;
-      const amount = parseInt(document.getElementById("amount").value);
       const output = document.getElementById("output");
 
-      fetch(`https://baconipsum.com/api/?type=meat-and-filler&format=text&paras=${type === 'paragraphs' ? amount : 1}`)
-        .then(res => res.text())
-        .then(data => {
-          let text = data;
-          if (type === 'sentences') {
-            const sentences = data.replace(/\n+/g, ' ').match(/[^.!?]+[.!?]/g);
-            text = sentences?.slice(0, amount).join(' ') || '';
-          } else if (type === 'words') {
-            text = data.replace(/\n+/g, ' ').split(/\s+/).slice(0, amount).join(' ');
-          }
-          output.value = text;
-        });
+      let baseText;
+      switch (type) {
+        case "hipster":
+          baseText = "Fixie helvetica kinfolk fanny pack biodiesel pitchfork. Cray hammock dreamcatcher bushwick pickled fingerstache tofu.";
+          break;
+        case "tech":
+          baseText = "Leverage agile frameworks to provide a robust synopsis for high level overviews. Iterative approaches to corporate strategy foster collaborative thinking.";
+          break;
+        default:
+          baseText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+      }
+
+      let result = "";
+      for (let i = 0; i < paras; i++) {
+        result += baseText + "\n\n";
+      }
+
+      output.value = result.trim();
+    }
+
+    function setLanguage(lang) {
+      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
     }
   </script>
-
 </body>
 </html>
+
