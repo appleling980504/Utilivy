@@ -1,108 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Utilivy - Split & Group PDF</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Split PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <style>
     :root {
-      --primary-color:#4f46e5;
-      --bg-color:#f3f4f6;
-      --text-color:#111827;
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
     }
-    *{box-sizing:border-box;}
-    body{
-      margin:0;
-      font-family:'Inter',sans-serif;
-      background-color:var(--bg-color);
-      color:var(--text-color);
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
     }
-    header{
-      background:white;
-      padding:1rem 2rem;
-      box-shadow:0 2px 4px rgba(0,0,0,0.05);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
     }
-    .header-right{display:flex;align-items:center;gap:1rem;}
-    .lang-switch button{
-      background:var(--primary-color);
-      color:white;
-      border:none;
-      border-radius:6px;
-      padding:0.4rem 0.8rem;
-      cursor:pointer;
+    .header-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
     }
-    header a{ text-decoration:none; color:var(--primary-color); font-weight:500; }
-    .adsense-banner,.adsense-footer{ text-align:center; display:none; margin:1rem 0; color:gray;}
-    .container{
-      max-width:900px;
-      margin:2rem auto;
-      padding:2rem;
-      background:white;
-      border-radius:12px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
     }
-    label,button,input,textarea{
-      margin-top:0.5rem;
-      font-size:1rem;
+    .adsense-banner, .adsense-footer {
+      display: none;
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
     }
-    input[type="file"],input[type="text"],textarea{
-      width:100%;
-      padding:0.75rem;
-      border:1px solid #d1d5db;
-      border-radius:8px;
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    textarea{height:60px;}
-    #taskList,#previewList{
-      list-style:none;
-      padding:0;
-      margin:1rem 0;
+    input[type="file"], textarea {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 1rem;
     }
-    #taskList li,#previewList li{
-      background:#f3f4f6;
-      margin-bottom:0.5rem;
-      padding:0.5rem;
-      border-radius:6px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      cursor:move;
+    button {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
     }
-    .group-btn,.del-btn{
-      margin-left:0.5rem;
-      padding:0.2rem 0.4rem;
-      border:none;
-      border-radius:4px;
-      cursor:pointer;
+    ul { padding-left: 0; list-style: none; }
+    li {
+      background: #f3f4f6;
+      margin-top: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    .group-btn{background:#10b981;color:white;}
-    .del-btn{background:#ef4444;color:white;}
-    button.main-btn{
-      background:var(--primary-color);
-      color:white;
-      border:none;
-      padding:0.75rem 1.2rem;
-      border-radius:8px;
-      cursor:pointer;
-      margin-right:0.5rem;
-      margin-top:1rem;
+    li span { flex: 1; }
+    .remove-btn {
+      background: #ef4444;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 0.3rem 0.6rem;
+      cursor: pointer;
+      margin-left: 1rem;
     }
-    footer{
-      text-align:center;
-      padding:1rem;
-      font-size:0.9rem;
-      color:#6b7280;
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
 <body>
 <header>
-  <h1 data-en="Utilivy - Split & Group PDF" data-zh="Utilivy - 拆分并分组 PDF">Utilivy - Split & Group PDF</h1>
+  <h1 data-en="Utilivy - Split PDF" data-zh="Utilivy - 拆分 PDF">Utilivy - Split PDF</h1>
   <div class="header-right">
     <div class="lang-switch">
       <button onclick="setLang('en')">EN</button>
@@ -115,157 +117,109 @@
 <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
 <div class="container">
-  <label data-en="Upload PDF file" data-zh="上传 PDF 文件">Upload PDF file</label>
-  <input type="file" id="pdfFile" accept="application/pdf"/>
+  <label>Upload PDF</label>
+  <input type="file" id="pdfFile" accept="application/pdf" />
 
-  <label data-en="Enter page ranges (e.g. 1-3,5,7-9)" data-zh="输入页码范围（如 1-3,5,7-9）">Enter page ranges (e.g. 1-3,5,7-9)</label>
-  <textarea id="ranges" placeholder="1-3,5,7-9"></textarea>
+  <label>Enter page ranges (e.g. 1-2,4-5)</label>
+  <textarea id="rangeInput" placeholder="1-2,4,6-8"></textarea>
 
-  <button class="main-btn" onclick="addTask()" data-en="Add Task" data-zh="添加任务">Add Task</button>
-
+  <button onclick="addTask()">Add Split Task</button>
   <ul id="taskList"></ul>
 
-  <button class="main-btn" onclick="processTasks()" data-en="Split & Preview" data-zh="拆分并预览">Split & Preview</button>
-
-  <ul id="previewList"></ul>
-
-  <button class="main-btn" onclick="downloadSelected()" data-en="Download Selected" data-zh="下载选中项">Download Selected</button>
+  <button onclick="splitTasks()">Split & Download</button>
 </div>
 
 <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
 
-<footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
+<footer>
+  &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+</footer>
 
 <script>
-function setLang(l){
-  window.lang=l;
-  document.querySelectorAll('[data-en]').forEach(el=>{
-    el.textContent=(l==='zh'?el.getAttribute('data-zh'):el.getAttribute('data-en'));
-  });
-}
-setLang('en');
-
-let pdfBuf, pdfDoc;
-document.getElementById('pdfFile').addEventListener('change',async e=>{
-  const f=e.target.files[0];
-  if(!f)return;
-  pdfBuf=await f.arrayBuffer();
-  pdfDoc=await PDFLib.PDFDocument.load(pdfBuf);
-});
-
-let tasks=[];
-function addTask(){
-  if(!pdfDoc) return alert('Please upload a PDF file first');
-  const ranges=document.getElementById('ranges').value.trim();
-  if(!ranges) return alert('Please enter page ranges');
-  const list=parseRanges(ranges);
-  if(!list.length) return alert('Invalid ranges');
-  tasks.push(list);
-  renderTasks();
-}
-
-function parseRanges(text){
-  const parts = text.split(',');
-  const res = [];
-  const total = pdfDoc.getPageCount();
-  for(const p of parts){
-    const match = p.match(/^(\d+)(?:-(\d+))?$/);
-    if(match){
-      const a = parseInt(match[1], 10);
-      const b = match[2] ? parseInt(match[2], 10) : a;
-      if (a < 1 || b > total || a > b) {
-        alert(`Invalid range: ${p} (PDF has ${total} pages)`);
-        return [];
-      }
-      res.push([a-1, b-1]); // zero-based index for pdf-lib
-    } else {
-      alert(`Invalid format: ${p}`);
-      return [];
-    }
-  }
-  return res;
-}
-
-
-function renderTasks(){
-  const ul=document.getElementById('taskList');
-  ul.innerHTML='';
-  tasks.forEach((r,i)=>{
-    const li=document.createElement('li');
-    li.draggable=true; li.dataset.idx=i;
-    li.innerHTML = `<span>\${r.map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')}</span>`;
-    const del=document.createElement('button');
-    del.textContent='×'; del.className='del-btn';
-    del.onclick=()=>{tasks.splice(i,1); renderTasks();}
-    li.appendChild(del);
-    ul.appendChild(li);
-  });
-  makeSortable('taskList',()=>{
-    const arr=[...document.getElementById('taskList').children].map(ch=>+ch.dataset.idx);
-    tasks=arr.map(i=>tasks[i]);
-    renderTasks();
-  });
-}
-
-function makeSortable(listId, onDrop){
-  const ul=document.getElementById(listId);
-  let drag=null;
-  Array.from(ul.children).forEach(li=>{
-    li.addEventListener('dragstart',()=>drag=li);
-    li.addEventListener('dragover',e=>e.preventDefault());
-    li.addEventListener('drop',e=>{
-      e.preventDefault();
-      const target=e.target.closest('li');
-      if(drag && target && drag!==target){
-        ul.insertBefore(drag,target);
-        if(onDrop) onDrop();
-      }
+  let lang = 'en';
+  function setLang(l) {
+    lang = l;
+    document.querySelectorAll('[data-en]').forEach(el => {
+      el.textContent = l === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
     });
+  }
+  setLang('en');
+
+  let pdfDoc = null;
+  let pdfBytes = null;
+  const tasks = [];
+
+  document.getElementById('pdfFile').addEventListener('change', async e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    pdfBytes = await file.arrayBuffer();
+    pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    alert("PDF loaded successfully.");
   });
-}
 
-async function processTasks(){
-  const preview=document.getElementById('previewList');
-  preview.innerHTML='';
-  if(!tasks.length) return alert('No tasks to process');
-  for(let i=0;i<tasks.length;i++){
-    const newPdf=await PDFLib.PDFDocument.create();
-    for(const [a,b] of tasks[i]){
-      const pages=await newPdf.copyPages(pdfDoc, Array.from({length:b-a+1},(_,k)=>a+k));
-      pages.forEach(p=>newPdf.addPage(p));
+  function parseRange(str, totalPages) {
+    const parts = str.split(',');
+    const result = [];
+    for (let part of parts) {
+      part = part.trim();
+      const match = part.match(/^(\d+)(?:-(\d+))?$/);
+      if (!match) continue;
+      let start = parseInt(match[1], 10);
+      let end = match[2] ? parseInt(match[2], 10) : start;
+      if (start < 1 || end > totalPages || start > end) {
+        alert(`Invalid range: ${part}`);
+        return null;
+      }
+      result.push([start - 1, end - 1]);
     }
-    const bytes=await newPdf.save();
-    const blob=new Blob([bytes],{type:'application/pdf'});
-    const url=URL.createObjectURL(blob);
-    const li=document.createElement('li');
-    const chk=document.createElement('input'); chk.type='checkbox'; chk.checked=true;
-    const a=document.createElement('a'); a.href=url;
-    a.textContent=`Part ${i+1} (${tasks[i].map(p=>`${p[0]+1}-${p[1]+1}`).join(', ')})`;
-    a.download=`part-${i+1}.pdf`;
-    li.appendChild(chk); li.appendChild(a);
-    preview.appendChild(li);
+    return result;
   }
-}
 
-async function downloadSelected(){
-  const lis=[...document.querySelectorAll('#previewList li')];
-  const sel=lis.filter(li=>li.querySelector('input').checked);
-  if(!sel.length) return alert('No selection');
-  const merged=await PDFLib.PDFDocument.create();
-  for(const li of sel){
-    const url=li.querySelector('a').href;
-    const buf=await fetch(url).then(r=>r.arrayBuffer());
-    const part=await PDFLib.PDFDocument.load(buf);
-    const pages=await merged.copyPages(part, part.getPageIndices());
-    pages.forEach(p=>merged.addPage(p));
+  function addTask() {
+    if (!pdfDoc) return alert("Please upload a PDF first.");
+    const input = document.getElementById('rangeInput').value;
+    const parsed = parseRange(input, pdfDoc.getPageCount());
+    if (!parsed) return;
+    tasks.push(parsed);
+    renderTasks();
   }
-  const out=await merged.save();
-  const blob=new Blob([out],{type:'application/pdf'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='merged-selected.pdf';
-  a.click();
-}
+
+  function renderTasks() {
+    const ul = document.getElementById('taskList');
+    ul.innerHTML = '';
+    tasks.forEach((ranges, index) => {
+      const li = document.createElement('li');
+      const span = document.createElement('span');
+      span.textContent = ranges.map(r => `${r[0]+1}-${r[1]+1}`).join(', ');
+      const btn = document.createElement('button');
+      btn.textContent = '×';
+      btn.className = 'remove-btn';
+      btn.onclick = () => {
+        tasks.splice(index, 1);
+        renderTasks();
+      };
+      li.appendChild(span);
+      li.appendChild(btn);
+      ul.appendChild(li);
+    });
+  }
+
+  async function splitTasks() {
+    if (!pdfDoc || tasks.length === 0) return alert("No tasks to split.");
+    for (let i = 0; i < tasks.length; i++) {
+      const newDoc = await PDFLib.PDFDocument.create();
+      for (const [start, end] of tasks[i]) {
+        const pages = await newDoc.copyPages(pdfDoc, Array.from({length: end - start + 1}, (_, idx) => start + idx));
+        pages.forEach(p => newDoc.addPage(p));
+      }
+      const pdfBytes = await newDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `split-part-${i+1}.pdf`;
+      a.click();
+    }
+  }
 </script>
 </body>
 </html>
