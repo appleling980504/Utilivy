@@ -120,7 +120,7 @@
   <label>Upload PDF</label>
   <input type="file" id="pdfFile" accept="application/pdf" />
 
-  <label>Enter page ranges (e.g. 1-2,4-5)</label>
+  <label>Enter page ranges (e.g. 1-2,4,6-8)</label>
   <textarea id="rangeInput" placeholder="1-2,4,6-8"></textarea>
 
   <button onclick="addTask()">Add Split Task</button>
@@ -145,15 +145,15 @@
   }
   setLang('en');
 
-  let pdfDoc = null;
   let pdfBytes = null;
+  let originalPdf = null;
   const tasks = [];
 
   document.getElementById('pdfFile').addEventListener('change', async e => {
     const file = e.target.files[0];
     if (!file) return;
     pdfBytes = await file.arrayBuffer();
-    pdfDoc = await PDFLib.PDFDocument.load(pdfBytes);
+    originalPdf = await PDFLib.PDFDocument.load(pdfBytes);
     alert("PDF loaded successfully.");
   });
 
@@ -170,16 +170,16 @@
         alert(`Invalid range: ${part}`);
         return null;
       }
-      result.push([start - 1, end - 1]);
+      result.push([start - 1, end - 1]); // PDFLib uses zero-based page index
     }
     return result;
   }
 
   function addTask() {
-    if (!pdfDoc) return alert("Please upload a PDF first.");
+    if (!originalPdf) return alert("Please upload a PDF first.");
     const input = document.getElementById('rangeInput').value;
-    const parsed = parseRange(input, pdfDoc.getPageCount());
-    if (!parsed) return;
+    const parsed = parseRange(input, originalPdf.getPageCount());
+    if (!parsed || parsed.length === 0) return;
     tasks.push(parsed);
     renderTasks();
   }
@@ -205,20 +205,30 @@
   }
 
   async function splitTasks() {
-    if (!pdfDoc || tasks.length === 0) return alert("No tasks to split.");
+    if (!originalPdf || tasks.length === 0) {
+      alert("No tasks to process.");
+      return;
+    }
+
     for (let i = 0; i < tasks.length; i++) {
+      const taskRanges = tasks[i];
       const newDoc = await PDFLib.PDFDocument.create();
-      for (const [start, end] of tasks[i]) {
-        const pages = await newDoc.copyPages(pdfDoc, Array.from({length: end - start + 1}, (_, idx) => start + idx));
+      for (const [start, end] of taskRanges) {
+        const pages = await newDoc.copyPages(originalPdf, Array.from({length: end - start + 1}, (_, idx) => start + idx));
         pages.forEach(p => newDoc.addPage(p));
       }
-      const pdfBytes = await newDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `split-part-${i+1}.pdf`;
-      a.click();
+
+      const newBytes = await newDoc.save();
+      const blob = new Blob([newBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `split-part-${i+1}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
+
+    alert("All parts downloaded.");
   }
 </script>
 </body>
