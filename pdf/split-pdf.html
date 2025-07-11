@@ -28,11 +28,7 @@
       align-items:center;
       flex-wrap:wrap;
     }
-    .header-right{
-      display:flex;
-      align-items:center;
-      gap:1rem;
-    }
+    .header-right{display:flex;align-items:center;gap:1rem;}
     .lang-switch button{
       background:var(--primary-color);
       color:white;
@@ -41,17 +37,8 @@
       padding:0.4rem 0.8rem;
       cursor:pointer;
     }
-    header a{
-      text-decoration:none;
-      color:var(--primary-color);
-      font-weight:500;
-    }
-    .adsense-banner,.adsense-footer{
-      text-align:center;
-      color:gray;
-      display:none;
-      margin:1rem 0;
-    }
+    header a{ text-decoration:none; color:var(--primary-color); font-weight:500; }
+    .adsense-banner,.adsense-footer{ text-align:center; display:none; margin:1rem 0; color:gray;}
     .container{
       max-width:900px;
       margin:2rem auto;
@@ -64,19 +51,13 @@
       margin-top:0.5rem;
       font-size:1rem;
     }
-    input[type="file"],input[type="text"]{
+    input[type="file"],input[type="text"],textarea{
       width:100%;
       padding:0.75rem;
       border:1px solid #d1d5db;
       border-radius:8px;
     }
-    textarea{
-      width:100%;
-      height:60px;
-      padding:0.75rem;
-      border:1px solid #d1d5db;
-      border-radius:8px;
-    }
+    textarea{height:60px;}
     #taskList,#previewList{
       list-style:none;
       padding:0;
@@ -92,19 +73,15 @@
       align-items:center;
       cursor:move;
     }
-    .group-btn, .del-btn{
+    .group-btn,.del-btn{
       margin-left:0.5rem;
       padding:0.2rem 0.4rem;
       border:none;
       border-radius:4px;
       cursor:pointer;
     }
-    .group-btn{
-      background:#10b981;color:white;
-    }
-    .del-btn{
-      background:#ef4444;color:white;
-    }
+    .group-btn{background:#10b981;color:white;}
+    .del-btn{background:#ef4444;color:white;}
     button.main-btn{
       background:var(--primary-color);
       color:white;
@@ -144,15 +121,15 @@
   <label data-en="Enter page ranges (e.g. 1-3,5,7-9)" data-zh="输入页码范围（如 1-3,5,7-9）">Enter page ranges (e.g. 1-3,5,7-9)</label>
   <textarea id="ranges" placeholder="1-3,5,7-9"></textarea>
 
-  <button class="main-btn" onclick="addTask()"
-    data-en="Add Task" data-zh="添加任务">Add Task</button>
+  <button class="main-btn" onclick="addTask()" data-en="Add Task" data-zh="添加任务">Add Task</button>
 
   <ul id="taskList"></ul>
 
-  <button class="main-btn" onclick="processTasks()"
-    data-en="Split & Preview" data-zh="拆分并预览">Split & Preview</button>
+  <button class="main-btn" onclick="processTasks()" data-en="Split & Preview" data-zh="拆分并预览">Split & Preview</button>
 
   <ul id="previewList"></ul>
+
+  <button class="main-btn" onclick="downloadSelected()" data-en="Download Selected" data-zh="下载选中项">Download Selected</button>
 </div>
 
 <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
@@ -160,12 +137,11 @@
 <footer>&copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span></footer>
 
 <script>
-function setText() {
-  document.querySelectorAll('[data-en]').forEach(el=>el.textContent=lang==='zh'?el.getAttribute('data-zh'):el.getAttribute('data-en'));
-}
 function setLang(l){
-  window.lang = l;
-  setText();
+  window.lang=l;
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    el.textContent=(l==='zh'?el.getAttribute('data-zh'):el.getAttribute('data-en'));
+  });
 }
 setLang('en');
 
@@ -179,99 +155,108 @@ document.getElementById('pdfFile').addEventListener('change',async e=>{
 
 let tasks=[];
 function addTask(){
+  if(!pdfDoc) return alert('Please upload a PDF file first');
   const ranges=document.getElementById('ranges').value.trim();
-  if(!pdfDoc||!ranges)return alert('Please load PDF and enter ranges.');
-  const list = parseRanges(ranges);
-  if(!list.length)return alert('Invalid ranges.');
+  if(!ranges) return alert('Please enter page ranges');
+  const list=parseRanges(ranges);
+  if(!list.length) return alert('Invalid ranges');
   tasks.push(list);
   renderTasks();
 }
+
 function parseRanges(text){
-  const arr = text.split(',');
+  const parts=text.split(',');
   const res=[];
-  for(const part of arr){
-    const m=part.match(/^(\d+)(?:-(\d+))?$/);
+  const total=pdfDoc.getPageCount();
+  for(const p of parts){
+    const m=p.match(/^(\\d+)(?:-(\\d+))?$/);
     if(m){
-      const a=parseInt(m[1]),b=m[2]?parseInt(m[2]):a;
-      if(a<=b && b<=pdfDoc.getPageCount()) res.push([a-1,b-1]);
+      const a=+m[1], b=m[2]?+m[2]:a;
+      if(a>=1 && b<=total && a<=b) res.push([a-1,b-1]);
     }
   }
   return res;
 }
+
 function renderTasks(){
-  const el=document.getElementById('taskList');
-  el.innerHTML='';
+  const ul=document.getElementById('taskList');
+  ul.innerHTML='';
   tasks.forEach((r,i)=>{
     const li=document.createElement('li');
-    li.draggable=true;
-    li.dataset.idx=i;
-    li.textContent = r.map(p=>`${p[0]+1}-${p[1]+1}`).join(', ');
-    const btnDel=document.createElement('button');
-    btnDel.textContent='×';btnDel.className='del-btn';
-    btnDel.onclick=()=>{tasks.splice(i,1);renderTasks();}
-    li.appendChild(btnDel);
-    el.appendChild(li);
+    li.draggable=true; li.dataset.idx=i;
+    li.innerHTML = \`<span>\${r.map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')}</span>\`;
+    const del=document.createElement('button');
+    del.textContent='×'; del.className='del-btn';
+    del.onclick=()=>{tasks.splice(i,1); renderTasks();}
+    li.appendChild(del);
+    ul.appendChild(li);
   });
-  makeSortable('taskList');
+  makeSortable('taskList',()=>{
+    const arr=[...document.getElementById('taskList').children].map(ch=>+ch.dataset.idx);
+    tasks=arr.map(i=>tasks[i]);
+    renderTasks();
+  });
 }
-function makeSortable(id){
-  const ul=document.getElementById(id);
+
+function makeSortable(listId, onDrop){
+  const ul=document.getElementById(listId);
   let drag=null;
   Array.from(ul.children).forEach(li=>{
     li.addEventListener('dragstart',()=>drag=li);
     li.addEventListener('dragover',e=>e.preventDefault());
     li.addEventListener('drop',e=>{
       e.preventDefault();
-      if(drag && drag!==li){
-        ul.insertBefore(drag,li);
-        const arr=[...ul.children].map(ch=>parseInt(ch.dataset.idx));
-        tasks=arr.map(i=>tasks[i]);
-        renderTasks();
+      const target=e.target.closest('li');
+      if(drag && target && drag!==target){
+        ul.insertBefore(drag,target);
+        if(onDrop) onDrop();
       }
     });
   });
 }
 
 async function processTasks(){
-  document.getElementById('previewList').innerHTML='';
-  if(!tasks.length)return alert('Add tasks first.');
-  for(const [idx,r] of tasks.entries()){
+  const preview=document.getElementById('previewList');
+  preview.innerHTML='';
+  if(!tasks.length) return alert('No tasks to process');
+  for(let i=0;i<tasks.length;i++){
     const newPdf=await PDFLib.PDFDocument.create();
-    for(const [a,b] of r){
-      const pages=await newPdf.copyPages(pdfDoc,Array.from({length:b-a+1},(_,k)=>a+k));
+    for(const [a,b] of tasks[i]){
+      const pages=await newPdf.copyPages(pdfDoc, Array.from({length:b-a+1},(_,k)=>a+k));
       pages.forEach(p=>newPdf.addPage(p));
     }
     const bytes=await newPdf.save();
     const blob=new Blob([bytes],{type:'application/pdf'});
     const url=URL.createObjectURL(blob);
     const li=document.createElement('li');
-    const chk=document.createElement('input');
-    chk.type='checkbox';chk.checked=true;
-    const link=document.createElement('a');
-    link.href=url;link.textContent=`Task ${idx+1}: ${tasks[idx].map(p=>`${p[0]+1}-${p[1]+1}`).join(', ')}`;
-    link.download=`part-${idx+1}.pdf`;
-    li.appendChild(chk);li.appendChild(link);
-    document.getElementById('previewList').appendChild(li);
+    const chk=document.createElement('input'); chk.type='checkbox'; chk.checked=true;
+    const a=document.createElement('a'); a.href=url;
+    a.textContent=\`Part \${i+1} (\${tasks[i].map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')})\`;
+    a.download=\`part-\${i+1}.pdf\`;
+    li.appendChild(chk); li.appendChild(a);
+    preview.appendChild(li);
   }
 }
 
 async function downloadSelected(){
-  const lis=document.querySelectorAll('#previewList li');
-  const selTasks=[]; lis.forEach((li,i)=>{
-    if(li.querySelector('input').checked) selTasks.push(i);
-  });
-  if(!selTasks.length)return;
+  const lis=[...document.querySelectorAll('#previewList li')];
+  const sel=lis.filter(li=>li.querySelector('input').checked);
+  if(!sel.length) return alert('No selection');
   const merged=await PDFLib.PDFDocument.create();
-  for(const idx of selTasks){
-    const blob=await fetch(document.querySelectorAll('#previewList a')[idx].href).then(r=>r.arrayBuffer());
-    const part=await PDFLib.PDFDocument.load(blob);
-    const pages=await merged.copyPages(part,part.getPageIndices());
+  for(const li of sel){
+    const url=li.querySelector('a').href;
+    const buf=await fetch(url).then(r=>r.arrayBuffer());
+    const part=await PDFLib.PDFDocument.load(buf);
+    const pages=await merged.copyPages(part, part.getPageIndices());
     pages.forEach(p=>merged.addPage(p));
   }
   const out=await merged.save();
-  const url=URL.createObjectURL(new Blob([out],{type:'application/pdf'}));
+  const blob=new Blob([out],{type:'application/pdf'});
   const a=document.createElement('a');
-  a.href=url;a.download='merged-selected.pdf';a.click();
+  a.href=URL.createObjectURL(blob);
+  a.download='merged-selected.pdf';
+  a.click();
 }
-
-function downloadAll(){downloadSelected();}
+</script>
+</body>
+</html>
