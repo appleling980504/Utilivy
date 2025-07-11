@@ -3,13 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Utilivy - Merge PDF</title>
+  <title>Utilivy - Merge PDF Files</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-  <script>
-    pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
-  </script>
   <style>
     :root {
       --primary-color: #4f46e5;
@@ -39,7 +35,6 @@
     header h1 {
       margin: 0;
       font-size: 1.5rem;
-      line-height: 1;
     }
     .header-right {
       display: flex;
@@ -65,60 +60,66 @@
       justify-content: center;
     }
     header a {
-      text-decoration:none;
-      color:var(--primary-color);
-      font-weight:500;
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
     }
-    .adsense-banner, .adsense-footer {
-      display:none;
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
     }
     .container {
-      max-width:800px;
-      margin:2rem auto;
-      background:white;
-      padding:2rem;
-      border-radius:12px;
-      box-shadow:0 2px 8px rgba(0,0,0,0.05);
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     #dropZone {
-      border:2px dashed #ccc;
-      padding:2rem;
-      text-align:center;
-      border-radius:8px;
-      margin-bottom:1rem;
+      border: 2px dashed #ccc;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      cursor: pointer;
       transition: background 0.3s;
     }
     #dropZone.dragover {
-      background: var(--dragover-bg);
+      background-color: var(--dragover-bg);
     }
     #fileList {
-      list-style:none;
-      padding:0;
-      margin:0;
+      list-style: none;
+      padding: 0;
+      margin: 0;
     }
     #fileList li {
-      padding:0.5rem;
-      background:#f9fafb;
-      margin-bottom:0.5rem;
-      border:1px solid #e5e7eb;
-      border-radius:6px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      cursor:grab;
+      padding: 0.5rem 1rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: grab;
     }
     #fileList li.dragging {
-      opacity:0.5;
+      opacity: 0.5;
     }
     button.calculate {
-      background:var(--primary-color);
-      color:white;
-      border:none;
-      padding:0.6rem 1.2rem;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:1rem;
-      margin-top:1rem;
+      background-color: var(--primary-color);
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
     }
     footer {
       text-align: center;
@@ -130,7 +131,7 @@
 </head>
 <body>
   <header>
-    <h1 data-en="Utilivy - Merge PDF Files" data-zh="Utilivy - 合并 PDF 文件">Merge PDF Files</h1>
+    <h1 data-en="Utilivy - Merge PDF Files" data-zh="Utilivy - 合并 PDF 文件">Utilivy - Merge PDF Files</h1>
     <div class="header-right">
       <div class="lang-switch">
         <button onclick="setLanguage('en')">EN</button>
@@ -139,7 +140,7 @@
       <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
   </header>
-  
+
   <div class="adsense-banner">
     <p>[Ad Placeholder - Top]</p>
   </div>
@@ -147,81 +148,126 @@
   <div class="container">
     <div id="dropZone" data-en="Drag & drop PDF files here or click to select" data-zh="拖放 PDF 文件到这里或点击选择">
       Drag & drop PDF files here or click to select
-      <input type="file" id="pdfFiles" accept="application/pdf" multiple style="display:none">
+      <input type="file" id="pdfFiles" accept="application/pdf" multiple style="display: none;" />
     </div>
     <ul id="fileList"></ul>
     <button class="calculate" onclick="mergePDFs()">Merge & Download PDF</button>
   </div>
 
-  
   <div class="adsense-footer">
     <p>[Ad Placeholder - Bottom]</p>
   </div>
-  
-   <footer>
+
+  <footer>
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
   <script>
-    setLanguage('en');
-    function setLanguage(lang){
-      document.querySelectorAll('[data-en]').forEach(el=>{
-        el.textContent = lang==='zh'? el.getAttribute('data-zh'): el.getAttribute('data-en');
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
     }
 
-    const dropZone = document.getElementById('dropZone'), input = document.getElementById('pdfFiles'), fileList = document.getElementById('fileList');
+    setLanguage('en');
+
+    const dropZone = document.getElementById('dropZone');
+    const input = document.getElementById('pdfFiles');
+    const fileList = document.getElementById('fileList');
     let files = [];
 
     dropZone.addEventListener('click', () => input.click());
-    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-    dropZone.addEventListener('drop', e => {
-      e.preventDefault(); dropZone.classList.remove('dragover');
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
       handleFiles(e.dataTransfer.files);
     });
+
     input.addEventListener('change', () => handleFiles(input.files));
 
-    function handleFiles(selected){
-      for(const f of selected){
-        if(f.type === 'application/pdf'){
+    function handleFiles(selected) {
+      for (const f of selected) {
+        if (f.type === 'application/pdf') {
           files.push(f);
         }
       }
       renderList();
     }
 
-    function renderList(){
+    function renderList() {
       fileList.innerHTML = '';
-      files.forEach((f,i)=>{
+      files.forEach((file, index) => {
         const li = document.createElement('li');
         li.draggable = true;
-        li.innerHTML = `<span>${f.name}</span><span>${f.size>>20?Math.round(f.size/1024):''} ${(f.size/1024/1024).toFixed(1)}MB</span>`;
-        li.addEventListener('dragstart', ()=>li.classList.add('dragging'));
-        li.addEventListener('dragend', ()=>li.classList.remove('dragging'));
-        li.addEventListener('dragover', e=>{
+        li.innerHTML = `<span>${file.name}</span><span>${(file.size / 1024 / 1024).toFixed(1)} MB</span>`;
+
+        li.addEventListener('dragstart', () => {
+          li.classList.add('dragging');
+        });
+
+        li.addEventListener('dragend', () => {
+          li.classList.remove('dragging');
+        });
+
+        li.addEventListener('dragover', (e) => {
           e.preventDefault();
           const dragging = document.querySelector('.dragging');
-          fileList.insertBefore(dragging, li);
+          if (dragging && dragging !== li) {
+            const children = Array.from(fileList.children);
+            const dragIndex = children.indexOf(dragging);
+            const dropIndex = children.indexOf(li);
+            if (dragIndex < dropIndex) {
+              fileList.insertBefore(dragging, li.nextSibling);
+            } else {
+              fileList.insertBefore(dragging, li);
+            }
+            reorderFiles();
+          }
         });
+
         fileList.appendChild(li);
       });
     }
 
-    async function mergePDFs(){
-      if(files.length===0) return alert('No PDF files selected');
-      const merged = await PDFLib.PDFDocument.create();
-      for(const f of files){
-        const buf = await f.arrayBuffer();
-        const pdf = await PDFLib.PDFDocument.load(buf);
-        const pages = await merged.copyPages(pdf, pdf.getPageIndices());
-        pages.forEach(p=>merged.addPage(p));
+    function reorderFiles() {
+      const newFiles = [];
+      const items = fileList.querySelectorAll('li');
+      items.forEach(li => {
+        const name = li.querySelector('span').textContent;
+        const match = files.find(f => f.name === name);
+        if (match) newFiles.push(match);
+      });
+      files = newFiles;
+    }
+
+    async function mergePDFs() {
+      if (!files.length) return alert('Please select at least one PDF file.');
+      const mergedPdf = await PDFLib.PDFDocument.create();
+
+      for (const file of files) {
+        const bytes = await file.arrayBuffer();
+        const pdf = await PDFLib.PDFDocument.load(bytes);
+        const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+        copiedPages.forEach(p => mergedPdf.addPage(p));
       }
-      const out = await merged.save();
-      const blob = new Blob([out],{type:'application/pdf'}), url=URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href=url; a.download='merged.pdf';
-      a.click();
+
+      const mergedBytes = await mergedPdf.save();
+      const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'merged.pdf';
+      link.click();
       URL.revokeObjectURL(url);
     }
   </script>
