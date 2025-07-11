@@ -162,7 +162,8 @@
     &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
   </footer>
 
-  <script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
     function setLanguage(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
@@ -270,6 +271,8 @@
       link.click();
       URL.revokeObjectURL(url);
     }
-  </script>
+  });
+</script>
+
 </body>
 </html>
