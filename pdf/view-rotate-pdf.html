@@ -27,6 +27,11 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
     }
     .header-right { display: flex; align-items: center; gap: 1rem; }
     .lang-switch button {
@@ -36,6 +41,8 @@
       cursor: pointer;
       background-color: var(--primary-color);
       color: white;
+      width: 42px;
+      height: 32px;
     }
     header a {
       text-decoration: none;
@@ -56,11 +63,13 @@
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
-    canvas {
-      border: 1px solid #ccc;
-      display: block;
-      margin: 1rem auto;
-    }
+canvas {
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
     .controls {
       display: flex;
       flex-wrap: wrap;
@@ -107,6 +116,7 @@
     <div class="controls">
       <button onclick="prevPage()">⬅️ Prev</button>
       <button onclick="nextPage()">Next ➡️</button>
+      <br>
       <button onclick="rotateCurrentPage()">🔁 Rotate</button>
       <label>
         <span data-en="Angle:" data-zh="角度：">Angle:</span>
@@ -117,7 +127,9 @@
           <option value="270">270°</option>
         </select>
       </label>
-      <button onclick="downloadRotatedPDF()">⬇️ Download All</button>
+      <br>
+        <button onclick="downloadRotatedPDF()">⬇️ Download All</button>
+          <br>
       <button onclick="downloadCurrentPagePDF()">📄 Download Current Page</button>
     </div>
     <canvas id="pdfCanvas"></canvas>
