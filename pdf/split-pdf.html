@@ -29,13 +29,23 @@
       flex-wrap: wrap;
     }
     .header-right { display: flex; align-items: center; gap: 1rem; }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
     .lang-switch button {
       padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
       border: none;
       border-radius: 6px;
       cursor: pointer;
       background-color: var(--primary-color);
       color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
     header a {
       text-decoration: none;
@@ -60,11 +70,12 @@
       width: 100%;
       padding: 0.75rem;
       margin-top: 1rem;
+      margin-bottom: 1rem;
       border: 1px solid #d1d5db;
       border-radius: 8px;
       font-size: 1rem;
     }
-    button {
+    button.calculate {
       background: var(--primary-color);
       color: white;
       border: none;
@@ -120,13 +131,13 @@
   <label>Upload PDF</label>
   <input type="file" id="pdfFile" accept="application/pdf" />
 
-  <label>Enter page ranges (e.g. 1-2,4,6-8)</label>
-  <textarea id="rangeInput" placeholder="1-2,4,6-8"></textarea>
+  <label>Enter page ranges (e.g. 1-2 or 4 or 6-8)</label>
+  <textarea id="rangeInput" placeholder="1-2 or 4 or 6-8"></textarea>
 
-  <button onclick="addTask()">Add Split Task</button>
+  <button class="calculate" onclick="addTask()">Add Split Task</button>
   <ul id="taskList"></ul>
 
-  <button onclick="splitTasks()">Split & Download</button>
+  <button class="calculate" onclick="splitTasks()">Split & Download</button>
 </div>
 
 <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
