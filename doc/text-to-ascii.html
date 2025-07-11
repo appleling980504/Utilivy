@@ -2,55 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text to ASCII/Binary Converter</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Text to ASCII</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4">Text to ASCII / Binary / Unicode Converter</h1>
-
-    <textarea id="textInput" rows="6" placeholder="Enter your text here..." class="w-full p-3 border rounded mb-4"></textarea>
-
-    <div class="flex flex-wrap gap-3 mb-4">
-      <button onclick="convert('ascii')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">ASCII</button>
-      <button onclick="convert('binary')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Binary</button>
-      <button onclick="convert('unicode')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Unicode</button>
-      <button onclick="convert('hex')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Hex</button>
-      <button onclick="convert('octal')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Octal</button>
-      <button onclick="downloadTxt()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">Download .txt</button>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Text to ASCII" data-zh="Utilivy - 文本转 ASCII">Utilivy - Text to ASCII</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <textarea id="output" rows="10" placeholder="Converted output will appear here..." class="w-full p-3 border rounded"></textarea>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="textInput" data-en="Input text:" data-zh="输入文本：">Input text:</label>
+    <textarea id="textInput" placeholder="Type your text here..."></textarea>
+
+    <button class="calculate" onclick="convertToAscii()">🔢 <span data-en="Convert to ASCII" data-zh="转换为 ASCII">Convert to ASCII</span></button>
+
+    <label for="asciiOutput" data-en="ASCII Output:" data-zh="ASCII 输出：">ASCII Output:</label>
+    <textarea id="asciiOutput" readonly></textarea>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    function convert(mode) {
-      const text = document.getElementById('textInput').value;
-      const lines = text.split('\n');
-      let result = lines.map(line => {
-        return [...line].map(char => {
-          const code = char.charCodeAt(0);
-          switch (mode) {
-            case 'ascii': return code;
-            case 'binary': return code.toString(2).padStart(8, '0');
-            case 'unicode': return '\\u' + code.toString(16).padStart(4, '0');
-            case 'hex': return '0x' + code.toString(16).toUpperCase();
-            case 'octal': return '\\' + code.toString(8);
-          }
-        }).join(' ');
-      }).join('\n');
-      document.getElementById('output').value = result;
+    function convertToAscii() {
+      const text = document.getElementById("textInput").value;
+      const ascii = Array.from(text).map(c => c.charCodeAt(0)).join(' ');
+      document.getElementById("asciiOutput").value = ascii;
     }
 
-    function downloadTxt() {
-      const blob = new Blob([document.getElementById('output').value], { type: 'text/plain' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'converted_output.txt';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+      });
     }
   </script>
 </body>
