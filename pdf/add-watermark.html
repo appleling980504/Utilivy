@@ -221,7 +221,7 @@
       if (!file) return alert("Upload a PDF first.");
       const arrayBuffer = await file.arrayBuffer();
       const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
+      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRoman);
       const pages = pdfDoc.getPages();
 
       const text = document.getElementById("watermarkText").value;
@@ -240,14 +240,14 @@
         if (position === "bottomleft")  { x = 50; y = 50; }
         if (position === "bottomright") { x = width - 150; y = 50; }
 
-        page.drawText(text, {
-          x, y,
-          size,
-          rotate: PDFLib.degrees(angle),
-          font,
-          color: PDFLib.rgb(r, g, b),
-          opacity,
-        });
+page.drawText(text, {
+  x, y,
+  size: 48,
+  rotate: PDFLib.degrees(angle),
+  font,
+  color: PDFLib.rgb(r, g, b),
+  opacity: 0.5,
+});
       });
 
       watermarkedPdfBytes = await pdfDoc.save();
