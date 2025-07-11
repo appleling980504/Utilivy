@@ -108,16 +108,12 @@
   </footer>
 
   <script>
-    function setLang(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        if (el.tagName === 'A') {
-          const en = el.getAttribute('data-en');
-          const zh = el.getAttribute('data-zh');
-          el.innerText = (lang === 'en') ? `${en} / ${zh}` : `${zh} / ${en}`;
-        } else {
-          el.innerText = el.getAttribute(`data-${lang}`);
-        }
-      });
+function setLang(lang) {
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute(`data-${lang}`);
+  });
+}
+
       document.title = document.querySelector('title').getAttribute(`data-${lang}`);
     }
     setLang('en');
