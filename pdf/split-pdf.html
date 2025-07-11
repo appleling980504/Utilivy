@@ -184,7 +184,7 @@ function renderTasks(){
   tasks.forEach((r,i)=>{
     const li=document.createElement('li');
     li.draggable=true; li.dataset.idx=i;
-    li.innerHTML = \`<span>\${r.map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')}</span>\`;
+    li.innerHTML = `<span>\${r.map(p=>\`\${p[0]+1}-\${p[1]+1}\`).join(', ')}</span>`;
     const del=document.createElement('button');
     del.textContent='×'; del.className='del-btn';
     del.onclick=()=>{tasks.splice(i,1); renderTasks();}
