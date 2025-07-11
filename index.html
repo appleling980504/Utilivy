@@ -3,120 +3,107 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title data-en="Utilivy - All-in-One Online Tools" data-zh="Utilivy - 在线工具集">Utilivy - All-in-One Online Tools</title>
-  <meta name="description" content="Utilivy provides free online tools including PDF converters, calculators, formatters, and more." />
+  <title data-en="Utilivy - All-in-One Online Tools" data-zh="Utilivy - 在线多功能工具箱">Utilivy - All-in-One Online Tools</title>
+  <meta name="description" content="Utilivy provides free online tools including PDF converters, calculators, formatters, and more. Simple, fast, and ad-supported." />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
 </head>
 <body class="bg-blue-50 text-blue-900">
   <header class="bg-white shadow">
     <div class="container mx-auto px-4 py-4 flex justify-between items-center">
       <h1 class="text-xl font-bold">Utilivy</h1>
-      <nav>
-        <ul class="flex space-x-4">
-          <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
-          <li><a href="#doc" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
-          <li><a href="#calc" data-en="Calculators" data-zh="计算器">Calculators</a></li>
-          <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
-        </ul>
-      </nav>
+      <div class="flex items-center gap-4">
+        <nav>
+          <ul class="flex space-x-4 text-sm">
+            <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
+            <li><a href="#doc" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
+            <li><a href="#calc" data-en="Calculators" data-zh="计算器">Calculators</a></li>
+            <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
+          </ul>
+        </nav>
+        <div class="lang-switch space-x-2 text-sm">
+          <button onclick="setLang('en')" class="text-blue-700 font-medium">EN</button>
+          <button onclick="setLang('zh')" class="text-blue-700 font-medium">中</button>
+        </div>
+      </div>
     </div>
   </header>
 
-  <main class="container mx-auto px-4 py-8">
-    <!-- PDF Tools -->
+  <main class="container mx-auto px-4 py-8 space-y-12">
+
     <section id="pdf" data-en="PDF Tools" data-zh="PDF 工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="📄 PDF Tools" data-zh="📄 PDF 工具">📄 PDF Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <li data-en="Split PDF" data-zh="拆分 PDF"><a href="/pdf/split-pdf.html">Split PDF / 拆分 PDF</a></li>
-        <li data-en="Merge PDFs" data-zh="合并 PDF"><a href="/pdf/merge-pdf.html">Merge PDFs / 合并 PDF</a></li>
-        <li data-en="Extract Text from PDF" data-zh="提取 PDF 文字"><a href="/pdf/extract-text.html">Extract Text from PDF / 提取 PDF 文字</a></li>
-        <li data-en="View or Rotate PDF" data-zh="查看或旋转 PDF"><a href="/pdf/view-rotate-pdf.html">View or Rotate PDF / 查看或旋转 PDF</a></li>
-        <li data-en="Image to PDF" data-zh="图片转 PDF"><a href="/pdf/image-to-pdf.html">Image to PDF / 图片转 PDF</a></li>
-        <li data-en="Reorder PDF Pages" data-zh="重排 PDF 页面"><a href="/pdf/reorder-pages.html">Reorder PDF Pages / 重排 PDF 页面</a></li>
-        <li data-en="Add Watermark to PDF" data-zh="添加水印到 PDF"><a href="/pdf/add-watermark.html">Add Watermark to PDF / 添加水印到 PDF</a></li>
-        <li data-en="Add Page Numbers to PDF" data-zh="添加页码到 PDF"><a href="/pdf/add-page-numbers.html">Add Page Numbers to PDF / 添加页码到 PDF</a></li>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <li><a href="/pdf/split-pdf.html" data-en="Split PDF" data-zh="拆分 PDF">Split PDF / 拆分 PDF</a></li>
+        <li><a href="/pdf/merge-pdf.html" data-en="Merge PDFs" data-zh="合并 PDF">Merge PDFs / 合并 PDF</a></li>
+        <li><a href="/pdf/extract-text.html" data-en="Extract Text from PDF" data-zh="提取 PDF 文字">Extract Text from PDF / 提取 PDF 文字</a></li>
+        <li><a href="/pdf/view-rotate-pdf.html" data-en="View or Rotate PDF" data-zh="查看或旋转 PDF">View or Rotate PDF / 查看或旋转 PDF</a></li>
+        <li><a href="/pdf/image-to-pdf.html" data-en="Image to PDF" data-zh="图片转 PDF">Image to PDF / 图片转 PDF</a></li>
+        <li><a href="/pdf/reorder-pages.html" data-en="Reorder PDF Pages" data-zh="重排 PDF 页面">Reorder PDF Pages / 重排 PDF 页面</a></li>
+        <li><a href="/pdf/add-watermark.html" data-en="Add Watermark to PDF" data-zh="添加水印到 PDF">Add Watermark to PDF / 添加水印到 PDF</a></li>
+        <li><a href="/pdf/add-page-numbers.html" data-en="Add Page Numbers to PDF" data-zh="添加页码到 PDF">Add Page Numbers to PDF / 添加页码到 PDF</a></li>
       </ul>
     </section>
 
-    <!-- Document Tools -->
-    <section id="doc" class="mt-10" data-en="Document Tools" data-zh="文档工具">
+    <section id="doc" data-en="Document Tools" data-zh="文档工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="📝 Document Tools" data-zh="📝 文档工具">📝 Document Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <li data-en="Lorem Ipsum Generator" data-zh="假文生成器"><a href="/text/lorem-ipsum.html">Lorem Ipsum Generator / 假文生成器</a></li>
-        <li data-en="DOCX to TXT" data-zh="DOCX 转 TXT"><a href="/doc/docx-to-txt.html">DOCX to TXT / DOCX 转 TXT</a></li>
-        <li data-en="Case & Word Counter" data-zh="字母 & 字数统计器"><a href="/doc/case-word-counter.html">Case & Word Counter / 字母 & 字数统计器</a></li>
-        <li data-en="Remove Line Breaks" data-zh="删除换行符"><a href="/doc/remove-line-breaks.html">Remove Line Breaks / 删除换行符</a></li>
-        <li data-en="Text Diff Checker" data-zh="文本差异对比工具"><a href="/doc/text-diff-checker.html">Text Diff Checker / 文本差异对比工具</a></li>
-        <li data-en="Character Map" data-zh="特殊符号表"><a href="/doc/character-map.html">Character Map / 特殊符号表</a></li>
-        <li data-en="Text to ASCII / Binary" data-zh="文本转编码"><a href="/doc/text-to-ascii.html">Text to ASCII / Binary / 文本转编码</a></li>
-        <li data-en="Plain Text to PDF" data-zh="文本转 PDF"><a href="/doc/text-to-pdf.html">Plain Text to PDF / 文本转 PDF</a></li>
-        <li data-en="Document Formatter" data-zh="清洁器"><a href="/doc/document-formatter.html">Document Formatter / 清洁器</a></li>
-        <li data-en="Text Case Converter" data-zh="大小写转换器"><a href="/doc/text-case-converter.html">Text Case Converter / 大小写转换器</a></li>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <li><a href="/text/lorem-ipsum.html" data-en="Lorem Ipsum Generator" data-zh="假文生成器">Lorem Ipsum Generator / 假文生成器</a></li>
+        <li><a href="/doc/docx-to-txt.html" data-en="DOCX to TXT" data-zh="DOCX 转 TXT">DOCX to TXT / DOCX 转 TXT</a></li>
+        <li><a href="/doc/case-word-counter.html" data-en="Case & Word Counter" data-zh="字母 & 字数统计器">Case & Word Counter / 字母 & 字数统计器</a></li>
+        <li><a href="/doc/remove-line-breaks.html" data-en="Remove Line Breaks" data-zh="删除换行符">Remove Line Breaks / 删除换行符</a></li>
+        <li><a href="/doc/text-diff-checker.html" data-en="Text Diff Checker" data-zh="文本差异对比工具">Text Diff Checker / 文本差异对比工具</a></li>
+        <li><a href="/doc/character-map.html" data-en="Character Map" data-zh="特殊符号表">Character Map / 特殊符号表</a></li>
+        <li><a href="/doc/text-to-ascii.html" data-en="Text to ASCII / Binary" data-zh="文本转编码">Text to ASCII / Binary / 文本转编码</a></li>
+        <li><a href="/doc/text-to-pdf.html" data-en="Plain Text to PDF" data-zh="文本转 PDF">Plain Text to PDF / 文本转 PDF</a></li>
+        <li><a href="/doc/document-formatter.html" data-en="Document Formatter" data-zh="清洁器">Document Formatter / 清洁器</a></li>
+        <li><a href="/doc/text-case-converter.html" data-en="Text Case Converter" data-zh="大小写转换器">Text Case Converter / 大小写转换器</a></li>
       </ul>
     </section>
 
-    <!-- Calculators -->
-    <section id="calc" class="mt-10" data-en="Calculators" data-zh="计算器">
+    <section id="calc" data-en="Calculators" data-zh="计算器">
       <h2 class="text-2xl font-semibold mb-4" data-en="🧮 Calculators" data-zh="🧮 计算器">🧮 Calculators</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <li data-en="BMI Calculator" data-zh="身体质量指数计算器"><a href="/calc/bmi-calculator.html">BMI Calculator / 身体质量指数计算器</a></li>
-        <li data-en="Mortgage Calculator" data-zh="房贷计算器"><a href="/calc/mortgage-calculator.html">Mortgage Calculator / 房贷计算器</a></li>
-        <li data-en="Age Calculator" data-zh="年龄计算器"><a href="/calc/age-calculator.html">Age Calculator / 年龄计算器</a></li>
-        <li data-en="Date Calculator" data-zh="日期计算工具"><a href="/calc/date-calculator.html">Date Calculator / 日期计算工具</a></li>
-        <li data-en="Compound Interest Calculator" data-zh="复利计算器"><a href="/calc/compound-interest-calculator.html">Compound Interest Calculator / 复利计算器</a></li>
-        <li data-en="Loan Calculator" data-zh="贷款计算器"><a href="/calc/loan-calculator.html">Loan Calculator / 贷款计算器</a></li>
-        <li data-en="Savings Goal Calculator" data-zh="储蓄目标计算器"><a href="/calc/savings-goal-calculator.html">Savings Goal Calculator / 储蓄目标计算器</a></li>
-        <li data-en="Retirement Calculator" data-zh="退休计算器"><a href="/calc/retirement-calculator.html">Retirement Calculator / 退休计算器</a></li>
-        <li data-en="Unit Converter" data-zh="单位换算工具"><a href="/calc/unit-converter.html">Unit Converter / 单位换算工具</a></li>
-        <li data-en="Pregnancy Due Date Calculator" data-zh="预产期计算器"><a href="/calc/pregnancy-due-date-calculator.html">Pregnancy Due Date Calculator / 预产期计算器</a></li>
-        <li data-en="Ovulation & Fertility Calculator" data-zh="排卵期与受孕期计算器"><a href="/calc/ovulation-calculator.html">Ovulation & Fertility Calculator / 排卵期与受孕期计算器</a></li>
-        <li data-en="Ideal Weight Calculator" data-zh="理想体重计算器"><a href="/calc/ideal-weight-calculator.html">Ideal Weight Calculator / 理想体重计算器</a></li>
-        <li data-en="Number to Words" data-zh="数字转英文中文大写"><a href="/calc/number-to-words.html">Number to Words / 数字转英文中文大写</a></li>
-        <li data-en="Percentage Calculator" data-zh="百分比计算器"><a href="/calc/percentage-calculator.html">Percentage Calculator / 百分比计算器</a></li>
-        <li data-en="Rule of 72 Calculator" data-zh="72法则计算器"><a href="/calc/rule-of-72-calculator.html">Rule of 72 Calculator / 72法则计算器</a></li>
-        <li data-en="GPA Calculator" data-zh="GPA 计算器"><a href="/calc/gpa-calculator.html">GPA Calculator / GPA 计算器</a></li>
-        <li data-en="Body Fat Calculator" data-zh="体脂率计算器"><a href="/calc/body-fat-calculator.html">Body Fat Calculator / 体脂率计算器</a></li>
-        <li data-en="Daily Water Intake Calculator" data-zh="日常饮水量计算器"><a href="/calc/daily-water-intake.html">Daily Water Intake Calculator / 日常饮水量计算器</a></li>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <li><a href="/calc/bmi-calculator.html" data-en="BMI Calculator" data-zh="身体质量指数计算器">BMI Calculator / 身体质量指数计算器</a></li>
+        <li><a href="/calc/mortgage-calculator.html" data-en="Mortgage Calculator" data-zh="房贷计算器">Mortgage Calculator / 房贷计算器</a></li>
+        <li><a href="/calc/age-calculator.html" data-en="Age Calculator" data-zh="年龄计算器">Age Calculator / 年龄计算器</a></li>
+        <li><a href="/calc/date-calculator.html" data-en="Date Calculator" data-zh="日期计算工具">Date Calculator / 日期计算工具</a></li>
+        <li><a href="/calc/compound-interest-calculator.html" data-en="Compound Interest Calculator" data-zh="复利计算器">Compound Interest Calculator / 复利计算器</a></li>
+        <li><a href="/calc/loan-calculator.html" data-en="Loan Calculator" data-zh="贷款计算器">Loan Calculator / 贷款计算器</a></li>
+        <li><a href="/calc/savings-goal-calculator.html" data-en="Savings Goal Calculator" data-zh="储蓄目标计算器">Savings Goal Calculator / 储蓄目标计算器</a></li>
+        <li><a href="/calc/retirement-calculator.html" data-en="Retirement Calculator" data-zh="退休计算器">Retirement Calculator / 退休计算器</a></li>
+        <li><a href="/calc/unit-converter.html" data-en="Unit Converter" data-zh="单位换算工具">Unit Converter / 单位换算工具</a></li>
+        <li><a href="/calc/pregnancy-due-date-calculator.html" data-en="Pregnancy Due Date Calculator" data-zh="预产期计算器">Pregnancy Due Date Calculator / 预产期计算器</a></li>
       </ul>
     </section>
 
-    <!-- Developer Tools -->
-    <section id="dev" class="mt-10" data-en="Developer Tools" data-zh="开发者工具">
+    <section id="dev" data-en="Developer Tools" data-zh="开发者工具">
       <h2 class="text-2xl font-semibold mb-4" data-en="💻 Developer Tools" data-zh="💻 开发者工具">💻 Developer Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        <li data-en="JSON Formatter" data-zh="JSON 格式化工具"><a href="/dev/json-formatter.html">JSON Formatter / JSON 格式化工具</a></li>
-        <li data-en="JSON Validator" data-zh="JSON 校验工具"><a href="/dev/json-validator.html">JSON Validator / JSON 校验工具</a></li>
-        <li data-en="JWT Decoder" data-zh="JWT 解码器"><a href="/dev/jwt-decoder.html">JWT Decoder / JWT 解码器</a></li>
-        <li data-en="Regex Tester" data-zh="正则表达式测试工具"><a href="/dev/regex-tester.html">Regex Tester / 正则表达式测试工具</a></li>
-        <li data-en="Epoch Converter" data-zh="Unix 时间戳转换器"><a href="/dev/epoch-converter.html">Epoch Converter / Unix 时间戳转换器</a></li>
-        <li data-en="UUID Generator" data-zh="唯一标识生成器"><a href="/dev/uuid-generator.html">UUID Generator / 唯一标识生成器</a></li>
-        <li data-en="Color Picker" data-zh="取色器"><a href="/dev/color-picker.html">Color Picker / 取色器</a></li>
-        <li data-en="Timestamp Converter" data-zh="时间戳转换器"><a href="/dev/timestamp-converter.html">Timestamp Converter / 时间戳转换器</a></li>
-        <li data-en="Markdown Previewer" data-zh="Markdown 预览器"><a href="/dev/markdown-previewer.html">Markdown Previewer / Markdown 预览器</a></li>
-        <li data-en="Markdown to HTML" data-zh="Markdown 转 HTML"><a href="/dev/markdown-to-html.html">Markdown to HTML / Markdown 转 HTML</a></li>
-        <li data-en="URL Encoder / Decoder" data-zh="URL 编码/解码器"><a href="/dev/url-encoder-decoder.html">URL Encoder / Decoder / URL 编码/解码器</a></li>
-        <li data-en="URL ↔ Base64 Converter" data-zh="URL 与 Base64 转换器"><a href="/dev/base64-tool.html">URL ↔ Base64 Converter / URL 与 Base64 转换器</a></li>
-        <li data-en="HTML Entities Encoder / Decoder" data-zh="HTML 实体编码/解码器"><a href="/dev/html-entities-tool.html">HTML Entities Encoder / Decoder / HTML 实体编码/解码器</a></li>
-        <li data-en="Hash Generator" data-zh="哈希生成器"><a href="/dev/hash-generator.html">Hash Generator / 哈希生成器</a></li>
-        <li data-en="QR Code Generator" data-zh="二维码生成器"><a href="/dev/qr-code-generator.html">QR Code Generator / 二维码生成器</a></li>
-        <li data-en="Code Minifier / Beautifier" data-zh="代码压缩与美化工具"><a href="/dev/code-beautifier-minifier.html">Code Minifier / Beautifier / 代码压缩与美化工具</a></li>
+      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+        <li><a href="/dev/json-formatter.html" data-en="JSON Formatter" data-zh="JSON 格式化工具">JSON Formatter / JSON 格式化工具</a></li>
+        <li><a href="/dev/json-validator.html" data-en="JSON Validator" data-zh="JSON 校验工具">JSON Validator / JSON 校验工具</a></li>
+        <li><a href="/dev/regex-tester.html" data-en="Regex Tester" data-zh="正则表达式测试工具">Regex Tester / 正则表达式测试工具</a></li>
+        <li><a href="/dev/color-picker.html" data-en="Color Picker" data-zh="取色器">Color Picker / 取色器</a></li>
+        <li><a href="/dev/epoch-converter.html" data-en="Epoch Converter" data-zh="Unix 时间戳转换器">Epoch Converter / Unix 时间戳转换器</a></li>
       </ul>
     </section>
+
   </main>
 
   <footer class="bg-white border-t mt-12">
     <div class="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      &copy; 2025 Utilivy.com — <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+      <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">
+        © 2025 Utilivy.com — All rights reserved.
+      </span>
     </div>
   </footer>
 
   <script>
     function setLang(lang) {
-      document.querySelectorAll("[data-en]").forEach(el => {
-        el.textContent = el.getAttribute("data-" + lang);
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute('data-' + lang);
       });
     }
-    // Default to English; use setLang('zh') for Chinese
+    // 默认设置语言为英文
     setLang('en');
   </script>
 </body>
