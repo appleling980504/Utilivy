@@ -7,7 +7,15 @@
   <title>Utilivy - Add Watermark to PDF</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-  <script type="module" src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.mjs"></script>
+<!-- 加载 PDF.js 的 UMD 版本 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
+
+<script>
+  // 正确设置 worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+</script>
+
   <style>
     :root {
       --primary-color: #4f46e5;
