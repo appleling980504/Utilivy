@@ -2,145 +2,160 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Text to PDF / 文本转 PDF</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Utilivy - Text to PDF</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC&display=swap');
+    :root {
+      --primary-color: #4f46e5;
+      --bg-color: #f3f4f6;
+      --text-color: #111827;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: 'Noto Sans SC', sans-serif;
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
+    header {
+      background: white;
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .lang-switch {
+      display: flex;
+      gap: 0.4rem;
+    }
+    .lang-switch button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.85rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background-color: var(--primary-color);
+      color: white;
+      width: 42px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+    .adsense-banner,
+    .adsense-footer {
+      text-align: center;
+      margin: 1rem 0;
+      color: gray;
+      display: none;
+    }
+    .container {
+      max-width: 700px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
     textarea {
-      font-family: 'Noto Sans SC', sans-serif;
+      width: 100%;
+      height: 300px;
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      font-family: monospace;
+    }
+    button.calculate {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+    button.calculate:hover {
+      background-color: #4338ca;
+    }
+    footer {
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      color: #6b7280;
     }
   </style>
 </head>
-<body class="bg-gray-100 text-gray-900 p-4">
-  <div class="max-w-3xl mx-auto bg-white p-6 rounded shadow">
-    <div class="flex justify-between items-center mb-4">
-      <h1 class="text-xl font-bold" id="title">Text to PDF / 文本转 PDF</h1>
-      <select id="langSelect" class="border px-2 py-1 rounded text-sm">
-        <option value="en">English</option>
-        <option value="zh">中文</option>
-      </select>
+<body>
+  <header>
+    <h1 data-en="Utilivy - Text to PDF" data-zh="Utilivy - 文本转 PDF">Utilivy - Text to PDF</h1>
+    <div class="header-right">
+      <div class="lang-switch">
+        <button onclick="setLanguage('en')">EN</button>
+        <button onclick="setLanguage('zh')">中</button>
+      </div>
+      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
     </div>
+  </header>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-      <input type="file" accept=".txt" id="fileInput" class="text-sm" />
-      <button onclick="downloadPDF()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded text-sm">
-        Generate PDF / 生成 PDF
-      </button>
-    </div>
-
-    <div class="grid grid-cols-2 gap-4 mb-4 text-sm">
-      <label>Font Size <input type="number" id="fontSize" value="12" class="w-full border px-2 py-1 rounded" /></label>
-      <label>Line Height <input type="number" id="lineHeight" value="1.5" step="0.1" class="w-full border px-2 py-1 rounded" /></label>
-      <label>Text Align
-        <select id="align" class="w-full border px-2 py-1 rounded">
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </select>
-      </label>
-      <label>Style
-        <select id="style" class="w-full border px-2 py-1 rounded">
-          <option value="normal">Normal</option>
-          <option value="bold">Bold</option>
-          <option value="underline">Underline</option>
-        </select>
-      </label>
-    </div>
-
-    <textarea id="textInput" rows="12" class="w-full border p-3 rounded text-sm mb-4" placeholder="Enter your text or upload a .txt file..."></textarea>
-
-    <div class="border p-4 rounded bg-gray-50 text-sm whitespace-pre-wrap" id="preview"></div>
+  <div class="adsense-banner">
+    <p>[Ad Placeholder - Top]</p>
   </div>
 
+  <div class="container">
+    <label for="textInput" data-en="Input your text below:" data-zh="请输入要转换的文本：">Input your text below:</label>
+    <textarea id="textInput" placeholder="Type your text here..."></textarea>
+
+    <button class="calculate" onclick="exportToPDF()">📄 <span data-en="Download as PDF" data-zh="下载为 PDF">Download as PDF</span></button>
+  </div>
+
+  <div class="adsense-footer">
+    <p>[Ad Placeholder - Bottom]</p>
+  </div>
+
+  <footer>
+    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
+  </footer>
+
   <script>
-    const { jsPDF } = window.jspdf;
-    let currentLang = 'en';
+    async function exportToPDF() {
+      const { jsPDF } = window.jspdf;
+      const pdf = new jsPDF();
+      const text = document.getElementById("textInput").value;
+      const lines = pdf.splitTextToSize(text, 180);
+      pdf.text(lines, 10, 10);
+      pdf.save("text.pdf");
+    }
 
-    const i18n = {
-      en: {
-        title: 'Text to PDF',
-        generate: 'Generate PDF',
-        placeholder: 'Enter your text or upload a .txt file...',
-        alert: 'Please enter or upload some text'
-      },
-      zh: {
-        title: '文本转 PDF',
-        generate: '生成 PDF',
-        placeholder: '输入文字或上传 .txt 文件...',
-        alert: '请输入或上传一些文字'
-      }
-    };
-
-    const langSelect = document.getElementById('langSelect');
-    const title = document.getElementById('title');
-    const textInput = document.getElementById('textInput');
-    const preview = document.getElementById('preview');
-    const fileInput = document.getElementById('fileInput');
-
-    langSelect.addEventListener('change', () => {
-      currentLang = langSelect.value;
-      const t = i18n[currentLang];
-      title.textContent = `${t.title} / 文本转 PDF`;
-      document.querySelector('button').textContent = `${t.generate} / ${currentLang === 'en' ? '生成 PDF' : 'Generate PDF'}`;
-      textInput.placeholder = t.placeholder;
-    });
-
-    textInput.addEventListener('input', () => {
-      preview.textContent = textInput.value;
-    });
-
-    fileInput.addEventListener('change', function () {
-      const file = this.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        textInput.value = e.target.result;
-        preview.textContent = e.target.result;
-      };
-      reader.readAsText(file, 'utf-8');
-    });
-
-    async function downloadPDF() {
-      const text = textInput.value.trim();
-      if (!text) {
-        alert(i18n[currentLang].alert);
-        return;
-      }
-
-      const doc = new jsPDF();
-      doc.addFileToVFS("NotoSans.otf", "T1RUTwARAQAABAAQQkFTRe369RYA74igAAAA8ENGRiAzjnN0AAOniADr4RZEU0lHAAAAAQDzhpwAAAAIR0RFRgIOAgEA84akAAAAHEdQT1MMyK2iAPOGwAAAuRpHU1VCoxCpSAD0P9wAAozkT1MvMp/jF+4AAAGAAAAAYFZPUkfSA/QVAPbMwAAAA5hjbWFwLk8uEgAACkQAA50haGVhZB//YUgAAAEcAAAANmhoZWEMEghuAAABVAAAACRobXR4K+QFUQD20F..."); // base64 内容省略，会替换
-      doc.addFont("NotoSans.otf", "NotoSans", "normal");
-      doc.setFont("NotoSans");
-
-      const fontSize = parseInt(document.getElementById("fontSize").value) || 12;
-      const lineHeight = parseFloat(document.getElementById("lineHeight").value) || 1.5;
-      const align = document.getElementById("align").value;
-      const style = document.getElementById("style").value;
-
-      if (style === "bold") doc.setFont(undefined, "bold");
-      if (style === "underline") doc.setTextColor(0, 0, 255);
-
-      doc.setFontSize(fontSize);
-      const lines = doc.splitTextToSize(text, 180);
-      const lineSpacing = fontSize * lineHeight;
-      let y = 20;
-
-      lines.forEach(line => {
-        if (y > 280) {
-          doc.addPage();
-          y = 20;
-        }
-        doc.text(line, align === 'center' ? 105 : (align === 'right' ? 200 : 20), y, { align });
-        y += lineSpacing;
+    function setLanguage(lang) {
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
       });
-
-      doc.save("converted.pdf");
     }
   </script>
 </body>
