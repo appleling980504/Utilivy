@@ -11,9 +11,7 @@
       --bg-color: #f3f4f6;
       --text-color: #111827;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
@@ -145,24 +143,22 @@
     </div>
   </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
+  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
 
   <div class="container">
-    <label for="amount">Loan Amount (e.g. 100000):</label>
-    <input type="number" id="amount" />
+    <label data-en="Loan Amount (e.g. 100000):" data-zh="贷款金额（例如：100000）：">Loan Amount (e.g. 100000):</label>
+    <input type="number" id="amount" placeholder="100000" />
 
-    <label for="interest">Annual Interest Rate (%):</label>
-    <input type="number" id="interest" step="0.01" />
+    <label data-en="Annual Interest Rate (%):" data-zh="年利率（%）：">Annual Interest Rate (%):</label>
+    <input type="number" id="interest" step="0.01" placeholder="4.5" />
 
-    <label for="years">Loan Term (Years):</label>
-    <input type="number" id="years" />
+    <label data-en="Loan Term (Years):" data-zh="贷款期限（年）：">Loan Term (Years):</label>
+    <input type="number" id="years" placeholder="30" />
 
-    <label for="extra">Extra Monthly Repayment (Optional):</label>
-    <input type="number" id="extra" value="0" />
+    <label data-en="Extra Monthly Repayment (Optional):" data-zh="每月额外还款（可选）：">Extra Monthly Repayment (Optional):</label>
+    <input type="number" id="extra" value="0" placeholder="0" />
 
-    <button class="calculate" onclick="calculateLoan()">Calculate</button>
+    <button class="calculate" onclick="calculateLoan()" data-en="Calculate" data-zh="计算">Calculate</button>
 
     <div class="result" id="monthlyPayment"></div>
     <div class="result" id="totalPayment"></div>
@@ -171,20 +167,18 @@
     <table id="schedule" style="display:none;">
       <thead>
         <tr>
-          <th>Month</th>
-          <th>Principal</th>
-          <th>Interest</th>
-          <th>Extra Payment</th>
-          <th>Balance</th>
+          <th data-en="Month" data-zh="期数">Month</th>
+          <th data-en="Principal" data-zh="本金">Principal</th>
+          <th data-en="Interest" data-zh="利息">Interest</th>
+          <th data-en="Extra Payment" data-zh="额外还款">Extra Payment</th>
+          <th data-en="Balance" data-zh="剩余余额">Balance</th>
         </tr>
       </thead>
       <tbody></tbody>
     </table>
   </div>
 
-  <footer class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </footer>
+  <footer class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></footer>
 
   <script>
     function calculateLoan() {
