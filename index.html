@@ -111,10 +111,14 @@
   <script>
     function setLang(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+        const value = el.getAttribute(`data-${lang}`);
+        if (value !== null) el.textContent = value;
       });
     }
-    setLang('en'); // Default language
+
+    document.addEventListener('DOMContentLoaded', () => {
+      setLang('en');
+    });
   </script>
 </body>
 </html>
