@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Home -->
+  <url>
+    <loc>https://utilivy.com/</loc>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- PDF Tools -->
+  <url><loc>https://utilivy.com/pdf/split-pdf.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/merge-pdf.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/extract-text.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/view-rotate-pdf.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/image-to-pdf.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/reorder-pages.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/add-watermark.html</loc></url>
+  <url><loc>https://utilivy.com/pdf/add-page-numbers.html</loc></url>
+
+  <!-- Document Tools -->
+  <url><loc>https://utilivy.com/text/lorem-ipsum.html</loc></url>
+  <url><loc>https://utilivy.com/doc/docx-to-txt.html</loc></url>
+  <url><loc>https://utilivy.com/doc/case-word-counter.html</loc></url>
+  <url><loc>https://utilivy.com/doc/remove-line-breaks.html</loc></url>
+  <url><loc>https://utilivy.com/doc/text-diff-checker.html</loc></url>
+  <url><loc>https://utilivy.com/doc/character-map.html</loc></url>
+  <url><loc>https://utilivy.com/doc/text-to-ascii.html</loc></url>
+  <url><loc>https://utilivy.com/doc/text-to-pdf.html</loc></url>
+  <url><loc>https://utilivy.com/doc/document-formatter.html</loc></url>
+  <url><loc>https://utilivy.com/doc/text-case-converter.html</loc></url>
+
+  <!-- Calculators -->
+  <url><loc>https://utilivy.com/calc/bmi-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/mortgage-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/age-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/date-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/compound-interest-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/loan-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/savings-goal-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/retirement-calculator.html</loc></url>
+  <url><loc>https://utilivy.com/calc/unit-converter.html</loc></url>
+  <url><loc>https://utilivy.com/calc/pregnancy-due-date-calculator.html</loc></url>
+
+  <!-- Developer Tools -->
+  <url><loc>https://utilivy.com/dev/json-formatter.html</loc></url>
+  <url><loc>https://utilivy.com/dev/json-validator.html</loc></url>
+  <url><loc>https://utilivy.com/dev/regex-tester.html</loc></url>
+  <url><loc>https://utilivy.com/dev/color-picker.html</loc></url>
+  <url><loc>https://utilivy.com/dev/epoch-converter.html</loc></url>
+  <url><loc>https://utilivy.com/dev/uuid-generator.html</loc></url>
+  <url><loc>https://utilivy.com/dev/timestamp-converter.html</loc></url>
+  <url><loc>https://utilivy.com/dev/markdown-previewer.html</loc></url>
+  <url><loc>https://utilivy.com/dev/markdown-to-html.html</loc></url>
+  <url><loc>https://utilivy.com/dev/url-encoder-decoder.html</loc></url>
+  <url><loc>https://utilivy.com/dev/base64-tool.html</loc></url>
+  <url><loc>https://utilivy.com/dev/html-entities-tool.html</loc></url>
+  <url><loc>https://utilivy.com/dev/hash-generator.html</loc></url>
+  <url><loc>https://utilivy.com/dev/qr-code-generator.html</loc></url>
+  <url><loc>https://utilivy.com/dev/code-beautifier-minifier.html</loc></url>
+
+</urlset>
