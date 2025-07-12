@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <!-- Home -->
-  <url>
-    <loc>https://utilivy.com/</loc>
-    <priority>1.0</priority>
-  </url>
-
   <!-- PDF Tools -->
   <url><loc>https://utilivy.com/pdf/split-pdf.html</loc></url>
   <url><loc>https://utilivy.com/pdf/merge-pdf.html</loc></url>
@@ -57,5 +50,4 @@
   <url><loc>https://utilivy.com/dev/hash-generator.html</loc></url>
   <url><loc>https://utilivy.com/dev/qr-code-generator.html</loc></url>
   <url><loc>https://utilivy.com/dev/code-beautifier-minifier.html</loc></url>
-
 </urlset>
