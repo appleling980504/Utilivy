@@ -1,2 +1,25 @@
+# Vercel local deployment config
 .vercel
+
+# Local environment variables
 .env.local
+
+# VS Code workspace settings
+.vscode/
+
+# System/OS-specific junk
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+*.bak
+
+# Editor-specific files
+.idea/
+*.swp
+
+# Node.js
+node_modules/
