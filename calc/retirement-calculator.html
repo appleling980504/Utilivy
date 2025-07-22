@@ -1,322 +1,690 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
- <title>Retirement Calculator - Plan Your Retirement Funds | Utilivy</title>
-<meta name="description" content="Estimate how much you need to save monthly to reach your retirement goals." />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvG极m_sSbwBpUROGKkXk" />
+  <title>Retirement Calculator – Utilivy</title>
+  <meta name="description" content="Estimate how much you need to save monthly to reach your retirement goals.">
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .input-field {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4f46e5;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+      font-weight: bold;
+      color: #4f46e5;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    .result-highlight {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin: 10px 0;
+    }
+    .formula-box {
+      background: #f0f9ff;
+      border-left: 4px solid #4f46e5;
+      padding: 10px 15px;
+      border-radius: 0 8px 8px 0;
+      margin: 15px 0;
+    }
+    .progress-container {
+      height: 12px;
+      background-color: #e5e7eb;
+      border-radius: 6px;
+      overflow: hidden;
+      margin: 15px 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4f46e5, #7c3aed);
+      border-radius: 6px;
+      transition: width 0.8s ease;
+    }
+    .quote-box {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      color: white;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      text-align: center;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    .input-group {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    .input-with-icon {
+      padding-left: 40px;
+    }
+    .info-card {
+      background-color: #f9fafb;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    .summary-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      padding: 10px 0;
+      border-bottom: 1px solid #e5e7eb;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    .quote {
-      margin-top: 1rem;
-      font-style: italic;
-      color: #555;
-      font-size: 0.95rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    .summary-item:last-child {
+      border-bottom: none;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Retirement Calculator" data-zh="Utilivy - 退休计算器">Utilivy - Retirement Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Retirement Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">退休计算器</h1>
+      <p class="text-gray-500 text-sm en">Plan your financial future with confidence</p>
+      <p class="text-gray-500 text-sm zh">自信规划您的财务未来</p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <!-- Motivational Quote -->
+      <div id="quoteBox" class="quote-box"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="input-group">
+          <i class="fa-solid fa-user input-icon"></i>
+          <input type="number" id="currentAge" class="input-field input-with-icon" placeholder="30" min="18" max="100" value="30">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Current Age</span>
+            <span class="zh">当前年龄</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-flag input-icon"></i>
+          <input type="number" id="retirementAge" class="input-field input-with-icon" placeholder="65" min="25" max="100" value="65">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Retirement Age</span>
+            <span class="zh">退休年龄</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-heart input-icon"></i>
+          <input type="number" id="lifeExpectancy" class="input-field input-with-icon" placeholder="85" min="65" max="120" value="85">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Life Expectancy</span>
+            <span class="zh">预期寿命</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-piggy-bank input-icon"></i>
+          <input type="number" id="currentSavings" class="input-field input-with-icon" placeholder="10000" min="0" value="10000">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Current Savings ($)</span>
+            <span class="zh">当前储蓄 ($)</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-wallet input-icon"></i>
+          <input type="number" id="monthlyContribution" class="input-field input-with-icon" placeholder="500" min="0" value="500">
+          <label class="block text极-sm font-medium mb-2 mt-3">
+            <span class="en">Monthly Contribution ($)</span>
+            <span class="zh">每月储蓄 ($)</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-percent input-icon"></i>
+          <input type="number" id="annualInterest" class="input-field input-with-icon" placeholder="6" min="0" max="20" step="0.1" value="6">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Annual Interest Rate (%)</span>
+            <span class="zh">年利率 (%)</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-credit-card input-icon"></i>
+          <input type="number" id="retirementMonthlyExpense" class="input-field input-with-icon" placeholder="3000" min="0" value="3000">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Monthly Retirement Expense ($)</span>
+            <span class="zh">退休后每月支出 ($)</span>
+          </label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa-solid fa-bullseye input-icon"></i>
+          <input type="number" id="retirementGoal" class="input-field input-with-icon" placeholder="1000000" min="0" value="1000000">
+          <label class="block text-sm font-medium mb-2 mt-3">
+            <span class="en">Retirement Goal ($) <span class="text-gray-500">(optional)</span></span>
+            <span class="zh">退休目标 ($) <span class="text-gray-500">(可选)</span></span>
+          </label>
+        </div>
+      </div>
+
+      <button onclick="calculateRetirement()" class="w-full btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-calculator"></i>
+        <span class="en">Calculate Retirement Plan</span>
+        <span class="zh">计算退休计划</span>
+      </button>
+      
+      <div class="loading" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        <span class="en">Calculating your retirement plan...</span>
+        <span class="zh">正在计算您的退休计划...</span>
+      </div>
+
+      <!-- Results Section -->
+      <div id="result" class="pt-4 space-y-4">
+        <div class="result-box hidden" id="resultContainer">
+          <div class="font-medium text-green-600 flex items-center gap-2">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="en">Retirement Projection</span>
+            <span class="zh">退休计划预测</span>
+          </div>
+          
+          <div id="resultDisplay" class="space-y-4">
+            <!-- Results will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <!-- How to Use -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter your current financial information</li>
+          <li class="zh">1. 输入您当前的财务状况</li>
+          <li class="en">2. Set your retirement goals and expectations</li>
+          <li class="zh">2. 设置您的退休目标和预期</li>
+          <li class="en">3. Click "Calculate" to see your retirement projection</li>
+          <li class="zh">3. 点击"计算"查看退休预测</li>
+        </ol>
+      </div>
+
+      <!-- Retirement Tips -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Retirement Planning Tips</span>
+          <span class="zh">退休规划建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Aim to save 15-20% of your income for retirement</li>
+          <li class="zh">▸ 目标是将收入的15-20%用于退休储蓄</li>
+          <li class="en">▸ Consider increasing contributions with salary raises</li>
+          <li class="zh">▸ 考虑随着工资增长增加储蓄</li>
+          <li class="en">▸ Diversify investments to balance risk and return</li>
+          <li class="zh">▸ 分散投资以平衡风险和回报</li>
+          <li class="en">▸ Review your plan annually and adjust as needed</li>
+          <li class="zh">▸ 每年审查计划并根据需要调整</li>
+        </ul>
+      </div>
+
+      <!-- Investment Strategies -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-chart-line"></i>
+          <span class="en">Investment Strategies</span>
+          <span class="zh">投资策略</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Start early to benefit from compound growth</li>
+          <li class="zh">▸ 尽早开始以受益于复利增长</li>
+          <li class="en">▸ Consider low-cost index funds for long-term growth</li>
+          <li class="zh">▸ 考虑低成本指数基金实现长期增长</li>
+          <li class="en">▸ Rebalance your portfolio annually</li>
+          <li class="zh">▸ 每年重新平衡您的投资组合</li>
+          <li class="en">▸ Reduce risk as you approach retirement age</li>
+          <li class="zh">▸ 随着退休年龄临近降低风险</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <div class="quote" id="quoteBox"></div>
-
-    <label id="label-currentAge">Current Age</label>
-    <input type="number" id="currentAge" />
-
-    <label id="label-retirementAge">Retirement Age</label>
-    <input type="number" id="retirementAge" />
-
-    <label id="label-lifeExpectancy">Expected Life Expectancy</label>
-    <input type="number" id="lifeExpectancy" />
-
-    <label id="label-currentSavings">Current Savings ($)</label>
-    <input type="number" id="currentSavings" />
-
-    <label id="label-monthlyContribution">Monthly Contribution ($)</label>
-    <input type="number" id="monthlyContribution" />
-
-    <label id="label-annualInterest">Expected Annual Interest Rate (%)</label>
-    <input type="number" id="annualInterest" />
-
-    <label id="label-retirementMonthlyExpense">Expected Monthly Expense After Retirement ($)</label>
-    <input type="number" id="retirementMonthlyExpense" />
-
-    <label id="label-retirementGoal">Retirement Goal Amount ($) (optional)</label>
-    <input type="number" id="retirementGoal" />
-
-    <button class="calculate" onclick="calculateRetirement()" id="calculateBtn">Calculate</button>
-
-    <div class="result" id="result"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span class="en">Calculation complete!</span>
+    <span class="zh">计算完成！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    let lang = 'en';
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set default values
+      document.getElementById('currentAge').value = 30;
+      document.getElementById('retirementAge').value = 65;
+      document.getElementById('lifeExpectancy').value = 85;
+      document.getElementById('currentSavings').value = 10000;
+      document.getElementById('monthlyContribution').value = 500;
+      document.getElementById('annualInterest').value = 6;
+      document.getElementById('retirementMonthlyExpense').value = 3000;
+      document.getElementById('retirementGoal').value = 1000000;
+      
+      // Show random quote
+      showRandomQuote();
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+      
+      // Update quote when language changes
+      showRandomQuote();
+    }
+
+    // Motivational quotes
     const quotes = {
       en: [
-        "Keep saving – your dream retirement is closer than you think.",
-        "Today’s sacrifice is tomorrow’s freedom.",
-        "Stay consistent – your future self will thank you.",
-        "Small steps now, giant leap at retirement."
+        "The best time to start saving was yesterday. The next best time is today.",
+        "Small consistent investments today create financial freedom tomorrow.",
+        "Retirement planning is not about age, it's about financial readiness.",
+        "Your future self will thank you for the sacrifices you make today."
       ],
       zh: [
-        "坚持储蓄，是未来自由的钥匙。",
-        "现在存一点，将来不愁花。",
-        "你现在的努力，就是未来的安心。",
-        "一点一滴的坚持，终将成为退休时的底气。"
+        "开始储蓄的最佳时间是昨天，其次是现在。",
+        "今天的小额持续投资将创造明天的财务自由。",
+        "退休规划不是关于年龄，而是关于财务准备。",
+        "未来的你会感谢今天做出牺牲的你。"
       ]
     };
-    const labels = {
-      en: {
-        currentAge: "Current Age",
-        retirementAge: "Retirement Age",
-        lifeExpectancy: "Expected Life Expectancy",
-        currentSavings: "Current Savings ($)",
-        monthlyContribution: "Monthly Contribution ($)",
-        annualInterest: "Expected Annual Interest Rate (%)",
-        retirementMonthlyExpense: "Expected Monthly Expense After Retirement ($)",
-        retirementGoal: "Retirement Goal Amount ($) (optional)",
-        calculateBtn: "Calculate",
-        resultWarning: "⚠️ Warning: You may not reach your retirement goal.",
-        resultSuccess: "🎉 Great! You’re on track.",
-        resultError: "❗ Please fill in all fields correctly.",
-        suggestion: "📌 Suggestion: Increase your monthly savings by approx ",
-        orDelay: " or delay retirement by about ",
-        years: " year(s).",
-        suggestionTitle: "Suggested Retirement Goal: "
-      },
-      zh: {
-        currentAge: "当前年龄",
-        retirementAge: "退休年龄",
-        lifeExpectancy: "预期寿命",
-        currentSavings: "当前储蓄（$）",
-        monthlyContribution: "每月储蓄（$）",
-        annualInterest: "预计年利率（%）",
-        retirementMonthlyExpense: "退休后的每月支出（$）",
-        retirementGoal: "退休目标金额（$）（可选）",
-        calculateBtn: "计算",
-        resultWarning: "⚠️ 提示：您的退休目标可能无法实现。",
-        resultSuccess: "🎉 太棒了！您已朝着目标稳步前进。",
-        resultError: "❗ 请正确填写所有字段。",
-        suggestion: "📌 建议：每月多存约 ",
-        orDelay: " 或延迟退休约 ",
-        years: " 年。",
-        suggestionTitle: "建议的退休目标金额："
-      }
-    };
 
-    function setLanguage(selectedLang) {
-      lang = selectedLang;
-      const l = labels[lang];
-      document.getElementById("label-currentAge").innerText = l.currentAge;
-      document.getElementById("label-retirementAge").innerText = l.retirementAge;
-      document.getElementById("label-lifeExpectancy").innerText = l.lifeExpectancy;
-      document.getElementById("label-currentSavings").innerText = l.currentSavings;
-      document.getElementById("label-monthlyContribution").innerText = l.monthlyContribution;
-      document.getElementById("label-annualInterest").innerText = l.annualInterest;
-      document.getElementById("label-retirementMonthlyExpense").innerText = l.retirementMonthlyExpense;
-      document.getElementById("label-retirementGoal").innerText = l.retirementGoal;
-      document.getElementById("calculateBtn").innerText = l.calculateBtn;
-      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
-      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
-      document.getElementById("quoteBox").innerText = quotes[lang][Math.floor(Math.random() * quotes[lang].length)];
-      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
+    function showRandomQuote() {
+      const isEnglish = document.getElementById('langToggle').checked;
+      const lang = isEnglish ? 'en' : 'zh';
+      const randomIndex = Math.floor(Math.random() * quotes[lang].length);
+      document.getElementById('quoteBox').textContent = quotes[lang][randomIndex];
     }
 
     function formatCurrency(num) {
-      return num.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+      return num.toLocaleString('en-US', { 
+        style: 'currency', 
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0
+      });
     }
 
     function calculateRetirement() {
-      const c = (id) => parseFloat(document.getElementById(id).value);
-      const currentAge = c('currentAge');
-      const retirementAge = c('retirementAge');
-      const lifeExpectancy = c('lifeExpectancy');
-      const currentSavings = c('currentSavings');
-      const monthlyContribution = c('monthlyContribution');
-      const annualInterest = c('annualInterest');
-      const retirementMonthlyExpense = c('retirementMonthlyExpense');
-      let retirementGoal = c('retirementGoal');
+      // Show loading indicator
+      const loading = document.getElementById('loadingIndicator');
+      const resultContainer = document.getElementById('resultContainer');
+      const resultDisplay = document.getElementById('resultDisplay');
+      loading.style.display = 'flex';
+      resultContainer.classList.add('hidden');
+      resultDisplay.innerHTML = '';
+      
+      // Get input values with proper validation
+      const getValue = (id) => {
+        const val = document.getElementById(id).value;
+        return val === '' ? 0 : parseFloat(val);
+      };
+      
+      const currentAge = getValue('currentAge');
+      const retirementAge = getValue('retirementAge');
+      const lifeExpectancy = getValue('lifeExpectancy');
+      const currentSavings = getValue('currentSavings');
+      const monthlyContribution = getValue('monthlyContribution');
+      const annualInterest = getValue('annualInterest');
+      const retirementMonthlyExpense = getValue('retirementMonthlyExpense');
+      let retirementGoal = getValue('retirementGoal');
+      
+      const isEnglish = document.getElementById('langToggle').checked;
+      const l = {
+        error: isEnglish ? "Please fill all required fields correctly" : "请正确填写所有必填字段",
+        suggestionTitle: isEnglish ? "Suggested Retirement Goal: " : "建议退休目标金额: ",
+        projection: isEnglish ? "By age {age}, you will have: " : "到{age}岁时，您将拥有: ",
+        shortfall: isEnglish ? "Suggestion: Increase monthly savings by {amount} or work {years} more years" 
+                            : "建议: 每月多存{amount}或再多工作{years}年",
+        success: isEnglish ? "Great! You're on track to meet your goal" 
+                          : "太棒了！您正朝着目标稳步前进",
+        expenseNote: isEnglish ? "Based on your monthly expense of {expense} for {years} years" 
+                              : "基于您每月支出{expense}持续{years}年",
+        retirementYears: isEnglish ? "Years in retirement: " : "退休年数: ",
+        savingsProgress: isEnglish ? "Progress toward your goal" : "目标完成进度",
+        summary: isEnglish ? "Retirement Summary" : "退休计划摘要"
+      };
 
-      if ([currentAge, retirementAge, lifeExpectancy, currentSavings, monthlyContribution, annualInterest, retirementMonthlyExpense].some(isNaN)) {
-        document.getElementById('result').innerText = labels[lang].resultError;
+      // Validate inputs
+      let isValid = true;
+      const requiredFields = [
+        currentAge, retirementAge, lifeExpectancy, 
+        monthlyContribution, annualInterest, retirementMonthlyExpense
+      ];
+      
+      // Check for required fields and logical consistency
+      if (requiredFields.some(val => isNaN(val) || val <= 0)) {
+        isValid = false;
+      }
+      
+      if (retirementAge <= currentAge) {
+        showNotification(isEnglish 
+          ? "Retirement age must be greater than current age" 
+          : "退休年龄必须大于当前年龄", true);
+        loading.style.display = 'none';
+        return;
+      }
+      
+      if (lifeExpectancy <= retirementAge) {
+        showNotification(isEnglish 
+          ? "Life expectancy must be greater than retirement age" 
+          : "预期寿命必须大于退休年龄", true);
+        loading.style.display = 'none';
+        return;
+      }
+      
+      if (!isValid) {
+        showNotification(l.error, true);
+        loading.style.display = 'none';
         return;
       }
 
-      const monthsToRetire = (retirementAge - currentAge) * 12;
-      const monthlyInterestRate = annualInterest / 100 / 12;
-
-      let totalSavings = currentSavings;
-      for (let i = 0; i < monthsToRetire; i++) {
-        totalSavings += monthlyContribution;
-        totalSavings *= (1 + monthlyInterestRate);
+      // Calculate years until retirement
+      const yearsToRetire = retirementAge - currentAge;
+      const retirementYears = lifeExpectancy - retirementAge;
+      
+      // Calculate monthly interest rate
+      const monthlyRate = annualInterest / 100 / 12;
+      
+      // Calculate future value using compound interest formula
+      const months = yearsToRetire * 12;
+      const futureValue = 
+        currentSavings * Math.pow(1 + monthlyRate, months) +
+        monthlyContribution * (Math.pow(1 + monthlyRate, months) - 1) / monthlyRate;
+      
+      // Calculate required retirement goal if not provided
+      if (!retirementGoal || retirementGoal <= 0) {
+        retirementGoal = retirementMonthlyExpense * 12 * retirementYears;
       }
-
-      if (isNaN(retirementGoal)) {
-        retirementGoal = retirementMonthlyExpense * 12 * (lifeExpectancy - retirementAge);
-      }
-
-      const l = labels[lang];
-      let result = `${l.suggestionTitle}<strong>${formatCurrency(retirementGoal)}</strong><br/><br/>`;
-      result += `${lang === 'zh' ? '到' : 'By'} ${retirementAge}, ${lang === 'zh' ? '您预计将积累约 ' : 'you will have around '}<strong>${formatCurrency(totalSavings)}</strong>。`;
-
-      if (totalSavings < retirementGoal) {
-        const gap = retirementGoal - totalSavings;
-        const morePerMonth = gap / monthsToRetire;
-        result += `<br/><span style="color:red;">${l.resultWarning}<br/>${l.suggestion}${formatCurrency(morePerMonth)}${l.orDelay}1${l.years}</span>`;
+      
+      // Calculate progress percentage
+      const progressPercentage = Math.min(100, (futureValue / retirementGoal) * 100);
+      
+      // Prepare result HTML
+      let resultHTML = `
+        <div class="info-card">
+          <h3 class="font-semibold text-lg text-blue-700 mb-3">${l.summary}</h3>
+          
+          <div class="summary-item">
+            <span>${isEnglish ? "Years until retirement" : "距离退休年数"}</span>
+            <span class="font-semibold">${yearsToRetire}</span>
+          </div>
+          
+          <div class="summary-item">
+            <span>${l.retirementYears}</span>
+            <span class="font-semibold">${retirementYears}</span>
+          </div>
+          
+          <div class="summary-item">
+            <span>${isEnglish ? "Total contributions" : "总储蓄金额"}</span>
+            <span class="font-semibold">${formatCurrency(monthlyContribution * months)}</span>
+          </div>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="text-xs font-medium text-gray-500">${l.suggestionTitle}</h3>
+          <p class="text-lg font-semibold">${formatCurrency(retirementGoal)}</p>
+          <p class="text-xs text-gray-500 mt-1">${l.expenseNote.replace('{expense}', formatCurrency(retirementMonthlyExpense)).replace('{years}', retirementYears)}</p>
+        </div>
+        
+        <div class="bg-gray-50 p-4 rounded-lg">
+          <h3 class="text-xs font-medium text-gray-500">${l.projection.replace('{age}', retirementAge)}</h3>
+          <p class="text-lg font-semibold">${formatCurrency(futureValue)}</p>
+        </div>
+        
+        <div class="mt-4">
+          <div class="flex justify-between text-sm mb-1">
+            <span>${l.savingsProgress}</span>
+            <span>${progressPercentage.toFixed(1)}%</span>
+          </div>
+          <div class="progress-container">
+            <div class="progress-bar" style="width: ${progressPercentage}%"></div>
+          </div>
+        </div>
+      `;
+      
+      // Check if goal is met
+      if (futureValue < retirementGoal) {
+        const shortfall = retirementGoal - futureValue;
+        const additionalMonthly = (shortfall / months).toFixed(2);
+        const additionalYears = Math.ceil(shortfall / (futureValue / yearsToRetire));
+        
+        resultHTML += `
+          <div class="bg-red-50 p-4 rounded-lg border border-red-200">
+            <h3 class="text-sm font-medium text-red-600">${isEnglish ? "Retirement Shortfall" : "退休资金缺口"}</h3>
+            <p class="text-sm text-red-600 mt-2">${l.shortfall
+              .replace('{amount}', formatCurrency(additionalMonthly))
+              .replace('{years}', additionalYears)}</p>
+          </div>
+        `;
       } else {
-        result += `<br/><span style="color:green;">${l.resultSuccess}</span>`;
+        resultHTML += `
+          <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+            <h3 class="text-sm font-medium text-green-600">${l.success}</h3>
+            <p class="text-sm text-green-600 mt-2">${isEnglish 
+              ? `You'll have ${formatCurrency(futureValue - retirementGoal)} more than needed!` 
+              : `您将比所需金额多出 ${formatCurrency(futureValue - retirementGoal)}！`}</p>
+          </div>
+        `;
       }
+      
+      // Add inflation note
+      resultHTML += `
+        <div class="text-xs text-gray-500 italic mt-2">
+          ${isEnglish 
+            ? "Note: Calculations don't account for inflation. Consider 2-3% annual inflation in long-term planning." 
+            : "注意：计算未考虑通货膨胀。长期规划中应考虑每年2-3%的通货膨胀率。"}
+        </div>
+      `;
 
-      document.getElementById("result").innerHTML = result;
+      // Update result display
+      resultDisplay.innerHTML = resultHTML;
+
+      // Display results with slight delay
+      setTimeout(() => {
+        resultContainer.classList.remove('hidden');
+        loading.style.display = 'none';
+        showNotification('Calculation complete!');
+      }, 800);
     }
 
-    setLanguage(lang);
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message === 'Calculation complete!' ? '计算完成！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
   </script>
 </body>
 </html>

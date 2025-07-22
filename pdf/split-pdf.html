@@ -1,266 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+    crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
-  <title>Split PDF Online - Free PDF Splitter | Utilivy</title>
   <meta name="description" content="Easily split PDF files into separate pages with our free online PDF splitter. No registration or download required." />
+  
+  <title>Split PDF Online - Free PDF Splitter | Utilivy</title>
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right { display: flex; align-items: center; gap: 1rem; }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-    .adsense-banner, .adsense-footer {
-      display: none;
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-    }
-    input[type="file"], textarea {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1rem;
-    }
-    ul { padding-left: 0; list-style: none; }
-    li {
-      background: #f3f4f6;
-      margin-top: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    li span { flex: 1; }
-    .remove-btn {
-      background: #ef4444;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      padding: 0.3rem 0.6rem;
-      cursor: pointer;
-      margin-left: 1rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-effect {
+        @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary-500 to-primary-700;
+      }
+      .gradient-bg-secondary {
+        @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+      }
+      .notification-hidden {
+        @apply transform translate-x-full;
+      }
+      .notification-visible {
+        @apply transform translate-x-0;
+      }
     }
   </style>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              500: '#10b981',
+            },
+            error: {
+              500: '#ef4444',
+            },
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        },
+      }
+    }
+  </script>
 </head>
-<body>
-<header>
-  <h1 data-en="Utilivy - Split PDF" data-zh="Utilivy - 拆分 PDF">Utilivy - Split PDF</h1>
-  <div class="header-right">
-    <div class="lang-switch">
-      <button onclick="setLang('en')">EN</button>
-      <button onclick="setLang('zh')">中</button>
+
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches other tools -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-    <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Split PDF Online</h1>
+      <h1 class="text-3xl font-bold zh mb-2">在线拆分 PDF</h1>
+      <p class="text-gray-500 text-sm en">Split PDF files into custom page ranges</p>
+      <p class="text-gray-500 text-sm zh">将 PDF 文件拆分为自定义页面范围</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+      <!-- Notification -->
+      <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">Operation successful!</span>
+        <span class="zh">操作成功！</span>
+      </div>
+
+      <!-- File Upload -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Upload PDF File</span>
+          <span class="zh">上传 PDF 文件</span>
+        </label>
+        <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary-500 transition-colors cursor-pointer" onclick="document.getElementById('pdfFile').click()">
+          <i class="fa-regular fa-file-pdf text-4xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500 en">Click to select PDF or drag and drop here</p>
+          <p class="text-gray-500 zh">点击选择 PDF 或拖放至此处</p>
+          <input type="file" id="pdfFile" accept="application/pdf" class="hidden" onchange="handleFileUpload(event)" />
+        </div>
+        <div id="fileInfo" class="hidden mt-3 flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+          <div class="flex items-center gap-2">
+            <i class="fa-regular fa-file-pdf text-primary-500"></i>
+            <span id="fileName" class="font-medium"></span>
+          </div>
+          <span id="filePages" class="text-xs text-gray-500"></span>
+        </div>
+      </div>
+
+      <!-- Page Ranges Input -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Enter Page Ranges</span>
+          <span class="zh">输入页面范围</span>
+        </label>
+        <textarea 
+          id="rangeInput" 
+          class="w-full border border-gray-300 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 min-h-[100px]"
+          placeholder="en: e.g. 1-2, 4, 6-8&#10;zh: 例如：1-2, 4, 6-8"
+        ></textarea>
+        <p class="text-xs text-gray-500 mt-1">
+          <span class="en">Use commas to separate ranges (e.g. 1-3, 5, 7-10)</span>
+          <span class="zh">使用逗号分隔范围（例如：1-3, 5, 7-10）</span>
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button onclick="addTask()" class="gradient-bg-secondary text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-plus-circle"></i>
+          <span class="en">Add Split Task</span>
+          <span class="zh">添加拆分任务</span>
+        </button>
+        <button onclick="splitTasks()" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-scissors"></i>
+          <span class="en">Split & Download</span>
+          <span class="zh">拆分并下载</span>
+        </button>
+      </div>
+
+      <!-- Task List -->
+      <div>
+        <h3 class="text-lg font-semibold mb-3">
+          <span class="en">Split Tasks</span>
+          <span class="zh">拆分任务</span>
+        </h3>
+        <ul id="taskList" class="space-y-3">
+          <!-- Tasks will be added here dynamically -->
+          <li class="text-gray-500 text-sm text-center py-6 border border-dashed border-gray-300 rounded-xl">
+            <span class="en">No tasks added yet</span>
+            <span class="zh">尚未添加任务</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">1. Upload your PDF file</li>
+          <li class="zh">1. 上传您的 PDF 文件</li>
+          <li class="en">2. Enter page ranges to split (e.g. 1-3, 5)</li>
+          <li class="zh">2. 输入要拆分的页面范围（例如：1-3, 5）</li>
+          <li class="en">3. Click "Add Split Task" to save the range</li>
+          <li class="zh">3. 点击"添加拆分任务"保存范围</li>
+          <li class="en">4. Add multiple tasks for different ranges</li>
+          <li class="zh">4. 可为不同范围添加多个任务</li>
+          <li class="en">5. Click "Split & Download" to get your files</li>
+          <li class="zh">5. 点击"拆分并下载"获取文件</li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Features</span>
+          <span class="zh">功能特点</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">▸ Split PDF into custom page ranges</li>
+          <li class="zh">▸ 将 PDF 拆分为自定义页面范围</li>
+          <li class="en">▸ Support for multiple split tasks</li>
+          <li class="zh">▸ 支持多个拆分任务</li>
+          <li class="en">▸ 100% client-side processing</li>
+          <li class="zh">▸ 100% 客户端处理</li>
+          <li class="en">▸ Preserves original PDF quality</li>
+          <li class="zh">▸ 保留原始 PDF 质量</li>
+          <li class="en">▸ No file size limitations</li>
+          <li class="zh">▸ 无文件大小限制</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy PDF splitting into custom page ranges.</p>
+      <p class="mt-2 zh">专为轻松将 PDF 拆分为自定义页面范围而设计。</p>
+    </footer>
   </div>
-</header>
 
-<div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
+  <script>
+    // Global variables
+    let pdfBytes = null;
+    let originalPdf = null;
+    const tasks = [];
+    let totalPages = 0;
 
-<div class="container">
-  <label>Upload PDF</label>
-  <input type="file" id="pdfFile" accept="application/pdf" />
-
-  <label>Enter page ranges (e.g. 1-2 or 4 or 6-8)</label>
-  <textarea id="rangeInput" placeholder="1-2 or 4 or 6-8"></textarea>
-
-  <button class="calculate" onclick="addTask()">Add Split Task</button>
-  <ul id="taskList"></ul>
-
-  <button class="calculate" onclick="splitTasks()">Split & Download</button>
-</div>
-
-<div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
-
-<footer>
-  &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-</footer>
-
-<script>
-  let lang = 'en';
-  function setLang(l) {
-    lang = l;
-    document.querySelectorAll('[data-en]').forEach(el => {
-      el.textContent = l === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-    });
-  }
-  setLang('en');
-
-  let pdfBytes = null;
-  let originalPdf = null;
-  const tasks = [];
-
-  document.getElementById('pdfFile').addEventListener('change', async e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    pdfBytes = await file.arrayBuffer();
-    originalPdf = await PDFLib.PDFDocument.load(pdfBytes);
-    alert("PDF loaded successfully.");
-  });
-
-  function parseRange(str, totalPages) {
-    const parts = str.split(',');
-    const result = [];
-    for (let part of parts) {
-      part = part.trim();
-      const match = part.match(/^(\d+)(?:-(\d+))?$/);
-      if (!match) continue;
-      let start = parseInt(match[1], 10);
-      let end = match[2] ? parseInt(match[2], 10) : start;
-      if (start < 1 || end > totalPages || start > end) {
-        alert(`Invalid range: ${part}`);
-        return null;
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
       }
-      result.push([start - 1, end - 1]); // PDFLib uses zero-based page index
-    }
-    return result;
-  }
-
-  function addTask() {
-    if (!originalPdf) return alert("Please upload a PDF first.");
-    const input = document.getElementById('rangeInput').value;
-    const parsed = parseRange(input, originalPdf.getPageCount());
-    if (!parsed || parsed.length === 0) return;
-    tasks.push(parsed);
-    renderTasks();
-  }
-
-  function renderTasks() {
-    const ul = document.getElementById('taskList');
-    ul.innerHTML = '';
-    tasks.forEach((ranges, index) => {
-      const li = document.createElement('li');
-      const span = document.createElement('span');
-      span.textContent = ranges.map(r => `${r[0]+1}-${r[1]+1}`).join(', ');
-      const btn = document.createElement('button');
-      btn.textContent = '×';
-      btn.className = 'remove-btn';
-      btn.onclick = () => {
-        tasks.splice(index, 1);
-        renderTasks();
-      };
-      li.appendChild(span);
-      li.appendChild(btn);
-      ul.appendChild(li);
     });
-  }
 
-  async function splitTasks() {
-    if (!originalPdf || tasks.length === 0) {
-      alert("No tasks to process.");
-      return;
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
     }
 
-    for (let i = 0; i < tasks.length; i++) {
-      const taskRanges = tasks[i];
-      const newDoc = await PDFLib.PDFDocument.create();
-      for (const [start, end] of taskRanges) {
-        const pages = await newDoc.copyPages(originalPdf, Array.from({length: end - start + 1}, (_, idx) => start + idx));
-        pages.forEach(p => newDoc.addPage(p));
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      
+      // Reset classes
+      notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+      if (isError) {
+        notification.classList.add('bg-error-500');
+        notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+      } else {
+        notification.classList.add('bg-success-500');
+        notification.querySelector('i').className = 'fas fa-check-circle mr-2';
       }
-
-      const newBytes = await newDoc.save();
-      const blob = new Blob([newBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = `split-part-${i+1}.pdf`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      
+      // Set message
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      enSpan.textContent = message;
+      zhSpan.textContent = isError ? '错误: ' + message : message;
+      
+      // Show notification
+      notification.classList.remove('notification-hidden');
+      notification.classList.add('notification-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('notification-visible');
+        notification.classList.add('notification-hidden');
+      }, 3000);
     }
 
-    alert("All parts downloaded.");
-  }
-</script>
+    // Handle file upload
+    async function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      try {
+        // Show file info
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileInfo').classList.remove('hidden');
+        
+        // Load PDF
+        pdfBytes = await file.arrayBuffer();
+        originalPdf = await PDFLib.PDFDocument.load(pdfBytes);
+        totalPages = originalPdf.getPageCount();
+        
+        // Update page count display
+        document.getElementById('filePages').textContent = 
+          `${totalPages} ${totalPages === 1 ? 'page' : 'pages'}`;
+        
+        showNotification('PDF loaded successfully');
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        showNotification('Failed to load PDF: ' + error.message, true);
+        document.getElementById('fileInfo').classList.add('hidden');
+        pdfBytes = null;
+        originalPdf = null;
+      }
+    }
+
+    // Parse and validate page ranges
+    function parseRange(input, totalPages) {
+      if (!input.trim()) return null;
+      
+      const parts = input.split(',').map(p => p.trim()).filter(p => p);
+      if (parts.length === 0) return null;
+      
+      const ranges = [];
+      
+      for (const part of parts) {
+        // Validate range format (e.g., "1-3" or "5")
+        const match = part.match(/^(\d+)(?:-(\d+))?$/);
+        if (!match) {
+          showNotification(`Invalid range format: ${part}`, true);
+          return null;
+        }
+        
+        const start = parseInt(match[1], 10);
+        const end = match[2] ? parseInt(match[2], 10) : start;
+        
+        // Validate page numbers
+        if (start < 1 || end > totalPages || start > end) {
+          showNotification(`Invalid range: ${part} (Total pages: ${totalPages})`, true);
+          return null;
+        }
+        
+        ranges.push({ start, end });
+      }
+      
+      return ranges;
+    }
+
+    // Add split task
+    function addTask() {
+      if (!originalPdf) {
+        showNotification('Please upload a PDF first', true);
+        return;
+      }
+      
+      const input = document.getElementById('rangeInput').value;
+      const ranges = parseRange(input, totalPages);
+      
+      if (!ranges) return;
+      
+      // Add to tasks array
+      tasks.push(ranges);
+      
+      // Clear input
+      document.getElementById('rangeInput').value = '';
+      
+      // Update task list UI
+      renderTasks();
+      
+      showNotification('Split task added');
+    }
+
+    // Render task list
+    function renderTasks() {
+      const taskList = document.getElementById('taskList');
+      
+      // Clear list
+      taskList.innerHTML = '';
+      
+      // Show empty state if no tasks
+      if (tasks.length === 0) {
+        taskList.innerHTML = `
+          <li class="text-gray-500 text-sm text-center py-6 border border-dashed border-gray-300 rounded-xl">
+            <span class="en">No tasks added yet</span>
+            <span class="zh">尚未添加任务</span>
+          </li>
+        `;
+        return;
+      }
+      
+      // Add tasks to list
+      tasks.forEach((task, index) => {
+        const rangeText = task.map(r => `${r.start}-${r.end}`).join(', ');
+        
+        const li = document.createElement('li');
+        li.className = 'bg-gray-50 rounded-xl p-4 flex justify-between items-center';
+        li.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="bg-primary-100 text-primary-700 w-6 h-6 rounded-full flex items-center justify-center text-sm font-medium">
+              ${index + 1}
+            </div>
+            <div>
+              <div class="font-medium en">Split Range</div>
+              <div class="font-medium zh">拆分范围</div>
+              <div class="text-sm text-gray-600">${rangeText}</div>
+            </div>
+          </div>
+          <button onclick="removeTask(${index})" class="text-gray-400 hover:text-error-500 transition-colors">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        `;
+        
+        taskList.appendChild(li);
+      });
+    }
+
+    // Remove task
+    function removeTask(index) {
+      tasks.splice(index, 1);
+      renderTasks();
+      showNotification('Task removed');
+    }
+
+    // Process split tasks
+    async function splitTasks() {
+      if (!originalPdf || tasks.length === 0) {
+        showNotification('Please upload a PDF and add split tasks first', true);
+        return;
+      }
+      
+      try {
+        // Process each task
+        for (let i = 0; i < tasks.length; i++) {
+          const task = tasks[i];
+          const newDoc = await PDFLib.PDFDocument.create();
+          
+          // Collect all pages for this task
+          const pagesToCopy = [];
+          task.forEach(range => {
+            for (let p = range.start; p <= range.end; p++) {
+              pagesToCopy.push(p - 1); // Convert to 0-based index
+            }
+          });
+          
+          // Copy pages to new document
+          const copiedPages = await newDoc.copyPages(originalPdf, pagesToCopy);
+          copiedPages.forEach(page => newDoc.addPage(page));
+          
+          // Save and download
+          const newBytes = await newDoc.save();
+          const blob = new Blob([newBytes], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = `split-part-${i + 1}.pdf`;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }
+        
+        showNotification('All PDF parts downloaded successfully');
+      } catch (error) {
+        console.error('Error splitting PDF:', error);
+        showNotification('Failed to split PDF: ' + error.message, true);
+      }
+    }
+  </script>
 </body>
 </html>

@@ -2,286 +2,526 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+    crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Merge PDFs Online - Combine PDF Files Free | Utilivy</title>
-<meta name="description" content="Quickly merge multiple PDF files into one with our free online PDF combiner tool." />
+  <meta name="description" content="Quickly merge multiple PDF files into one with our free online PDF combiner tool." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    #dropZone {
-      border: 2px dashed #ccc;
-      padding: 2rem;
-      text-align: center;
-      cursor: pointer;
-      margin-bottom: 1rem;
-      border-radius: 8px;
-      background-color: #fafafa;
-    }
-    #dropZone.dragover {
-      background-color: #e0e7ff;
-    }
-    ul#fileList {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0;
-    }
-    ul#fileList li {
-      background: #f3f4f6;
-      margin-bottom: 0.5rem;
-      padding: 0.5rem 1rem;
-      border-radius: 6px;
-      cursor: move;
-      display: flex;
-      justify-content: space-between;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-effect {
+        @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary-500 to-primary-700;
+      }
+      .gradient-bg-secondary {
+        @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+      }
+      .notification-hidden {
+        @apply transform translate-x-full;
+      }
+      .notification-visible {
+        @apply transform translate-x-0;
+      }
+      .file-item {
+        @apply bg-gray-50 rounded-lg p-3 flex justify-between items-center mb-2 cursor-move transition-all duration-200;
+      }
+      .file-item:hover {
+        @apply bg-gray-100;
+      }
+      .file-item.dragging {
+        @apply opacity-50 scale-95;
+      }
+      .drop-area {
+        @apply border-2 border-dashed border-gray-300 rounded-xl p-8 text-center cursor-pointer transition-all duration-300;
+      }
+      .drop-area:hover {
+        @apply border-primary-500 bg-primary-50;
+      }
+      .drop-area.dragover {
+        @apply border-primary-600 bg-primary-100;
+      }
     }
   </style>
-</head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Merge PDF Files" data-zh="Utilivy - 合并 PDF 文件">Utilivy - Merge PDF Files</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
-      </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
-
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <div id="dropZone" data-en="Click or Drop PDF Files Here" data-zh="点击或拖放 PDF 文件至此">
-      Click or Drop PDF Files Here
-    </div>
-    <input type="file" id="pdfFiles" multiple accept="application/pdf" style="display: none;" />
-    <ul id="fileList"></ul>
-    <button class="calculate" onclick="mergePDFs()" data-en="Merge PDF Files" data-zh="合并 PDF 文件">Merge PDF Files</button>
-  </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              500: '#10b981',
+            },
+            error: {
+              500: '#ef4444',
+            },
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
     }
-    setLanguage('en');
+  </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches other tools -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const input = document.getElementById('pdfFiles');
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Merger</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 合并工具</h1>
+      <p class="text-gray-500 text-sm en">Combine multiple PDF files into one document</p>
+      <p class="text-gray-500 text-sm zh">将多个PDF文件合并为一个文档</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+      <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">PDF generated successfully!</span>
+        <span class="zh">PDF生成成功！</span>
+      </div>
+
+      <!-- Drop Zone -->
+      <div class="drop-area" id="dropZone">
+        <div class="space-y-3">
+          <i class="fa-regular fa-file-pdf text-4xl text-gray-400"></i>
+          <h3 class="text-lg font-semibold en">Drag & Drop PDF Files Here</h3>
+          <h3 class="text-lg font-semibold zh">将PDF文件拖放到此处</h3>
+          <p class="text-gray-500 text-sm en">or click to browse files</p>
+          <p class="text-gray-500 text-sm zh">或点击浏览文件</p>
+          <p class="text-gray-500 text-xs en mt-2">Supports multiple files. You can reorder them by dragging.</p>
+          <p class="text-gray-500 text-xs zh mt-2">支持多个文件。您可以通过拖动重新排序。</p>
+        </div>
+        <input type="file" id="pdfFiles" multiple accept="application/pdf" class="hidden" />
+      </div>
+
+      <!-- File List -->
+      <div>
+        <h3 class="text-lg font-semibold mb-3">
+          <span class="en">Files to Merge</span>
+          <span class="zh">待合并文件</span>
+        </h3>
+        <ul id="fileList"></ul>
+      </div>
+
+      <!-- Action Buttons -->
+      <button onclick="mergePDFs()" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium w-full">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span class="en">Merge PDF Files</span>
+        <span class="zh">合并PDF文件</span>
+      </button>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-primary-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">1. Drag and drop PDF files or click to select</li>
+          <li class="zh">1. 拖放PDF文件或点击选择</li>
+          <li class="en">2. Reorder files by dragging if needed</li>
+          <li class="zh">2. 如有需要，可通过拖动重新排序</li>
+          <li class="en">3. Click "Merge PDF Files" button</li>
+          <li class="zh">3. 点击"合并PDF文件"按钮</li>
+          <li class="en">4. Download your merged PDF file</li>
+          <li class="zh">4. 下载合并后的PDF文件</li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Features</span>
+          <span class="zh">功能特点</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">▸ Merge multiple PDFs into one</li>
+          <li class="zh">▸ 将多个PDF合并为一个</li>
+          <li class="en">▸ Reorder files easily</li>
+          <li class="zh">▸ 轻松重新排序文件</li>
+          <li class="en">▸ Preserves original quality</li>
+          <li class="zh">▸ 保留原始质量</li>
+          <li class="en">▸ 100% client-side processing</li>
+          <li class="zh">▸ 100%客户端处理</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy PDF merging.</p>
+      <p class="mt-2 zh">专为轻松合并PDF而设计。</p>
+    </footer>
+  </div>
+
+  <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Setup drag and drop
       const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('pdfFiles');
       const fileList = document.getElementById('fileList');
       let files = [];
-
-      dropZone.addEventListener('click', () => input.click());
-
+      
+      // Click to select files
+      dropZone.addEventListener('click', () => {
+        fileInput.click();
+      });
+      
+      // Handle file selection
+      fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+      });
+      
+      // Drag and drop handlers
       dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('dragover');
       });
-
+      
       dropZone.addEventListener('dragleave', () => {
         dropZone.classList.remove('dragover');
       });
-
+      
       dropZone.addEventListener('drop', (e) => {
         e.preventDefault();
         dropZone.classList.remove('dragover');
-        handleFiles(e.dataTransfer.files);
+        
+        if (e.dataTransfer.files.length) {
+          handleFiles(e.dataTransfer.files);
+        }
       });
-
-      input.addEventListener('change', () => handleFiles(input.files));
-
-      function handleFiles(selected) {
-        for (const f of selected) {
-          if (f.type === 'application/pdf') {
-            files.push(f);
+      
+      // Handle dropped files
+      function handleFiles(selectedFiles) {
+        const newFiles = [];
+        
+        for (const file of selectedFiles) {
+          if (file.type === 'application/pdf') {
+            // Check if file already exists
+            const exists = files.some(f => f.name === file.name && f.size === file.size && f.lastModified === file.lastModified);
+            
+            if (!exists) {
+              newFiles.push(file);
+            }
           }
         }
-        renderList();
+        
+        if (newFiles.length === 0) {
+          showNotification('No new PDF files selected', true);
+          return;
+        }
+        
+        files = [...files, ...newFiles];
+        renderFileList();
+        showNotification(`Added ${newFiles.length} PDF file(s)`);
       }
-
-      function renderList() {
+      
+      // Render file list
+      function renderFileList() {
         fileList.innerHTML = '';
+        
+        if (files.length === 0) {
+          fileList.innerHTML = `
+            <div class="text-center text-gray-400 p-6 border-2 border-dashed rounded-xl">
+              <i class="fa-regular fa-file-pdf text-3xl mb-2"></i>
+              <p class="en">No PDF files selected</p>
+              <p class="zh">未选择PDF文件</p>
+            </div>
+          `;
+          return;
+        }
+        
         files.forEach((file, index) => {
+          const fileSize = (file.size / 1024 / 1024).toFixed(2);
           const li = document.createElement('li');
+          li.className = 'file-item';
           li.draggable = true;
-          li.innerHTML = `<span>${file.name}</span><span>${(file.size / 1024 / 1024).toFixed(1)} MB</span>`;
-
+          li.dataset.index = index;
+          li.innerHTML = `
+            <div class="flex items-center gap-3">
+              <i class="fa-regular fa-file-pdf text-primary-500"></i>
+              <div>
+                <div class="font-medium truncate max-w-xs">${file.name}</div>
+                <div class="text-xs text-gray-500">${fileSize} MB</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-medium bg-gray-100 px-2 py-1 rounded">${index + 1}</span>
+              <button class="text-gray-400 hover:text-error-500" onclick="removeFile(${index})">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+          `;
+          
+          // Drag and drop sorting
           li.addEventListener('dragstart', () => {
             li.classList.add('dragging');
           });
-
+          
           li.addEventListener('dragend', () => {
             li.classList.remove('dragging');
           });
-
+          
+          // Allow drop
           li.addEventListener('dragover', (e) => {
             e.preventDefault();
-            const dragging = document.querySelector('.dragging');
-            if (dragging && dragging !== li) {
-              const children = Array.from(fileList.children);
-              const dragIndex = children.indexOf(dragging);
-              const dropIndex = children.indexOf(li);
-              if (dragIndex < dropIndex) {
-                fileList.insertBefore(dragging, li.nextSibling);
-              } else {
-                fileList.insertBefore(dragging, li);
-              }
-              reorderFiles();
+            const afterElement = getDragAfterElement(fileList, e.clientY);
+            const draggingItem = document.querySelector('.dragging');
+            
+            if (afterElement) {
+              fileList.insertBefore(draggingItem, afterElement);
+            } else {
+              fileList.appendChild(draggingItem);
             }
+            
+            updateFileOrder();
           });
-
+          
           fileList.appendChild(li);
         });
       }
-
-      function reorderFiles() {
+      
+      // Get element to insert after
+      function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.file-item:not(.dragging)')];
+        
+        return draggableElements.reduce((closest, child) => {
+          const box = child.getBoundingClientRect();
+          const offset = y - box.top - box.height / 2;
+          
+          if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+          } else {
+            return closest;
+          }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+      }
+      
+      // Update file order based on DOM
+      function updateFileOrder() {
         const newFiles = [];
-        const items = fileList.querySelectorAll('li');
-        items.forEach(li => {
-          const name = li.querySelector('span').textContent;
-          const match = files.find(f => f.name === name);
-          if (match) newFiles.push(match);
+        const items = fileList.querySelectorAll('.file-item');
+        
+        items.forEach((item, index) => {
+          const fileIndex = parseInt(item.dataset.index);
+          if (files[fileIndex]) {
+            newFiles.push(files[fileIndex]);
+            // Update the index in the DOM
+            item.querySelector('span.bg-gray-100').textContent = index + 1;
+            item.dataset.index = index;
+          }
         });
+        
         files = newFiles;
       }
+      
+      // Remove file from list
+      window.removeFile = function(index) {
+        files.splice(index, 1);
+        renderFileList();
+        showNotification('File removed');
+      };
+      
+      // Initial render
+      renderFileList();
+    });
 
-      window.mergePDFs = async function () {
-        if (!files.length) return alert("Please select at least one PDF file.");
-        const mergedPdf = await PDFLib.PDFDocument.create();
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
 
-        for (const file of files) {
-          const bytes = await file.arrayBuffer();
-          const pdf = await PDFLib.PDFDocument.load(bytes);
-          const copiedPages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-          copiedPages.forEach(p => mergedPdf.addPage(p));
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      
+      // Reset and set appropriate class
+      notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+      if (isError) {
+        notification.classList.add('bg-error-500');
+        notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+      } else {
+        notification.classList.add('bg-success-500');
+        notification.querySelector('i').className = 'fas fa-check-circle mr-2';
+      }
+      
+      // Set message
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      enSpan.textContent = message;
+      zhSpan.textContent = isError ? '错误: ' + message : message;
+      
+      // Show notification
+      notification.classList.remove('notification-hidden');
+      notification.classList.add('notification-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('notification-visible');
+        notification.classList.add('notification-hidden');
+      }, 3000);
+    }
+
+    // Merge PDFs
+    async function mergePDFs() {
+      const fileList = document.getElementById('fileList');
+      const fileItems = fileList.querySelectorAll('.file-item');
+      
+      if (fileItems.length === 0) {
+        showNotification('Please select at least one PDF file', true);
+        return;
+      }
+      
+      try {
+        showNotification('Merging PDFs...');
+        
+        // Create new PDF document
+        const { PDFDocument } = PDFLib;
+        const mergedPdf = await PDFDocument.create();
+        
+        // Add each PDF's pages to the merged document
+        for (const item of fileItems) {
+          const fileIndex = parseInt(item.dataset.index);
+          const file = document.getElementById('pdfFiles').files[fileIndex];
+          
+          if (!file) {
+            // Fallback: use the files array
+            const fileName = item.querySelector('.font-medium').textContent;
+            const fileObj = files.find(f => f.name === fileName);
+            
+            if (!fileObj) {
+              continue;
+            }
+            
+            const arrayBuffer = await fileObj.arrayBuffer();
+            const pdfDoc = await PDFDocument.load(arrayBuffer);
+            const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            pages.forEach(page => mergedPdf.addPage(page));
+          } else {
+            const arrayBuffer = await file.arrayBuffer();
+            const pdfDoc = await PDFDocument.load(arrayBuffer);
+            const pages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+            pages.forEach(page => mergedPdf.addPage(page));
+          }
         }
-
-        const mergedBytes = await mergedPdf.save();
-        const blob = new Blob([mergedBytes], { type: 'application/pdf' });
+        
+        // Save merged PDF
+        const mergedPdfBytes = await mergedPdf.save();
+        
+        // Create download link
+        const blob = new Blob([mergedPdfBytes], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
         link.download = 'merged.pdf';
         link.click();
+        
+        // Cleanup
         URL.revokeObjectURL(url);
-      };
-    });
+        
+        showNotification('PDFs merged successfully!');
+      } catch (error) {
+        console.error('Error merging PDFs:', error);
+        showNotification('Error merging PDFs: ' + error.message, true);
+      }
+    }
   </script>
 </body>
 </html>

@@ -1,223 +1,1298 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <title data-en="Utilivy - All-in-One Online Tools" data-zh="Utilivy - 多功能在线工具">Utilivy - All-in-One Online Tools</title>
   <meta name="description" content="Utilivy provides free online tools including PDF, document, calculators, developer tools." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
 
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#2563eb',
+            secondary: '#f97316',
+            accent: '#10b981',
+            dark: '#1e293b',
+            light: '#f8fafc',
+            pdf: '#dc2626',      // Red for PDF tools
+            doc: '#0ea5e9',      // Blue for document tools
+            calc: '#10b981',     // Green for calculators
+            dev: '#8b5cf6',      // Purple for developer tools
+            blueTheme: '#AAB6FB', // New blue theme color
+            pinkTheme: '#FAA7B8'  // New pink theme color
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+        }
+      }
     }
-    .switch {
+  </script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .tool-card {
+        @apply rounded-xl p-6 border flex flex-col items-center text-center h-full w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+      }
+      .tool-icon {
+        @apply text-3xl mb-4 transition-transform duration-300;
+      }
+      .tool-title {
+        @apply font-medium transition-colors duration-300 text-base mb-2;
+      }
+      .tool-desc {
+        @apply text-xs text-gray-500 dark:text-gray-400 text-center;
+      }
+      .category-card {
+        @apply rounded-2xl p-6 mb-10 transition-all duration-500 hover:shadow-xl;
+      }
+      .section-title {
+        @apply text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-6 flex items-center gap-3;
+      }
+      .nav-link {
+        @apply relative py-2 hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full;
+      }
+      .gradient-bg {
+        @apply transition-all duration-700;
+      }
+      .tool-grid {
+        @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5;
+      }
+      .theme-gradient {
+        @apply bg-clip-text text-transparent transition-all duration-500;
+      }
+      .cta-gradient {
+        @apply transition-all duration-500;
+      }
+      .cta-button {
+        @apply font-medium px-8 py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+        color: white; 
+      }
+      .theme-toggle {
+        @apply w-10 h-10 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center border-2 border-transparent hover:scale-110;
+      }
+      .theme-toggle.active {
+        @apply border-white shadow-md;
+      }
+      .mode-option {
+        @apply px-3 py-2 rounded-full text-sm cursor-pointer transition-all duration-200 hover:bg-opacity-20;
+      }
+      .mode-option.active {
+        @apply bg-opacity-30 font-medium;
+      }
+    }
+
+    /* Theme styles */
+    body.blue-theme .theme-gradient {
+      background-image: linear-gradient(to right, #AAB6FB, #7B8FFE);
+    }
+    body.blue-theme .cta-gradient {
+      background: linear-gradient(to right, #AAB6FB, #7B8FFE);
+    }
+    body.blue-theme .theme-icon {
+      color: #AAB6FB;
+    }
+    body.blue-theme .gradient-bg {
+      background: linear-gradient(to-br, #AAB6FB20, #7B8FFE10);
+    }
+    body.blue-theme.dark-theme .gradient-bg {
+      background: linear-gradient(to-br, #AAB6FB10, #7B8FFE05);
+    }
+
+    body.pink-theme .theme-gradient {
+      background-image: linear-gradient(to right, #FAA7B8, #F07887);
+    }
+    body.pink-theme .cta-gradient {
+      background: linear-gradient(to right, #FAA7B8, #F07887);
+    }
+    body.pink-theme .theme-icon {
+      color: #FAA7B8;
+    }
+    body.pink-theme .gradient-bg {
+      background: linear-gradient(to-br, #FAA7B820, #F0788710);
+    }
+    body.pink-theme.dark-theme .gradient-bg {
+      background: linear-gradient(to-br, #FAA7B810, #F0788705);
+    }
+
+    /* Light/Dark theme styles */
+    body.light-theme {
+      @apply bg-gray-50 text-gray-800;
+    }
+    body.light-theme .tool-card,
+    body.light-theme .category-card,
+    body.light-theme header {
+      @apply bg-white border-gray-100;
+    }
+    body.light-theme footer {
+      @apply bg-dark text-white;
+    }
+    body.light-theme .mode-option {
+      @apply bg-gray-200 dark:bg-gray-700;
+    }
+
+    body.dark-theme {
+      @apply bg-gray-900 text-gray-100;
+    }
+    body.dark-theme .tool-card,
+    body.dark-theme .category-card,
+    body.dark-theme header {
+      @apply bg-gray-800 border-gray-700;
+    }
+    body.dark-theme footer {
+      @apply bg-gray-950 text-gray-300;
+    }
+    body.dark-theme .section-title {
+      @apply text-white;
+    }
+    body.dark-theme input[type="text"],
+    body.dark-theme input[type="email"] {
+      @apply bg-gray-700 border-gray-600;
+    }
+    body.dark-theme .mode-option {
+      @apply bg-gray-700;
+    }
+
+    /* Category hover effects */
+    .pdf-card:hover .tool-icon { transform: scale(1.1); }
+    .pdf-card:hover .tool-title { color: theme('colors.pdf'); }
+    
+    .doc-card:hover .tool-icon { transform: scale(1.1); }
+    .doc-card:hover .tool-title { color: theme('colors.doc'); }
+    
+    .calc-card:hover .tool-icon { transform: scale(1.1); }
+    .calc-card:hover .tool-title { color: theme('colors.calc'); }
+    
+    .dev-card:hover .tool-icon { transform: scale(1.1); }
+    .dev-card:hover .tool-title { color: theme('colors.dev'); }
+
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* Category background effects */
+    #pdf.category-card {
+      border-left: 4px solid theme('colors.pdf');
+    }
+    
+    #doc.category-card {
+      border-left: 4px solid theme('colors.doc');
+    }
+    
+    #calc.category-card {
+      border-left: 4px solid theme('colors.calc');
+    }
+    
+    #dev.category-card {
+      border-left: 4px solid theme('colors.dev');
+    }
+
+    /* Footer link hover effects */
+    footer a:hover {
+      color: var(--footer-hover-color, #AAB6FB);
+    }
+    body.pink-theme footer a:hover {
+      --footer-hover-color: #FAA7B8;
+    }
+    
+    /* New theme toggle styles */
+    .theme-toggle-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: currentColor;
+      width: 40px;
+      height: 40px;
+    }
+    
+    .sun-and-moon {
+      transition: transform 0.5s ease;
+    }
+    
+    .sun-and-moon .sun {
+      transform-origin: center center;
+      transition: transform 0.5s ease;
+    }
+    
+    .sun-and-moon .sun-beams {
+      stroke-linecap: round;
+      transform-origin: center center;
+      transition: opacity 0.5s ease;
+    }
+    
+    .dark-theme .sun-and-moon .sun {
+      transform: scale(1.75);
+    }
+    
+    .dark-theme .sun-and-moon .sun-beams {
+      opacity: 0;
+    }
+    
+    .dark-theme .sun-and-moon .moon circle {
+      transform: translateX(-7px);
+    }
+    
+    .sun-and-moon > .moon circle {
+      transition: transform 0.25s ease;
+    }
+    
+    @media (prefers-reduced-motion: reduce) {
+      .sun-and-moon > .moon circle {
+        transition: none;
+      }
+    }
+    
+    /* Adjust header layout */
+    .theme-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* Mobile menu adjustments */
+    #mobile-menu .theme-controls {
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 15px;
+    }
+    
+    /* Language toggle active color (matches theme) */
+    body.blue-theme #langToggle:checked + div,
+    body.blue-theme #mobile-langToggle:checked + div {
+      background-color: #AAB6FB; /* Blue theme color */
+    }
+
+    body.pink-theme #langToggle:checked + div,
+    body.pink-theme #mobile-langToggle:checked + div {
+      background-color: #FAA7B8; /* Pink theme color */
+    }
+
+    /* New split color theme toggle */
+    .split-theme-toggle {
       position: relative;
-      display: inline-block;
-      margin-left: 1rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
     }
-    .switch > span {
+    
+    .split-theme-toggle:hover {
+      transform: scale(1.1);
+    }
+    
+    .theme-half {
       position: absolute;
-      top: 8px;
-      font-weight: bold;
-      font-size: 12px;
-      text-transform: uppercase;
       width: 50%;
-      text-align: center;
+      height: 100%;
+      transition: all 0.3s ease;
+    }
+    
+    .blue-half {
+      left: 0;
+      background: linear-gradient(to bottom right, #AAB6FB, #7B8FFE);
+    }
+    
+    .pink-half {
+      right: 0;
+      background: linear-gradient(to bottom left, #FAA7B8, #F07887);
+    }
+    
+    .split-theme-toggle.active-blue .blue-half,
+    .split-theme-toggle.active-pink .pink-half {
+      box-shadow: inset 0 0 0 2px white;
+    }
+    
+    .split-theme-toggle.active-blue .blue-half::after,
+    .split-theme-toggle.active-pink .pink-half::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: white;
+      opacity: 0.8;
+    }
+    
+    .split-theme-toggle.active-blue .blue-half::after {
+      left: 30%;
+    }
+    
+    .split-theme-toggle.active-pink .pink-half::after {
+      left: 70%;
+    }
+    
+    /* Tooltip for theme toggle */
+    .theme-tooltip {
+      position: absolute;
+      bottom: -25px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 0.3s;
       pointer-events: none;
     }
-    .switch > span.on { left: 0; padding-left: 2px; }
-    .switch > span.off { right: 0; padding-right: 4px; }
-
-    input.check-toggle-round-flat ~ .on {
-      color: rgb(30 58 138 / 1);
-      font-weight: bolder;
+    
+    .split-theme-toggle:hover .theme-tooltip {
+      opacity: 1;
     }
-    input.check-toggle-round-flat ~ .off {
-      color: #d3d3d3;
+    
+    /* Match blue theme */
+    body.blue-theme .cta-button {
+      background-color: #AAB6FB; /* Blue theme color */
     }
-    input.check-toggle-round-flat:checked ~ .on {
-      color: #d3d3d3;
-    }
-    input.check-toggle-round-flat:checked ~ .off {
-      color: rgb(30 58 138 / 1);
+    body.blue-theme .cta-button:hover {
+      background-color: #7B8FFE; /* Darker blue on hover */
     }
 
-    .check-toggle {
-      position: absolute;
-      margin-left: -9999px;
-      visibility: hidden;
+    /* Match pink theme */
+    body.pink-theme .cta-button {
+      background-color: #FAA7B8; /* Pink theme color */
     }
-    input.check-toggle-round-flat + label {
-      display: block;
-      position: relative;
-      width: 80px;
-      height: 32px;
-      background-color: rgb(239 246 255 / 1);
-      border-radius: 60px;
-      cursor: pointer;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    input.check-toggle-round-flat + label:after {
-      content: "";
-      position: absolute;
-      top: 4px;
-      left: 4px;
-      bottom: 4px;
-      width: 36px;
-      background-color: #fff;
-      border-radius: 52px;
-      transition: margin 0.2s;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    }
-    input.check-toggle-round-flat:checked + label:after {
-      margin-left: 40px;
-      left: 0;
+    body.pink-theme .cta-button:hover {
+      background-color: #F07887; /* Darker pink on hover */
     }
   </style>
 </head>
-<body class="bg-blue-50 text-blue-900">
-  <header class="bg-white shadow">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center flex-wrap gap-4">
-      <h1 class="text-xl font-bold" style="font-size: xx-large;">Utilivy</h1>
-       <nav class="flex items-center gap-6 flex-wrap">
-        <ul class="flex space-x-4 text-sm">
-          <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="hover:underline">PDF Tools</a></li>
-          <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="hover:underline">Document Tools</a></li>
-          <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="hover:underline">Calculators</a></li>
-          <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="hover:underline">Developer Tools</a></li>
-        </ul>
-        <div class="switch relative text-sm">
-          <input id="language-toggle" class="check-toggle check-toggle-round-flat" type="checkbox">
-          <label for="language-toggle"></label>
-          <span class="on">EN</span>
-          <span class="off">中</span>
+
+<body class="font-inter min-h-screen blue-theme light-theme">
+  <!-- Header with Navigation -->
+  <header class="sticky top-0 z-50 shadow-sm transition-all duration-300">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16 md:h-20">
+        <!-- Logo -->
+        <a href="/" class="flex items-center gap-2">
+          <img src="/assets/logo.png" alt="Utilivy Logo" class="h-9 w-9 rounded-md shadow-sm">
+          <span class="text-xl font-bold theme-gradient">Utilivy</span>
+        </a>
+
+        <!-- Desktop Navigation -->
+        <nav class="hidden md:flex items-center gap-8">
+          <ul class="flex space-x-8">
+            <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="nav-link">PDF Tools</a></li>
+            <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="nav-link">Document Tools</a></li>
+            <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="nav-link">Calculators</a></li>
+            <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="nav-link">Developer Tools</a></li>
+          </ul>
+          
+          <!-- Theme Controls -->
+          <div class="theme-controls">
+            <!-- Color Theme Toggle - New Split Design -->
+            <div class="flex items-center gap-2">
+              <span data-en="Theme" data-zh="主题" class="text-sm font-medium">Theme</span>
+              <div class="split-theme-toggle active-blue" id="split-theme-toggle">
+                <div class="theme-half blue-half" data-theme="blue"></div>
+                <div class="theme-half pink-half" data-theme="pink"></div>
+                <div class="theme-tooltip">Switch theme color</div>
+              </div>
+            </div>
+            
+            <!-- Dark/Light Mode Toggle -->
+            <button class="theme-toggle-btn" id="theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+              <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                <mask class="moon" id="moon-mask">
+                  <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                  <circle cx="24" cy="10" r="6" fill="black" />
+                </mask>
+                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                <g class="sun-beams" stroke="currentColor">
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                 </g>
+              </svg>
+            </button>
+            
+            <!-- Language Toggle -->
+            <div class="flex items-center text-sm font-medium space-x-2">
+              <span class="zh text-gray-500 dark:text-gray-400">中</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors duration-300"></div>
+                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 peer-checked:translate-x-full"></div>
+              </label>
+              <span class="en">EN</span>
+            </div>
+          </div>
+        </nav>
+
+        <!-- Mobile Menu Button -->
+        <button id="mobile-menu-button" class="md:hidden text-gray-700 dark:text-gray-200 focus:outline-none">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden border-t">
+      <div class="container mx-auto px-4 py-3 space-y-4">
+        <!-- Mobile Theme Controls -->
+        <div class="theme-controls">
+          <div class="flex justify-between items-center w-full">
+            <span data-en="Theme Settings" data-zh="主题设置" class="font-medium">Theme Settings</span>
+          </div>
+          
+          <!-- Color Theme -->
+          <div class="mb-3 w-full">
+            <div class="flex justify-between items-center mb-2">
+              <span data-en="Primary Color" data-zh="主色调" class="text-sm">Primary Color</span>
+              <div class="split-theme-toggle active-blue" id="mobile-split-theme-toggle">
+                <div class="theme-half blue-half" data-theme="blue"></div>
+                <div class="theme-half pink-half" data-theme="pink"></div>
+                <div class="theme-tooltip">Switch theme color</div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Mode Selection -->
+          <div class="w-full">
+            <div class="flex justify-between items-center">
+              <span data-en="Display Mode" data-zh="显示模式" class="text-sm">Display Mode</span>
+              <button class="theme-toggle-btn" id="mobile-theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                  <mask class="moon" id="moon-mask-mobile">
+                    <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                    <circle cx="24" cy="10" r="6" fill="black" />
+                  </mask>
+                  <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask-mobile)" fill="currentColor" />
+                  <g class="sun-beams" stroke="currentColor">
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                  </g>
+                </svg>
+              </button>
+            </div>
+          </div>
         </div>
-      </nav>
+        
+        <!-- Mobile Language Toggle -->
+        <div class="flex items-center justify-between p-3 rounded-lg">
+          <span data-en="Language" data-zh="语言" class="font-medium">Language</span>
+          <div class="flex items-center text-sm font-medium space-x-2">
+            <span class="zh text-gray-500 dark:text-gray-400">中</span>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input id="mobile-langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+              <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors duration-300"></div>
+              <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 peer-checked:translate-x-full"></div>
+            </label>
+            <span class="en">EN</span>
+          </div>
+        </div>
+        
+        <!-- Mobile Navigation Links -->
+        <ul class="space-y-2">
+          <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">PDF Tools</a></li>
+          <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Document Tools</a></li>
+          <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Calculators</a></li>
+          <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Developer Tools</a></li>
+        </ul>
+      </div>
     </div>
   </header>
 
-  <main class="container mx-auto px-4 py-10 space-y-12">
+  <!-- Hero Section -->
+  <section class="gradient-bg py-16 md:py-24">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="max-w-3xl mx-auto">
+        <h1 class="text-[clamp(2.25rem,5vw,4rem)] font-bold mb-6 leading-tight theme-gradient" data-en="All-in-One Online Tools" data-zh="一站式在线工具">All-in-One Online Tools</h1>
+        <p class="text-lg md:text-xl mb-8" data-en="Free, fast, and easy-to-use tools for PDF, documents, calculations, and development needs" data-zh="免费、快速且易用的工具，满足PDF、文档、计算和开发需求">Free, fast, and easy-to-use tools for PDF, documents, calculations, and development needs</p>
+        
+        <!-- Search Bar with animation -->
+        <div class="max-w-2xl mx-auto relative group">
+          <input 
+            type="text" 
+            placeholder="Search tools..." 
+            data-en="Search tools..." 
+            data-zh="搜索工具..." 
+            class="w-full px-6 py-4 rounded-full shadow-md border focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+            id="search-input"
+          >
+          <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-blueTheme transition-colors theme-icon">
+            <i class="fa-solid fa-search text-xl"></i>
+          </button>
+        </div>
+        
+        <!-- Quick stats -->
+        <div class="flex flex-wrap justify-center gap-6 mt-12 text-sm md:text-base">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-tools theme-icon"></i>
+            <span data-en="70+ Tools" data-zh="70+ 工具">70+ Tools</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-globe theme-icon"></i>
+            <span data-en="100% Free" data-zh="100% 免费">100% Free</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-shield theme-icon"></i>
+            <span data-en="No Registration" data-zh="无需注册">No Registration</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-bolt theme-icon"></i>
+            <span data-en="Fast Processing" data-zh="快速处理">Fast Processing</span>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- PDF Tools -->
-    <section id="pdf">
-      <h2 class="text-2xl font-semibold mb-4" data-en="📄 PDF Tools" data-zh="📄 PDF 工具">📄 PDF Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/pdf/split-pdf.html" data-en="Split PDF" data-zh="拆分 PDF" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Split PDF / 拆分 PDF</a></li>
-        <li><a href="/pdf/merge-pdf.html" data-en="Merge PDFs" data-zh="合并 PDF" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Merge PDFs / 合并 PDF</a></li>
-        <li><a href="/pdf/extract-text.html" data-en="Extract Text" data-zh="提取文字" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Extract Text / 提取文字</a></li>
-        <li><a href="/pdf/view-rotate-pdf.html" data-en="View or Rotate PDF" data-zh="查看或旋转 PDF" class="block bg-white shadow hover:bg-blue-100 rounded p-4">View/Rotate PDF / 查看或旋转 PDF</a></li>
-        <li><a href="/pdf/image-to-pdf.html" data-en="Image to PDF" data-zh="图片转 PDF" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Image to PDF / 图片转 PDF</a></li>
-        <li><a href="/pdf/reorder-pages.html" data-en="Reorder PDF Pages" data-zh="重排 PDF 页面" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Reorder Pages / 重排页面</a></li>
-        <li><a href="/pdf/add-watermark.html" data-en="Add Watermark" data-zh="添加水印" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Add Watermark / 添加水印</a></li>
-        <li><a href="/pdf/add-page-numbers.html" data-en="Add Page Numbers" data-zh="添加页码" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Add Page Numbers / 添加页码</a></li>
+  <!-- Main Content -->
+  <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- PDF Tools Section -->
+    <section id="pdf" class="category-card scroll-mt-24">
+      <h2 class="section-title">
+        <i class="fa-solid fa-file-pdf text-pdf"></i>
+        <span data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</span>
+      </h2>
+      <ul class="tool-grid">
+        <li><a href="/pdf/split-pdf.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-scissors text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Split PDF" data-zh="拆分 PDF">Split PDF</span>
+          <span class="tool-desc" data-en="Divide a PDF into multiple files" data-zh="将PDF分割成多个文件">Divide a PDF into multiple files</span>
+        </a></li>
+        <li><a href="/pdf/merge-pdf.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-layer-group text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Merge PDFs" data-zh="合并 PDF">Merge PDFs</span>
+          <span class="tool-desc" data-en="Combine multiple PDFs into one" data-zh="将多个PDF合并为一个">Combine multiple PDFs into one</span>
+        </a></li>
+        <li><a href="/pdf/extract-text.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-file-lines text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Extract Text" data-zh="提取文字">Extract Text</span>
+          <span class="tool-desc" data-en="Extract text content from PDF files" data-zh="从PDF文件中提取文本内容">Extract text content from PDF files</span>
+        </a></li>
+        <li><a href="/pdf/view-rotate-pdf.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-rotate-right text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="View/Rotate PDF" data-zh="查看/旋转 PDF">View/Rotate PDF</span>
+          <span class="tool-desc" data-en="View and rotate PDF pages" data-zh="查看和旋转PDF页面">View and rotate PDF pages</span>
+        </a></li>
+        <li><a href="/pdf/image-to-pdf.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-image text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Image to PDF" data-zh="图片转 PDF">Image to PDF</span>
+          <span class="tool-desc" data-en="Convert images to PDF documents" data-zh="将图片转换为PDF文档">Convert images to PDF documents</span>
+        </a></li>
+        <li><a href="/pdf/reorder-pages.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-arrow-up-down text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Reorder Pages" data-zh="重排页面">Reorder Pages</span>
+          <span class="tool-desc" data-en="Rearrange pages in your PDF" data-zh="重新排列PDF中的页面">Rearrange pages in your PDF</span>
+        </a></li>
+        <li><a href="/pdf/add-watermark.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-stamp text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Add Watermark" data-zh="添加水印">Add Watermark</span>
+          <span class="tool-desc" data-en="Add text or image watermarks to PDFs" data-zh="为PDF添加文字或图片水印">Add text or image watermarks to PDFs</span>
+        </a></li>
+        <li><a href="/pdf/add-page-numbers.html" class="tool-card pdf-card">
+          <i class="fa-solid fa-hashtag text-pdf tool-icon"></i>
+          <span class="tool-title" data-en="Add Page Numbers" data-zh="添加页码">Add Page Numbers</span>
+          <span class="tool-desc" data-en="Insert page numbers into PDF files" data-zh="在PDF文件中插入页码">Insert page numbers into PDF files</span>
+        </a></li>
       </ul>
     </section>
 
-    <!-- Document Tools -->
-    <section id="doc">
-      <h2 class="text-2xl font-semibold mb-4" data-en="📝 Document Tools" data-zh="📝 文档工具">📝 Document Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/text/lorem-ipsum.html" data-en="Lorem Ipsum Generator" data-zh="假文生成器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Lorem Ipsum Generator / 假文生成器</a></li>
-        <li><a href="/doc/docx-to-txt.html" data-en="DOCX to TXT" data-zh="DOCX 转 TXT" class="block bg-white shadow hover:bg-blue-100 rounded p-4">DOCX to TXT / DOCX 转 TXT</a></li>
-        <li><a href="/doc/case-word-counter.html" data-en="Case & Word Counter" data-zh="字母与字数统计器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Case & Word Counter / 字母与字数统计器</a></li>
-        <li><a href="/doc/remove-line-breaks.html" data-en="Remove Line Breaks" data-zh="删除换行符" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Remove Line Breaks / 删除换行符</a></li>
-        <li><a href="/doc/text-diff-checker.html" data-en="Text Diff Checker" data-zh="文本差异对比" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Text Diff Checker / 文本差异对比</a></li>
-        <li><a href="/doc/character-map.html" data-en="Character Map" data-zh="特殊符号表" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Character Map / 特殊符号表</a></li>
-        <li><a href="/doc/text-to-ascii.html" data-en="Text to ASCII/Binary" data-zh="文本转编码" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Text to ASCII / 文本转编码</a></li>
-        <li><a href="/doc/text-to-pdf.html" data-en="Text to PDF" data-zh="文本转 PDF" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Text to PDF / 文本转 PDF</a></li>
-        <li><a href="/doc/document-formatter.html" data-en="Document Formatter" data-zh="文档清理器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Document Formatter / 文档清理器</a></li>
-        <li><a href="/doc/text-case-converter.html" data-en="Text Case Converter" data-zh="大小写转换器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Text Case Converter / 大小写转换器</a></li>
+    <!-- Document Tools Section -->
+    <section id="doc" class="category-card scroll-mt-24">
+      <h2 class="section-title">
+        <i class="fa-solid fa-file-text text-doc"></i>
+        <span data-en="Document Tools" data-zh="文档工具">Document Tools</span>
+      </h2>
+      <ul class="tool-grid">
+        <li><a href="/text/lorem-ipsum.html" class="tool-card doc-card">
+          <i class="fa-solid fa-paragraph text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Lorem Ipsum Generator" data-zh="假文生成器">Lorem Ipsum Generator</span>
+          <span class="tool-desc" data-en="Generate placeholder text for documents" data-zh="生成文档的占位文本">Generate placeholder text for documents</span>
+        </a></li>
+        <li><a href="/doc/docx-to-txt.html" class="tool-card doc-card">
+          <i class="fa-solid fa-file-word text-doc tool-icon"></i>
+          <span class="tool-title" data-en="DOCX to TXT" data-zh="DOCX 转 TXT">DOCX to TXT</span>
+          <span class="tool-desc" data-en="Convert Word documents to text files" data-zh="将Word文档转换为文本文件">Convert Word documents to text files</span>
+        </a></li>
+        <li><a href="/doc/case-word-counter.html" class="tool-card doc-card">
+          <i class="fa-solid fa-counting text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Case & Word Counter" data-zh="字母与字数统计器">Case & Word Counter</span>
+          <span class="tool-desc" data-en="Count words and change text case" data-zh="统计字数并转换文本大小写">Count words and change text case</span>
+        </a></li>
+        <li><a href="/doc/remove-line-breaks.html" class="tool-card doc-card">
+          <i class="fa-solid fa-arrows-left-right text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Remove Line Breaks" data-zh="删除换行符">Remove Line Breaks</span>
+          <span class="tool-desc" data-en="Clean up text by removing line breaks" data-zh="通过删除换行符清理文本">Clean up text by removing line breaks</span>
+        </a></li>
+        <li><a href="/doc/text-diff-checker.html" class="tool-card doc-card">
+          <i class="fa-solid fa-code-compare text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Text Diff Checker" data-zh="文本差异对比">Text Diff Checker</span>
+          <span class="tool-desc" data-en="Compare two text documents for differences" data-zh="比较两个文本文档的差异">Compare two text documents for differences</span>
+        </a></li>
+        <li><a href="/doc/character-map.html" class="tool-card doc-card">
+          <i class="fa-solid fa-font text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Character Map" data-zh="特殊符号表">Character Map</span>
+          <span class="tool-desc" data-en="Access special characters and symbols" data-zh="获取特殊字符和符号">Access special characters and symbols</span>
+        </a></li>
+        <li><a href="/doc/text-to-ascii.html" class="tool-card doc-card">
+          <i class="fa-solid fa-code text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Text to ASCII/Binary" data-zh="文本转编码">Text to ASCII/Binary</span>
+          <span class="tool-desc" data-en="Convert text to ASCII and binary codes" data-zh="将文本转换为ASCII和二进制代码">Convert text to ASCII and binary codes</span>
+        </a></li>
+        <li><a href="/doc/text-to-pdf.html" class="tool-card doc-card">
+          <i class="fa-solid fa-file-pen text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Text to PDF" data-zh="文本转 PDF">Text to PDF</span>
+          <span class="tool-desc" data-en="Convert plain text to PDF documents" data-zh="将纯文本转换为PDF文档">Convert plain text to PDF documents</span>
+        </a></li>
+        <li><a href="/doc/document-formatter.html" class="tool-card doc-card">
+          <i class="fa-solid fa-file-edit text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Document Formatter" data-zh="文档清理器">Document Formatter</span>
+          <span class="tool-desc" data-en="Clean and format document content" data-zh="清理和格式化文档内容">Clean and format document content</span>
+        </a></li>
+        <li><a href="/doc/text-case-converter.html" class="tool-card doc-card">
+          <i class="fa-solid fa-text-height text-doc tool-icon"></i>
+          <span class="tool-title" data-en="Text Case Converter" data-zh="大小写转换器">Text Case Converter</span>
+          <span class="tool-desc" data-en="Convert text between different cases" data-zh="在不同大小写之间转换文本">Convert text between different cases</span>
+        </a></li>
       </ul>
     </section>
 
-    <!-- Calculators -->
-    <section id="calc">
-      <h2 class="text-2xl font-semibold mb-4" data-en="🧮 Calculators" data-zh="🧮 计算器">🧮 Calculators</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/calc/bmi-calculator.html" data-en="BMI Calculator" data-zh="身体质量指数计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">BMI Calculator / 身体质量指数计算器</a></li>
-        <li><a href="/calc/mortgage-calculator.html" data-en="Mortgage Calculator" data-zh="房贷计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Mortgage Calculator / 房贷计算器</a></li>
-        <li><a href="/calc/age-calculator.html" data-en="Age Calculator" data-zh="年龄计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Age Calculator / 年龄计算器</a></li>
-        <li><a href="/calc/date-calculator.html" data-en="Date Calculator" data-zh="日期计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Date Calculator / 日期计算器</a></li>
-        <li><a href="/calc/compound-interest-calculator.html" data-en="Compound Interest Calculator" data-zh="复利计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Compound Interest / 复利计算</a></li>
-        <li><a href="/calc/loan-calculator.html" data-en="Loan Calculator" data-zh="贷款计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Loan Calculator / 贷款计算器</a></li>
-        <li><a href="/calc/savings-goal-calculator.html" data-en="Savings Goal Calculator" data-zh="储蓄目标计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Savings Goal / 储蓄目标</a></li>
-        <li><a href="/calc/retirement-calculator.html" data-en="Retirement Calculator" data-zh="退休计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Retirement Calculator / 退休计算器</a></li>
-        <li><a href="/calc/unit-converter.html" data-en="Unit Converter" data-zh="单位换算" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Unit Converter / 单位换算</a></li>
-        <li><a href="/calc/pregnancy-due-date-calculator.html" data-en="Pregnancy Due Date Calculator" data-zh="预产期计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Pregnancy Due Date / 预产期</a></li>
-       <li><a href="/calc/body-fat-calculator.html" data-en="Body Fat Calculator" data-zh="体脂率计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Body Fat Calculator / 体脂率计算器</a></li>
-<li><a href="/calc/daily-water-intake.html" data-en="Daily Water Intake" data-zh="每日饮水量计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Daily Water Intake / 每日饮水量</a></li>
-<li><a href="/calc/gpa-calculator.html" data-en="GPA Calculator" data-zh="GPA 计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">GPA Calculator / GPA 计算器</a></li>
-<li><a href="/calc/ideal-weight-calculator.html" data-en="Ideal Weight Calculator" data-zh="理想体重计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Ideal Weight Calculator / 理想体重</a></li>
-<li><a href="/calc/number-to-words.html" data-en="Number to Words" data-zh="数字转文字" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Number to Words / 数字转文字</a></li>
-<li><a href="/calc/ovulation-calculator.html" data-en="Ovulation Calculator" data-zh="排卵期计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Ovulation Calculator / 排卵期计算器</a></li>
-<li><a href="/calc/percentage-calculator.html" data-en="Percentage Calculator" data-zh="百分比计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Percentage Calculator / 百分比计算器</a></li>
-<li><a href="/calc/rule-of-72-calculator.html" data-en="Rule of 72 Calculator" data-zh="72 法则计算器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Rule of 72 Calculator / 72 法则</a></li>
+    <!-- Calculators Section -->
+    <section id="calc" class="category-card scroll-mt-24">
+      <h2 class="section-title">
+        <i class="fa-solid fa-calculator text-calc"></i>
+        <span data-en="Calculators" data-zh="计算器">Calculators</span>
+      </h2>
+      <ul class="tool-grid">
+        <li><a href="/calc/bmi-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-person text-calc tool-icon"></i>
+          <span class="tool-title" data-en="BMI Calculator" data-zh="身体质量指数计算器">BMI Calculator</span>
+          <span class="tool-desc" data-en="Calculate your body mass index" data-zh="计算您的身体质量指数">Calculate your body mass index</span>
+        </a></li>
+        <li><a href="/calc/mortgage-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-home text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Mortgage Calculator" data-zh="房贷计算器">Mortgage Calculator</span>
+          <span class="tool-desc" data-en="Estimate mortgage payments" data-zh="估算抵押贷款还款额">Estimate mortgage payments</span>
+        </a></li>
+        <li><a href="/calc/age-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-birthday-cake text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Age Calculator" data-zh="年龄计算器">Age Calculator</span>
+          <span class="tool-desc" data-en="Calculate exact age from birth date" data-zh="根据出生日期计算确切年龄">Calculate exact age from birth date</span>
+        </a></li>
+        <li><a href="/calc/date-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-calendar text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Date Calculator" data-zh="日期计算器">Date Calculator</span>
+          <span class="tool-desc" data-en="Calculate days between dates" data-zh="计算日期之间的天数">Calculate days between dates</span>
+        </a></li>
+        <li><a href="/calc/compound-interest-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-chart-line text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Compound Interest Calculator" data-zh="复利计算器">Compound Interest Calculator</span>
+          <span class="tool-desc" data-en="Calculate compound interest earnings" data-zh="计算复利收益">Calculate compound interest earnings</span>
+        </a></li>
+        <li><a href="/calc/loan-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-money-bill text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Loan Calculator" data-zh="贷款计算器">Loan Calculator</span>
+          <span class="tool-desc" data-en="Calculate loan payments and amortization" data-zh="计算贷款还款和摊销">Calculate loan payments and amortization</span>
+        </a></li>
+        <li><a href="/calc/savings-goal-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-piggy-bank text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Savings Goal Calculator" data-zh="储蓄目标计算器">Savings Goal Calculator</span>
+          <span class="tool-desc" data-en="Plan for your savings objectives" data-zh="规划您的储蓄目标">Plan for your savings objectives</span>
+        </a></li>
+        <li><a href="/calc/retirement-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-chair text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Retirement Calculator" data-zh="退休计算器">Retirement Calculator</span>
+          <span class="tool-desc" data-en="Plan your retirement savings" data-zh="规划您的退休储蓄">Plan your retirement savings</span>
+        </a></li>
+        <li><a href="/calc/unit-converter.html" class="tool-card calc-card">
+          <i class="fa-solid fa-ruler text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Unit Converter" data-zh="单位换算">Unit Converter</span>
+          <span class="tool-desc" data-en="Convert between various measurement units" data-zh="在各种计量单位之间转换">Convert between various measurement units</span>
+        </a></li>
+        <li><a href="/calc/pregnancy-due-date-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-baby text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Pregnancy Due Date" data-zh="预产期计算器">Pregnancy Due Date</span>
+          <span class="tool-desc" data-en="Estimate your baby's due date" data-zh="估算宝宝的预产期">Estimate your baby's due date</span>
+        </a></li>
+        <li><a href="/calc/body-fat-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-weight text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Body Fat Calculator" data-zh="体脂率计算器">Body Fat Calculator</span>
+          <span class="tool-desc" data-en="Estimate your body fat percentage" data-zh="估算您的体脂率">Estimate your body fat percentage</span>
+        </a></li>
+        <li><a href="/calc/daily-water-intake.html" class="tool-card calc-card">
+          <i class="fa-solid fa-tint text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Daily Water Intake" data-zh="每日饮水量计算器">Daily Water Intake</span>
+          <span class="tool-desc" data-en="Calculate recommended daily water consumption" data-zh="计算建议的每日饮水量">Calculate recommended daily water consumption</span>
+        </a></li>
+        <li><a href="/calc/gpa-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-graduation-cap text-calc tool-icon"></i>
+          <span class="tool-title" data-en="GPA Calculator" data-zh="GPA 计算器">GPA Calculator</span>
+          <span class="tool-desc" data-en="Calculate your grade point average" data-zh="计算您的平均绩点">Calculate your grade point average</span>
+        </a></li>
+        <li><a href="/calc/ideal-weight-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-balance-scale text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Ideal Weight Calculator" data-zh="理想体重计算器">Ideal Weight Calculator</span>
+          <span class="tool-desc" data-en="Estimate your ideal body weight" data-zh="估算您的理想体重">Estimate your ideal body weight</span>
+        </a></li>
+        <li><a href="/calc/number-to-words.html" class="tool-card calc-card">
+          <i class="fa-solid fa-hashtag text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Number to Words" data-zh="数字转文字">Number to Words</span>
+          <span class="tool-desc" data-en="Convert numbers to their word representation" data-zh="将数字转换为文字表示">Convert numbers to their word representation</span>
+        </a></li>
+        <li><a href="/calc/ovulation-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-calendar-check text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Ovulation Calculator" data-zh="排卵期计算器">Ovulation Calculator</span>
+          <span class="tool-desc" data-en="Estimate your fertile days" data-zh="估算您的排卵期">Estimate your fertile days</span>
+        </a></li>
+        <li><a href="/calc/percentage-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-percent text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Percentage Calculator" data-zh="百分比计算器">Percentage Calculator</span>
+          <span class="tool-desc" data-en="Calculate percentages and percentage changes" data-zh="计算百分比和百分比变化">Calculate percentages and percentage changes</span>
+        </a></li>
+        <li><a href="/calc/rule-of-72-calculator.html" class="tool-card calc-card">
+          <i class="fa-solid fa-clock-rotate-left text-calc tool-icon"></i>
+          <span class="tool-title" data-en="Rule of 72 Calculator" data-zh="72 法则计算器">Rule of 72 Calculator</span>
+          <span class="tool-desc" data-en="Estimate investment doubling time" data-zh="估算投资翻倍时间">Estimate investment doubling time</span>
+        </a></li>
       </ul>
     </section>
 
-    <!-- Developer Tools -->
-    <section id="dev">
-      <h2 class="text-2xl font-semibold mb-4" data-en="💻 Developer Tools" data-zh="💻 开发者工具">💻 Developer Tools</h2>
-      <ul class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-sm">
-        <li><a href="/dev/json-formatter.html" data-en="JSON Formatter" data-zh="JSON 格式化" class="block bg-white shadow hover:bg-blue-100 rounded p-4">JSON Formatter / JSON 格式化</a></li>
-        <li><a href="/dev/json-validator.html" data-en="JSON Validator" data-zh="JSON 校验" class="block bg-white shadow hover:bg-blue-100 rounded p-4">JSON Validator / JSON 校验</a></li>
-        <li><a href="/dev/regex-tester.html" data-en="Regex Tester" data-zh="正则测试" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Regex Tester / 正则测试</a></li>
-        <li><a href="/dev/color-picker.html" data-en="Color Picker" data-zh="取色器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Color Picker / 取色器</a></li>
-        <li><a href="/dev/epoch-converter.html" data-en="Epoch Converter" data-zh="Unix 时间戳转换器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Epoch Converter / Unix 时间戳</a></li>
-        <li><a href="/dev/uuid-generator.html" data-en="UUID Generator" data-zh="UUID 生成器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">UUID Generator / UUID 生成器</a></li>
-        <li><a href="/dev/timestamp-converter.html" data-en="Timestamp Converter" data-zh="时间戳转换器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Timestamp Converter / 时间戳转换器</a></li>
-        <li><a href="/dev/markdown-previewer.html" data-en="Markdown Previewer" data-zh="Markdown 预览器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Markdown Previewer / Markdown 预览器</a></li>
-        <li><a href="/dev/markdown-to-html.html" data-en="Markdown to HTML" data-zh="Markdown 转 HTML" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Markdown to HTML / 转换 HTML</a></li>
-        <li><a href="/dev/url-encoder-decoder.html" data-en="URL Encoder/Decoder" data-zh="URL 编码解码" class="block bg-white shadow hover:bg-blue-100 rounded p-4">URL Encoder/Decoder / URL 编码</a></li>
-        <li><a href="/dev/base64-tool.html" data-en="Base64 Converter" data-zh="Base64 转换器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Base64 Converter / Base64 工具</a></li>
-        <li><a href="/dev/html-entities-tool.html" data-en="HTML Entities Tool" data-zh="HTML 实体工具" class="block bg-white shadow hover:bg-blue-100 rounded p-4">HTML Entities Tool / HTML 实体</a></li>
-        <li><a href="/dev/hash-generator.html" data-en="Hash Generator" data-zh="哈希生成器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Hash Generator / 哈希生成</a></li>
-        <li><a href="/dev/qr-code-generator.html" data-en="QR Code Generator" data-zh="二维码生成器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">QR Code Generator / 二维码</a></li>
-        <li><a href="/dev/code-beautifier-minifier.html" data-en="Code Formatter" data-zh="代码美化压缩" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Code Formatter / 美化压缩</a></li>
-        <li><a href="/dev/jwt-decoder.html" data-en="JWT Decoder" data-zh="JWT 解码器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">JWT Decoder / JWT 解码器</a></li>
-        <li><a href="/dev/regex-tester.html" data-en="Regex Tester" data-zh="正则测试器" class="block bg-white shadow hover:bg-blue-100 rounded p-4">Regex Tester / 正则测试器</a></li>
+    <!-- Developer Tools Section -->
+    <section id="dev" class="category-card scroll-mt-24">
+      <h2 class="section-title">
+        <i class="fa-solid fa-code text-dev"></i>
+        <span data-en="Developer Tools" data-zh="开发者工具">Developer Tools</span>
+      </h2>
+      <ul class="tool-grid">
+        <li><a href="/dev/json-formatter.html" class="tool-card dev-card">
+          <i class="fa-solid fa-code text-dev tool-icon"></i>
+          <span class="tool-title" data-en="JSON Formatter" data-zh="JSON 格式化">JSON Formatter</span>
+          <span class="tool-desc" data-en="Format and beautify JSON data" data-zh="格式化和美化JSON数据">Format and beautify JSON data</span>
+        </a></li>
+        <li><a href="/dev/json-validator.html" class="tool-card dev-card">
+          <i class="fa-solid fa-check-circle text-dev tool-icon"></i>
+          <span class="tool-title" data-en="JSON Validator" data-zh="JSON 校验">JSON Validator</span>
+          <span class="tool-desc" data-en="Validate JSON syntax for errors" data-zh="验证JSON语法错误">Validate JSON syntax for errors</span>
+        </a></li>
+        <li><a href="/dev/regex-tester.html" class="tool-card dev-card">
+          <i class="fa-solid fa-search text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Regex Tester" data-zh="正则测试器">Regex Tester</span>
+          <span class="tool-desc" data-en="Test and validate regular expressions" data-zh="测试和验证正则表达式">Test and validate regular expressions</span>
+        </a></li>
+        <li><a href="/dev/color-picker.html" class="tool-card dev-card">
+          <i class="fa-solid fa-eyedropper text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Color Picker" data-zh="取色器">Color Picker</span>
+          <span class="tool-desc" data-en="Select colors and get their codes" data-zh="选择颜色并获取其代码">Select colors and get their codes</span>
+        </a></li>
+        <li><a href="/dev/epoch-converter.html" class="tool-card dev-card">
+          <i class="fa-solid fa-clock text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Epoch Converter" data-zh="Unix 时间戳转换器">Epoch Converter</span>
+          <span class="tool-desc" data-en="Convert between epoch time and dates" data-zh="在纪元时间和日期之间转换">Convert between epoch time and dates</span>
+        </a></li>
+        <li><a href="/dev/uuid-generator.html" class="tool-card dev-card">
+          <i class="fa-solid fa-hashtag text-dev tool-icon"></i>
+          <span class="tool-title" data-en="UUID Generator" data-zh="UUID 生成器">UUID Generator</span>
+          <span class="tool-desc" data-en="Generate unique identifiers" data-zh="生成唯一标识符">Generate unique identifiers</span>
+        </a></li>
+        <li><a href="/dev/timestamp-converter.html" class="tool-card dev-card">
+          <i class="fa-solid fa-clock-rotate-left text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Timestamp Converter" data-zh="时间戳转换器">Timestamp Converter</span>
+          <span class="tool-desc" data-en="Convert between timestamps and dates" data-zh="在时间戳和日期之间转换">Convert between timestamps and dates</span>
+        </a></li>
+        <li><a href="/dev/markdown-previewer.html" class="tool-card dev-card">
+          <i class="fa-solid fa-markdown text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Markdown Previewer" data-zh="Markdown 预览器">Markdown Previewer</span>
+          <span class="tool-desc" data-en="Preview Markdown formatting in real-time" data-zh="实时预览Markdown格式">Preview Markdown formatting in real-time</span>
+        </a></li>
+        <li><a href="/dev/markdown-to-html.html" class="tool-card dev-card">
+          <i class="fa-solid fa-code text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Markdown to HTML" data-zh="Markdown 转 HTML">Markdown to HTML</span>
+          <span class="tool-desc" data-en="Convert Markdown text to HTML code" data-zh="将Markdown文本转换为HTML代码">Convert Markdown text to HTML code</span>
+        </a></li>
+        <li><a href="/dev/url-encoder-decoder.html" class="tool-card dev-card">
+          <i class="fa-solid fa-link text-dev tool-icon"></i>
+          <span class="tool-title" data-en="URL Encoder/Decoder" data-zh="URL 编码解码">URL Encoder/Decoder</span>
+          <span class="tool-desc" data-en="Encode and decode URLs" data-zh="编码和解码URL">Encode and decode URLs</span>
+        </a></li>
+        <li><a href="/dev/base64-tool.html" class="tool-card dev-card">
+          <i class="fa-solid fa-key text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Base64 Converter" data-zh="Base64 转换器">Base64 Converter</span>
+          <span class="tool-desc" data-en="Encode and decode Base64 data" data-zh="编码和解码Base64数据">Encode and decode Base64 data</span>
+        </a></li>
+        <li><a href="/dev/html-entities-tool.html" class="tool-card dev-card">
+          <i class="fa-solid fa-html5 text-dev tool-icon"></i>
+          <span class="tool-title" data-en="HTML Entities Tool" data-zh="HTML 实体工具">HTML Entities Tool</span>
+          <span class="tool-desc" data-en="Convert text to HTML entities and vice versa" data-zh="将文本转换为HTML实体及反向转换">Convert text to HTML entities and vice versa</span>
+        </a></li>
+        <li><a href="/dev/hash-generator.html" class="tool-card dev-card">
+          <i class="fa-solid fa-hashtag text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Hash Generator" data-zh="哈希生成器">Hash Generator</span>
+          <span class="tool-desc" data-en="Generate hash values for text" data-zh="为文本生成哈希值">Generate hash values for text</span>
+        </a></li>
+        <li><a href="/dev/code-beautifier-minifier.html" class="tool-card dev-card">
+          <i class="fa-solid fa-code text-dev tool-icon"></i>
+          <span class="tool-title" data-en="Code Formatter" data-zh="代码美化压缩">Code Formatter</span>
+          <span class="tool-desc" data-en="Beautify and minify code for web" data-zh="美化和压缩网页代码">Beautify and minify code for web</span>
+        </a></li>
+        <li><a href="/dev/jwt-decoder.html" class="tool-card dev-card">
+          <i class="fa-solid fa-unlock text-dev tool-icon"></i>
+          <span class="tool-title" data-en="JWT Decoder" data-zh="JWT 解码器">JWT Decoder</span>
+          <span class="tool-desc" data-en="Decode and inspect JWT tokens" data-zh="解码和检查JWT令牌">Decode and inspect JWT tokens</span>
+        </a></li>
       </ul>
     </section>
   </main>
 
+  <!-- Call to Action -->
+  <section class="cta-gradient py-16 text-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="max-w-2xl mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold mb-4" data-en="Need a tool we don't have?" data-zh="需要我们没有的工具？">Need a tool we don't have?</h2>
+        <p class="mb-8" data-en="Suggest a new tool and we'll work on adding it to our collection" data-zh="建议一个新工具，我们会努力将其添加到我们的集合中">Suggest a new tool and we'll work on adding it to our collection</p>
+         <button class="cta-button">
+          <span data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
-  <footer class="bg-white border-t mt-12">
-    <div class="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-      <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">
-        © 2025 Utilivy.com — All rights reserved.
-      </span>
+  <!-- Footer -->
+  <footer class="pt-16 pb-8 transition-all duration-500">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <div>
+          <div class="flex items-center gap-2 mb-4">
+            <img src="/assets/logo.png" alt="Utilivy Logo" class="h-8 w-8 rounded-md">
+            <span class="text-xl font-bold theme-gradient">Utilivy</span>
+          </div>
+          <p class="mb-6" data-en="Your one-stop destination for free online tools" data-zh="您的一站式免费在线工具目的地">Your one-stop destination for free online tools</p>
+          <div class="flex space-x-4">
+            <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-github"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4 text-lg" data-en="Tool Categories" data-zh="工具分类">Tool Categories</h4>
+          <ul class="space-y-3">
+            <li><a href="#pdf" class="hover:text-white transition-colors" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
+            <li><a href="#doc" class="hover:text-white transition-colors" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
+            <li><a href="#calc" class="hover:text-white transition-colors" data-en="Calculators" data-zh="计算器">Calculators</a></li>
+            <li><a href="#dev" class="hover:text-white transition-colors" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4 text-lg" data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
+          <ul class="space-y-3">
+            <li><a href="#" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
+            <li><a href="#" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
+            <li><a href="#" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-semibold mb-4 text-lg" data-en="Newsletter" data-zh="新闻通讯">Newsletter</h4>
+          <p class="mb-4" data-en="Subscribe to get updates on new tools" data-zh="订阅以获取新工具的更新">Subscribe to get updates on new tools</p>
+          <div class="flex flex-col sm:flex-row gap-2">
+            <input type="email" placeholder="Your email" class="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent flex-grow">
+            <button class="hover:bg-opacity-90 text-white px-4 py-3 rounded-lg transition-colors whitespace-nowrap theme-icon">
+              <i class="fa-solid fa-paper-plane mr-2"></i>
+              <span data-en="Subscribe" data-zh="订阅">Subscribe</span>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="border-t pt-8 text-center text-sm">
+        <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">© 2025 Utilivy.com — All rights reserved.</span>
+      </div>
     </div>
   </footer>
 
   <script>
-    const toggle = document.getElementById('language-toggle');
+    // Mobile menu toggle
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      const icon = mobileMenuButton.querySelector('i');
+      if (mobileMenu.classList.contains('hidden')) {
+        icon.classList.remove('fa-xmark');
+        icon.classList.add('fa-bars');
+      } else {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-xmark');
+      }
+    });
+
+    // Theme mode functions
+    function setThemeMode(mode) {
+      const body = document.body;
+      
+      // Remove all theme modes
+      body.classList.remove('light-theme', 'dark-theme');
+      
+      // Apply the selected mode or auto-detect
+      if (mode === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        body.classList.add(prefersDark ? 'dark-theme' : 'light-theme');
+        localStorage.setItem('themeMode', 'auto');
+      } else {
+        body.classList.add(`${mode}-theme`);
+        localStorage.setItem('themeMode', mode);
+      }
+      
+      // Update toggle UI
+      updateThemeToggle(mode === 'auto' ? 
+        (body.classList.contains('dark-theme') ? 'dark' : 'light') : 
+        mode
+      );
+      
+      updateUIForTheme();
+    }
+    
+    // Primary color functions
+    function setPrimaryColor(color) {
+      const body = document.body;
+      
+      // Remove all primary color classes
+      body.classList.remove('blue-theme', 'pink-theme');
+      
+      // Apply the selected color
+      body.classList.add(`${color}-theme`);
+      localStorage.setItem('primaryColor', color);
+      
+      // Update active color indicator
+      const desktopToggle = document.getElementById('split-theme-toggle');
+      const mobileToggle = document.getElementById('mobile-split-theme-toggle');
+      
+      if (desktopToggle) {
+        desktopToggle.classList.remove('active-blue', 'active-pink');
+        desktopToggle.classList.add(`active-${color}`);
+      }
+      
+      if (mobileToggle) {
+        mobileToggle.classList.remove('active-blue', 'active-pink');
+        mobileToggle.classList.add(`active-${color}`);
+      }
+      
+      updateUIForTheme();
+    }
+    
+    // Update UI elements based on current theme
+    function updateUIForTheme() {
+      const body = document.body;
+      const searchInput = document.getElementById('search-input');
+      const subscribeBtn = document.querySelector('footer button');
+      const footer = document.querySelector('footer');
+      
+      // Update search input border and focus ring
+      searchInput.classList.remove('border-gray-200', 'border-gray-700', 'focus:ring-blueTheme', 'focus:ring-pinkTheme');
+      
+      if (body.classList.contains('dark-theme')) {
+        searchInput.classList.add('border-gray-700');
+        footer.classList.add('bg-gray-950');
+        footer.classList.remove('bg-dark');
+      } else {
+        searchInput.classList.add('border-gray-200');
+        footer.classList.add('bg-dark');
+        footer.classList.remove('bg-gray-950');
+      }
+      
+      if (body.classList.contains('pink-theme')) {
+        searchInput.classList.add('focus:ring-pinkTheme');
+      } else {
+        searchInput.classList.add('focus:ring-blueTheme');
+      }
+      
+      // Update subscribe button
+      if (subscribeBtn) {
+        subscribeBtn.classList.remove('bg-blueTheme', 'bg-pinkTheme');
+        
+        if (body.classList.contains('pink-theme')) {
+          subscribeBtn.classList.add('bg-pinkTheme');
+        } else {
+          subscribeBtn.classList.add('bg-blueTheme');
+        }
+      }
+    }
+
+    // Updated theme toggle functionality
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    
+    function updateThemeToggle(mode) {
+      const isDark = mode === 'dark';
+      themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      themeToggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      
+      if (mobileThemeToggle) {
+        mobileThemeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+        mobileThemeToggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+      }
+    }
+    
+    function toggleDarkMode() {
+      const body = document.body;
+      const currentMode = localStorage.getItem('themeMode') || 'auto';
+      let newMode;
+      
+      if (currentMode === 'auto') {
+        // If in auto mode, toggle between light and dark
+        const isDark = body.classList.contains('dark-theme');
+        newMode = isDark ? 'light' : 'dark';
+      } else {
+        // Toggle between light and dark modes
+        newMode = body.classList.contains('dark-theme') ? 'light' : 'dark';
+      }
+      
+      setThemeMode(newMode);
+    }
+    
+    themeToggle.addEventListener('click', toggleDarkMode);
+    if (mobileThemeToggle) {
+      mobileThemeToggle.addEventListener('click', toggleDarkMode);
+    }
+    
+    // Language toggle functionality
+    const desktopLangToggle = document.getElementById('langToggle');
+    const mobileLangToggle = document.getElementById('mobile-langToggle');
+    
+    // Initialize with English
     function setLang(lang) {
       document.querySelectorAll('[data-en]').forEach(el => {
         el.textContent = el.getAttribute(`data-${lang}`);
       });
+      
+      // Update language indicators
+      document.querySelectorAll('.en').forEach(el => {
+        el.classList.toggle('text-gray-800', lang === 'en' && document.body.classList.contains('light-theme'));
+        el.classList.toggle('text-gray-200', lang === 'en' && document.body.classList.contains('dark-theme'));
+        el.classList.toggle('text-gray-500', lang !== 'en');
+      });
+      
+      document.querySelectorAll('.zh').forEach(el => {
+        el.classList.toggle('text-gray-800', lang === 'zh' && document.body.classList.contains('light-theme'));
+        el.classList.toggle('text-gray-200', lang === 'zh' && document.body.classList.contains('dark-theme'));
+        el.classList.toggle('text-gray-500', lang !== 'zh');
+      });
     }
 
-    toggle.addEventListener('change', () => {
-      setLang(toggle.checked ? 'zh' : 'en');
+    function toggleLang(element) {
+      // Sync both toggles
+      desktopLangToggle.checked = element.checked;
+      mobileLangToggle.checked = element.checked;
+      
+      // Set language based on toggle state
+      const lang = element.checked ? 'en' : 'zh';
+      setLang(lang);
+      localStorage.setItem('language', lang);
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+          
+          // Close mobile menu if open
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            const icon = mobileMenuButton.querySelector('i');
+            icon.classList.remove('fa-xmark');
+            icon.classList.add('fa-bars');
+          }
+        }
+      });
     });
 
-    // 默认语言
-    setLang('en');
-    toggle.checked = false;
+    // Search functionality
+    const searchInput = document.getElementById('search-input');
+    const toolCards = document.querySelectorAll('.tool-card');
+    const allSections = document.querySelectorAll('main > section');
+
+    searchInput.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase().trim();
+      let hasResults = false;
+
+      // Reset all sections to visible
+      allSections.forEach(section => {
+        section.style.display = 'block';
+      });
+
+      // Check all tool cards
+      toolCards.forEach(card => {
+        const toolText = card.textContent.toLowerCase();
+        const listItem = card.closest('li');
+        
+        if (toolText.includes(searchTerm) || searchTerm === '') {
+          listItem.style.display = 'block';
+          hasResults = true;
+        } else {
+          listItem.style.display = 'none';
+        }
+      });
+
+      // Hide sections with no visible items
+      allSections.forEach(section => {
+        const visibleItems = section.querySelectorAll('li:not([style*="display: none"])');
+        
+        if (visibleItems.length === 0 && searchTerm !== '') {
+          section.style.display = 'none';
+        }
+      });
+
+      // Handle no results scenario
+      if (!hasResults && searchTerm !== '') {
+        let noResults = document.getElementById('no-results');
+        if (!noResults) {
+          noResults = document.createElement('div');
+          noResults.id = 'no-results';
+          noResults.className = 'text-center py-16';
+          noResults.innerHTML = `
+            <i class="fa-solid fa-search text-5xl mb-4 theme-icon"></i>
+            <p class="text-lg" data-en="No tools found matching your search" data-zh="没有找到匹配的工具">No tools found matching your search</p>
+          `;
+          document.querySelector('main').prepend(noResults);
+        }
+      } else {
+        const noResults = document.getElementById('no-results');
+        if (noResults) {
+          noResults.remove();
+        }
+      }
+    });
+
+    // Add animation on scroll for category cards
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('opacity-100', 'translate-y-0');
+          entry.target.classList.remove('opacity-0', 'translate-y-4');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.classList.add('opacity-0', 'translate-y-4', 'transition-all', 'duration-700');
+      observer.observe(card);
+    });
+
+    // Initialize theme from localStorage or system preference
+    function initTheme() {
+      // Check for saved preferences or use defaults
+      const savedMode = localStorage.getItem('themeMode') || 'auto';
+      const savedColor = localStorage.getItem('primaryColor') || 'blue';
+      const savedLang = localStorage.getItem('language') || 'en';
+      
+      // Apply saved preferences
+      setThemeMode(savedMode);
+      setPrimaryColor(savedColor);
+      setLang(savedLang);
+      
+      // Set language toggle correctly
+      desktopLangToggle.checked = savedLang === 'en';
+      mobileLangToggle.checked = savedLang === 'en';
+      
+      // Update toggle UI
+      updateThemeToggle(savedMode === 'auto' ? 
+        (document.body.classList.contains('dark-theme') ? 'dark' : 'light') : 
+        savedMode
+      );
+      
+      // Listen for system theme changes if in auto mode
+      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if (localStorage.getItem('themeMode') === 'auto') {
+          setThemeMode('auto');
+        }
+      });
+      
+      // Add event listeners to theme controls
+      const desktopToggle = document.getElementById('split-theme-toggle');
+      const mobileToggle = document.getElementById('mobile-split-theme-toggle');
+      
+      if (desktopToggle) {
+        desktopToggle.addEventListener('click', (e) => {
+          const clickedHalf = e.target.closest('.theme-half');
+          if (clickedHalf) {
+            const theme = clickedHalf.dataset.theme;
+            setPrimaryColor(theme);
+          }
+        });
+      }
+      
+      if (mobileToggle) {
+        mobileToggle.addEventListener('click', (e) => {
+          const clickedHalf = e.target.closest('.theme-half');
+          if (clickedHalf) {
+            const theme = clickedHalf.dataset.theme;
+            setPrimaryColor(theme);
+          }
+        });
+      }
+    }
+
+    // Initialize everything when page loads
+    window.addEventListener('DOMContentLoaded', initTheme);
   </script>
 </body>
 </html>
+

@@ -1,199 +1,464 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
- <title>JSON Validator - Check JSON Format | Utilivy</title>
-<meta name="description" content="Validate your JSON syntax and detect any formatting issues instantly." />
+  <title>JSON Validator - Check JSON Format | Utilivy</title>
+  <meta name="description" content="Validate your JSON syntax and detect any formatting issues instantly." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: #f3f4f6;
-      color: #111827;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: #4f46e5;
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: #4f46e5;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    textarea {
-      width: 95%;
-      padding: 1rem;
-      font-size: 1rem;
-      font-family: monospace;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-    }
-    .label {
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .button-group {
-      margin-bottom: 1rem;
-    }
-    .button-group button {
-      background-color: #4f46e5;
-      color: white;
-      border: none;
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.95rem;
-    }
-    .button-group button:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      font-weight: 500;
-      padding: 0.75rem 1rem;
-      border-radius: 6px;
-      font-size: 0.95rem;
-      display: none;
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
       margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+      font-family: monospace;
+      font-size: 0.9rem;
     }
-    .result.success {
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .json-icon {
+      color: #3b82f6;
+      font-size: 1.5rem;
+    }
+    .input-textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 200px;
+      resize: vertical;
+      background: white;
+    }
+    .input-textarea:focus {
+      outline: none;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+    }
+    .validation-success {
       background-color: #d1fae5;
       color: #065f46;
+      border: 1px solid #a7f3d0;
     }
-    .result.error {
+    .validation-error {
       background-color: #fee2e2;
       color: #991b1b;
+      border: 1px solid #fecaca;
     }
-    .adsense-banner, .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
+    .json-key { color: #8b5cf6; }
+    .json-string { color: #10b981; }
+    .json-number { color: #3b82f6; }
+    .json-boolean { color: #ef4444; }
+    .json-null { color: #8b5cf6; font-weight: bold; }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - JSON Validator" data-zh="Utilivy - JSON 校验工具">Utilivy - JSON Validator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <label for="jsonInput" class="label" data-en="Enter JSON" data-zh="输入 JSON">Enter JSON</label>
-    <textarea id="jsonInput" rows="10" placeholder='{"valid": true}'></textarea>
-
-    <div class="button-group">
-      <button onclick="validateJSON()" data-en="Validate JSON" data-zh="验证 JSON">Validate JSON</button>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">JSON Validator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">JSON 验证工具</h1>
+      <p class="text-gray-500 text-sm en">Validate your JSON syntax and detect formatting issues</p>
+      <p class="text-gray-500 text-sm zh">验证 JSON 语法并检测格式问题</p>
     </div>
 
-    <div id="result" class="result"></div>
+    <!-- Validator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Enter JSON to validate</span>
+          <span class="zh">输入要验证的 JSON</span>
+        </label>
+        <textarea id="jsonInput" class="input-textarea" placeholder='{"valid": true}'></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="validateJSON()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-check-circle"></i>
+          <span class="en">Validate JSON</span>
+          <span class="zh">验证 JSON</span>
+        </button>
+        
+        <button onclick="formatJSON()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Format JSON</span>
+          <span class="zh">格式化 JSON</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除所有</span>
+        </button>
+      </div>
+
+      <!-- Validation Result -->
+      <div class="result-box">
+        <div class="font-medium text-blue-600 flex items-center gap-2">
+          <i class="fa-solid fa-clipboard-check json-icon"></i>
+          <span class="en">Validation Result</span>
+          <span class="zh">验证结果</span>
+        </div>
+        <div id="validationResult" class="result-value">
+          <span class="en">Validation result will appear here</span>
+          <span class="zh">验证结果将显示在这里</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">1. Enter JSON in the input field</li>
+          <li class="zh">1. 在输入框中输入 JSON</li>
+          <li class="en">2. Click "Validate JSON" to check syntax</li>
+          <li class="zh">2. 点击"验证 JSON"检查语法</li>
+          <li class="en">3. Click "Format JSON" to beautify</li>
+          <li class="zh">3. 点击"格式化 JSON"美化格式</li>
+          <li class="en">4. Fix errors based on the validation result</li>
+          <li class="zh">4. 根据验证结果修复错误</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Common JSON Errors</span>
+          <span class="zh">常见 JSON 错误</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Missing commas between properties</li>
+          <li class="zh">▸ 属性之间缺少逗号</li>
+          <li class="en">▸ Trailing commas in objects/arrays</li>
+          <li class="zh">▸ 对象/数组中的尾部逗号</li>
+          <li class="en">▸ Unquoted property names</li>
+          <li class="zh">▸ 未加引号的属性名</li>
+          <li class="en">▸ Single quotes instead of double quotes</li>
+          <li class="zh">▸ 使用单引号而不是双引号</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-key"></i>
+          <span class="en">JSON Syntax Tips</span>
+          <span class="zh">JSON 语法提示</span>
+        </h2>
+        <div class="text-xs font-mono bg-gray-50 p-3 rounded">
+          <div class="json-key">"name"</div>: <div class="json-string">"Utilivy"</div>,<br>
+          <div class="json-key">"tools"</div>: <div class="json-number">99</div>,<br>
+          <div class="json-key">"active"</div>: <div class="json-boolean">true</div>,<br>
+          <div class="json-key">"data"</div>: <div class="json-null">null</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Add syntax highlighting to example
+      highlightJSONSyntax();
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Validate JSON
     function validateJSON() {
       const input = document.getElementById("jsonInput").value;
-      const result = document.getElementById("result");
-
+      const resultElement = document.getElementById("validationResult");
+      
+      if (!input.trim()) {
+        showNotification('Please enter some JSON to validate', true);
+        resultElement.innerHTML = '<span class="text-gray-500">Enter JSON to validate</span>';
+        return;
+      }
+      
       try {
         JSON.parse(input);
-        result.className = "result success";
-        result.textContent = "✅ Valid JSON!";
-        result.style.display = "block";
+        resultElement.innerHTML = '<div class="validation-success p-3 rounded flex items-center gap-2"><i class="fas fa-check-circle"></i> <span class="en">✅ Valid JSON!</span><span class="zh">✅ JSON 有效！</span></div>';
+        showNotification('JSON is valid!');
       } catch (e) {
-        result.className = "result error";
-        result.textContent = "❌ Invalid JSON: " + e.message;
-        result.style.display = "block";
+        const errorMessage = e.message.replace(/^JSON\.parse: /, '');
+        resultElement.innerHTML = `<div class="validation-error p-3 rounded flex items-start gap-2"><i class="fas fa-times-circle mt-1"></i> <div><span class="en">❌ Invalid JSON: ${errorMessage}</span><span class="zh">❌ JSON 无效: ${errorMessage}</span><br><span class="en">Line ${getErrorLine(e, input)}</span><span class="zh">第 ${getErrorLine(e, input)} 行</span></div></div>`;
+        showNotification('Invalid JSON: ' + errorMessage, true);
       }
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+    // Format JSON
+    function formatJSON() {
+      const input = document.getElementById("jsonInput").value;
+      if (!input.trim()) {
+        showNotification('Please enter some JSON to format', true);
+        return;
+      }
+      
+      try {
+        const obj = JSON.parse(input);
+        const formatted = JSON.stringify(obj, null, 2);
+        document.getElementById("jsonInput").value = formatted;
+        showNotification('JSON formatted successfully');
+        validateJSON(); // Re-validate after formatting
+      } catch (e) {
+        showNotification('Invalid JSON: ' + e.message, true);
+      }
+    }
+
+    // Get error line number
+    function getErrorLine(error, jsonString) {
+      if (!error.stack) return 'unknown';
+      
+      const match = error.stack.match(/at position (\d+)/);
+      if (match && match[1]) {
+        const position = parseInt(match[1]);
+        const lines = jsonString.substring(0, position).split('\n');
+        return lines.length;
+      }
+      return 'unknown';
+    }
+
+    // Highlight JSON syntax in the example
+    function highlightJSONSyntax() {
+      const example = document.querySelector('.text-xs.font-mono');
+      if (example) {
+        example.innerHTML = syntaxHighlight(example.textContent);
+      }
+    }
+
+    // Syntax highlighting for JSON
+    function syntaxHighlight(json) {
+      if (typeof json != 'string') {
+        json = JSON.stringify(json, null, 2);
+      }
+      
+      json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+        let cls = 'json-number';
+        if (/^"/.test(match)) {
+          if (/:$/.test(match)) {
+            cls = 'json-key';
+          } else {
+            cls = 'json-string';
+          }
+        } else if (/true|false/.test(match)) {
+          cls = 'json-boolean';
+        } else if (/null/.test(match)) {
+          cls = 'json-null';
+        }
+        return '<span class="' + cls + '">' + match + '</span>';
       });
     }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('jsonInput').value = '';
+      document.getElementById('validationResult').innerHTML = '<span class="en">Validation result will appear here</span><span class="zh">验证结果将显示在这里</span>';
+      showNotification('All fields cleared');
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Auto-validate when typing stops
+    let typingTimer;
+    document.getElementById('jsonInput').addEventListener('input', function() {
+      clearTimeout(typingTimer);
+      if (this.value.trim()) {
+        typingTimer = setTimeout(validateJSON, 800);
+      } else {
+        document.getElementById('validationResult').innerHTML = '<span class="en">Validation result will appear here</span><span class="zh">验证结果将显示在这里</span>';
+      }
+    });
   </script>
 </body>
 </html>

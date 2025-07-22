@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+     crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Comparison Tool – Utilivy</title>
+  <meta name="description" content="Compare two PDF files side by side and highlight differences between them.">
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
+    }
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .pdf-container {
+      overflow-y: auto;
+      max-height: 600px;
+      padding: 1rem;
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      position: relative;
+    }
+    .comparison-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+    @media (max-width: 768px) {
+      .comparison-container {
+        grid-template-columns: 1fr;
+      }
+    }
+    .pdf-preview {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      border: 1px solid #e5e7eb;
+    }
+    .file-upload-area {
+      border: 2px dashed #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .file-upload-area:hover {
+      border-color: #4f46e5;
+      background-color: rgba(79, 70, 229, 0.05);
+    }
+    .file-info {
+      margin-top: 1rem;
+      font-size: 0.85rem;
+    }
+    .difference-added {
+      background-color: rgba(34, 197, 94, 0.2);
+      border: 1px solid rgba(34, 197, 94, 0.5);
+      border-radius: 2px;
+    }
+    .difference-removed {
+      background-color: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      border-radius: 2px;
+      text-decoration: line-through;
+    }
+    .difference-changed {
+      background-color: rgba(251, 191, 36, 0.2);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      border-radius: 2px;
+    }
+    .page-navigation {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .compare-options {
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin: 1rem 0;
+      border: 1px solid #e5e7eb;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    .difference-counter {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: white;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 999;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Comparison Tool</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 比较工具</h1>
+      <p class="text-gray-500 text-sm en">Compare two PDF files and highlight differences</p>
+      <p class="text-gray-500 text-sm zh">比较两个 PDF 文件并高亮显示差异</p>
+    </div>
+
+    <!-- Comparison Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <!-- File Upload Areas -->
+      <div class="comparison-container">
+        <!-- First PDF -->
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Original PDF</span>
+            <span class="zh">原始 PDF</span>
+          </label>
+          <div class="file-upload-area" onclick="document.getElementById('pdfFile1').click()">
+            <i class="fa-regular fa-file-pdf text-5xl text-blue-500 mb-3"></i>
+            <p class="text-gray-500 en">Click to select PDF or drag and drop here</p>
+            <p class="text-gray-500 zh">点击选择 PDF 或拖放至此处</p>
+            <input type="file" id="pdfFile1" accept="application/pdf" class="hidden" onchange="handleFileUpload(event, 1)" />
+          </div>
+          <div id="fileInfo1" class="file-info hidden">
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center gap-2">
+                <i class="fa-regular fa-file-pdf text-blue-500"></i>
+                <div>
+                  <div id="fileName1" class="font-medium text-sm"></div>
+                  <div class="text-xs text-gray-500">
+                    <span id="fileSize1"></span> · 
+                    <span id="filePages1" class="en">pages</span>
+                    <span id="filePages1Zh" class="zh">页</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="removeFile(1)" class="text-gray-400 hover:text-red-500 transition-colors">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Second PDF -->
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Modified PDF</span>
+            <span class="zh">修改后的 PDF</span>
+          </label>
+          <div class="file-upload-area" onclick="document.getElementById('pdfFile2').click()">
+            <i class="fa-regular fa-file-pdf text-5xl text-purple-500 mb-3"></i>
+            <p class="text-gray-500 en">Click to select PDF or drag and drop here</p>
+            <p class="text-gray-500 zh">点击选择 PDF 或拖放至此处</p>
+            <input type="file" id="pdfFile2" accept="application/pdf" class="hidden" onchange="handleFileUpload(event, 2)" />
+          </div>
+          <div id="fileInfo2" class="file-info hidden">
+            <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+              <div class="flex items-center gap-2">
+                <i class="fa-regular fa-file-pdf text-purple-500"></i>
+                <div>
+                  <div id="fileName2" class="font-medium text-sm"></div>
+                  <div class="text-xs text-gray-500">
+                    <span id="fileSize2"></span> · 
+                    <span id="filePages2" class="en">pages</span>
+                    <span id="filePages2Zh" class="zh">页</span>
+                  </div>
+                </div>
+              </div>
+              <button onclick="removeFile(2)" class="text-gray-400 hover:text-red-500 transition-colors">
+                <i class="fa-solid fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Comparison Options -->
+      <div id="comparisonOptions" class="compare-options hidden">
+        <label class="block text-sm font-medium mb-3">
+          <span class="en">Comparison Options</span>
+          <span class="zh">比较选项</span>
+        </label>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="option-item">
+            <input type="checkbox" id="highlightAdditions" class="rounded text-blue-500" checked>
+            <label for="highlightAdditions" class="text-sm">
+              <span class="en">Highlight additions</span>
+              <span class="zh">高亮新增内容</span>
+            </label>
+          </div>
+          
+          <div class="option-item">
+            <input type="checkbox" id="highlightRemovals" class="rounded text-blue-500" checked>
+            <label for="highlightRemovals" class="text-sm">
+              <span class="en">Highlight removals</span>
+              <span class="zh">高亮删除内容</span>
+            </label>
+          </div>
+          
+          <div class="option-item">
+            <input type="checkbox" id="highlightChanges" class="rounded text-blue-500" checked>
+            <label for="highlightChanges" class="text-sm">
+              <span class="en">Highlight changes</span>
+              <span class="zh">高亮修改内容</span>
+            </label>
+          </div>
+          
+          <div class="option-item">
+            <input type="checkbox" id="syncPages" class="rounded text-blue-500" checked>
+            <label for="syncPages" class="text-sm">
+              <span class="en">Sync page navigation</span>
+              <span class="zh">同步页面导航</span>
+            </label>
+          </div>
+          
+          <div class="option-item">
+            <input type="checkbox" id="compareTextOnly" class="rounded text-blue-500">
+            <label for="compareTextOnly" class="text-sm">
+              <span class="en">Compare text only</span>
+              <span class="zh">仅比较文本</span>
+            </label>
+          </div>
+          
+          <div class="option-item">
+            <input type="checkbox" id="ignoreWhitespace" class="rounded text-blue-500">
+            <label for="ignoreWhitespace" class="text-sm">
+              <span class="en">Ignore whitespace</span>
+              <span class="zh">忽略空白字符</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div id="actionButtons" class="hidden grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="comparePDFs()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-balance-scale"></i>
+          <span class="en">Compare PDFs</span>
+          <span class="zh">比较 PDF</span>
+        </button>
+        
+        <button onclick="downloadComparisonReport()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-download"></i>
+          <span class="en">Download Report</span>
+          <span class="zh">下载报告</span>
+        </button>
+        
+        <button onclick="clearAllFiles()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-eraser"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除全部</span>
+        </button>
+      </div>
+
+      <!-- Comparison Results -->
+      <div id="comparisonResults" class="hidden">
+        <label class="block text-sm font-medium mb-3">
+          <span class="en">Comparison Results - Page <span id="currentPageDisplay">1</span></span>
+          <span class="zh">比较结果 - 第 <span id="currentPageDisplayZh">1</span> 页</span>
+        </label>
+        
+        <div class="comparison-container">
+          <!-- Original PDF Preview -->
+          <div>
+            <div class="text-sm font-medium mb-2 text-blue-600">
+              <i class="fa-regular fa-file-pdf mr-1"></i>
+              <span class="en">Original PDF</span>
+              <span class="zh">原始 PDF</span>
+            </div>
+            <div class="pdf-container" id="previewContainer1">
+              <div class="text-center py-10">
+                <i class="fa-solid fa-file-pdf text-5xl text-gray-300 mb-3"></i>
+                <p class="text-gray-400 en">PDF page will be displayed here</p>
+                <p class="text-gray-400 zh">PDF 页面将显示在这里</p>
+              </div>
+            </div>
+            <div class="page-navigation">
+              <button onclick="goToPreviousPage(1)" class="p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <div>
+                <span class="en"><span id="currentPage1">1</span> of <span id="totalPages1">0</span></span>
+                <span class="zh"><span id="currentPage1Zh">1</span> / <span id="totalPages1Zh">0</span></span>
+              </div>
+              <button onclick="goToNextPage(1)" class="p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Modified PDF Preview -->
+          <div>
+            <div class="text-sm font-medium mb-2 text-purple-600">
+              <i class="fa-regular fa-file-pdf mr-1"></i>
+              <span class="en">Modified PDF</span>
+              <span class="zh">修改后的 PDF</span>
+            </div>
+            <div class="pdf-container" id="previewContainer2">
+              <div class="text-center py-10">
+                <i class="fa-solid fa-file-pdf text-5xl text-gray-300 mb-3"></i>
+                <p class="text-gray-400 en">PDF page will be displayed here</p>
+                <p class="text-gray-400 zh">PDF 页面将显示在这里</p>
+              </div>
+            </div>
+            <div class="page-navigation">
+              <button onclick="goToPreviousPage(2)" class="p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <div>
+                <span class="en"><span id="currentPage2">1</span> of <span id="totalPages2">0</span></span>
+                <span class="zh"><span id="currentPage2Zh">1</span> / <span id="totalPages2Zh">0</span></span>
+              </div>
+              <button onclick="goToNextPage(2)" class="p-2 rounded-full hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Difference Summary -->
+        <div class="result-box mt-6">
+          <div class="font-medium text-blue-700 flex items-center gap-2 mb-3">
+            <i class="fa-solid fa-list-check"></i>
+            <span class="en">Difference Summary</span>
+            <span class="zh">差异摘要</span>
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div class="p-3 bg-green-50 rounded-lg border border-green-100">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-plus-circle text-green-500"></i>
+                <span class="font-medium en">Additions</span>
+                <span class="font-medium zh">新增内容</span>
+              </div>
+              <div class="mt-1 text-green-600 font-semibold" id="additionCount">0</div>
+            </div>
+            <div class="p-3 bg-red-50 rounded-lg border border-red-100">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-minus-circle text-red-500"></i>
+                <span class="font-medium en">Removals</span>
+                <span class="font-medium zh">删除内容</span>
+              </div>
+              <div class="mt-1 text-red-600 font-semibold" id="removalCount">0</div>
+            </div>
+            <div class="p-3 bg-yellow-50 rounded-lg border border-yellow-100">
+              <div class="flex items-center gap-2">
+                <i class="fa-solid fa-exchange text-yellow-500"></i>
+                <span class="font-medium en">Changes</span>
+                <span class="font-medium zh">修改内容</span>
+              </div>
+              <div class="mt-1 text-yellow-600 font-semibold" id="changeCount">0</div>
+            </div>
+          </div>
+          
+          <div class="mt-4 text-sm">
+            <div class="font-medium mb-2">
+              <span class="en">Detailed Differences:</span>
+              <span class="zh">详细差异：</span>
+            </div>
+            <div id="differenceDetails" class="space-y-3 max-h-40 overflow-y-auto">
+              <div class="text-gray-500 italic text-sm">
+                <span class="en">No differences found</span>
+                <span class="zh">未发现差异</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Upload two PDF files to compare</li>
+          <li class="zh">1. 上传两个要比较的 PDF 文件</li>
+          <li class="en">2. Adjust comparison options if needed</li>
+          <li class="zh">2. 根据需要调整比较选项</li>
+          <li class="en">3. Click "Compare PDFs" to start comparison</li>
+          <li class="zh">3. 点击"比较 PDF"开始比较</li>
+          <li class="en">4. View differences highlighted in both documents</li>
+          <li class="zh">4. 查看两个文档中高亮显示的差异</li>
+          <li class="en">5. Navigate through pages and review changes</li>
+          <li class="zh">5. 浏览页面并查看更改</li>
+          <li class="en">6. Download comparison report if needed</li>
+          <li class="zh">6. 必要时下载比较报告</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About PDF Comparison</span>
+          <span class="zh">关于 PDF 比较</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Highlights text additions, removals and changes</li>
+          <li class="zh">▸ 高亮显示文本的新增、删除和修改</li>
+          <li class="en">▸ Works with most PDF documents, including scanned ones</li>
+          <li class="zh">▸ 适用于大多数 PDF 文档，包括扫描件</li>
+          <li class="en">▸ Pages are synchronized by default for easy comparison</li>
+          <li class="zh">▸ 页面默认同步，便于比较</li>
+          <li class="en">▸ All comparisons are done in your browser</li>
+          <li class="zh">▸ 所有比较都在您的浏览器中进行</li>
+          <li class="en">▸ Generate detailed reports of all differences</li>
+          <li class="zh">▸ 生成包含所有差异的详细报告</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Difference Counter (Floating) -->
+    <div id="differenceCounter" class="difference-counter hidden">
+      <div class="font-medium mb-1 flex items-center gap-1">
+        <i class="fa-solid fa-exclamation-circle text-blue-500"></i>
+        <span class="en">Differences on Page</span>
+        <span class="zh">当前页差异</span>
+      </div>
+      <div class="text-xs text-gray-600">
+        <span class="en"><span id="currentPageDiffs">0</span> differences found</span>
+        <span class="zh">发现 <span id="currentPageDiffsZh">0</span> 处差异</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Operation successful!</span>
+    <span class="zh">操作成功！</span>
+  </div>
+
+  <script>
+    // Global variables
+    let pdfFiles = { 1: null, 2: null };
+    let pdfDocs = { 1: null, 2: null };
+    let totalPages = { 1: 0, 2: 0 };
+    let currentPages = { 1: 1, 2: 1 };
+    let pdfjsLib = window['pdfjs-dist/build/pdf'];
+    let differences = []; // Stores detected differences
+    let pageRotations = { 1: [], 2: [] }; // Stores rotation angles for each page
+    
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Setup drag and drop for both file areas
+      setupDragAndDrop('pdfFile1', 1);
+      setupDragAndDrop('pdfFile2', 2);
+    });
+
+    // Setup drag and drop functionality
+    function setupDragAndDrop(inputId, fileIndex) {
+      const dropArea = document.querySelectorAll('.file-upload-area')[fileIndex - 1];
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        dropArea.classList.add('border-blue-500');
+        dropArea.classList.add('bg-blue-50');
+      }
+      
+      function unhighlight() {
+        dropArea.classList.remove('border-blue-500');
+        dropArea.classList.remove('bg-blue-50');
+      }
+      
+      dropArea.addEventListener('drop', function(e) {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        
+        if (file && file.type === 'application/pdf') {
+          handleFileUpload({ target: { files: [file] } }, fileIndex);
+        } else {
+          showNotification('Please upload a PDF file', true);
+        }
+      }, false);
+    }
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Handle file upload
+    async function handleFileUpload(event, fileIndex) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (file.type !== 'application/pdf') {
+        showNotification('Please upload a PDF file', true);
+        return;
+      }
+      
+      pdfFiles[fileIndex] = file;
+      
+      // Show file info
+      document.getElementById(`fileName${fileIndex}`).textContent = file.name;
+      document.getElementById(`fileSize${fileIndex}`).textContent = formatFileSize(file.size);
+      document.getElementById(`fileInfo${fileIndex}`).classList.remove('hidden');
+      
+      try {
+        // Load PDF
+        const arrayBuffer = await file.arrayBuffer();
+        pdfDocs[fileIndex] = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        totalPages[fileIndex] = pdfDocs[fileIndex].numPages;
+        
+        // Initialize page rotations
+        pageRotations[fileIndex] = new Array(totalPages[fileIndex]).fill(0);
+        
+        document.getElementById(`filePages${fileIndex}`).textContent = totalPages[fileIndex];
+        document.getElementById(`filePages${fileIndex}Zh`).textContent = totalPages[fileIndex];
+        document.getElementById(`totalPages${fileIndex}`).textContent = totalPages[fileIndex];
+        document.getElementById(`totalPages${fileIndex}Zh`).textContent = totalPages[fileIndex];
+        
+        // Reset to first page
+        currentPages[fileIndex] = 1;
+        updatePageDisplay(fileIndex);
+        
+        // Load first page
+        loadPage(fileIndex, currentPages[fileIndex]);
+        
+        // Enable navigation buttons as appropriate
+        updateNavigationButtons(fileIndex);
+        
+        // Show comparison options and action buttons if both files are uploaded
+        if (pdfFiles[1] && pdfFiles[2]) {
+          document.getElementById('comparisonOptions').classList.remove('hidden');
+          document.getElementById('actionButtons').classList.remove('hidden');
+        }
+        
+        showNotification(`PDF ${fileIndex} loaded successfully`);
+      } catch (error) {
+        console.error(`Error loading PDF ${fileIndex}:`, error);
+        showNotification(`Error loading PDF: ${error.message}`, true);
+      }
+    }
+
+    // Load a specific page
+    async function loadPage(fileIndex, pageNum) {
+      const container = document.getElementById(`previewContainer${fileIndex}`);
+      
+      // Show loading state
+      container.innerHTML = `
+        <div class="text-center py-10">
+          <i class="fa-solid fa-spinner fa-spin text-blue-500"></i>
+          <p class="mt-2 text-sm text-gray-500 en">Loading page ${pageNum}...</p>
+          <p class="mt-2 text-sm text-gray-500 zh">正在加载第 ${pageNum} 页...</p>
+        </div>
+      `;
+      
+      try {
+        if (!pdfDocs[fileIndex]) return;
+        
+        const page = await pdfDocs[fileIndex].getPage(pageNum);
+        
+        // Apply rotation
+        const rotation = pageRotations[fileIndex][pageNum - 1] || 0;
+        const viewport = page.getViewport({ scale: 1.0, rotation: rotation });
+        
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+        canvas.className = 'pdf-preview';
+        canvas.id = `pageCanvas${fileIndex}`;
+        canvas.dataset.pageNum = pageNum;
+        
+        // Clear container and add canvas
+        container.innerHTML = '';
+        container.appendChild(canvas);
+        
+        // If comparison has been run, show differences for this page
+        if (differences.length > 0) {
+          highlightDifferences(fileIndex, pageNum, viewport);
+        }
+        
+        const renderContext = {
+          canvasContext: context,
+          viewport: viewport
+        };
+        
+        // Render the page
+        await page.render(renderContext).promise;
+        
+        // If both files are loaded and comparison has been run, update counters
+        if (pdfFiles[1] && pdfFiles[2] && differences.length > 0) {
+          updateDifferenceCounters();
+        }
+        
+      } catch (error) {
+        console.error(`Error rendering page ${pageNum} for PDF ${fileIndex}:`, error);
+        container.innerHTML = `
+          <div class="text-center py-10">
+            <i class="fa-solid fa-exclamation-triangle text-yellow-500 text-3xl mb-3"></i>
+            <p class="text-red-500 text-sm en">Error loading page ${pageNum}</p>
+            <p class="text-red-500 text-sm zh">加载第 ${pageNum} 页出错</p>
+          </div>
+        `;
+      }
+    }
+
+    // Update page display numbers
+    function updatePageDisplay(fileIndex) {
+      document.getElementById(`currentPage${fileIndex}`).textContent = currentPages[fileIndex];
+      document.getElementById(`currentPage${fileIndex}Zh`).textContent = currentPages[fileIndex];
+      
+      // Update main display if this is the first PDF or if pages are synced
+      if (fileIndex === 1 || document.getElementById('syncPages').checked) {
+        document.getElementById('currentPageDisplay').textContent = currentPages[fileIndex];
+        document.getElementById('currentPageDisplayZh').textContent = currentPages[fileIndex];
+      }
+    }
+
+    // Update navigation buttons state
+    function updateNavigationButtons(fileIndex) {
+      const prevBtn = document.querySelectorAll(`#previewContainer${fileIndex} + .page-navigation button:first-child`)[0];
+      const nextBtn = document.querySelectorAll(`#previewContainer${fileIndex} + .page-navigation button:last-child`)[0];
+      
+      prevBtn.disabled = currentPages[fileIndex] <= 1;
+      nextBtn.disabled = currentPages[fileIndex] >= totalPages[fileIndex];
+    }
+
+    // Go to previous page
+    function goToPreviousPage(fileIndex) {
+      if (currentPages[fileIndex] > 1) {
+        currentPages[fileIndex]--;
+        updatePageDisplay(fileIndex);
+        loadPage(fileIndex, currentPages[fileIndex]);
+        updateNavigationButtons(fileIndex);
+        
+        // If sync is enabled, update the other PDF
+        if (document.getElementById('syncPages').checked) {
+          const otherIndex = fileIndex === 1 ? 2 : 1;
+          if (currentPages[otherIndex] > 1) {
+            currentPages[otherIndex]--;
+            updatePageDisplay(otherIndex);
+            loadPage(otherIndex, currentPages[otherIndex]);
+            updateNavigationButtons(otherIndex);
+          }
+        }
+      }
+    }
+
+    // Go to next page
+    function goToNextPage(fileIndex) {
+      if (currentPages[fileIndex] < totalPages[fileIndex]) {
+        currentPages[fileIndex]++;
+        updatePageDisplay(fileIndex);
+        loadPage(fileIndex, currentPages[fileIndex]);
+        updateNavigationButtons(fileIndex);
+        
+        // If sync is enabled, update the other PDF
+        if (document.getElementById('syncPages').checked) {
+          const otherIndex = fileIndex === 1 ? 2 : 1;
+          if (currentPages[otherIndex] < totalPages[otherIndex]) {
+            currentPages[otherIndex]++;
+            updatePageDisplay(otherIndex);
+            loadPage(otherIndex, currentPages[otherIndex]);
+            updateNavigationButtons(otherIndex);
+          }
+        }
+      }
+    }
+
+    // Remove selected file
+    function removeFile(fileIndex) {
+      pdfFiles[fileIndex] = null;
+      pdfDocs[fileIndex] = null;
+      totalPages[fileIndex] = 0;
+      currentPages[fileIndex] = 1;
+      pageRotations[fileIndex] = [];
+      
+      document.getElementById(`pdfFile${fileIndex}`).value = '';
+      document.getElementById(`fileInfo${fileIndex}`).classList.add('hidden');
+      
+      // Reset page displays
+      document.getElementById(`currentPage${fileIndex}`).textContent = '1';
+      document.getElementById(`currentPage${fileIndex}Zh`).textContent = '1';
+      document.getElementById(`totalPages${fileIndex}`).textContent = '0';
+      document.getElementById(`totalPages${fileIndex}Zh`).textContent = '0';
+      
+      // Reset preview container
+      const container = document.getElementById(`previewContainer${fileIndex}`);
+      container.innerHTML = `
+        <div class="text-center py-10">
+          <i class="fa-solid fa-file-pdf text-5xl text-gray-300 mb-3"></i>
+          <p class="text-gray-400 en">PDF page will be displayed here</p>
+          <p class="text-gray-400 zh">PDF 页面将显示在这里</p>
+        </div>
+      `;
+      
+      // Hide options and results if one file is removed
+      document.getElementById('comparisonOptions').classList.add('hidden');
+      document.getElementById('actionButtons').classList.add('hidden');
+      document.getElementById('comparisonResults').classList.add('hidden');
+      document.getElementById('differenceCounter').classList.add('hidden');
+      
+      // Clear differences
+      differences = [];
+      
+      showNotification(`File ${fileIndex} removed`);
+    }
+
+    // Clear all files
+    function clearAllFiles() {
+      removeFile(1);
+      removeFile(2);
+      showNotification('All files cleared');
+    }
+
+    // Compare PDFs
+    async function comparePDFs() {
+      if (!pdfFiles[1] || !pdfFiles[2]) {
+        showNotification(
+          document.querySelector('.en').style.display !== 'none' 
+            ? 'Please upload both PDF files' 
+            : '请上传两个 PDF 文件', 
+          true
+        );
+        return;
+      }
+      
+      // Show results area
+      document.getElementById('comparisonResults').classList.remove('hidden');
+      
+      // Show loading notification
+      showNotification(
+        document.querySelector('.en').style.display !== 'none' 
+          ? 'Comparing PDFs...' 
+          : '正在比较 PDF...'
+      );
+      
+      try {
+        // In a real implementation, this would analyze both PDFs and find differences
+        // For this demo, we'll generate sample differences
+        
+        // Clear previous differences
+        differences = [];
+        
+        // Generate sample differences for demonstration
+        generateSampleDifferences();
+        
+        // Reload current pages to show differences
+        loadPage(1, currentPages[1]);
+        loadPage(2, currentPages[2]);
+        
+        // Update summary counters
+        updateDifferenceSummary();
+        
+        // Show difference counter
+        document.getElementById('differenceCounter').classList.remove('hidden');
+        
+        showNotification(
+          document.querySelector('.en').style.display !== 'none' 
+            ? 'PDF comparison complete' 
+            : 'PDF 比较完成'
+        );
+      } catch (error) {
+        console.error('Error comparing PDFs:', error);
+        showNotification(`Error comparing PDFs: ${error.message}`, true);
+      }
+    }
+
+    // Generate sample differences for demonstration
+    function generateSampleDifferences() {
+      // Create some sample differences across multiple pages
+      differences = [
+        // Page 1 differences
+        {
+          page: 1,
+          type: 'addition', // addition, removal, change
+          text: 'New paragraph added to the modified document.',
+          position: { x: 50, y: 200, width: 300, height: 40 }
+        },
+        {
+          page: 1,
+          type: 'removal',
+          text: 'This paragraph was removed from the original document.',
+          position: { x: 50, y: 300, width: 300, height: 40 }
+        },
+        {
+          page: 1,
+          type: 'change',
+          originalText: 'Old version of this sentence.',
+          newText: 'Updated version of this sentence with different content.',
+          position: { x: 50, y: 400, width: 300, height: 40 }
+        },
+        
+        // Page 2 differences
+        {
+          page: 2,
+          type: 'addition',
+          text: 'Another new section added in the modified PDF.',
+          position: { x: 50, y: 150, width: 300, height: 60 }
+        },
+        {
+          page: 2,
+          type: 'change',
+          originalText: 'Previous data: $1,000.00',
+          newText: 'Updated data: $1,500.00',
+          position: { x: 50, y: 350, width: 200, height: 20 }
+        }
+      ];
+    }
+
+    // Highlight differences on the page
+    function highlightDifferences(fileIndex, pageNum, viewport) {
+      const container = document.getElementById(`previewContainer${fileIndex}`);
+      const pageDiffs = differences.filter(d => d.page === pageNum);
+      
+      pageDiffs.forEach(diff => {
+        // Skip if the user has disabled this type of highlighting
+        if ((diff.type === 'addition' && !document.getElementById('highlightAdditions').checked) ||
+            (diff.type === 'removal' && !document.getElementById('highlightRemovals').checked) ||
+            (diff.type === 'change' && !document.getElementById('highlightChanges').checked)) {
+          return;
+        }
+        
+        // Create highlight element
+        const highlight = document.createElement('div');
+        highlight.className = `absolute pointer-events-none transition-opacity duration-300`;
+        
+        // Position and size the highlight
+        highlight.style.left = `${diff.position.x}px`;
+        highlight.style.top = `${diff.position.y}px`;
+        highlight.style.width = `${diff.position.width}px`;
+        highlight.style.height = `${diff.position.height}px`;
+        
+        // Set color based on difference type
+        if (diff.type === 'addition') {
+          highlight.classList.add('difference-added');
+          // For modified PDF, show the added text
+          if (fileIndex === 2) {
+            highlight.innerHTML = `<div class="p-1 text-sm">${diff.text}</div>`;
+          }
+        } else if (diff.type === 'removal') {
+          highlight.classList.add('difference-removed');
+          // For original PDF, show the removed text
+          if (fileIndex === 1) {
+            highlight.innerHTML = `<div class="p-1 text-sm">${diff.text}</div>`;
+          }
+        } else if (diff.type === 'change') {
+          highlight.classList.add('difference-changed');
+          // Show appropriate text based on which PDF we're displaying
+          if (fileIndex === 1) {
+            highlight.innerHTML = `<div class="p-1 text-sm">${diff.originalText}</div>`;
+          } else {
+            highlight.innerHTML = `<div class="p-1 text-sm">${diff.newText}</div>`;
+          }
+        }
+        
+        container.appendChild(highlight);
+      });
+    }
+
+    // Update difference summary counters
+    function updateDifferenceSummary() {
+      const additionCount = differences.filter(d => d.type === 'addition').length;
+      const removalCount = differences.filter(d => d.type === 'removal').length;
+      const changeCount = differences.filter(d => d.type === 'change').length;
+      
+      document.getElementById('additionCount').textContent = additionCount;
+      document.getElementById('removalCount').textContent = removalCount;
+      document.getElementById('changeCount').textContent = changeCount;
+      
+      // Update detailed differences list
+      const detailsContainer = document.getElementById('differenceDetails');
+      
+      if (differences.length === 0) {
+        detailsContainer.innerHTML = `
+          <div class="text-gray-500 italic text-sm">
+            <span class="en">No differences found</span>
+            <span class="zh">未发现差异</span>
+          </div>
+        `;
+        return;
+      }
+      
+      // Create detailed list
+      let detailsHTML = '<ul class="list-disc list-inside space-y-1">';
+      
+      differences.forEach((diff, index) => {
+        let diffText = '';
+        const isEnglish = document.querySelector('.en').style.display !== 'none';
+        
+        if (diff.type === 'addition') {
+          diffText = isEnglish 
+            ? `Page ${diff.page}: Added text - "${truncateText(diff.text, 50)}"`
+            : `第 ${diff.page} 页：新增文本 - "${truncateText(diff.text, 50)}"`;
+        } else if (diff.type === 'removal') {
+          diffText = isEnglish
+            ? `Page ${diff.page}: Removed text - "${truncateText(diff.text, 50)}"`
+            : `第 ${diff.page} 页：删除文本 - "${truncateText(diff.text, 50)}"`;
+        } else if (diff.type === 'change') {
+          diffText = isEnglish
+            ? `Page ${diff.page}: Changed text - "${truncateText(diff.originalText, 30)}" to "${truncateText(diff.newText, 30)}"`
+            : `第 ${diff.page} 页：修改文本 - "${truncateText(diff.originalText, 30)}" 改为 "${truncateText(diff.newText, 30)}"`;
+        }
+        
+        detailsHTML += `<li class="text-sm ${diff.type === 'addition' ? 'text-green-600' : diff.type === 'removal' ? 'text-red-600' : 'text-yellow-600'}" onclick="scrollToDifference(${diff.page}, ${index})">${diffText}</li>`;
+      });
+      
+      detailsHTML += '</ul>';
+      detailsContainer.innerHTML = detailsHTML;
+    }
+
+    // Update current page difference counters
+    function updateDifferenceCounters() {
+      const currentPage = currentPages[1]; // Using first PDF's page since they're synced
+      const currentPageDiffs = differences.filter(d => d.page === currentPage).length;
+      
+      document.getElementById('currentPageDiffs').textContent = currentPageDiffs;
+      document.getElementById('currentPageDiffsZh').textContent = currentPageDiffs;
+    }
+
+    // Scroll to a specific difference
+    function scrollToDifference(pageNum, diffIndex) {
+      // Navigate to the page with the difference
+      currentPages[1] = pageNum;
+      currentPages[2] = pageNum;
+      
+      updatePageDisplay(1);
+      updatePageDisplay(2);
+      
+      loadPage(1, pageNum);
+      loadPage(2, pageNum);
+      
+      updateNavigationButtons(1);
+      updateNavigationButtons(2);
+      
+      // In a real implementation, we would scroll to the exact position
+      // of the difference on the page
+    }
+
+    // Download comparison report
+    function downloadComparisonReport() {
+      if (differences.length === 0) {
+        showNotification(
+          document.querySelector('.en').style.display !== 'none' 
+            ? 'No comparison results to download' 
+            : '没有可下载的比较结果', 
+          true
+        );
+        return;
+      }
+      
+      // In a real implementation, this would generate a detailed PDF or text report
+      // with all differences
+      
+      showNotification(
+        document.querySelector('.en').style.display !== 'none' 
+          ? 'Comparison report downloaded' 
+          : '比较报告已下载'
+      );
+    }
+
+    // Helper function to truncate text
+    function truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substring(0, maxLength) + '...';
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

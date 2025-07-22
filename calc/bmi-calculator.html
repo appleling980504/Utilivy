@@ -1,238 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
- <title>BMI Calculator - Body Mass Index Chart | Utilivy</title>
-<meta name="description" content="Calculate your BMI and assess whether you're underweight, normal, or overweight." />
-  <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409" crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk">
+  <title>BMI Calculator - Body Mass Index Chart | Utilivy</title>
+  <meta name="description" content="Calculate your BMI and assess whether you're underweight, normal, or overweight.">
+  <link rel="icon" href="/assets/logo.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    .bmi-table {
-      margin-top: 1.5rem;
-      border-collapse: collapse;
-      width: 100%;
-      font-size: 0.95rem;
-    }
-    .bmi-table th, .bmi-table td {
-      border: 1px solid #d1d5db;
-      padding: 0.5rem;
-      text-align: center;
-    }
-    .bmi-table th {
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
       background-color: #f9fafb;
-      font-weight: 600;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.9rem;
-      color: #6b7280;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10极速赛车开奖直播平台官网 -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .bmi-progress {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-top: 10px;
+    }
+    .bmi-fill {
+      height: 100%;
+      border-radius: 5px;
+      transition: width 0.5s ease;
+    }
+    .category-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - BMI Calculator" data-zh="Utilivy - BMI 计算器">Utilivy - BMI Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">BMI Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">BMI 计算器</h1>
+      <p class="text-gray-500 text-sm en">Calculate your Body Mass Index and health category</p>
+      <p class="text-gray-500 text-sm zh">计算你的身体质量指数和健康分类</p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Height (cm)</span>
+            <span class="zh">身高 (cm)</span>
+          </label>
+          <input type="number" id="height" placeholder="e.g. 170" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Weight (kg)</span>
+            <span class="zh">体重 (kg)</span>
+          </label>
+          <input type="number" id="weight" placeholder="e.g. 65" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button onclick="calculateBMI()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-calculator"></i>
+          <span class="en">Calculate BMI</span>
+          <span class="zh">计算 BMI</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除全部</span>
+        </button>
+      </div>
+
+      <!-- Result Box -->
+      <div class="result-box">
+        <div class="font-medium text-blue-600 flex items-center gap-2">
+          <i class="fa-solid fa-heart-pulse"></i>
+          <span class="en">BMI Result</span>
+          <span class="zh">BMI 结果</span>
+        </div>
+        <div id="result" class="result-value text-center py-4"></div>
+        <div class="bmi-progress">
+          <div id="bmiProgress" class="bmi-fill" style="width: 0%"></div>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard('result', this)">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy</span>
+          <span class="zh">复制</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">1. Enter your height in centimeters</li>
+          <li class="zh">1. 输入你的身高（厘米）</li>
+          <li class="en">2. Enter your weight in kilograms</li>
+          <li class="zh">2. 输入你的体重（公斤）</li>
+          <li class="en">3. Click "Calculate" to get your BMI</li>
+          <li class="zh">3. 点击"计算"获取你的 BMI</li>
+          <li class="en">4. Copy your result with the copy button</li>
+          <li class="zh">4. 使用复制按钮复制结果</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Health Tips</span>
+          <span class="zh">健康建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ BMI is a general indicator of health</li>
+          <li class="zh">▸ BMI 是健康的一般性指标</li>
+          <li class="en">▸ Consult a doctor for personalized advice</li>
+          <li class="zh">▸ 请咨询医生获取个性化建议</li>
+          <li class="en">▸ Combine with other health measurements</li>
+          <li class="zh">▸ 结合其他健康指标一起评估</li>
+          <li class="en">▸ Maintain a balanced diet and exercise</li>
+          <li class="zh">▸ 保持均衡饮食和适当运动</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-scale-balanced"></i>
+          <span class="en">BMI Categories</span>
+          <span class="zh">BMI 分类</span>
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="w-full border-collapse text-xs">
+            <thead>
+              <tr class="bg-gray-100">
+                <th class="border border-gray-300 p-2 text-left">
+                  <span class="en">Category</span>
+                  <span class="zh">分类</span>
+                </th>
+                <th class="border border-gray-300 p-2 text-center">
+                  <span class="en">BMI Range</span>
+                  <span class="zh">BMI 范围</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="border border-gray-300 p-2">
+                  <span class="en flex items-center"><span class="category-indicator bg-blue-500"></span> Underweight</span>
+                  <span class="zh flex items-center"><span class="category-indicator bg-blue-500"></span> 偏瘦</span>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">&lt; 18.5</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-300 p-2">
+                  <span class="en flex items-center"><span class="category-indicator bg-green-500"></span> Normal</span>
+                  <span class="zh flex items-center"><span class="category-indicator bg-green-500"></span> 正常</span>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">18.5 – 24.9</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-300 p-2">
+                  <span class="en flex items-center"><span class="category-indicator bg-yellow-500"></span> Overweight</span>
+                  <span class="zh flex items-center"><span class="category-indicator bg-yellow-500"></span> 偏重</span>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">25 – 29.9</td>
+              </tr>
+              <tr>
+                <td class="border border-gray-300 p-2">
+                  <span class="en flex items-center"><span class="category-indicator bg-red-500"></span> Obese</span>
+                  <span class="zh flex items-center"><span class="category-indicator bg-red-500"></span> 肥胖</span>
+                </td>
+                <td class="border border-gray-300 p-2 text-center">30+</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <h2 data-en="BMI Calculator" data-zh="BMI 计算器">BMI Calculator</h2>
-    
-    <label data-en="Height (cm)" data-zh="身高（厘米）">Height (cm)</label>
-    <input type="number" id="height" placeholder="e.g. 170">
-
-    <label data-en="Weight (kg)" data-zh="体重（公斤）">Weight (kg)</label>
-    <input type="number" id="weight" placeholder="e.g. 65">
-
-    <button class="calculate" onclick="calculateBMI()" data-en="Calculate" data-zh="计算">Calculate</button>
-
-    <div class="result" id="result"></div>
-
-    <table class="bmi-table">
-      <thead>
-        <tr>
-          <th data-en="Category" data-zh="类别">Category</th>
-          <th data-en="BMI Range" data-zh="BMI 范围">BMI Range</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td data-en="Underweight" data-zh="偏瘦">Underweight</td><td>&lt; 18.5</td></tr>
-        <tr><td data-en="Normal weight" data-zh="正常">Normal weight</td><td>18.5 – 24.9</td></tr>
-        <tr><td data-en="Overweight" data-zh="偏重">Overweight</td><td>25 – 29.9</td></tr>
-        <tr><td data-en="Obesity" data-zh="肥胖">Obesity</td><td>30+</td></tr>
-      </tbody>
-    </table>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    let lang = 'en';
-    function setLanguage(selectedLang) {
-      lang = selectedLang;
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${selectedLang}`);
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
       });
     }
 
+    // Calculate BMI
     function calculateBMI() {
       const height = parseFloat(document.getElementById('height').value) / 100;
       const weight = parseFloat(document.getElementById('weight').value);
+      const result = document.getElementById('result');
 
       if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
-        document.getElementById('result').textContent = lang === 'zh'
-          ? '请输入有效的身高和体重。'
-          : 'Please enter valid height and weight.';
+        showNotification('Please enter valid height and weight', true);
         return;
       }
 
       const bmi = weight / (height * height);
       const rounded = bmi.toFixed(1);
-      let category = '';
+      let categoryEn = '', categoryZh = '';
+      let colorClass = '';
 
-      if (bmi < 18.5) category = lang === 'zh' ? '偏瘦' : 'Underweight';
-      else if (bmi < 25) category = lang === 'zh' ? '正常' : 'Normal weight';
-      else if (bmi < 30) category = lang === 'zh' ? '偏重' : 'Overweight';
-      else category = lang === 'zh' ? '肥胖' : 'Obesity';
+      if (bmi < 18.5) { 
+        categoryEn = 'Underweight'; 
+        categoryZh = '偏瘦';
+        colorClass = 'bg-blue-500';
+      }
+      else if (bmi < 25) { 
+        categoryEn = 'Normal weight'; 
+        categoryZh = '正常';
+        colorClass = 'bg-green-500';
+      }
+      else if (bmi < 30) { 
+        categoryEn = 'Overweight'; 
+        categoryZh = '偏重';
+        colorClass = 'bg-yellow-500';
+      }
+      else { 
+        categoryEn = 'Obesity'; 
+        categoryZh = '肥胖';
+        colorClass = 'bg-red-500';
+      }
 
-      document.getElementById('result').textContent = 
-        (lang === 'zh' ? `您的 BMI 为 ${rounded}，属于「${category}」范围。` 
-                       : `Your BMI is ${rounded}, which is considered "${category}".`);
+      const isEnglish = document.getElementById('langToggle').checked;
+      
+      result.innerHTML = `
+        <div class="text-2xl font-bold">${rounded}</div>
+        <div class="mt-2 flex items-center justify-center">
+          <span class="${colorClass} category-indicator"></span>
+          <span class="en">${categoryEn}</span>
+          <span class="zh">${categoryZh}</span>
+        </div>
+      `;
+      
+      // Update progress bar
+      const progressBar = document.getElementById('bmiProgress');
+      progressBar.className = `bmi-fill ${colorClass}`;
+      const progressPercent = Math.min(100, Math.max(0, (bmi / 40) * 100));
+      progressBar.style.width = `${progressPercent}%`;
+    }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById("height").value = "";
+      document.getElementById("weight").value = "";
+      document.getElementById("result").innerHTML = '';
+      
+      // Reset progress bar
+      const progressBar = document.getElementById('bmiProgress');
+      progressBar.style.width = '0%';
+    }
+
+    // Secure clipboard copy method
+    function copyToClipboard(elementId, button) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      if (!text.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      // Create a temporary textarea for copying
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.top = '0';
+      textArea.style.left = '0';
+      textArea.style.opacity = '0';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        // Execute the copy command
+        const successful = document.execCommand('copy');
+        if (successful) {
+          // Visual feedback
+          const originalHTML = button.innerHTML;
+          button.innerHTML = '<i class="fa-solid fa-check"></i> <span class="en">Copied!</span><span class="zh">已复制!</span>';
+          button.classList.add('copied');
+          
+          // Show notification
+          showNotification('Copied to clipboard!');
+          
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('copied');
+          }, 2000);
+        } else {
+          showNotification('Copy failed. Please try again.', true);
+        }
+      } catch (err) {
+        showNotification('Error copying: ' + err, true);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

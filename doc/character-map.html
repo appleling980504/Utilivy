@@ -3,107 +3,148 @@
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Special Character Map - Copy Unicode Symbols | Utilivy</title>
-<meta name="description" content="Explore and copy special symbols, Unicode characters, and emojis for use in your projects." />
+  <meta name="description" content="Explore and copy special symbols, Unicode characters, and emojis for use in your projects." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .stats-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .stat-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f1f5f9;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
+    
+    .stat-item:last-child {
+      border-bottom: none;
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    
+    .stat-label {
+      color: #64748b;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    
+    .stat-value {
+      font-weight: 600;
+      color: #1e293b;
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
+    
+    .notification.error {
+      background: #ef4444;
     }
-    .container {
-      max-width: 1000px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    h2 {
-      font-size: 1.2rem;
-      margin-top: 2rem;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.5rem;
-    }
+    
     .char-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
       gap: 8px;
       margin: 1rem 0;
     }
+    
     .char-cell {
       padding: 10px;
       text-align: center;
@@ -112,391 +153,908 @@
       cursor: pointer;
       background-color: #f9fafb;
       font-size: 1.2rem;
-      transition: background 0.2s;
+      transition: all 0.2s;
     }
+    
     .char-cell:hover {
-      background-color: var(--primary-color);
+      background-color: #4f46e5;
       color: white;
+      transform: translateY(-2px);
     }
-    .copied {
-      color: green;
-      font-size: 0.9rem;
-      text-align: center;
-      margin-top: 0.5rem;
+    
+    .char-cell:active {
+      transform: translateY(0);
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    
+    .category-title {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 0.5rem;
+      color: #4f46e5;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Character Map" data-zh="Utilivy - 字符映射表">Utilivy - Character Map</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches Base64 Converter -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle - Matches Base64 Converter -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Special Character Map</h1>
+      <h1 class="text-3xl font-bold zh mb-2">特殊字符映射表</h1>
+      <p class="text-gray-500 text-sm en">Explore and copy special symbols, Unicode characters, and emojis</p>
+      <p class="text-gray-500 text-sm zh">浏览并复制特殊符号、Unicode字符和表情符号</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white card p-6 space-y-6 mb-8">
+      <div id="notification" class="notification">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">Copied to clipboard!</span>
+        <span class="zh">已复制到剪贴板！</span>
+      </div>
+      
+      <div id="output" class="text-center text-green-600 mb-4 hidden"></div>
+      
+      <!-- Letters & Numbers -->
+      <div class="category-title">
+        <i class="fa-solid fa-font en"></i>
+        <i class="fa-solid fa-text-height zh"></i>
+        <span class="en">Letters & Numbers</span>
+        <span class="zh">字母和数字</span>
+      </div>
+      <div class="char-grid">
+        <!-- Uppercase -->
+        <div class="char-cell" data-char="A">A</div>
+        <div class="char-cell" data-char="B">B</div>
+        <div class="char-cell" data-char="C">C</div>
+        <div class="char-cell" data-char="D">D</div>
+        <div class="char-cell" data-char="E">E</div>
+        <div class="char-cell" data-char="F">F</div>
+        <div class="char-cell" data-char="G">G</div>
+        <div class="char-cell" data-char="H">H</div>
+        <div class="char-cell" data-char="I">I</div>
+        <div class="char-cell" data-char="J">J</div>
+        <div class="char-cell" data-char="K">K</div>
+        <div class="char-cell" data-char="L">L</div>
+        <div class="char-cell" data-char="M">M</div>
+        <div class="char-cell" data-char="N">N</div>
+        <div class="char-cell" data-char="O">O</div>
+        <div class="char-cell" data-char="P">P</div>
+        <div class="char-cell" data-char="Q">Q</div>
+        <div class="char-cell" data-char="R">R</div>
+        <div class="char-cell" data-char="S">S</div>
+        <div class="char-cell" data-char="T">T</div>
+        <div class="char-cell" data-char="U">U</div>
+        <div class="char-cell" data-char="V">V</div>
+        <div class="char-cell" data-char="W">W</div>
+        <div class="char-cell" data-char="X">X</div>
+        <div class="char-cell" data-char="Y">Y</div>
+        <div class="char-cell" data-char="Z">Z</div>
+
+        <!-- Lowercase -->
+        <div class="char-cell" data-char="a">a</div>
+        <div class="char-cell" data-char="b">b</div>
+        <div class="char-cell" data-char="c">c</div>
+        <div class="char-cell" data-char="d">d</div>
+        <div class="char-cell" data-char="e">e</div>
+        <div class="char-cell" data-char="f">f</div>
+        <div class="char-cell" data-char="g">g</div>
+        <div class="char-cell" data-char="h">h</div>
+        <div class="char-cell" data-char="i">i</div>
+        <div class="char-cell" data-char="j">j</div>
+        <div class="char-cell" data-char="k">k</div>
+        <div class="char-cell" data-char="l">l</div>
+        <div class="char-cell" data-char="m">m</div>
+        <div class="char-cell" data-char="n">n</div>
+        <div class="char-cell" data-char="o">o</div>
+        <div class="char-cell" data-char="p">p</div>
+        <div class="char-cell" data-char="q">q</div>
+        <div class="char-cell" data-char="r">r</div>
+        <div class="char-cell" data-char="s">s</div>
+        <div class="char-cell" data-char="t">t</div>
+        <div class="char-cell" data-char="u">u</div>
+        <div class="char-cell" data-char="v">v</div>
+        <div class="char-cell" data-char="w">w</div>
+        <div class="char-cell" data-char="x">x</div>
+        <div class="char-cell" data-char="y">y</div>
+        <div class="char-cell" data-char="z">z</div>
+
+        <!-- Numbers -->
+        <div class="char-cell" data-char="0">0</div>
+        <div class="char-cell" data-char="1">1</div>
+        <div class="char-cell" data-char="2">2</div>
+        <div class="char-cell" data-char="3">3</div>
+        <div class="char-cell" data-char="4">4</div>
+        <div class="char-cell" data-char="5">5</div>
+        <div class="char-cell" data-char="6">6</div>
+        <div class="char-cell" data-char="7">7</div>
+        <div class="char-cell" data-char="8">8</div>
+        <div class="char-cell" data-char="9">9</div>
+      </div>
+
+      <!-- Math Symbols -->
+      <div class="category-title">
+        <i class="fa-solid fa-calculator en"></i>
+        <i class="fa-solid fa-square-root-variable zh"></i>
+        <span class="en">Math Symbols</span>
+        <span class="zh">数学符号</span>
+      </div>
+      <div class="char-grid">
+        <!-- Basic Operators -->
+        <div class="char-cell" data-char="+">+</div>
+        <div class="char-cell" data-char="−">−</div>
+        <div class="char-cell" data-char="×">×</div>
+        <div class="char-cell" data-char="÷">÷</div>
+        <div class="char-cell" data-char="=">=</div>
+        <div class="char-cell" data-char="≠">≠</div>
+        <div class="char-cell" data-char="≈">≈</div>
+        <div class="char-cell" data-char="≡">≡</div>
+        <div class="char-cell" data-char="∓">∓</div>
+
+        <!-- Comparison -->
+        <div class="char-cell" data-char="<">&lt;</div>
+        <div class="char-cell" data-char=">">&gt;</div>
+        <div class="char-cell" data-char="≤">≤</div>
+        <div class="char-cell" data-char="≥">≥</div>
+        <div class="char-cell" data-char="≪">≪</div>
+        <div class="char-cell" data-char="≫">≫</div>
+        <div class="char-cell" data-char="∝">∝</div>
+
+        <!-- Advanced Math -->
+        <div class="char-cell" data-char="√">√</div>
+        <div class="char-cell" data-char="∛">∛</div>
+        <div class="char-cell" data-char="∜">∜</div>
+        <div class="char-cell" data-char="∞">∞</div>
+        <div class="char-cell" data-char="π">π</div>
+        <div class="char-cell" data-char="e">e</div>
+        <div class="char-cell" data-char="θ">θ</div>
+        <div class="char-cell" data-char="∑">∑</div>
+        <div class="char-cell" data-char="∏">∏</div>
+        <div class="char-cell" data-char="∫">∫</div>
+        <div class="char-cell" data-char="∬">∬</div>
+        <div class="char-cell" data-char="∭">∭</div>
+        <div class="char-cell" data-char="∇">∇</div>
+        <div class="char-cell" data-char="∆">∆</div>
+        <div class="char-cell" data-char="∂">∂</div>
+      </div>
+
+      <!-- Currency Symbols -->
+      <div class="category-title">
+        <i class="fa-solid fa-money-bill-wave en"></i>
+        <i class="fa-solid fa-coins zh"></i>
+        <span class="en">Currency Symbols</span>
+        <span class="zh">货币符号</span>
+      </div>
+      <div class="char-grid">
+        <div class="char-cell" data-char="$">$</div>
+        <div class="char-cell" data-char="¢">¢</div>
+        <div class="char-cell" data-char="£">£</div>
+        <div class="char-cell" data-char="€">€</div>
+        <div class="char-cell" data-char="¥">¥</div>
+        <div class="char-cell" data-char="₩">₩</div>
+        <div class="char-cell" data-char="₪">₪</div>
+        <div class="char-cell" data-char="₹">₹</div>
+        <div class="char-cell" data-char="₽">₽</div>
+        <div class="char-cell" data-char="₺">₺</div>
+        <div class="char-cell" data-char="₿">₿</div>
+        <div class="char-cell" data-char="¤">¤</div>
+      </div>
+
+      <!-- Punctuation & Special Characters -->
+      <div class="category-title">
+        <i class="fa-solid fa-keyboard en"></i>
+        <i class="fa-solid fa-at zh"></i>
+        <span class="en">Punctuation & Special Characters</span>
+        <span class="zh">标点和特殊字符</span>
+      </div>
+      <div class="char-grid">
+        <!-- Punctuation -->
+        <div class="char-cell" data-char="!">!</div>
+        <div class="char-cell" data-char="?">?</div>
+        <div class="char-cell" data-char=".">.</div>
+        <div class="char-cell" data-char=",">,</div>
+        <div class="char-cell" data-char=":">:</div>
+        <div class="char-cell" data-char=";">;</div>
+        <div class="char-cell" data-char="-">-</div>
+        <div class="char-cell" data-char="--">--</div>
+        <div class="char-cell" data-char="—">—</div>
+        <div class="char-cell" data-char="–">–</div>
+        <div class="char-cell" data-char="...">...</div>
+        <div class="char-cell" data-char='"'>"</div>
+        <div class="char-cell" data-char="'">'</div>
+        <div class="char-cell" data-char="`">`</div>
+        <div class="char-cell" data-char="´">´</div>
+        <div class="char-cell" data-char="‘">‘</div>
+        <div class="char-cell" data-char="’">’</div>
+        <div class="char-cell" data-char="“">“</div>
+        <div class="char-cell" data-char="”">”</div>
+        <div class="char-cell" data-char="«">«</div>
+        <div class="char-cell" data-char="»">»</div>
+        <div class="char-cell" data-char="‹">‹</div>
+        <div class="char-cell" data-char="›">›</div>
+
+        <!-- Special Characters -->
+        <div class="char-cell" data-char="@">@</div>
+        <div class="char-cell" data-char="#">#</div>
+        <div class="char-cell" data-char="$">$</div>
+        <div class="char-cell" data-char="%">%</div>
+        <div class="char-cell" data-char="^">^</div>
+        <div class="char-cell" data-char="&">&</div>
+        <div class="char-cell" data-char="*">*</div>
+        <div class="char-cell" data-char="(">(</div>
+        <div class="char-cell" data-char=")">)</div>
+        <div class="char-cell" data-char="[">[</div>
+        <div class="char-cell" data-char="]">]</div>
+        <div class="char-cell" data-char="{">{</div>
+        <div class="char-cell" data-char="}">}</div>
+        <div class="char-cell" data-char="/">/</div>
+        <div class="char-cell" data-char="\\">\\</div>
+        <div class="char-cell" data-char="|">|</div>
+        <div class="char-cell" data-char="~">~</div>
+        <div class="char-cell" data-char="`">`</div>
+        <div class="char-cell" data-char="+">+</div>
+        <div class="char-cell" data-char="=">=</div>
+        <div class="char-cell" data-char="_">_</div>
+        <div class="char-cell" data-char="<">&lt;</div>
+        <div class="char-cell" data-char=">">&gt;</div>
+      </div>
+
+      <!-- Greek Alphabet -->
+      <div class="category-title">
+        <i class="fa-solid fa-alpha en"></i>
+        <i class="fa-solid fa-omega zh"></i>
+        <span class="en">Greek Alphabet</span>
+        <span class="zh">希腊字母</span>
+      </div>
+      <div class="char-grid">
+        <!-- Uppercase -->
+        <div class="char-cell" data-char="Α">Α</div>
+        <div class="char-cell" data-char="Β">Β</div>
+        <div class="char-cell" data-char="Γ">Γ</div>
+        <div class="char-cell" data-char="Δ">Δ</div>
+        <div class="char-cell" data-char="Ε">Ε</div>
+        <div class="char-cell" data-char="Ζ">Ζ</div>
+        <div class="char-cell" data-char="Η">Η</div>
+        <div class="char-cell" data-char="Θ">Θ</div>
+        <div class="char-cell" data-char="Ι">Ι</div>
+        <div class="char-cell" data-char="Κ">Κ</div>
+        <div class="char-cell" data-char="Λ">Λ</div>
+        <div class="char-cell" data-char="Μ">Μ</div>
+        <div class="char-cell" data-char="Ν">Ν</div>
+        <div class="char-cell" data-char="Ξ">Ξ</div>
+        <div class="char-cell" data-char="Ο">Ο</div>
+        <div class="char-cell" data-char="Π">Π</div>
+        <div class="char-cell" data-char="Ρ">Ρ</div>
+        <div class="char-cell" data-char="Σ">Σ</div>
+        <div class="char-cell" data-char="Τ">Τ</div>
+        <div class="char-cell" data-char="Υ">Υ</div>
+        <div class="char-cell" data-char="Φ">Φ</div>
+        <div class="char-cell" data-char="Χ">Χ</div>
+        <div class="char-cell" data-char="Ψ">Ψ</div>
+        <div class="char-cell" data-char="Ω">Ω</div>
+
+        <!-- Lowercase -->
+        <div class="char-cell" data-char="α">α</div>
+        <div class="char-cell" data-char="β">β</div>
+        <div class="char-cell" data-char="γ">γ</div>
+        <div class="char-cell" data-char="δ">δ</div>
+        <div class="char-cell" data-char="ε">ε</div>
+        <div class="char-cell" data-char="ζ">ζ</div>
+        <div class="char-cell" data-char="η">η</div>
+        <div class="char-cell" data-char="θ">θ</div>
+        <div class="char-cell" data-char="ι">ι</div>
+        <div class="char-cell" data-char="κ">κ</div>
+        <div class="char-cell" data-char="λ">λ</div>
+        <div class="char-cell" data-char="μ">μ</div>
+        <div class="char-cell" data-char="ν">ν</div>
+        <div class="char-cell" data-char="ξ">ξ</div>
+        <div class="char-cell" data-char="ο">ο</div>
+        <div class="char-cell" data-char="π">π</div>
+        <div class="char-cell" data-char="ρ">ρ</div>
+        <div class="char-cell" data-char="σ">σ</div>
+        <div class="char-cell" data-char="ς">ς</div>
+        <div class="char-cell" data-char="τ">τ</div>
+        <div class="char-cell" data-char="υ">υ</div>
+        <div class="char-cell" data-char="φ">φ</div>
+        <div class="char-cell" data-char="χ">χ</div>
+        <div class="char-cell" data-char="ψ">ψ</div>
+        <div class="char-cell" data-char="ω">ω</div>
+      </div>
+
+      <!-- Emoji Section -->
+      <div class="category-title">
+        <i class="fa-solid fa-face-smile en"></i>
+        <i class="fa-solid fa-heart zh"></i>
+        <span class="en">Emojis</span>
+        <span class="zh">表情符号</span>
+      </div>
+      <div class="char-grid">
+        <!-- Smileys & Emotion -->
+        <div class="char-cell" data-char="😊">😊</div>
+        <div class="char-cell" data-char="😀">😀</div>
+        <div class="char-cell" data-char="😂">😂</div>
+        <div class="char-cell" data-char="😍">😍</div>
+        <div class="char-cell" data-char="🥰">🥰</div>
+        <div class="char-cell" data-char="😎">😎</div>
+        <div class="char-cell" data-char="🤔">🤔</div>
+        <div class="char-cell" data-char="😏">😏</div>
+        <div class="char-cell" data-char="😒">😒</div>
+        <div class="char-cell" data-char="😴">😴</div>
+        <div class="char-cell" data-char="🥱">🥱</div>
+        <div class="char-cell" data-char="😡">😡</div>
+        <div class="char-cell" data-char="🥳">🥳</div>
+        <div class="char-cell" data-char="🤩">🤩</div>
+        <div class="char-cell" data-char="🥺">🥺</div>
+        <div class="char-cell" data-char="🤯">🤯</div>
+        <div class="char-cell" data-char="😱">😱</div>
+        <div class="char-cell" data-char="😇">😇</div>
+        <div class="char-cell" data-char="🥲">🥲</div>
+        <div class="char-cell" data-char="🤗">🤗</div>
+
+        <!-- Nature -->
+        <div class="char-cell" data-char="🌞">🌞</div>
+        <div class="char-cell" data-char="🌙">🌙</div>
+        <div class="char-cell" data-char="🌼">🌼</div>
+        <div class="char-cell" data-char="🌳">🌳</div>
+        <div class="char-cell" data-char="🐶">🐶</div>
+        <div class="char-cell" data-char="🐱">🐱</div>
+        <div class="char-cell" data-char="🐭">🐭</div>
+        <div class="char-cell" data-char="🐹">🐹</div>
+        <div class="char-cell" data-char="🐰">🐰</div>
+        <div class="char-cell" data-char="🦊">🦊</div>
+        <div class="char-cell" data-char="🐻">🐻</div>
+        <div class="char-cell" data-char="🐼">🐼</div>
+        <div class="char-cell" data-char="🐨">🐨</div>
+        <div class="char-cell" data-char="🐯">🐯</div>
+        <div class="char-cell" data-char="🦁">🦁</div>
+        <div class="char-cell" data-char="🐮">🐮</div>
+        <div class="char-cell" data-char="🐷">🐷</div>
+        <div class="char-cell" data-char="🐸">🐸</div>
+        <div class="char-cell" data-char="🐵">🐵</div>
+        <div class="char-cell" data-char="🐔">🐔</div>
+
+        <!-- Food & Drink -->
+        <div class="char-cell" data-char="🍎">🍎</div>
+        <div class="char-cell" data-char="🍌">🍌</div>
+        <div class="char-cell" data-char="🍓">🍓</div>
+        <div class="char-cell" data-char="🍔">🍔</div>
+        <div class="char-cell" data-char="🍕">🍕</div>
+        <div class="char-cell" data-char="🍣">🍣</div>
+        <div class="char-cell" data-char="🍰">🍰</div>
+        <div class="char-cell" data-char="🍪">🍪</div>
+        <div class="char-cell" data-char="🍫">🍫</div>
+        <div class="char-cell" data-char="☕">☕</div>
+        <div class="char-cell" data-char="🍵">🍵</div>
+        <div class="char-cell" data-char="🍷">🍷</div>
+        <div class="char-cell" data-char="🍺">🍺</div>
+        <div class="char-cell" data-char="🥤">🥤</div>
+        <div class="char-cell" data-char="🍬">🍬</div>
+        <div class="char-cell" data-char="🍭">🍭</div>
+        <div class="char-cell" data-char="🍿">🍿</div>
+        <div class="char-cell" data-char="🍩">🍩</div>
+        <div class="char-cell" data-char="🍦">🍦</div>
+        <div class="char-cell" data-char="🥧">🥧</div>
+
+        <!-- Activity -->
+        <div class="char-cell" data-char="⚽">⚽</div>
+        <div class="char-cell" data-char="🏀">🏀</div>
+        <div class="char-cell" data-char="🏈">🏈</div>
+        <div class="char-cell" data-char="🎾">🎾</div>
+        <div class="char-cell" data-char="🏓">🏓</div>
+        <div class="char-cell" data-char="🏸">🏸</div>
+        <div class="char-cell" data-char="🏒">🏒</div>
+        <div class="char-cell" data-char="🏹">🏹</div>
+        <div class="char-cell" data-char="🎯">🎯</div>
+        <div class="char-cell" data-char="🎮">🎮</div>
+        <div class="char-cell" data-char="🎲">🎲</div>
+        <div class="char-cell" data-char="🀄">🀄</div>
+        <div class="char-cell" data-char="🎨">🎨</div>
+        <div class="char-cell" data-char="🎬">🎬</div>
+        <div class="char-cell" data-char="📚">📚</div>
+        <div class="char-cell" data-char="🎼">🎼</div>
+        <div class="char-cell" data-char="🎤">🎤</div>
+        <div class="char-cell" data-char="🎧">🎧</div>
+        <div class="char-cell" data-char="📷">📷</div>
+        <div class="char-cell" data-char="📸">📸</div>
+      </div>
+    </div>
+
+    <!-- Search Feature -->
+    <div class="bg-white card p-6 mb-8">
+      <div class="category-title">
+        <i class="fa-solid fa-search en"></i>
+        <i class="fa-solid fa-magnifying-glass zh"></i>
+        <span class="en">Search Characters</span>
+        <span class="zh">搜索字符</span>
+      </div>
+      
+      <div class="mb-4">
+        <input type="text" id="searchInput" placeholder="Type to search for characters..." class="w-full px-4 py-2 rounded-lg input-field">
+      </div>
+      
+      <div id="searchResults" class="char-grid">
+        <!-- Search results will be displayed here -->
+      </div>
+    </div>
+
+    <!-- Stats Box -->
+    <div class="stats-box">
+      <div class="stat-item">
+        <span class="stat-label en">Total Characters</span>
+        <span class="stat-label zh">字符总数</span>
+        <span class="stat-value" id="totalChars">0</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label en">Categories</span>
+        <span class="stat-label zh">分类</span>
+        <span class="stat-value">6</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label en">Last Updated</span>
+        <span class="stat-label zh">最后更新</span>
+        <span class="stat-value">July 20, 2025</span>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy access to special characters and symbols.</p>
+      <p class="mt-2 zh">设计用于轻松访问特殊字符和符号。</p>
+    </footer>
   </div>
-
-  <div class="container" id="charMapContainer">
-    <div id="output" class="copied"></div>
-
-<h2>🔤 Letters & Numbers</h2>
-<div class="char-grid">
-  <!-- Uppercase -->
-  <div class="char-cell" onclick="copyChar('A')">A</div>
-  <div class="char-cell" onclick="copyChar('B')">B</div>
-  <div class="char-cell" onclick="copyChar('C')">C</div>
-  <div class="char-cell" onclick="copyChar('D')">D</div>
-  <div class="char-cell" onclick="copyChar('E')">E</div>
-  <div class="char-cell" onclick="copyChar('F')">F</div>
-  <div class="char-cell" onclick="copyChar('G')">G</div>
-  <div class="char-cell" onclick="copyChar('H')">H</div>
-  <div class="char-cell" onclick="copyChar('I')">I</div>
-  <div class="char-cell" onclick="copyChar('J')">J</div>
-  <div class="char-cell" onclick="copyChar('K')">K</div>
-  <div class="char-cell" onclick="copyChar('L')">L</div>
-  <div class="char-cell" onclick="copyChar('M')">M</div>
-  <div class="char-cell" onclick="copyChar('N')">N</div>
-  <div class="char-cell" onclick="copyChar('O')">O</div>
-  <div class="char-cell" onclick="copyChar('P')">P</div>
-  <div class="char-cell" onclick="copyChar('Q')">Q</div>
-  <div class="char-cell" onclick="copyChar('R')">R</div>
-  <div class="char-cell" onclick="copyChar('S')">S</div>
-  <div class="char-cell" onclick="copyChar('T')">T</div>
-  <div class="char-cell" onclick="copyChar('U')">U</div>
-  <div class="char-cell" onclick="copyChar('V')">V</div>
-  <div class="char-cell" onclick="copyChar('W')">W</div>
-  <div class="char-cell" onclick="copyChar('X')">X</div>
-  <div class="char-cell" onclick="copyChar('Y')">Y</div>
-  <div class="char-cell" onclick="copyChar('Z')">Z</div>
-
-  <!-- Lowercase -->
-  <div class="char-cell" onclick="copyChar('a')">a</div>
-  <div class="char-cell" onclick="copyChar('b')">b</div>
-  <div class="char-cell" onclick="copyChar('c')">c</div>
-  <div class="char-cell" onclick="copyChar('d')">d</div>
-  <div class="char-cell" onclick="copyChar('e')">e</div>
-  <div class="char-cell" onclick="copyChar('f')">f</div>
-  <div class="char-cell" onclick="copyChar('g')">g</div>
-  <div class="char-cell" onclick="copyChar('h')">h</div>
-  <div class="char-cell" onclick="copyChar('i')">i</div>
-  <div class="char-cell" onclick="copyChar('j')">j</div>
-  <div class="char-cell" onclick="copyChar('k')">k</div>
-  <div class="char-cell" onclick="copyChar('l')">l</div>
-  <div class="char-cell" onclick="copyChar('m')">m</div>
-  <div class="char-cell" onclick="copyChar('n')">n</div>
-  <div class="char-cell" onclick="copyChar('o')">o</div>
-  <div class="char-cell" onclick="copyChar('p')">p</div>
-  <div class="char-cell" onclick="copyChar('q')">q</div>
-  <div class="char-cell" onclick="copyChar('r')">r</div>
-  <div class="char-cell" onclick="copyChar('s')">s</div>
-  <div class="char-cell" onclick="copyChar('t')">t</div>
-  <div class="char-cell" onclick="copyChar('u')">u</div>
-  <div class="char-cell" onclick="copyChar('v')">v</div>
-  <div class="char-cell" onclick="copyChar('w')">w</div>
-  <div class="char-cell" onclick="copyChar('x')">x</div>
-  <div class="char-cell" onclick="copyChar('y')">y</div>
-  <div class="char-cell" onclick="copyChar('z')">z</div>
-
-  <!-- Numbers -->
-  <div class="char-cell" onclick="copyChar('0')">0</div>
-  <div class="char-cell" onclick="copyChar('1')">1</div>
-  <div class="char-cell" onclick="copyChar('2')">2</div>
-  <div class="char-cell" onclick="copyChar('3')">3</div>
-  <div class="char-cell" onclick="copyChar('4')">4</div>
-  <div class="char-cell" onclick="copyChar('5')">5</div>
-  <div class="char-cell" onclick="copyChar('6')">6</div>
-  <div class="char-cell" onclick="copyChar('7')">7</div>
-  <div class="char-cell" onclick="copyChar('8')">8</div>
-  <div class="char-cell" onclick="copyChar('9')">9</div>
-</div>
-
-<h2>➗ Math Symbols</h2>
-<div class="char-grid">
-  <!-- Basic Operators -->
-  <div class="char-cell" onclick="copyChar('+')">+</div>
-  <div class="char-cell" onclick="copyChar('-')">−</div>
-  <div class="char-cell" onclick="copyChar('×')">×</div>
-  <div class="char-cell" onclick="copyChar('÷')">÷</div>
-  <div class="char-cell" onclick="copyChar('=')">=</div>
-  <div class="char-cell" onclick="copyChar('≠')">≠</div>
-  <div class="char-cell" onclick="copyChar('≈')">≈</div>
-  <div class="char-cell" onclick="copyChar('≡')">≡</div>
-  <div class="char-cell" onclick="copyChar('∓')">∓</div>
-
-  <!-- Comparison -->
-  <div class="char-cell" onclick="copyChar('<')">&lt;</div>
-  <div class="char-cell" onclick="copyChar('>')">&gt;</div>
-  <div class="char-cell" onclick="copyChar('≤')">≤</div>
-  <div class="char-cell" onclick="copyChar('≥')">≥</div>
-  <div class="char-cell" onclick="copyChar('∝')">∝</div>
-
-  <!-- Sets & Logic -->
-  <div class="char-cell" onclick="copyChar('∈')">∈</div>
-  <div class="char-cell" onclick="copyChar('∉')">∉</div>
-  <div class="char-cell" onclick="copyChar('⊂')">⊂</div>
-  <div class="char-cell" onclick="copyChar('⊃')">⊃</div>
-  <div class="char-cell" onclick="copyChar('⊆')">⊆</div>
-  <div class="char-cell" onclick="copyChar('⊇')">⊇</div>
-  <div class="char-cell" onclick="copyChar('∪')">∪</div>
-  <div class="char-cell" onclick="copyChar('∩')">∩</div>
-  <div class="char-cell" onclick="copyChar('¬')">¬</div>
-  <div class="char-cell" onclick="copyChar('∧')">∧</div>
-  <div class="char-cell" onclick="copyChar('∨')">∨</div
-  >
-  <div class="char-cell" onclick="copyChar('∴')">∴</div>
-  <div class="char-cell" onclick="copyChar('∵')">∵</div>
-
-  <!-- Calculus & Greek -->
-  <div class="char-cell" onclick="copyChar('∞')">∞</div>
-  <div class="char-cell" onclick="copyChar('∫')">∫</div>
-  <div class="char-cell" onclick="copyChar('∬')">∬</div>
-  <div class="char-cell" onclick="copyChar('∇')">∇</div>
-  <div class="char-cell" onclick="copyChar('∂')">∂</div>
-  <div class="char-cell" onclick="copyChar('Σ')">Σ</div>
-  <div class="char-cell" onclick="copyChar('π')">π</div>
-  <div class="char-cell" onclick="copyChar('θ')">θ</div>
-  <div class="char-cell" onclick="copyChar('λ')">λ</div>
-
-  <!-- Geometry -->
-  <div class="char-cell" onclick="copyChar('∠')">∠</div>
-  <div class="char-cell" onclick="copyChar('⊥')">⊥</div>
-  <div class="char-cell" onclick="copyChar('‖')">‖</div>
-  <div class="char-cell" onclick="copyChar('△')">△</div>
-  <div class="char-cell" onclick="copyChar('◯')">◯</div>
-
-  <!-- Special -->
-  <div class="char-cell" onclick="copyChar('√')">√</div>
-  <div class="char-cell" onclick="copyChar('∛')">∛</div>
-  <div class="char-cell" onclick="copyChar('∜')">∜</div>
-  <div class="char-cell" onclick="copyChar('%')">%</div>
-  <div class="char-cell" onclick="copyChar('‰')">‰</div>
-</div>
-
-   <h2>💱 Currency Symbols</h2>
-<div class="char-grid">
-  <!-- Common Symbols -->
-  <div class="char-cell" onclick="copyChar('$')">$</div>
-  <div class="char-cell" onclick="copyChar('¢')">¢</div>
-  <div class="char-cell" onclick="copyChar('£')">£</div>
-  <div class="char-cell" onclick="copyChar('€')">€</div>
-  <div class="char-cell" onclick="copyChar('¥')">¥</div>
-  <div class="char-cell" onclick="copyChar('₩')">₩</div>
-  <div class="char-cell" onclick="copyChar('₨')">₨</div>
-  <div class="char-cell" onclick="copyChar('₱')">₱</div>
-  <div class="char-cell" onclick="copyChar('₹')">₹</div>
-  <div class="char-cell" onclick="copyChar('₦')">₦</div>
-  <div class="char-cell" onclick="copyChar('₴')">₴</div>
-  <div class="char-cell" onclick="copyChar('₭')">₭</div>
-  <div class="char-cell" onclick="copyChar('₮')">₮</div>
-  <div class="char-cell" onclick="copyChar('₺')">₺</div>
-  <div class="char-cell" onclick="copyChar('₡')">₡</div>
-  <div class="char-cell" onclick="copyChar('₢')">₢</div>
-  <div class="char-cell" onclick="copyChar('₳')">₳</div>
-  <div class="char-cell" onclick="copyChar('₥')">₥</div>
-  <div class="char-cell" onclick="copyChar('₰')">₰</div
-  >
-  <!-- Crypto symbols -->
-  <div class="char-cell" onclick="copyChar('₿')">₿</div>
-  <div class="char-cell" onclick="copyChar('Ξ')">Ξ</div>
-</div>
-
-
-<h2>➡️ Arrow Symbols</h2>
-<div class="char-grid">
-  <!-- Basic Directions -->
-  <div class="char-cell" onclick="copyChar('←')">←</div>
-  <div class="char-cell" onclick="copyChar('↑')">↑</div>
-  <div class="char-cell" onclick="copyChar('→')">→</div>
-  <div class="char-cell" onclick="copyChar('↓')">↓</div>
-  <div class="char-cell" onclick="copyChar('↔')">↔</div>
-  <div class="char-cell" onclick="copyChar('↕')">↕</div>
-
-  <!-- Curved Arrows -->
-  <div class="char-cell" onclick="copyChar('↩')">↩</div>
-  <div class="char-cell" onclick="copyChar('↪')">↪</div>
-  <div class="char-cell" onclick="copyChar('⤴')">⤴</div>
-  <div class="char-cell" onclick="copyChar('⤵')">⤵</div>
-  <div class="char-cell" onclick="copyChar('↻')">↻</div>
-  <div class="char-cell" onclick="copyChar('↺')">↺</div>
-
-  <!-- Double Arrows -->
-  <div class="char-cell" onclick="copyChar('⇐')">⇐</div>
-  <div class="char-cell" onclick="copyChar('⇑')">⇑</div>
-  <div class="char-cell" onclick="copyChar('⇒')">⇒</div>
-  <div class="char-cell" onclick="copyChar('⇓')">⇓</div>
-  <div class="char-cell" onclick="copyChar('⇔')">⇔</div>
-  <div class="char-cell" onclick="copyChar('⇕')">⇕</div>
-
-  <!-- Fancy/Block Arrows -->
-  <div class="char-cell" onclick="copyChar('➔')">➔</div>
-  <div class="char-cell" onclick="copyChar('➜')">➜</div>
-  <div class="char-cell" onclick="copyChar('➝')">➝</div>
-  <div class="char-cell" onclick="copyChar('➞')">➞</div>
-  <div class="char-cell" onclick="copyChar('➟')">➟</div>
-  <div class="char-cell" onclick="copyChar('➠')">➠</div>
-  <div class="char-cell" onclick="copyChar('➡')">➡</div>
-  <div class="char-cell" onclick="copyChar('➢')">➢</div>
-  <div class="char-cell" onclick="copyChar('➣')">➣</div>
-  <div class="char-cell" onclick="copyChar('➤')">➤</div>
-  <div class="char-cell" onclick="copyChar('➥')">➥</div>
-  <div class="char-cell" onclick="copyChar('➦')">➦</div>
-  <div class="char-cell" onclick="copyChar('➧')">➧</div>
-  <div class="char-cell" onclick="copyChar('➨')">➨</div>
-
-  <!-- Other Arrows -->
-  <div class="char-cell" onclick="copyChar('⟵')">⟵</div>
-  <div class="char-cell" onclick="copyChar('⟶')">⟶</div>
-  <div class="char-cell" onclick="copyChar('⟷')">⟷</div>
-  <div class="char-cell" onclick="copyChar('⟹')">⟹</div>
-  <div class="char-cell" onclick="copyChar('⟺')">⟺</div>
-</div>
-
-
-   <h2>✨ Decoration Symbols</h2>
-<div class="char-grid">
-  <!-- Stars & Sparkles -->
-  <div class="char-cell" onclick="copyChar('★')">★</div>
-  <div class="char-cell" onclick="copyChar('☆')">☆</div>
-  <div class="char-cell" onclick="copyChar('✦')">✦</div>
-  <div class="char-cell" onclick="copyChar('✧')">✧</div>
-  <div class="char-cell" onclick="copyChar('✨')">✨</div>
-  <div class="char-cell" onclick="copyChar('✪')">✪</div>
-  <div class="char-cell" onclick="copyChar('🌟')">🌟</div>
-
-  <!-- Lines & Separators -->
-  <div class="char-cell" onclick="copyChar('━')">━</div>
-  <div class="char-cell" onclick="copyChar('┉')">┉</div>
-  <div class="char-cell" onclick="copyChar('╍')">╍</div>
-  <div class="char-cell" onclick="copyChar('═')">═</div>
-  <div class="char-cell" onclick="copyChar('▪')">▪</div>
-  <div class="char-cell" onclick="copyChar('▫')">▫</div>
-  <div class="char-cell" onclick="copyChar('•')">•</div>
-  <div class="char-cell" onclick="copyChar('‣')">‣</div>
-  <div class="char-cell" onclick="copyChar('※')">※</div>
-  <div class="char-cell" onclick="copyChar('⁂')">⁂</div>
-  <div class="char-cell" onclick="copyChar('⁎')">⁎</div>
-
-  <!-- Hearts & Love -->
-  <div class="char-cell" onclick="copyChar('♥')">♥</div>
-  <div class="char-cell" onclick="copyChar('♡')">♡</div>
-  <div class="char-cell" onclick="copyChar('❤')">❤</div>
-  <div class="char-cell" onclick="copyChar('💖')">💖</div>
-  <div class="char-cell" onclick="copyChar('❣')">❣</div>
-  <div class="char-cell" onclick="copyChar('💕')">💕</div>
-
-  <!-- Crowns, Ribbons, Arrows -->
-  <div class="char-cell" onclick="copyChar('👑')">👑</div>
-  <div class="char-cell" onclick="copyChar('🎀')">🎀</div>
-  <div class="char-cell" onclick="copyChar('➶')">➶</div>
-  <div class="char-cell" onclick="copyChar('➴')">➴</div>
-
-  <!-- Music / Notes -->
-  <div class="char-cell" onclick="copyChar('♪')">♪</div>
-  <div class="char-cell" onclick="copyChar('♫')">♫</div>
-  <div class="char-cell" onclick="copyChar('♩')">♩</div>
-  <div class="char-cell" onclick="copyChar('♬')">♬</div>
-
-  <!-- Emo-flair -->
-  <div class="char-cell" onclick="copyChar('☀')">☀</div>
-  <div class="char-cell" onclick="copyChar('☁')">☁</div>
-  <div class="char-cell" onclick="copyChar('☂')">☂</div>
-  <div class="char-cell" onclick="copyChar('☃')">☃</div>
-  <div class="char-cell" onclick="copyChar('❄')">❄</div>
-  <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
-  <div class="char-cell" onclick="copyChar('💫')">💫</div>
-</div>
-
-<h2>😄 Emoji Symbols</h2>
-<div class="char-grid">
-  <!-- Faces -->
-  <div class="char-cell" onclick="copyChar('😀')">😀</div>
-  <div class="char-cell" onclick="copyChar('😃')">😃</div>
-  <div class="char-cell" onclick="copyChar('😄')">😄</div>
-  <div class="char-cell" onclick="copyChar('😁')">😁</div>
-  <div class="char-cell" onclick="copyChar('😆')">😆</div>
-  <div class="char-cell" onclick="copyChar('😅')">😅</div>
-  <div class="char-cell" onclick="copyChar('😂')">😂</div>
-  <div class="char-cell" onclick="copyChar('🤣')">🤣</div>
-  <div class="char-cell" onclick="copyChar('😊')">😊</div>
-  <div class="char-cell" onclick="copyChar('😇')">😇</div>
-  <div class="char-cell" onclick="copyChar('😉')">😉</div>
-  <div class="char-cell" onclick="copyChar('😍')">😍</div>
-  <div class="char-cell" onclick="copyChar('😘')">😘</div>
-  <div class="char-cell" onclick="copyChar('😜')">😜</div>
-
-  <!-- Hands -->
-  <div class="char-cell" onclick="copyChar('👍')">👍</div>
-  <div class="char-cell" onclick="copyChar('👎')">👎</div>
-  <div class="char-cell" onclick="copyChar('👊')">👊</div>
-  <div class="char-cell" onclick="copyChar('✊')">✊</div>
-  <div class="char-cell" onclick="copyChar('🤛')">🤛</div>
-  <div class="char-cell" onclick="copyChar('🤜')">🤜</div>
-  <div class="char-cell" onclick="copyChar('👏')">👏</div>
-  <div class="char-cell" onclick="copyChar('🙌')">🙌</div>
-  <div class="char-cell" onclick="copyChar('👐')">👐</div>
-  <div class="char-cell" onclick="copyChar('🤲')">🤲</div>
-
-  <!-- Hearts -->
-  <div class="char-cell" onclick="copyChar('❤️')">❤️</div>
-  <div class="char-cell" onclick="copyChar('🧡')">🧡</div>
-  <div class="char-cell" onclick="copyChar('💛')">💛</div>
-  <div class="char-cell" onclick="copyChar('💚')">💚</div>
-  <div class="char-cell" onclick="copyChar('💙')">💙</div>
-  <div class="char-cell" onclick="copyChar('💜')">💜</div>
-  <div class="char-cell" onclick="copyChar('🖤')">🖤</div>
-  <div class="char-cell" onclick="copyChar('🤍')">🤍</div>
-  <div class="char-cell" onclick="copyChar('💖')">💖</div>
-  <div class="char-cell" onclick="copyChar('💗')">💗</div>
-
-  <!-- Symbols -->
-  <div class="char-cell" onclick="copyChar('⚠️')">⚠️</div>
-  <div class="char-cell" onclick="copyChar('❗')">❗</div>
-  <div class="char-cell" onclick="copyChar('❓')">❓</div>
-  <div class="char-cell" onclick="copyChar('✅')">✅</div>
-  <div class="char-cell" onclick="copyChar('❌')">❌</div>
-  <div class="char-cell" onclick="copyChar('💯')">💯</div>
-  <div class="char-cell" onclick="copyChar('🔥')">🔥</div>
-  <div class="char-cell" onclick="copyChar('🌈')">🌈</div>
-  <div class="char-cell" onclick="copyChar('🎉')">🎉</div>
-  <div class="char-cell" onclick="copyChar('🧸')">🧸</div>
-</div>
-
-  </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Language toggle functionality
+    function toggleLang(checkbox) {
+      const enElements = document.querySelectorAll('.en');
+      const zhElements = document.querySelectorAll('.zh');
+      
+      if (checkbox.checked) {
+        // Show English, hide Chinese
+        enElements.forEach(el => el.style.display = 'block');
+        zhElements.forEach(el => el.style.display = 'none');
+      } else {
+        // Show Chinese, hide English
+        enElements.forEach(el => el.style.display = 'none');
+        zhElements.forEach(el => el.style.display = 'block');
+      }
+    }
+    
+    // Copy character to clipboard with fallback
     function copyChar(char) {
-      navigator.clipboard.writeText(char).then(() => {
-        const output = document.getElementById('output');
-        output.textContent = `Copied: ${char}`;
-        setTimeout(() => { output.textContent = ''; }, 1500);
-      });
+      // Try modern clipboard API
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(char)
+          .then(() => {
+            showNotification('success');
+          })
+          .catch(err => {
+            console.error('Failed to copy using modern API: ', err);
+            fallbackCopyTextToClipboard(char);
+          });
+      } else {
+        // Fallback to textarea method
+        fallbackCopyTextToClipboard(char);
+      }
     }
-
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
-      });
+    
+    // Fallback method for copying to clipboard
+    function fallbackCopyTextToClipboard(text) {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      
+      // Make the textarea invisible
+      textArea.style.position = 'fixed';
+      textArea.style.top = 0;
+      textArea.style.left = 0;
+      textArea.style.width = '2em';
+      textArea.style.height = '2em';
+      textArea.style.padding = 0;
+      textArea.style.border = 'none';
+      textArea.style.outline = 'none';
+      textArea.style.boxShadow = 'none';
+      textArea.style.background = 'transparent';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showNotification('success');
+        } else {
+          showNotification('error');
+        }
+      } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+        showNotification('error');
+      }
+      
+      document.body.removeChild(textArea);
     }
+    
+    // Show notification
+    function showNotification(type) {
+      const notification = document.getElementById('notification');
+      
+      // Reset and set appropriate class
+      notification.className = 'notification';
+      if (type === 'error') {
+        notification.classList.add('error');
+      }
+      
+      // Show notification
+      notification.classList.add('show');
+      
+      // Hide after 2 seconds
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 2000);
+    }
+    
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const searchResults = document.getElementById('searchResults');
+      
+      // Clear previous results
+      searchResults.innerHTML = '';
+      
+      if (searchTerm.length < 2) {
+        return; // Minimum 2 characters to search
+      }
+      
+      // Define all available characters and their names
+      const allChars = [
+        { char: 'A', name: 'uppercase a' },
+        { char: 'B', name: 'uppercase b' },
+        { char: 'C', name: 'uppercase c' },
+        { char: 'D', name: 'uppercase d' },
+        { char: 'E', name: 'uppercase e' },
+        { char: 'F', name: 'uppercase f' },
+        { char: 'G', name: 'uppercase g' },
+        { char: 'H', name: 'uppercase h' },
+        { char: 'I', name: 'uppercase i' },
+        { char: 'J', name: 'uppercase j' },
+        { char: 'K', name: 'uppercase k' },
+        { char: 'L', name: 'uppercase l' },
+        { char: 'M', name: 'uppercase m' },
+        { char: 'N', name: 'uppercase n' },
+        { char: 'O', name: 'uppercase o' },
+        { char: 'P', name: 'uppercase p' },
+        { char: 'Q', name: 'uppercase q' },
+        { char: 'R', name: 'uppercase r' },
+        { char: 'S', name: 'uppercase s' },
+        { char: 'T', name: 'uppercase t' },
+        { char: 'U', name: 'uppercase u' },
+        { char: 'V', name: 'uppercase v' },
+        { char: 'W', name: 'uppercase w' },
+        { char: 'X', name: 'uppercase x' },
+        { char: 'Y', name: 'uppercase y' },
+        { char: 'Z', name: 'uppercase z' },
+        { char: 'a', name: 'lowercase a' },
+        { char: 'b', name: 'lowercase b' },
+        { char: 'c', name: 'lowercase c' },
+        { char: 'd', name: 'lowercase d' },
+        { char: 'e', name: 'lowercase e' },
+        { char: 'f', name: 'lowercase f' },
+        { char: 'g', name: 'lowercase g' },
+        { char: 'h', name: 'lowercase h' },
+        { char: 'i', name: 'lowercase i' },
+        { char: 'j', name: 'lowercase j' },
+        { char: 'k', name: 'lowercase k' },
+        { char: 'l', name: 'lowercase l' },
+        { char: 'm', name: 'lowercase m' },
+        { char: 'n', name: 'lowercase n' },
+        { char: 'o', name: 'lowercase o' },
+        { char: 'p', name: 'lowercase p' },
+        { char: 'q', name: 'lowercase q' },
+        { char: 'r', name: 'lowercase r' },
+        { char: 's', name: 'lowercase s' },
+        { char: 't', name: 'lowercase t' },
+        { char: 'u', name: 'lowercase u' },
+        { char: 'v', name: 'lowercase v' },
+        { char: 'w', name: 'lowercase w' },
+        { char: 'x', name: 'lowercase x' },
+        { char: 'y', name: 'lowercase y' },
+        { char: 'z', name: 'lowercase z' },
+        { char: '0', name: 'zero' },
+        { char: '1', name: 'one' },
+        { char: '2', name: 'two' },
+        { char: '3', name: 'three' },
+        { char: '4', name: 'four' },
+        { char: '5', name: 'five' },
+        { char: '6', name: 'six' },
+        { char: '7', name: 'seven' },
+        { char: '8', name: 'eight' },
+        { char: '9', name: 'nine' },
+        { char: '+', name: 'plus sign' },
+        { char: '−', name: 'minus sign' },
+        { char: '×', name: 'multiplication sign' },
+        { char: '÷', name: 'division sign' },
+        { char: '=', name: 'equals sign' },
+        { char: '≠', name: 'not equal sign' },
+        { char: '≈', name: 'approximately equal sign' },
+        { char: '≡', name: 'identical to sign' },
+        { char: '∓', name: 'minus or plus sign' },
+        { char: '<', name: 'less than sign' },
+        { char: '>', name: 'greater than sign' },
+        { char: '≤', name: 'less than or equal to sign' },
+        { char: '≥', name: 'greater than or equal to sign' },
+        { char: '≪', name: 'much less than sign' },
+        { char: '≫', name: 'much greater than sign' },
+        { char: '∝', name: 'proportional to sign' },
+        { char: '√', name: 'square root sign' },
+        { char: '∛', name: 'cube root sign' },
+        { char: '∜', name: 'fourth root sign' },
+        { char: '∞', name: 'infinity sign' },
+        { char: 'π', name: 'pi' },
+        { char: 'e', name: 'euler\'s number' },
+        { char: 'θ', name: 'theta' },
+        { char: '∑', name: 'sigma' },
+        { char: '∏', name: 'pi' },
+        { char: '∫', name: 'integral' },
+        { char: '∬', name: 'double integral' },
+        { char: '∭', name: 'triple integral' },
+        { char: '∇', name: 'nabla' },
+        { char: '∆', name: 'delta' },
+        { char: '∂', name: 'partial derivative' },
+        { char: '$', name: 'dollar sign' },
+        { char: '¢', name: 'cent sign' },
+        { char: '£', name: 'pound sign' },
+        { char: '€', name: 'euro sign' },
+        { char: '¥', name: 'yen sign' },
+        { char: '₩', name: 'won sign' },
+        { char: '₪', name: 'shekel sign' },
+        { char: '₹', name: 'rupee sign' },
+        { char: '₽', name: 'ruble sign' },
+        { char: '₺', name: 'turkish lira sign' },
+        { char: '₿', name: 'bitcoin sign' },
+        { char: '¤', name: 'currency sign' },
+        { char: '!', name: 'exclamation mark' },
+        { char: '?', name: 'question mark' },
+        { char: '.', name: 'period' },
+        { char: ',', name: 'comma' },
+        { char: ':', name: 'colon' },
+        { char: ';', name: 'semicolon' },
+        { char: '-', name: 'hyphen' },
+        { char: '--', name: 'dash' },
+        { char: '—', name: 'em dash' },
+        { char: '–', name: 'en dash' },
+        { char: '...', name: 'ellipsis' },
+        { char: '"', name: 'double quote' },
+        { char: "'", name: 'single quote' },
+        { char: '`', name: 'backtick' },
+        { char: '´', name: 'acute accent' },
+        { char: '‘', name: 'left single quote' },
+        { char: '’', name: 'right single quote' },
+        { char: '“', name: 'left double quote' },
+        { char: '”', name: 'right double quote' },
+        { char: '«', name: 'left angle quote' },
+        { char: '»', name: 'right angle quote' },
+        { char: '‹', name: 'left single angle quote' },
+        { char: '›', name: 'right single angle quote' },
+        { char: '@', name: 'at sign' },
+        { char: '#', name: 'pound' },
+        { char: '$', name: 'dollar' },
+        { char: '%', name: 'percent' },
+        { char: '^', name: 'caret' },
+        { char: '&', name: 'ampersand' },
+        { char: '*', name: 'asterisk' },
+        { char: '(', name: 'left parenthesis' },
+        { char: ')', name: 'right parenthesis' },
+        { char: '[', name: 'left bracket' },
+        { char: ']', name: 'right bracket' },
+        { char: '{', name: 'left brace' },
+        { char: '}', name: 'right brace' },
+        { char: '/', name: 'slash' },
+        { char: '\\', name: 'backslash' },
+        { char: '|', name: 'pipe' },
+        { char: '~', name: 'tilde' },
+        { char: '`', name: 'backtick' },
+        { char: '+', name: 'plus' },
+        { char: '=', name: 'equals' },
+        { char: '_', name: 'underscore' },
+        { char: '<', name: 'less than' },
+        { char: '>', name: 'greater than' },
+        { char: 'Α', name: 'alpha' },
+        { char: 'Β', name: 'beta' },
+        { char: 'Γ', name: 'gamma' },
+        { char: 'Δ', name: 'delta' },
+        { char: 'Ε', name: 'epsilon' },
+        { char: 'Ζ', name: 'zeta' },
+        { char: 'Η', name: 'eta' },
+        { char: 'Θ', name: 'theta' },
+        { char: 'Ι', name: 'iota' },
+        { char: 'Κ', name: 'kappa' },
+        { char: 'Λ', name: 'lambda' },
+        { char: 'Μ', name: 'mu' },
+        { char: 'Ν', name: 'nu' },
+        { char: 'Ξ', name: 'xi' },
+        { char: 'Ο', name: 'omicron' },
+        { char: 'Π', name: 'pi' },
+        { char: 'Ρ', name: 'rho' },
+        { char: 'Σ', name: 'sigma' },
+        { char: 'Τ', name: 'tau' },
+        { char: 'Υ', name: 'upsilon' },
+        { char: 'Φ', name: 'phi' },
+        { char: 'Χ', name: 'chi' },
+        { char: 'Ψ', name: 'psi' },
+        { char: 'Ω', name: 'omega' },
+        { char: 'α', name: 'alpha' },
+        { char: 'β', name: 'beta' },
+        { char: 'γ', name: 'gamma' },
+        { char: 'δ', name: 'delta' },
+        { char: 'ε', name: 'epsilon' },
+        { char: 'ζ', name: 'zeta' },
+        { char: 'η', name: 'eta' },
+        { char: 'θ', name: 'theta' },
+        { char: 'ι', name: 'iota' },
+        { char: 'κ', name: 'kappa' },
+        { char: 'λ', name: 'lambda' },
+        { char: 'μ', name: 'mu' },
+        { char: 'ν', name: 'nu' },
+        { char: 'ξ', name: 'xi' },
+        { char: 'ο', name: 'omicron' },
+        { char: 'π', name: 'pi' },
+        { char: 'ρ', name: 'rho' },
+        { char: 'σ', name: 'sigma' },
+        { char: 'ς', name: 'final sigma' },
+        { char: 'τ', name: 'tau' },
+        { char: 'υ', name: 'upsilon' },
+        { char: 'φ', name: 'phi' },
+        { char: 'χ', name: 'chi' },
+        { char: 'ψ', name: 'psi' },
+        { char: 'ω', name: 'omega' },
+        { char: '😊', name: 'smiling face' },
+        { char: '😀', name: 'grinning face' },
+        { char: '😂', name: 'face with tears of joy' },
+        { char: '😍', name: 'smiling face with heart-eyes' },
+        { char: '🥰', name: 'smiling face with hearts' },
+        { char: '😎', name: 'smiling face with sunglasses' },
+        { char: '🤔', name: 'thinking face' },
+        { char: '😏', name: 'smirking face' },
+        { char: '😒', name: 'unamused face' },
+        { char: '😴', name: 'sleeping face' },
+        { char: '🥱', name: 'yawning face' },
+        { char: '😡', name: 'pouting face' },
+        { char: '🥳', name: 'partying face' },
+        { char: '🤩', name: 'star-struck' },
+        { char: '🥺', name: 'pleading face' },
+        { char: '🤯', name: 'exploding head' },
+        { char: '😱', name: 'face screaming in fear' },
+        { char: '😇', name: 'smiling face with halo' },
+        { char: '🥲', name: 'smiling face with tear' },
+        { char: '🤗', name: 'hugging face' },
+        { char: '🌞', name: 'sun with face' },
+        { char: '🌙', name: 'crescent moon' },
+        { char: '🌼', name: 'blossom' },
+        { char: '🌳', name: 'deciduous tree' },
+        { char: '🐶', name: 'dog face' },
+        { char: '🐱', name: 'cat face' },
+        { char: '🐭', name: 'mouse face' },
+        { char: '🐹', name: 'hamster' },
+        { char: '🐰', name: 'rabbit face' },
+        { char: '🦊', name: 'fox' },
+        { char: '🐻', name: 'bear' },
+        { char: '🐼', name: 'panda' },
+        { char: '🐨', name: 'koala' },
+        { char: '🐯', name: 'tiger face' },
+        { char: '🦁', name: 'lion' },
+        { char: '🐮', name: 'cow face' },
+        { char: '🐷', name: 'pig face' },
+        { char: '🐸', name: 'frog' },
+        { char: '🐵', name: 'monkey face' },
+        { char: '🐔', name: 'chicken' },
+        { char: '🍎', name: 'red apple' },
+        { char: '🍌', name: 'banana' },
+        { char: '🍓', name: 'strawberry' },
+        { char: '🍔', name: 'hamburger' },
+        { char: '🍕', name: 'pizza' },
+        { char: '🍣', name: 'sushi' },
+        { char: '🍰', name: 'shortcake' },
+        { char: '🍪', name: 'cookie' },
+        { char: '🍫', name: 'chocolate bar' },
+        { char: '☕', name: 'hot beverage' },
+        { char: '🍵', name: 'teacup without handle' },
+        { char: '🍷', name: 'wine glass' },
+        { char: '🍺', name: 'beer mug' },
+        { char: '🥤', name: 'cup with straw' },
+        { char: '🍬', name: 'candy' },
+        { char: '🍭', name: 'lollipop' },
+        { char: '🍿', name: 'popcorn' },
+        { char: '🍩', name: 'doughnut' },
+        { char: '🍦', name: 'soft ice cream' },
+        { char: '🥧', name: 'pie' },
+        { char: '⚽', name: 'soccer ball' },
+        { char: '🏀', name: 'basketball' },
+        { char: '🏈', name: 'american football' },
+        { char: '🎾', name: 'tennis' },
+        { char: '🏓', name: 'ping pong' },
+        { char: '🏸', name: 'badminton' },
+        { char: '🏒', name: 'ice hockey' },
+        { char: '🏹', name: 'bow and arrow' },
+        { char: '🎯', name: 'direct hit' },
+        { char: '🎮', name: 'video game' },
+        { char: '🎲', name: 'game die' },
+        { char: '🀄', name: 'mahjong red dragon' },
+        { char: '🎨', name: 'artist palette' },
+        { char: '🎬', name: 'clapper board' },
+        { char: '📚', name: 'books' },
+        { char: '🎼', name: 'musical score' },
+        { char: '🎤', name: 'microphone' },
+        { char: '🎧', name: 'headphone' },
+        { char: '📷', name: 'camera' },
+        { char: '📸', name: 'camera with flash' }
+      ];
+      
+      const results = allChars.filter(charItem => {
+        return charItem.name.includes(searchTerm) || 
+               charItem.char.includes(searchTerm);
+      });
+      
+      results.forEach(charItem => {
+        const charCell = document.createElement('div');
+        charCell.className = 'char-cell';
+        charCell.textContent = charItem.char;
+        charCell.dataset.char = charItem.char;
+        searchResults.appendChild(charCell);
+      });
+    });
+    
+    // Event delegation for character clicks
+    document.addEventListener('click', function(e) {
+      const charCell = e.target.closest('.char-cell');
+      if (charCell) {
+        const char = charCell.dataset.char;
+        if (char) {
+          copyChar(char);
+        }
+      }
+    });
+    
+    // Update total characters count
+    const totalCharCells = document.querySelectorAll('.char-cell').length;
+    document.getElementById('totalChars').textContent = totalCharCells;
+    
+    // Initialize language toggle
+    document.getElementById('langToggle').addEventListener('change', function(e) {
+      toggleLang(e.target);
+    });
   </script>
 </body>
 </html>

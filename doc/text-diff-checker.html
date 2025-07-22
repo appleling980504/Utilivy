@@ -1,218 +1,377 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
- <title>Text Diff Checker - Compare Two Texts | Utilivy</title>
-<meta name="description" content="Compare two blocks of text and see differences highlighted clearly and instantly." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
+  <title>Text Diff Checker - Compare Two Texts | Utilivy</title>
+  <meta name="description" content="Compare two blocks of text and see differences highlighted clearly and instantly." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/diff-match-patch"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    textarea {
-      width: 100%; height: 150px; margin-bottom: 10px; padding: 10px;
-      font-family: monospace;
+    .notification.error {
+      background: #ef4444;
     }
     .diff-output {
-      border: 1px solid #ccc;
-      padding: 10px;
-      background: #fff;
+      border: 1px solid #e5e7eb;
+      padding: 1rem;
+      background: white;
       white-space: pre-wrap;
-      margin-bottom: 10px;
+      margin: 1rem 0;
+      border-radius: 0.5rem;
+      min-height: 150px;
     }
-    ins { background: #a6f3a6; text-decoration: none; }
-    del { background: #f7a6a6; text-decoration: line-through; }
-    button.compare {
-      background: var(--primary-color);
+    ins { 
+      background: #a6f3a6; 
+      text-decoration: none; 
+    }
+    del { 
+      background: #f7a6a6; 
+      text-decoration: line-through; 
+    }
+    .file-input {
+      display: none;
+    }
+    .file-label {
+      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
       color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      border-radius: 0.375rem;
       cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
+      font-size: 0.875rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
     }
-    button.compare:hover {
-      background-color: #4338ca;
-    }
-    input[type="file"] {
-      margin-right: 10px;
-      margin-bottom: 5px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      border: none;
-      color: white;
-      cursor: pointer;
-    }
-    .nav-links, .version-list {
-      margin-top: 10px;
-      font-size: 14px;
+    .file-label:hover {
+      background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
     }
     .version-item {
+      padding: 0.5rem;
+      border-radius: 0.375rem;
+      margin-bottom: 0.5rem;
       cursor: pointer;
-      text-decoration: underline;
-      color: blue;
-      margin-bottom: 5px;
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    .version-item:hover {
+      background-color: #f3f4f6;
+    }
+    .nav-btn {
+      padding: 0.25rem 0.5rem;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      background-color: #e5e7eb;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      font-size: 0.75rem;
+    }
+    .nav-btn:hover {
+      background-color: #d1d5db;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Text Diff Editor" data-zh="Utilivy - 文本差异编辑器">Utilivy - Text Diff Editor</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <label data-en="Original Text:" data-zh="原始文本：">Original Text:</label>
-    <input type="file" accept=".txt" onchange="loadFile(event, 'text1')" />
-    <textarea id="text1" placeholder="Enter or upload original text..."></textarea>
-
-    <label data-en="Modified Text:" data-zh="修改文本：">Modified Text:</label>
-    <input type="file" accept=".txt" onchange="loadFile(event, 'text2')" />
-    <textarea id="text2" placeholder="Enter or upload modified text..."></textarea>
-
-    <div>
-      <button onclick="compareTexts()">Compare</button>
-      <button onclick="exportModified('txt')">Export TXT</button>
-      <button onclick="exportModified('docx')">Export DOCX</button>
-      <button onclick="exportModified('pdf')">Export PDF</button>
-      <button onclick="saveVersion()">Save Version</button>
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
 
-    <h3 data-en="Comparison Result:" data-zh="差异对比结果：">Comparison Result:</h3>
-    <div class="diff-output" id="diffOutput" contenteditable="true"></div>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Text Diff Checker</h1>
+      <h1 class="text-3xl font-bold zh mb-2">文本差异检查器</h1>
+      <p class="text-gray-500 text-sm en">Compare two texts and highlight differences</p>
+      <p class="text-gray-500 text-sm zh">比较两个文本并突出显示差异</p>
+    </div>
 
-    <div class="nav-links" id="navLinks"></div>
+    <!-- Main Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <!-- Original Text Section -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Original Text</span>
+          <span class="zh">原始文本</span>
+        </label>
+        <input type="file" id="file1" class="file-input" accept=".txt" onchange="loadFile(event, 'text1')" />
+        <label for="file1" class="file-label">
+          <i class="fas fa-upload"></i>
+          <span class="en">Upload File</span>
+          <span class="zh">上传文件</span>
+        </label>
+        <textarea id="text1" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-40" placeholder="Paste original text here..."></textarea>
+      </div>
 
-    <h3 data-en="Version History:" data-zh="历史版本：">Version History:</h3>
-    <div class="version-list" id="versionList"></div>
+      <!-- Modified Text Section -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Modified Text</span>
+          <span class="zh">修改文本</span>
+        </label>
+        <input type="file" id="file2" class="file-input" accept=".txt" onchange="loadFile(event, 'text2')" />
+        <label for="file2" class="file-label">
+          <i class="fas fa-upload"></i>
+          <span class="en">Upload File</span>
+          <span class="zh">上传文件</span>
+        </label>
+        <textarea id="text2" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-40" placeholder="Paste modified text here..."></textarea>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button onclick="compareTexts()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fas fa-code-compare"></i>
+          <span class="en">Compare Texts</span>
+          <span class="zh">比较文本</span>
+        </button>
+        
+        <button onclick="saveVersion()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fas fa-save"></i>
+          <span class="en">Save Version</span>
+          <span class="zh">保存版本</span>
+        </button>
+        
+        <button onclick="exportModified('txt')" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fas fa-file-export"></i>
+          <span class="en">Export TXT</span>
+          <span class="zh">导出TXT</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fas fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">全部清除</span>
+        </button>
+      </div>
+
+      <!-- Diff Output -->
+      <div>
+        <h3 class="font-medium text-blue-700 flex items-center gap-2 mb-2">
+          <i class="fas fa-file-circle-check"></i>
+          <span class="en">Comparison Result</span>
+          <span class="zh">比较结果</span>
+        </h3>
+        <div class="diff-output" id="diffOutput" contenteditable="true"></div>
+      </div>
+
+      <!-- Navigation Links -->
+      <div id="navLinks" class="flex flex-wrap"></div>
+
+      <!-- Version History -->
+      <div>
+        <h3 class="font-medium text-blue-700 flex items-center gap-2 mb-2">
+          <i class="fas fa-clock-rotate-left"></i>
+          <span class="en">Version History</span>
+          <span class="zh">历史版本</span>
+        </h3>
+        <div class="version-list" id="versionList"></div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter or upload original text in the first box</li>
+          <li class="zh">1. 在第一个框中输入或上传原始文本</li>
+          <li class="en">2. Enter or upload modified text in the second box</li>
+          <li class="zh">2. 在第二个框中输入或上传修改后的文本</li>
+          <li class="en">3. Click "Compare Texts" to see differences highlighted</li>
+          <li class="zh">3. 点击"比较文本"查看突出显示的差异</li>
+          <li class="en">4. Save versions or export the comparison results</li>
+          <li class="zh">4. 保存版本或导出比较结果</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About Text Diff</span>
+          <span class="zh">关于文本差异</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Green highlights show added content</li>
+          <li class="zh">▸ 绿色高亮显示添加的内容</li>
+          <li class="en">▸ Red highlights show deleted content</li>
+          <li class="zh">▸ 红色高亮显示删除的内容</li>
+          <li class="en">▸ Useful for code reviews, document comparisons, and version control</li>
+          <li class="zh">▸ 适用于代码审查、文档比较和版本控制</li>
+          <li class="en">▸ Supports text files up to 10MB in size</li>
+          <li class="zh">▸ 支持最大10MB的文本文件</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
     const dmp = new diff_match_patch();
     let versionHistory = [];
 
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
     function loadFile(event, targetId) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (file.size > 10 * 1024 * 1024) {
+        showNotification('File is too large (max 10MB)', true);
+        return;
+      }
+
       const reader = new FileReader();
-      reader.onload = function () {
+      reader.onload = function() {
         document.getElementById(targetId).value = reader.result;
       };
-      reader.readAsText(event.target.files[0]);
+      reader.onerror = function() {
+        showNotification('Error reading file', true);
+      };
+      reader.readAsText(file);
     }
 
     function compareTexts() {
       const text1 = document.getElementById("text1").value.trim();
       const text2 = document.getElementById("text2").value.trim();
+      
+      if (!text1 || !text2) {
+        showNotification('Please enter both original and modified texts', true);
+        return;
+      }
+
       const diff = dmp.diff_main(text1, text2);
       dmp.diff_cleanupSemantic(diff);
       const html = dmp.diff_prettyHtml(diff);
@@ -220,12 +379,15 @@
       const output = document.getElementById("diffOutput");
       output.innerHTML = html;
 
+      // Create navigation buttons for differences
       const navLinks = document.getElementById("navLinks");
       navLinks.innerHTML = '';
       const matches = output.querySelectorAll("ins, del");
+      
       matches.forEach((node, i) => {
         const btn = document.createElement('button');
-        btn.textContent = `${node.tagName === "INS" ? "Add" : "Del"} ${i + 1}`;
+        btn.className = 'nav-btn';
+        btn.innerHTML = `${node.tagName === "INS" ? '<i class="fas fa-plus text-green-600"></i>' : '<i class="fas fa-minus text-red-600"></i>'} ${i + 1}`;
         btn.onclick = () => node.scrollIntoView({ behavior: 'smooth', block: 'center' });
         navLinks.appendChild(btn);
       });
@@ -233,48 +395,107 @@
 
     async function exportModified(type) {
       const text = document.getElementById("diffOutput").innerText.trim();
-      if (type === 'txt') {
-        const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
-        saveAs(blob, "modified.txt");
-      } else if (type === 'docx') {
-        const zip = new JSZip();
-        zip.file("modified.docx", text);
-        const blob = await zip.generateAsync({type: "blob"});
-        saveAs(blob, "modified.docx");
-      } else if (type === 'pdf') {
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF();
-        const lines = pdf.splitTextToSize(text, 180);
-        pdf.text(lines, 10, 10);
-        pdf.save("modified.pdf");
+      if (!text) {
+        showNotification('No comparison result to export', true);
+        return;
+      }
+
+      try {
+        if (type === 'txt') {
+          const blob = new Blob([text], {type: 'text/plain;charset=utf-8'});
+          saveAs(blob, "text-diff-result.txt");
+          showNotification('Exported as TXT successfully');
+        } else if (type === 'docx') {
+          showNotification('DOCX export not implemented yet', true);
+        } else if (type === 'pdf') {
+          const { jsPDF } = window.jspdf;
+          const pdf = new jsPDF();
+          const lines = pdf.splitTextToSize(text, 180);
+          pdf.text(lines, 10, 10);
+          pdf.save("text-diff-result.pdf");
+          showNotification('Exported as PDF successfully');
+        }
+      } catch (e) {
+        showNotification('Export failed: ' + e.message, true);
       }
     }
 
     function saveVersion() {
-      const versionContent = document.getElementById("diffOutput").innerHTML;
+      const text1 = document.getElementById("text1").value.trim();
+      const text2 = document.getElementById("text2").value.trim();
+      
+      if (!text1 || !text2) {
+        showNotification('Please enter both texts before saving', true);
+        return;
+      }
+
+      const diff = dmp.diff_main(text1, text2);
+      dmp.diff_cleanupSemantic(diff);
+      const html = dmp.diff_prettyHtml(diff);
+
       const timestamp = new Date().toLocaleString();
-      versionHistory.push({ time: timestamp, content: versionContent });
+      versionHistory.push({ 
+        time: timestamp, 
+        content: html,
+        text1: text1,
+        text2: text2
+      });
+      
       updateVersionList();
+      showNotification('Version saved successfully');
     }
 
     function updateVersionList() {
       const list = document.getElementById("versionList");
       list.innerHTML = '';
+      
       versionHistory.forEach((v, i) => {
         const div = document.createElement("div");
         div.className = "version-item";
-        div.textContent = `Version ${i + 1} - ${v.time}`;
+        div.innerHTML = `
+          <div class="font-medium">Version ${i + 1} - ${v.time}</div>
+          <div class="text-xs text-gray-500">${v.text1.substring(0, 30)}... vs ${v.text2.substring(0, 30)}...</div>
+        `;
         div.onclick = () => {
+          document.getElementById("text1").value = v.text1;
+          document.getElementById("text2").value = v.text2;
           document.getElementById("diffOutput").innerHTML = v.content;
         };
         list.appendChild(div);
       });
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    function clearAll() {
+      document.getElementById("text1").value = '';
+      document.getElementById("text2").value = '';
+      document.getElementById("diffOutput").innerHTML = '';
+      document.getElementById("file1").value = '';
+      document.getElementById("file2").value = '';
+      document.getElementById("navLinks").innerHTML = '';
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('Exported') ? '导出成功' : 
+                           message.includes('saved') ? '版本保存成功' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

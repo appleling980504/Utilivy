@@ -1,186 +1,352 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+    <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
-  <title>Date Calculator - Add/Subtract Days | Utilivy</title>
-<meta name="description" content="Add or subtract days from any date, or calculate duration between two dates." />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="google-site-verification" content="l-l-tcTIjwKGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
+  <title>Date Calculator – Utilivy</title>
+  <meta name="description" content="Add or subtract days from any date, or calculate duration between two dates.">
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
       margin-top: 1rem;
-      font-weight: 500;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
       margin-top: 0.5rem;
-      font-size: 1rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
     }
-    button.calculate {
-      background: var(--primary-color);
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
       color: white;
       border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
       cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
+      font-size: 0.8rem;
+      transition: all 0.2s;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
+    .copy-btn:hover {
+      background: #4338ca;
     }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
+    .copy-btn.copied {
+      background: #10b981;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .date-input {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .summary-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e40af;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Date Calculator" data-zh="Utilivy - 日期计算器">Utilivy - Date Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Date Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">日期计算器</h1>
+      <p class="text-gray-500 text-sm en">Add or subtract days, months, or years from any date</p>
+      <p class="text-gray-500 text-sm zh">对任意日期进行天数、月数或年数的加减计算</p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Start Date</span>
+          <span class="zh">起始日期</span>
+        </label>
+        <input type="date" id="startDate" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400">
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Days</span>
+            <span class="zh">天数</span>
+          </label>
+          <input type="number" id="days" value="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="0">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Months</span>
+            <span class="zh">月数</span>
+          </label>
+          <input type="number" id="months" value="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="0">
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Years</span>
+            <span class="zh">年数</span>
+          </label>
+          <input type="number" id="years" value="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="0">
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button onclick="calculateDate()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-calculator"></i>
+          <span class="en">Calculate Date</span>
+          <span class="zh">计算日期</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除全部</span>
+        </button>
+      </div>
+
+      <!-- Result Box -->
+      <div class="result-box">
+        <div class="font-medium text-green-600 flex items-center gap-2">
+          <i class="fa-solid fa-calendar-days"></i>
+          <span class="en">Result Date</span>
+          <span class="zh">计算结果</span>
+        </div>
+        <div id="result" class="result-value text-center py-4"></div>
+        <div id="weekday" class="text-center text-gray-500 text-sm pt-2"></div>
+        <button class="copy-btn" onclick="copyToClipboard('result', this)">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy</span>
+          <span class="zh">复制</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">1. Select your starting date</li>
+          <li class="zh">1. 选择起始日期</li>
+          <li class="en">2. Enter days, months, or years to add/subtract</li>
+          <li class="zh">2. 输入要加减的天数、月数或年数</li>
+          <li class="en">3. Use positive numbers to add</li>
+          <li class="zh">3. 正数表示增加</li>
+          <li class="en">4. Use negative numbers to subtract</li>
+          <li class="zh">4. 负数表示减少</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Date Tips</span>
+          <span class="zh">日期建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Great for deadlines and anniversaries</li>
+          <li class="zh">▸ 适合计算截止日期和纪念日</li>
+          <li class="en">▸ Calculates across month/year boundaries</li>
+          <li class="zh">▸ 自动计算跨月跨年的日期</li>
+          <li class="en">▸ Handles leap years automatically</li>
+          <li class="zh">▸ 自动处理闰年</li>
+          <li class="en">▸ Copy results to clipboard</li>
+          <li class="zh">▸ 复制结果到剪贴板</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-calendar-check"></i>
+          <span class="en">Common Calculations</span>
+          <span class="zh">常用计算</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ 30 days from today: +30 days</li>
+          <li class="zh">▸ 30天后：+30 天</li>
+          <li class="en">▸ 6 months from now: +6 months</li>
+          <li class="zh">▸ 6个月后：+6 月</li>
+          <li class="en">▸ 1 year ago: -1 year</li>
+          <li class="zh">▸ 1年前：-1 年</li>
+          <li class="en">▸ 90 days before: -90 days</li>
+          <li class="zh">▸ 90天前：-90 天</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label data-en="Start Date" data-zh="起始日期">Start Date</label>
-    <input type="date" id="startDate" />
-
-    <label data-en="Add/Subtract Days" data-zh="加/减天数">Add/Subtract Days</label>
-    <input type="number" id="days" value="0" />
-
-    <label data-en="Add/Subtract Months" data-zh="加/减月数">Add/Subtract Months</label>
-    <input type="number" id="months" value="0" />
-
-    <label data-en="Add/Subtract Years" data-zh="加/减年数">Add/Subtract Years</label>
-    <input type="number" id="years" value="0" />
-
-    <button class="calculate" onclick="calculateDate()" data-en="Calculate" data-zh="计算">Calculate</button>
-
-    <div class="result" id="result"></div>
-    <p id="weekday" style="margin-top:1rem;"></p>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    <span data-en="This tool helps you calculate a new date by adding or subtracting days, months, or years." data-zh="该工具可根据天数、月数或年数进行日期加减。">This tool helps you calculate a new date by adding or subtracting days, months, or years.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set today's date as default
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      document.getElementById('startDate').value = formattedDate;
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Calculate date
     function calculateDate() {
       const startDate = new Date(document.getElementById("startDate").value);
       if (isNaN(startDate)) {
-        document.getElementById("result").innerText = "Please select a valid start date.";
+        showNotification('Please select a valid start date', true);
         return;
       }
 
@@ -193,25 +359,108 @@
       resultDate.setMonth(resultDate.getMonth() + months);
       resultDate.setDate(resultDate.getDate() + days);
 
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
       const weekdays = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
       const weekdays_zh = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'];
+      
+      const formattedDate = resultDate.toLocaleDateString();
+      const weekday = weekdays[resultDate.getDay()];
+      const weekday_zh = weekdays_zh[resultDate.getDay()];
+      
+      const isEnglish = document.getElementById('langToggle').checked;
 
-      document.getElementById("result").innerText =
-        `→ Resulting Date: ${resultDate.toLocaleDateString()}`;
-
-      const lang = document.documentElement.lang || 'en';
-      document.getElementById("weekday").innerText =
-        lang === 'zh' 
-        ? `该日是：${weekdays_zh[resultDate.getDay()]}`
-        : `It falls on a ${weekdays[resultDate.getDay()]}`;
+      document.getElementById("result").innerHTML = `
+        <div class="text-2xl font-bold text-blue-600">${formattedDate}</div>
+      `;
+      
+      document.getElementById("weekday").innerHTML = `
+        <div class="en">${weekday}</div>
+        <div class="zh">${weekday_zh}</div>
+      `;
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en]").forEach(el => {
-        el.innerText = el.dataset[lang];
-      });
-      document.documentElement.lang = lang;
+    // Clear all fields
+    function clearAll() {
+      document.getElementById("days").value = "0";
+      document.getElementById("months").value = "0";
+      document.getElementById("years").value = "0";
+      document.getElementById("result").innerHTML = '';
+      document.getElementById("weekday").innerHTML = '';
+      
+      // Reset to today's date
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      document.getElementById('startDate').value = formattedDate;
+    }
+
+    // Secure clipboard copy method
+    function copyToClipboard(elementId, button) {
+      const element = document.getElementById(elementId);
+      const text = element.textContent;
+      
+      if (!text.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      // Create a temporary textarea for copying
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.top = '0';
+      textArea.style.left = '0';
+      textArea.style.opacity = '0';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        // Execute the copy command
+        const successful = document.execCommand('copy');
+        if (successful) {
+          // Visual feedback
+          const originalHTML = button.innerHTML;
+          button.innerHTML = '<i class="fa-solid fa-check"></i> <span class="en">Copied!</span><span class="zh">已复制!</span>';
+          button.classList.add('copied');
+          
+          // Show notification
+          showNotification('Copied to clipboard!');
+          
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('copied');
+          }, 2000);
+        } else {
+          showNotification('Copy failed. Please try again.', true);
+        }
+      } catch (err) {
+        showNotification('Error copying: ' + err, true);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

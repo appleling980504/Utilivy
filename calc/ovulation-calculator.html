@@ -1,169 +1,441 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
- <title>Ovulation Calculator - Estimate Fertile Days | Utilivy</title>
-<meta name="description" content="Find your fertile window and estimated ovulation date based on your menstrual cycle. Helpful for family planning." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <title>Ovulation Calculator – Utilivy</title>
+  <meta name="description" content="Find your fertile window and estimated ovulation date based on your menstrual cycle. Helpful for family planning.">
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 10px;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .notification.show {
+      transform: translateX(0);
     }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .notification.error {
+      background: #ef4444;
     }
-    label {
-      display: block;
+    .input-field {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
       margin-top: 1rem;
-      font-weight: 500;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
       margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    .result {
-      margin-top: 1.5rem;
-      font-size: 1.1rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
       font-weight: bold;
-    }
-        footer {
+      color: #4f46e5;
+      font-size: 1.1rem;
       text-align: center;
-      padding: 1rem;
+    }
+    .input-group {
+      position: relative;
+    }
+    .input-icon {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+    .input-with-icon {
+      padding-left: 40px;
+    }
+    .result-card {
+      background: linear-gradient(135deg, #f0f7ff 0%, #e6f0ff 100%);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      text-align: center;
+      margin: 1rem 0;
+      border: 1px solid #dbeafe;
+    }
+    .result-value-large {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin: 0.5rem 0;
+    }
+    .result-label {
       font-size: 0.9rem;
       color: #6b7280;
     }
+    .cycle-visual {
+      height: 8px;
+      background: #e5e7eb;
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 1rem 0;
+      position: relative;
+    }
+    .cycle-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4f46e5, #7c3aed);
+      border-radius: 4px;
+      position: absolute;
+    }
+    .cycle-marker {
+      position: absolute;
+      top: -10px;
+      width: 2px;
+      height: 28px;
+      background: #ef4444;
+    }
+    .cycle-label {
+      position: absolute;
+      top: -35px;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      transform: translateX(-50%);
+    }
+    .timeline-container {
+      position: relative;
+      height: 120px;
+      margin: 2rem 0;
+    }
+    .timeline {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: #e5e7eb;
+      transform: translateY(-50%);
+    }
+    .timeline-event {
+      position: absolute;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100px;
+    }
+    .timeline-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #4f46e5;
+      margin: 0 auto 5px;
+      position: relative;
+      z-index: 2;
+    }
+    .timeline-dot.fertile {
+      background: #ef4444;
+    }
+    .timeline-dot.ovulation {
+      background: #10b981;
+      width: 20px;
+      height: 20px;
+    }
+    .timeline-date {
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+    .timeline-label {
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+    .timeline-event.top {
+      top: 20%;
+    }
+    .timeline-event.bottom {
+      top: 80%;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator {
+      filter: invert(0.5);
+    }
+    .info-card {
+      background: white;
+      border-radius: 0.75rem;
+      padding: 1.25rem;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+      border: 1px solid #e5e7eb;
+    }
+    .info-card h3 {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6b7280;
+      margin-bottom: 0.5rem;
+    }
+    .info-card p {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #4f46e5;
+    }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Ovulation Calculator" data-zh="Utilivy - 排卵计算器">Utilivy - Ovulation Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="container">
-    <p data-en="Enter the first day of your last period and your average cycle length to estimate your ovulation date."
-       data-zh="输入你上次月经的第一天和平均周期长度，以估算排卵日。">
-       Enter the first day of your last period and your average cycle length to estimate your ovulation date.
-    </p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Ovulation Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">排卵计算器</h1>
+      <p class="text-gray-500 text-sm en">Estimate your fertile window and ovulation date</p>
+      <p class="text-gray-500 text-sm zh">估算您的易孕期和排卵日</p>
+    </div>
 
-    <label for="lastPeriod" data-en="First Day of Last Period" data-zh="上次月经第一天">First Day of Last Period</label>
-    <input type="date" id="lastPeriod" />
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">First Day of Last Period</span>
+            <span class="zh">上次月经第一天</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-calendar-days absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="date" id="lastPeriod" class="w-full input-field pl-10">
+          </div>
+        </div>
+        
+        <div>
+          <label class="block text-sm font-medium mb-2">
+            <span class="en">Average Cycle Length (days)</span>
+            <span class="zh">平均月经周期（天）</span>
+          </label>
+          <div class="relative">
+            <i class="fa-solid fa-arrow-right-arrow-left absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+            <input type="number" id="cycleLength" value="28" min="20" max="45" class="w-full input-field pl-10">
+          </div>
+        </div>
+      </div>
 
-    <label for="cycleLength" data-en="Average Cycle Length (days)" data-zh="平均月经周期（天）">Average Cycle Length (days)</label>
-    <input type="number" id="cycleLength" value="28" min="20" max="45" />
+      <button onclick="calculateOvulation()" class="w-full btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-calculator"></i>
+        <span class="en">Calculate Ovulation</span>
+        <span class="zh">计算排卵日</span>
+      </button>
 
-    <button class="calculate" onclick="calculateOvulation()" data-en="Calculate" data-zh="计算">Calculate</button>
+      <!-- Results Section -->
+      <div class="pt-4 space-y-4">
+        <div class="result-box hidden" id="resultContainer">
+          <div class="font-medium text-green-600 flex items-center gap-2">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="en">Ovulation Results</span>
+            <span class="zh">排卵计算结果</span>
+          </div>
+          
+          <div id="resultDisplay" class="space-y-4">
+            <!-- Results will be inserted here -->
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <div class="result" id="result"></div>
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <!-- How to Use -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter the first day of your last menstrual period</li>
+          <li class="zh">1. 输入您上次月经的第一天</li>
+          <li class="en">2. Input your average cycle length (typically 28 days)</li>
+          <li class="zh">2. 输入您的平均月经周期（通常为28天）</li>
+          <li class="en">3. Click "Calculate" to see your fertile window</li>
+          <li class="zh">3. 点击"计算"查看您的易孕期</li>
+        </ol>
+      </div>
+
+      <!-- About Ovulation -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-flask"></i>
+          <span class="en">About Ovulation</span>
+          <span class="zh">关于排卵</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en"><strong>Ovulation:</strong> Typically occurs 14 days before your next period</li>
+          <li class="zh"><strong>排卵:</strong> 通常发生在下次月经前14天</li>
+          <li class="en"><strong>Fertile Window:</strong> 5 days before ovulation through ovulation day</li>
+          <li class="zh"><strong>易孕期:</strong> 排卵前5天至排卵当天</li>
+          <li class="en"><strong>Cycle Length:</strong> Count from day 1 of period to day before next period</li>
+          <li class="zh"><strong>周期长度:</strong> 从月经第一天到下次月经前一天计算</li>
+        </ul>
+      </div>
+
+      <!-- Fertility Tips -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Fertility Tips</span>
+          <span class="zh">生育建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Track your basal body temperature for more accuracy</li>
+          <li class="zh">▸ 跟踪基础体温以提高准确性</li>
+          <li class="en">▸ Use ovulation predictor kits for confirmation</li>
+          <li class="zh">▸ 使用排卵预测试纸确认</li>
+          <li class="en">▸ Have intercourse every other day during fertile window</li>
+          <li class="zh">▸ 在易孕期每隔一天同房一次</li>
+          <li class="en">▸ Consult a doctor if trying for over a year without success</li>
+          <li class="zh">▸ 如果尝试一年未成功请咨询医生</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span class="en">Calculation complete!</span>
+    <span class="zh">计算完成！</span>
+  </div>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set default date to today
+      const today = new Date();
+      const formattedDate = today.toISOString().split('T')[0];
+      document.getElementById('lastPeriod').value = formattedDate;
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
     function calculateOvulation() {
       const lastPeriod = document.getElementById('lastPeriod').value;
       const cycleLength = parseInt(document.getElementById('cycleLength').value);
-      const resultDiv = document.getElementById('result');
+      const resultContainer = document.getElementById('resultContainer');
+      const resultDisplay = document.getElementById('resultDisplay');
+      const isEnglish = document.getElementById('langToggle').checked;
 
+      // Clear previous results
+      resultDisplay.innerHTML = '';
+      
       if (!lastPeriod || isNaN(cycleLength)) {
-        resultDiv.textContent = 'Please fill all fields.';
+        showNotification(isEnglish ? "Please fill all fields" : "请填写所有字段", true);
+        resultContainer.classList.add('hidden');
         return;
       }
 
@@ -174,23 +446,112 @@
       const fertileStart = new Date(ovulationDate);
       fertileStart.setDate(ovulationDate.getDate() - 5);
       const fertileEnd = new Date(ovulationDate);
+      fertileEnd.setDate(ovulationDate.getDate() + 1); // Include ovulation day
 
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      resultDiv.innerHTML = `
-        <div data-en="Estimated Ovulation Date: ${ovulationDate.toLocaleDateString(undefined, options)}"
-             data-zh="预测排卵日：${ovulationDate.toLocaleDateString(undefined, options)}">
-          Estimated Ovulation Date: ${ovulationDate.toLocaleDateString(undefined, options)}
+      const nextPeriod = new Date(startDate);
+      nextPeriod.setDate(startDate.getDate() + cycleLength);
+
+      const options = { year: 'numeric', month: 'short', day: 'numeric' };
+      
+      // Create timeline visualization
+      const timelineStart = new Date(startDate);
+      timelineStart.setDate(startDate.getDate() - 2);
+      const timelineEnd = new Date(nextPeriod);
+      timelineEnd.setDate(nextPeriod.getDate() + 2);
+      
+      const totalDays = Math.ceil((timelineEnd - timelineStart) / (1000 * 60 * 60 * 24));
+      const fertileStartPos = Math.ceil((fertileStart - timelineStart) / (1000 * 60 * 60 * 24)) / totalDays * 100;
+      const fertileEndPos = Math.ceil((fertileEnd - timelineStart) / (1000 * 60 * 60 * 24)) / totalDays * 100;
+      const ovulationPos = Math.ceil((ovulationDate - timelineStart) / (1000 * 60 * 60 * 24)) / totalDays * 100;
+      const nextPeriodPos = Math.ceil((nextPeriod - timelineStart) / (1000 * 60 * 60 * 24)) / totalDays * 100;
+      
+      const timelineHTML = `
+        <div class="timeline-container">
+          <div class="timeline"></div>
+          <div class="timeline-event top" style="left: 0%;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">${startDate.toLocaleDateString(undefined, options)}</div>
+            <div class="timeline-label">${isEnglish ? "Last Period" : "上次月经"}</div>
+          </div>
+          <div class="timeline-event top" style="left: ${fertileStartPos}%;">
+            <div class="timeline-dot fertile"></div>
+            <div class="timeline-date">${fertileStart.toLocaleDateString(undefined, options)}</div>
+            <div class="timeline-label">${isEnglish ? "Fertile Start" : "易孕开始"}</div>
+          </div>
+          <div class="timeline-event" style="left: ${ovulationPos}%;">
+            <div class="timeline-dot ovulation"></div>
+            <div class="timeline-date">${ovulationDate.toLocaleDateString(undefined, options)}</div>
+            <div class="timeline-label">${isEnglish ? "Ovulation" : "排卵日"}</div>
+          </div>
+          <div class="timeline-event bottom" style="left: ${fertileEndPos}%;">
+            <div class="timeline-dot fertile"></div>
+            <div class="timeline-date">${fertileEnd.toLocaleDateString(undefined, options)}</div>
+            <div class="timeline-label">${isEnglish ? "Fertile End" : "易孕结束"}</div>
+          </div>
+          <div class="timeline-event bottom" style="left: ${nextPeriodPos}%;">
+            <div class="timeline-dot"></div>
+            <div class="timeline-date">${nextPeriod.toLocaleDateString(undefined, options)}</div>
+            <div class="timeline-label">${isEnglish ? "Next Period" : "下次月经"}</div>
+          </div>
         </div>
-        <div data-en="Fertile Window: ${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}"
-             data-zh="易孕期：${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}">
-          Fertile Window: ${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}
-        </div>`;
+      `;
+      
+      const resultHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="result-card">
+            <div class="result-label">${isEnglish ? "Next Period" : "下次月经"}</div>
+            <div class="result-value-large">${nextPeriod.toLocaleDateString(undefined, options)}</div>
+            <div class="text-gray-500 text-sm">${isEnglish ? "Estimated date" : "预计日期"}</div>
+          </div>
+          
+          <div class="result-card">
+            <div class="result-label">${isEnglish ? "Ovulation Date" : "排卵日"}</div>
+            <div class="result-value-large" style="color: #10b981;">${ovulationDate.toLocaleDateString(undefined, options)}</div>
+            <div class="text-gray-500 text-sm">${isEnglish ? "Most fertile day" : "最佳受孕日"}</div>
+          </div>
+          
+          <div class="result-card">
+            <div class="result-label">${isEnglish ? "Fertile Window" : "易孕期"}</div>
+            <div class="result-value-large" style="color: #ef4444;">${fertileStart.toLocaleDateString(undefined, options)} - ${fertileEnd.toLocaleDateString(undefined, options)}</div>
+            <div class="text-gray-500 text-sm">${isEnglish ? "Best time to conceive" : "最佳受孕时间"}</div>
+          </div>
+        </div>
+        
+        ${timelineHTML}
+        
+        <div class="cycle-visual">
+          <div class="cycle-fill" style="left: ${fertileStartPos}%; width: ${fertileEndPos - fertileStartPos}%; background: linear-gradient(90deg, #fecaca, #ef4444);"></div>
+          <div class="cycle-marker" style="left: ${ovulationPos}%;"></div>
+          <div class="cycle-label" style="left: ${ovulationPos}%;">${isEnglish ? "Ovulation" : "排卵"}</div>
+        </div>
+      `;
+
+      resultDisplay.innerHTML = resultHTML;
+      resultContainer.classList.remove('hidden');
+      showNotification(isEnglish ? "Calculation complete!" : "计算完成！");
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message === 'Calculation complete!' ? '计算完成！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

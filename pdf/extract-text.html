@@ -1,190 +1,270 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google AdSense -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
- <title>Extract Text from PDF - Free PDF Text Tool | Utilivy</title>
-<meta name="description" content="Extract text content from any PDF file easily and free, right in your browser." />
+  <title>Extract Text from PDF - Free PDF Text Tool | Utilivy</title>
+  <meta name="description" content="Extract text content from any PDF file easily and free, right in your browser." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <script>
     pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
   </script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .notification.error {
+      background: #ef4444;
     }
     textarea {
-      width: 100%;
-      min-height: 300px;
-      padding: 1rem;
-      margin-top: 1rem;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: vertical;
-    }
-    input[type="file"] {
-      margin-bottom: 1rem;
-    }
-    button.calculate {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    footer {
-      text-align: center;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
       padding: 1rem;
       font-size: 0.9rem;
-      color: #6b7280;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Extract Text from PDF" data-zh="Utilivy - 提取 PDF 文本">Utilivy - Extract Text from PDF</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Text Extractor</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 文本提取器</h1>
+      <p class="text-gray-500 text-sm en">Extract text content from any PDF file</p>
+      <p class="text-gray-500 text-sm zh">从PDF文件中提取文本内容</p>
+    </div>
+
+    <!-- Main Content -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Upload PDF File</span>
+          <span class="zh">上传 PDF 文件</span>
+        </label>
+        <input type="file" id="pdfFile" accept="application/pdf" 
+               class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" />
+      </div>
+
+      <button onclick="extractText()" class="btn-primary text-white py-3 w-full rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span class="en">Extract Text</span>
+        <span class="zh">提取文本</span>
+      </button>
+
+      <div class="mt-4">
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Extracted Text</span>
+          <span class="zh">已提取文本</span>
+        </label>
+        <textarea id="output" class="w-full h-64" placeholder="Extracted text will appear here..."></textarea>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Upload a PDF file using the button above</li>
+          <li class="zh">1. 点击上方按钮上传PDF文件</li>
+          <li class="en">2. Click 'Extract Text' to start processing</li>
+          <li class="zh">2. 点击'提取文本'开始处理</li>
+          <li class="en">3. Wait a few seconds for text extraction</li>
+          <li class="zh">3. 等待几秒钟完成文本提取</li>
+          <li class="en">4. Copy or edit the extracted text</li>
+          <li class="zh">4. 复制或编辑提取的文本</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About PDF Extraction</span>
+          <span class="zh">关于PDF提取</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Works with scanned PDFs (OCR required)</li>
+          <li class="zh">▸ 支持扫描版PDF(需要OCR)</li>
+          <li class="en">▸ Preserves basic text formatting</li>
+          <li class="zh">▸ 保留基本文本格式</li>
+          <li class="en">▸ Maximum file size: 25MB</li>
+          <li class="zh">▸ 最大文件大小: 25MB</li>
+          <li class="en">▸ 100% browser-based processing</li>
+          <li class="zh">▸ 100% 浏览器端处理</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="pdfFile">Upload PDF File:</label>
-    <input type="file" id="pdfFile" accept="application/pdf" />
-    <button onclick="extractText()">Extract Text</button>
-    <textarea id="output" placeholder="Extracted text will appear here..."></textarea>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Text extracted successfully!</span>
+    <span class="zh">文本提取成功！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    document.addEventListener('DOMContentLoaded', function() {
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+    });
+
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
       });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('success') ? '文本提取成功！' : message;
+      }
+      
+      notification.classList.add('show');
+      setTimeout(() => notification.classList.remove('show'), 3000);
     }
 
     async function extractText() {
       const fileInput = document.getElementById("pdfFile");
       const output = document.getElementById("output");
-      output.value = "Loading and extracting text...";
-      if (!fileInput.files.length) return alert("Please upload a PDF file.");
-
-      const file = fileInput.files[0];
-      const arrayBuffer = await file.arrayBuffer();
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdf = await loadingTask.promise;
-
-      let fullText = "";
-      for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        const pageText = content.items.map(item => item.str).join(" ");
-        fullText += `--- Page ${i} ---\\n` + pageText + "\\n\\n";
+      
+      if (!fileInput.files.length) {
+        showNotification('Please upload a PDF file', true);
+        return;
       }
-      output.value = fullText.trim();
+
+      output.value = "";
+      showNotification('Processing PDF...');
+
+      try {
+        const file = fileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+
+        let fullText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          fullText += content.items.map(item => item.str).join(" ") + "\n\n";
+        }
+        
+        output.value = fullText.trim();
+        showNotification('Text extraction completed');
+      } catch (error) {
+        showNotification('Error: ' + error.message, true);
+        output.value = "Error occurred during text extraction";
+      }
     }
   </script>
 </body>

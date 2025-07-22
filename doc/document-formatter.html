@@ -1,103 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
   <title>Document Formatter - Clean and Fix Text | Utilivy</title>
-<meta name="description" content="Format and clean raw documents for better readability and structure." />
+  <meta name="description" content="Format and clean raw documents for better readability and structure." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
+    
+    .notification.error {
+      background: #ef4444;
     }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
+    
     textarea {
       width: 100%;
       height: 250px;
@@ -107,110 +116,327 @@
       font-size: 1rem;
       font-family: monospace;
       resize: vertical;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
+    
     select {
       padding: 0.5rem 1rem;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
       font-size: 1rem;
       border-radius: 8px;
       border: 1px solid #d1d5db;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
       width: 100%;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
+    
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
+    
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.9rem;
-      color: #6b7280;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+      height: 250px;
+      overflow: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Document Formatter" data-zh="Utilivy - 文本格式化工具">Utilivy - Document Formatter</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Document Formatter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">文本格式化工具</h1>
+      <p class="text-gray-500 text-sm en">Clean and format your code for better readability</p>
+      <p class="text-gray-500 text-sm zh">清理并格式化您的代码以提高可读性</p>
+    </div>
 
-  <div class="container">
-    <label for="formatType" data-en="Select Document Type:" data-zh="选择文档类型：">Select Document Type:</label>
-    <select id="formatType">
-      <option value="json">JSON</option>
-      <option value="html">HTML</option>
-      <option value="xml">XML</option>
-      <option value="css">CSS</option>
-      <option value="js">JavaScript</option>
-    </select>
+    <!-- Formatter Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Select Document Type</span>
+          <span class="zh">选择文档类型</span>
+        </label>
+        <select id="formatType" class="input-field">
+          <option value="json">JSON</option>
+          <option value="html">HTML</option>
+          <option value="xml">XML</option>
+          <option value="css">CSS</option>
+          <option value="js">JavaScript</option>
+        </select>
+      </div>
 
-    <label for="inputText" data-en="Paste Your Code:" data-zh="粘贴你的代码：">Paste Your Code:</label>
-    <textarea id="inputText" placeholder="Paste or type your content..."></textarea>
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Paste Your Code</span>
+          <span class="zh">粘贴您的代码</span>
+        </label>
+        <textarea id="inputText" class="input-field" placeholder="Paste your content here..."></textarea>
+      </div>
 
-    <button class="calculate" onclick="formatContent()" data-en="Format" data-zh="格式化">Format</button>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="formatContent()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="en">Format</span>
+          <span class="zh">格式化</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear</span>
+          <span class="zh">清除</span>
+        </button>
+        
+        <button onclick="copyOutput()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-copy"></i>
+          <span class="en">Copy Output</span>
+          <span class="zh">复制输出</span>
+        </button>
+      </div>
 
-    <label for="outputText" data-en="Formatted Output:" data-zh="格式化输出：">Formatted Output:</label>
-    <textarea id="outputText" readonly></textarea>
+      <!-- Formatted Output -->
+      <div class="result-box">
+        <div class="font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Formatted Output</span>
+          <span class="zh">格式化输出</span>
+        </div>
+        <div id="outputText" class="result-value"></div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Select the document type from the dropdown</li>
+          <li class="zh">1. 从下拉菜单中选择文档类型</li>
+          <li class="en">2. Paste your code into the input field</li>
+          <li class="zh">2. 将代码粘贴到输入框中</li>
+          <li class="en">3. Click "Format" to clean and structure your code</li>
+          <li class="zh">3. 点击"格式化"清理并结构化您的代码</li>
+          <li class="en">4. Copy the formatted output using the button</li>
+          <li class="zh">4. 使用按钮复制格式化后的输出</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Supported Formats</span>
+          <span class="zh">支持的格式</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ JSON: Format and validate JSON data</li>
+          <li class="zh">▸ JSON: 格式化和验证JSON数据</li>
+          <li class="en">▸ HTML: Clean and indent HTML code</li>
+          <li class="zh">▸ HTML: 清理和缩进HTML代码</li>
+          <li class="en">▸ XML: Format XML documents</li>
+          <li class="zh">▸ XML: 格式化XML文档</li>
+          <li class="en">▸ CSS: Beautify CSS stylesheets</li>
+          <li class="zh">▸ CSS: 美化CSS样式表</li>
+          <li class="en">▸ JavaScript: Format JS code</li>
+          <li class="zh">▸ JavaScript: 格式化JS代码</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
-
-  <script>
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
-      });
-    }
-
-    function formatContent() {
-      const type = document.getElementById("formatType").value;
-      const input = document.getElementById("inputText").value;
-      let output = '';
-
-      try {
-        if (type === 'json') {
-          output = JSON.stringify(JSON.parse(input), null, 2);
-        } else if (type === 'html' || type === 'xml') {
-          output = vkbeautify[type](input, 2);
-        } else if (type === 'css') {
-          output = vkbeautify.css(input, 2);
-        } else if (type === 'js') {
-          output = js_beautify(input);
-        }
-      } catch (e) {
-        output = '⚠️ Error formatting document: ' + e.message;
-      }
-
-      document.getElementById("outputText").value = output;
-    }
-  </script>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
+  </div>
 
   <!-- vkBeautify and js-beautify CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vkbeautify@0.99.00/vkbeautify.min.js"></script>
+
+  <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Add event listener for the toggle
+      toggle.addEventListener('change', function(e) {
+        toggleLang(e.target);
+      });
+    });
+
+    // Language toggle
+    function toggleLang(checkbox) {
+      const isEnglish = checkbox.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputText').textContent = '';
+    }
+
+    // Copy output to clipboard
+    function copyOutput() {
+      const output = document.getElementById('outputText').textContent;
+      
+      if (!output.trim()) {
+        showNotification('No output to copy', true);
+        return;
+      }
+      
+      navigator.clipboard.writeText(output)
+        .then(() => {
+          showNotification('Copied to clipboard!');
+        })
+        .catch(err => {
+          showNotification('Failed to copy: ' + err, true);
+        });
+    }
+
+    // Format content
+    function formatContent() {
+      const type = document.getElementById("formatType").value;
+      const input = document.getElementById("inputText").value;
+      let output = '';
+
+      if (!input.trim()) {
+        showNotification('Please enter some text to format', true);
+        return;
+      }
+      
+      try {
+        if (type === 'json') {
+          output = JSON.stringify(JSON.parse(input), null, 2);
+        } else if (type === 'html') {
+          output = html_beautify(input, { indent_size: 2 });
+        } else if (type === 'xml') {
+          output = vkbeautify.xml(input, 2);
+        } else if (type === 'css') {
+          output = css_beautify(input, { indent_size: 2 });
+        } else if (type === 'js') {
+          output = js_beautify(input, { indent_size: 2 });
+        }
+      } catch (e) {
+        output = '⚠️ Error formatting document: ' + e.message;
+        showNotification('Formatting error: ' + e.message, true);
+      }
+
+      document.getElementById("outputText").textContent = output;
+    }
+  </script>
 </body>
 </html>

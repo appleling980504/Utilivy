@@ -1,212 +1,363 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Regex Tester Online - Test Regular Expressions | Utilivy</title>
-<meta name="description" content="Test and debug your regular expressions with our online regex tester. See instant match results and explanations." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <meta name="description" content="Test and debug your regular expressions with our online regex tester. See instant match results and explanations." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
+    
+    .notification.error {
+      background: #ef4444;
     }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-family: monospace;
-    }
-    button.test {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.test:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+    
+    .result-box {
       background-color: #f9fafb;
-      white-space: pre-wrap;
-      word-break: break-word;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    mark {
+    
+    .match-highlight {
       background-color: #fde68a;
       padding: 0 2px;
       border-radius: 3px;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Regex Tester" data-zh="Utilivy - 正则表达式测试器">Utilivy - Regex Tester</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matched to QR Code Generator -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle - Same as QR Code Generator -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Regex Tester</h1>
+      <h1 class="text-3xl font-bold zh mb-2">正则表达式测试器</h1>
+      <p class="text-gray-500 text-sm en">Test and debug regular expressions with instant results</p>
+      <p class="text-gray-500 text-sm zh">测试和调试正则表达式，即时查看结果</p>
+    </div>
+
+    <!-- Regex Tester Card -->
+    <div class="bg-white card p-6 space-y-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Regular Expression</span>
+          <span class="zh">正则表达式</span>
+        </label>
+        <input 
+          type="text" 
+          id="regexInput" 
+          class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" 
+          placeholder="e.g. \b\w+\b" 
+        />
+        <div class="text-xs text-gray-500 mt-1">
+          <span class="en">Enter your regular expression pattern</span>
+          <span class="zh">输入您的正则表达式模式</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Flags (optional)</span>
+          <span class="zh">标志 (可选)</span>
+        </label>
+        <input 
+          type="text" 
+          id="flagsInput" 
+          class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" 
+          placeholder="e.g. gi" 
+        />
+        <div class="text-xs text-gray-500 mt-1">
+          <span class="en">Optional flags: g (global), i (case-insensitive), m (multiline)</span>
+          <span class="zh">可选标志: g (全局), i (不区分大小写), m (多行)</span>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Test Text</span>
+          <span class="zh">测试文本</span>
+        </label>
+        <textarea 
+          id="textInput" 
+          class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-40" 
+          placeholder="Enter text to test against your regex..."
+        ></textarea>
+      </div>
+
+      <button class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm font-medium flex items-center justify-center gap-2" style="width:100%;" onclick="runRegex()">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span class="en">Test Regex</span>
+        <span class="zh">测试正则表达式</span>
+      </button>
+
+      <!-- Results Section -->
+      <div class="result-box">
+        <div class="font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Match Results</span>
+          <span class="zh">匹配结果</span>
+        </div>
+        <div id="resultOutput" class="mt-3 p-4 bg-white rounded-lg border border-gray-200 min-h-[100px]">
+          <div class="text-gray-500 text-center">
+            <i class="fa-solid fa-magnifying-glass text-3xl mb-2 text-gray-300"></i>
+            <p class="en">Results will appear here</p>
+            <p class="zh">结果将显示在这里</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 gap-6 mt-8 mb-10">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter your regular expression pattern</li>
+          <li class="zh">1. 输入您的正则表达式模式</li>
+          <li class="en">2. Add optional flags (g, i, m)</li>
+          <li class="zh">2. 添加可选标志 (g, i, m)</li>
+          <li class="en">3. Enter text to test against the regex</li>
+          <li class="zh">3. 输入要测试的文本</li>
+          <li class="en">4. Click "Test Regex" to see matches</li>
+          <li class="zh">4. 点击"测试正则表达式"查看匹配结果</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About Regular Expressions</span>
+          <span class="zh">关于正则表达式</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Patterns used to match character combinations in strings</li>
+          <li class="zh">▸ 用于匹配字符串中字符组合的模式</li>
+          <li class="en">▸ Widely used in programming, text editing, and data validation</li>
+          <li class="zh">▸ 广泛用于编程、文本编辑和数据验证</li>
+          <li class="en">▸ Use metacharacters like . * + ? ^ $ ( ) [ ] { } | \</li>
+          <li class="zh">▸ 使用元字符如 . * + ? ^ $ ( ) [ ] { } | \</li>
+          <li class="en">▸ Flags modify how the regex is interpreted</li>
+          <li class="zh">▸ 标志修改正则表达式的解释方式</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="regexInput" data-en="Regular Expression:" data-zh="正则表达式：">Regular Expression:</label>
-    <input type="text" id="regexInput" placeholder="e.g. \\b\\w+\\b" />
-
-    <label for="flagsInput" data-en="Flags (optional):" data-zh="标志位（可选）：">Flags (optional):</label>
-    <input type="text" id="flagsInput" placeholder="e.g. gi" />
-
-    <label for="textInput" data-en="Test Text:" data-zh="测试文本：">Test Text:</label>
-    <textarea id="textInput" rows="6" placeholder="Enter your test string here..."></textarea>
-
-    <button class="test" onclick="runRegex()">Test Regex</button>
-
-    <div class="result" id="resultOutput"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Regex tested successfully!</span>
+    <span class="zh">正则表达式测试成功！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+    });
+
+    // Language toggle - Same as QR Code Generator
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
     function runRegex() {
       const pattern = document.getElementById('regexInput').value;
       const flags = document.getElementById('flagsInput').value;
       const text = document.getElementById('textInput').value;
       const output = document.getElementById('resultOutput');
 
+      if (!pattern || !text) {
+        output.innerHTML = `
+          <div class="text-red-500 text-center">
+            <i class="fa-solid fa-exclamation-circle text-xl mb-2"></i>
+            <p class="en">Please enter both a regular expression and test text</p>
+            <p class="zh">请同时输入正则表达式和测试文本</p>
+          </div>
+        `;
+        return;
+      }
+
       try {
         const regex = new RegExp(pattern, flags);
         let resultText = '';
         let lastIndex = 0;
         let match;
+        let hasMatches = false;
 
-        // Highlight each match using <mark>
+        // Check for matches
         while ((match = regex.exec(text)) !== null) {
           resultText += escapeHtml(text.slice(lastIndex, match.index));
-          resultText += '<mark>' + escapeHtml(match[0]) + '</mark>';
+          resultText += `<span class="match-highlight">${escapeHtml(match[0])}</span>`;
           lastIndex = match.index + match[0].length;
+          hasMatches = true;
 
           if (!regex.global) break; // Prevent infinite loop for non-global regex
         }
         resultText += escapeHtml(text.slice(lastIndex));
-        output.innerHTML = resultText || '<span style="color: gray;" data-en="No match found." data-zh="未找到匹配。">No match found.</span>';
+
+        if (hasMatches) {
+          output.innerHTML = resultText;
+        } else {
+          output.innerHTML = `
+            <div class="text-gray-500 text-center">
+              <i class="fa-solid fa-times-circle text-xl mb-2 text-gray-400"></i>
+              <p class="en">No matches found</p>
+              <p class="zh">未找到匹配项</p>
+            </div>
+          `;
+        }
+
+        showNotification('Regex tested successfully!');
       } catch (e) {
-        output.innerHTML = `<span style="color: red;">${e.message}</span>`;
+        output.innerHTML = `
+          <div class="text-red-500">
+            <i class="fa-solid fa-exclamation-triangle mr-2"></i>
+            <span class="en">Error: ${e.message}</span>
+            <span class="zh">错误: ${e.message}</span>
+          </div>
+        `;
       }
     }
 
@@ -222,11 +373,28 @@
       });
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    // Show notification - Same as QR Code Generator
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.replace('Regex', '正则表达式').replace('tested', '测试');
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>
-</html>
+</html>  

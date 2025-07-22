@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+     crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+
+  <title>Regex Generator - Create Regular Expressions | Utilivy</title>
+  <meta name="description" content="Generate regular expressions with our intuitive builder. Perfect for developers and data analysts." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
+    }
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.error {
+      background: #ef4444;
+    }
+    
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .regex-preview {
+      background: #f3f4f6;
+      padding: 1rem;
+      border-radius: 0.5rem;
+      font-family: monospace;
+      word-break: break-all;
+    }
+    
+    .option-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .option-group h3 {
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    
+    .option-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+    
+    .option-item input[type="checkbox"] {
+      margin-right: 0.5rem;
+    }
+    
+    .option-item label {
+      font-size: 0.9rem;
+    }
+    
+    .character-set {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.5rem;
+    }
+    
+    .character-set-item {
+      padding: 0.5rem;
+      border: 1px solid #e5e7eb;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .character-set-item:hover {
+      background-color: #eef2ff;
+      border-color: #4f46e5;
+    }
+    
+    .character-set-item.active {
+      background-color: #e0e7ff;
+      border-color: #4f46e5;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Regex Generator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">正则表达式生成器</h1>
+      <p class="text-gray-500 text-sm en">Create complex regular expressions with an intuitive interface</p>
+      <p class="text-gray-500 text-sm zh">通过直观的界面创建复杂的正则表达式</p>
+    </div>
+
+    <!-- Regex Generator Card -->
+    <div class="bg-white card p-6 space-y-6 mb-8">
+      <!-- Regex Preview -->
+      <div class="result-box">
+        <div class="font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Generated Regex</span>
+          <span class="zh">生成的正则表达式</span>
+        </div>
+        <div id="regexPreview" class="regex-preview mt-3">
+          <span class="text-gray-500 en">Your regex will appear here</span>
+          <span class="text-gray-500 zh">您的正则表达式将显示在这里</span>
+        </div>
+        <button id="copyBtn" class="mt-3 px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition" onclick="copyRegex()" style="display: none;">
+          <i class="fa-solid fa-copy mr-1"></i>
+          <span class="en">Copy to Clipboard</span>
+          <span class="zh">复制到剪贴板</span>
+        </button>
+      </div>
+
+      <!-- Regex Options -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Character Sets -->
+        <div class="option-group">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+            <i class="fa-solid fa-list-ul"></i>
+            <span class="en">Character Sets</span>
+            <span class="zh">字符集</span>
+          </h3>
+          <div class="character-set">
+            <div class="character-set-item" data-value="\\d" onclick="toggleCharacterSet(this)">
+              <span class="en">Digits (0-9)</span>
+              <span class="zh">数字 (0-9)</span>
+            </div>
+            <div class="character-set-item" data-value="\\D" onclick="toggleCharacterSet(this)">
+              <span class="en">Non-digits</span>
+              <span class="zh">非数字</span>
+            </div>
+            <div class="character-set-item" data-value="\\w" onclick="toggleCharacterSet(this)">
+              <span class="en">Word characters (a-z, A-Z, 0-9, _)</span>
+              <span class="zh">单词字符 (a-z, A-Z, 0-9, _)</span>
+            </div>
+            <div class="character-set-item" data-value="\\W" onclick="toggleCharacterSet(this)">
+              <span class="en">Non-word characters</span>
+              <span class="zh">非单词字符</span>
+            </div>
+            <div class="character-set-item" data-value="\\s" onclick="toggleCharacterSet(this)">
+              <span class="en">Whitespace</span>
+              <span class="zh">空白字符</span>
+            </div>
+            <div class="character-set-item" data-value="\\S" onclick="toggleCharacterSet(this)">
+              <span class="en">Non-whitespace</span>
+              <span class="zh">非空白字符</span>
+            </div>
+            <div class="character-set-item" data-value="." onclick="toggleCharacterSet(this)">
+              <span class="en">Any character (except newline)</span>
+              <span class="zh">任意字符 (除换行符)</span>
+            </div>
+            <div class="character-set-item" data-value="\\." onclick="toggleCharacterSet(this)">
+              <span class="en">Literal dot (.)</span>
+              <span class="zh">文字点 (.)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quantifiers -->
+        <div class="option-group">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+            <i class="fa-solid fa-arrows-h"></i>
+            <span class="en">Quantifiers</span>
+            <span class="zh">量词</span>
+          </h3>
+          <div class="character-set">
+            <div class="character-set-item" data-value="*" onclick="toggleQuantifier(this)">
+              <span class="en">Zero or more (*)</span>
+              <span class="zh">零个或多个 (*)</span>
+            </div>
+            <div class="character-set-item" data-value="+" onclick="toggleQuantifier(this)">
+              <span class="en">One or more (+)</span>
+              <span class="zh">一个或多个 (+)</span>
+            </div>
+            <div class="character-set-item" data-value="?" onclick="toggleQuantifier(this)">
+              <span class="en">Zero or one (?)</span>
+              <span class="zh">零个或一个 (?)</span>
+            </div>
+            <div class="character-set-item" data-value="{n}" onclick="toggleQuantifier(this)">
+              <span class="en">Exactly n times ({n})</span>
+              <span class="zh">恰好 n 次 ({n})</span>
+            </div>
+            <div class="character-set-item" data-value="{n,}" onclick="toggleQuantifier(this)">
+              <span class="en">At least n times ({n,})</span>
+              <span class="zh">至少 n 次 ({n,})</span>
+            </div>
+            <div class="character-set-item" data-value="{n,m}" onclick="toggleQuantifier(this)">
+              <span class="en">Between n and m times ({n,m})</span>
+              <span class="zh">n 到 m 次之间 ({n,m})</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Anchors -->
+        <div class="option-group">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+            <i class="fa-solid fa-anchor"></i>
+            <span class="en">Anchors</span>
+            <span class="zh">锚点</span>
+          </h3>
+          <div class="character-set">
+            <div class="character-set-item" data-value="^" onclick="toggleAnchor(this)">
+              <span class="en">Start of string (^)</span>
+              <span class="zh">字符串开头 (^)</span>
+            </div>
+            <div class="character-set-item" data-value="$" onclick="toggleAnchor(this)">
+              <span class="en">End of string ($)</span>
+              <span class="zh">字符串结尾 ($)</span>
+            </div>
+            <div class="character-set-item" data-value="\\b" onclick="toggleAnchor(this)">
+              <span class="en">Word boundary (\\b)</span>
+              <span class="zh">单词边界 (\\b)</span>
+            </div>
+            <div class="character-set-item" data-value="\\B" onclick="toggleAnchor(this)">
+              <span class="en">Non-word boundary (\\B)</span>
+              <span class="zh">非单词边界 (\\B)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flags -->
+        <div class="option-group">
+          <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+            <i class="fa-solid fa-flag"></i>
+            <span class="en">Flags</span>
+            <span class="zh">标志</span>
+          </h3>
+          <div class="space-y-2">
+            <div class="option-item">
+              <input type="checkbox" id="flagGlobal" onchange="updateRegex()">
+              <label for="flagGlobal">
+                <span class="en">Global (g) - Match all occurrences</span>
+                <span class="zh">全局 (g) - 匹配所有出现</span>
+              </label>
+            </div>
+            <div class="option-item">
+              <input type="checkbox" id="flagIgnoreCase" onchange="updateRegex()">
+              <label for="flagIgnoreCase">
+                <span class="en">Case-insensitive (i) - Ignore case</span>
+                <span class="zh">不区分大小写 (i) - 忽略大小写</span>
+              </label>
+            </div>
+            <div class="option-item">
+              <input type="checkbox" id="flagMultiline" onchange="updateRegex()">
+              <label for="flagMultiline">
+                <span class="en">Multiline (m) - ^ and $ match start/end of line</span>
+                <span class="zh">多行 (m) - ^ 和 $ 匹配行的开始/结束</span>
+              </label>
+            </div>
+            <div class="option-item">
+              <input type="checkbox" id="flagDotAll" onchange="updateRegex()">
+              <label for="flagDotAll">
+                <span class="en">Dot-all (s) - . matches newline</span>
+                <span class="zh">单行 (s) - . 匹配换行符</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Pattern Input -->
+      <div class="option-group">
+        <h3 class="flex items-center gap-2 text-sm font-semibold text-gray-700">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Custom Pattern</span>
+          <span class="zh">自定义模式</span>
+        </h3>
+        <div class="flex gap-2">
+          <input type="text" id="customPattern" placeholder="e.g., [a-zA-Z]" class="input-field flex-1 px-3 py-2 text-sm">
+          <button class="btn-primary text-white px-4 py-2 rounded hover:shadow-md transition text-sm font-medium" onclick="addCustomPattern()">
+            <span class="en">Add</span>
+            <span class="zh">添加</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Build Regex Button -->
+      <button class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm font-medium flex items-center justify-center gap-2 w-full" onclick="buildRegex()">
+        <i class="fa-solid fa-cogs"></i>
+        <span class="en">Build Regex</span>
+        <span class="zh">构建正则表达式</span>
+      </button>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 gap-6 mt-8 mb-10">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Select character sets, quantifiers, and anchors</li>
+          <li class="zh">1. 选择字符集、量词和锚点</li>
+          <li class="en">2. Set desired flags (global, case-insensitive, etc.)</li>
+          <li class="zh">2. 设置所需的标志（全局、不区分大小写等）</li>
+          <li class="en">3. Add custom patterns if needed</li>
+          <li class="zh">3. 如果需要，添加自定义模式</li>
+          <li class="en">4. Click "Build Regex" to generate your regular expression</li>
+          <li class="zh">4. 点击"构建正则表达式"生成您的正则表达式</li>
+          <li class="en">5. Copy the generated regex to use in your code</li>
+          <li class="zh">5. 复制生成的正则表达式以在您的代码中使用</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Regex Tips</span>
+          <span class="zh">正则表达式提示</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Use character sets to match specific types of characters</li>
+          <li class="zh">▸ 使用字符集匹配特定类型的字符</li>
+          <li class="en">▸ Quantifiers control how many times a character or group can appear</li>
+          <li class="zh">▸ 量词控制字符或组可以出现的次数</li>
+          <li class="en">▸ Anchors help match positions rather than characters</li>
+          <li class="zh">▸ 锚点有助于匹配位置而非字符</li>
+          <li class="en">▸ Flags modify how the regex is interpreted</li>
+          <li class="zh">▸ 标志修改正则表达式的解释方式</li>
+          <li class="en">▸ Use parentheses to group parts of your regex</li>
+          <li class="zh">▸ 使用括号将正则表达式的部分分组</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Regex generated successfully!</span>
+    <span class="zh">正则表达式生成成功！</span>
+  </div>
+
+  <script>
+    let regexComponents = {
+      characterSets: [],
+      quantifiers: [],
+      anchors: [],
+      customPatterns: []
+    };
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Toggle character set selection
+    function toggleCharacterSet(element) {
+      element.classList.toggle('active');
+      const value = element.getAttribute('data-value');
+      const index = regexComponents.characterSets.indexOf(value);
+      
+      if (index === -1) {
+        regexComponents.characterSets.push(value);
+      } else {
+        regexComponents.characterSets.splice(index, 1);
+      }
+      
+      updateRegexPreview();
+    }
+
+    // Toggle quantifier selection
+    function toggleQuantifier(element) {
+      element.classList.toggle('active');
+      const value = element.getAttribute('data-value');
+      const index = regexComponents.quantifiers.indexOf(value);
+      
+      if (index === -1) {
+        regexComponents.quantifiers.push(value);
+      } else {
+        regexComponents.quantifiers.splice(index, 1);
+      }
+      
+      updateRegexPreview();
+    }
+
+    // Toggle anchor selection
+    function toggleAnchor(element) {
+      element.classList.toggle('active');
+      const value = element.getAttribute('data-value');
+      const index = regexComponents.anchors.indexOf(value);
+      
+      if (index === -1) {
+        regexComponents.anchors.push(value);
+      } else {
+        regexComponents.anchors.splice(index, 1);
+      }
+      
+      updateRegexPreview();
+    }
+
+    // Add custom pattern
+    function addCustomPattern() {
+      const input = document.getElementById('customPattern');
+      const pattern = input.value.trim();
+      
+      if (pattern) {
+        regexComponents.customPatterns.push(pattern);
+        input.value = '';
+        updateRegexPreview();
+      }
+    }
+
+    // Update regex preview
+    function updateRegexPreview() {
+      const previewElement = document.getElementById('regexPreview');
+      let regexString = '';
+      
+      // Combine all components
+      if (regexComponents.anchors.length > 0) {
+        regexString += regexComponents.anchors.join('');
+      }
+      
+      if (regexComponents.characterSets.length > 0) {
+        if (regexComponents.characterSets.length > 1) {
+          regexString += '[' + regexComponents.characterSets.join('') + ']';
+        } else {
+          regexString += regexComponents.characterSets[0];
+        }
+      }
+      
+      if (regexComponents.quantifiers.length > 0) {
+        regexString += regexComponents.quantifiers[regexComponents.quantifiers.length - 1];
+      }
+      
+      if (regexComponents.customPatterns.length > 0) {
+        regexString += regexComponents.customPatterns.join('');
+      }
+      
+      if (regexString) {
+        previewElement.textContent = regexString;
+      } else {
+        previewElement.innerHTML = `
+          <span class="text-gray-500 en">Your regex will appear here</span>
+          <span class="text-gray-500 zh">您的正则表达式将显示在这里</span>
+        `;
+      }
+    }
+
+    // Build the final regex with flags
+    function buildRegex() {
+      const previewElement = document.getElementById('regexPreview');
+      let regexString = previewElement.textContent;
+      
+      if (!regexString || regexString.includes('Your regex')) {
+        showNotification('Please select at least one component to build a regex', true);
+        return;
+      }
+      
+      // Get selected flags
+      const flags = [];
+      if (document.getElementById('flagGlobal').checked) flags.push('g');
+      if (document.getElementById('flagIgnoreCase').checked) flags.push('i');
+      if (document.getElementById('flagMultiline').checked) flags.push('m');
+      if (document.getElementById('flagDotAll').checked) flags.push('s');
+      
+      const finalRegex = `/` + regexString + `/` + flags.join('');
+      previewElement.textContent = finalRegex;
+      
+      // Show the copy button after successful generation
+      document.getElementById('copyBtn').style.display = 'inline-block';
+      
+      showNotification('Regex built successfully!');
+    }
+
+    // Copy regex to clipboard
+    function copyRegex() {
+      const previewElement = document.getElementById('regexPreview');
+      const regexString = previewElement.textContent;
+      
+      if (regexString && !regexString.includes('Your regex')) {
+        navigator.clipboard.writeText(regexString).then(() => {
+          showNotification('Copied to clipboard!');
+        }).catch(err => {
+          showNotification('Failed to copy text', true);
+        });
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.replace('Regex', '正则表达式').replace('generated', '生成').replace('built', '构建').replace('copied', '复制');
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>  

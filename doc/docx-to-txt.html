@@ -3,194 +3,809 @@
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
   <title>DOCX to TXT Converter - Extract Plain Text | Utilivy</title>
-<meta name="description" content="Convert DOCX files to plain TXT format instantly online. No installation needed." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <meta name="description" content="Convert DOCX files to plain TXT format instantly online. No installation needed." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
       margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+      padding: 0;
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
+      background: white;
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
       color: white;
-      width: 42px;
-      height: 32px;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    input[type="file"] {
-      width: 100%;
-      margin-top: 1rem;
-    }
-    button.convert {
-      background: var(--primary-color);
+    
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
       color: white;
       border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
       cursor: pointer;
       font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
-    button.convert:hover {
-      background-color: #4338ca;
+    
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
     }
-    textarea {
-      width: 100%;
-      margin-top: 1.5rem;
-      padding: 1rem;
-      font-size: 1rem;
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
       border-radius: 8px;
-      border: 1px solid #d1d5db;
-      height: 200px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
+    
+    .notification.show {
+      transform: translateX(0);
+    }
+    
+    .notification.error {
+      background: #ef4444;
+    }
+    
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 150px;
+      height: 300px;
+      overflow: auto;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+    
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    
+    .file-upload {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    
+    .file-upload-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      background: #f9fafb;
+      border: 2px dashed #d1d5db;
+      border-radius: 0.75rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    
+    .file-upload-btn:hover {
+      border-color: #4f46e5;
+      background: #f3f4f6;
+    }
+    
+    .file-upload-btn i {
+      font-size: 2.5rem;
+      color: #4f46e5;
+    }
+    
+    .file-upload-btn span {
+      font-weight: 500;
+      color: #4b5563;
+    }
+    
+    .file-upload input[type="file"] {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    
+    .file-name {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: #4b5563;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+    
+    .file-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center;
+      margin-top: 0.5rem;
+    }
+    
+    .file-info i {
+      color: #4f46e5;
+    }
+    
+    .btn-container {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+    
+    .max-w-3xl {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    .mb-10 {
+      margin-bottom: 2.5rem;
+    }
+    
+    .mb-8 {
+      margin-bottom: 2rem;
+    }
+    
+    .mt-10 {
+      margin-top: 2.5rem;
+    }
+    
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    
+    .py-10 {
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+    
+    .flex {
+      display: flex;
+    }
+    
+    .justify-between {
+      justify-content: space-between;
+    }
+    
+    .items-center {
+      align-items: center;
+    }
+    
+    .gap-2 {
+      gap: 0.5rem;
+    }
+    
+    .gap-4 {
+      gap: 1rem;
+    }
+    
+    .text-blue-600 {
+      color: #4f46e5;
+    }
+    
+    .text-gray-500 {
       color: #6b7280;
+    }
+    
+    .text-3xl {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+    
+    .font-bold {
+      font-weight: 700;
+    }
+    
+    .text-sm {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+    
+    .bg-white {
+      background-color: white;
+    }
+    
+    .p-6 {
+      padding: 1.5rem;
+    }
+    
+    .space-y-6 > * + * {
+      margin-top: 1.5rem;
+    }
+    
+    .grid {
+      display: grid;
+    }
+    
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    
+    .gap-6 {
+      gap: 1.5rem;
+    }
+    
+    .mt-8 {
+      margin-top: 2rem;
+    }
+    
+    .p-5 {
+      padding: 1.25rem;
+    }
+    
+    .space-y-3 > * + * {
+      margin-top: 0.75rem;
+    }
+    
+    .font-semibold {
+      font-weight: 600;
+    }
+    
+    .text-blue-700 {
+      color: #1d4ed8;
+    }
+    
+    .list-decimal {
+      list-style-type: decimal;
+    }
+    
+    .list-inside {
+      list-style-position: inside;
+    }
+    
+    .text-gray-600 {
+      color: #4b5563;
+    }
+    
+    .pl-4 {
+      padding-left: 1rem;
+    }
+    
+    .space-y-2 > * + * {
+      margin-top: 0.5rem;
+    }
+    
+    .text-green-600 {
+      color: #059669;
+    }
+    
+    .list-disc {
+      list-style-type: disc;
+    }
+    
+    .text-xs {
+      font-size: 0.75rem;
+      line-height: 1rem;
+    }
+    
+    .pt-10 {
+      padding-top: 2.5rem;
+    }
+    
+    .hidden {
+      display: none;
+    }
+    
+    .progress-container {
+      height: 6px;
+      background: #e5e7eb;
+      border-radius: 3px;
+      margin: 1rem 0;
+      overflow: hidden;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: #4f46e5;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    
+    .character-count {
+      text-align: right;
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 0.5rem;
+    }
+    
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .btn-container {
+        flex-direction: column;
+      }
+      
+      .text-3xl {
+        font-size: 1.5rem;
+      }
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - DOC to TXT Converter" data-zh="Utilivy - DOC 转 TXT">Utilivy - DOC to TXT Converter</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">DOCX to TXT Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">DOCX 转 TXT 转换器</h1>
+      <p class="text-gray-500 text-sm en">Extract plain text from DOCX files instantly</p>
+      <p class="text-gray-500 text-sm zh">从 DOCX 文件中即时提取纯文本</p>
+    </div>
+
+    <!-- Converter Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Upload .docx File</span>
+          <span class="zh">上传 .docx 文件</span>
+        </label>
+        
+        <div class="file-upload">
+          <div class="file-upload-btn">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span class="en">Drag & drop or click to upload</span>
+            <span class="zh">拖放文件或点击上传</span>
+          </div>
+          <input type="file" id="upload" accept=".docx" onchange="updateFileName()" />
+          <div id="fileName" class="file-name en">No file selected</div>
+          <div id="fileName" class="file-name zh">未选择文件</div>
+          <div class="file-info">
+            <i class="fa-solid fa-circle-info"></i>
+            <span class="en">Max file size: 10MB</span>
+            <span class="zh">最大文件大小: 10MB</span>
+          </div>
+        </div>
+        
+        <div class="progress-container hidden" id="progressContainer">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <div class="btn-container">
+        <button onclick="convertToText()" class="btn-primary">
+          <i class="fa-solid fa-file-arrow-down"></i>
+          <span class="en">Convert to TXT</span>
+          <span class="zh">转换为 TXT</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除全部</span>
+        </button>
+      </div>
+
+      <!-- Result -->
+      <div class="result-box">
+        <div class="font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-file-lines"></i>
+          <span class="en">Extracted Text</span>
+          <span class="zh">提取的文本</span>
+        </div>
+        <div id="output" class="result-value" placeholder="Converted text will appear here..."></div>
+        <div class="character-count">
+          <span id="charCount">0</span>
+          <span class="en"> characters</span>
+          <span class="zh"> 个字符</span>
+        </div>
+        <button class="copy-btn" onclick="copyOutput()">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy Text</span>
+          <span class="zh">复制文本</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Click "Choose a DOCX file" to select your document</li>
+          <li class="zh">1. 点击"选择 DOCX 文件"选择您的文档</li>
+          <li class="en">2. Click "Convert to TXT" to extract the text</li>
+          <li class="zh">2. 点击"转换为 TXT"提取文本</li>
+          <li class="en">3. Copy the extracted text using the button</li>
+          <li class="zh">3. 使用按钮复制提取的文本</li>
+          <li class="en">4. Use "Clear All" to reset the converter</li>
+          <li class="zh">4. 使用"清除全部"重置转换器</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About DOCX to TXT</span>
+          <span class="zh">关于 DOCX 转 TXT</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">▸ Extract text from Word documents without formatting</li>
+          <li class="zh">▸ 从 Word 文档中提取无格式文本</li>
+          <li class="en">▸ Preserve basic text structure (paragraphs and line breaks)</li>
+          <li class="zh">▸ 保留基本文本结构（段落和换行）</li>
+          <li class="en">▸ Process runs entirely in your browser - files never uploaded</li>
+          <li class="zh">▸ 完全在浏览器中处理 - 文件不会被上传</li>
+          <li class="en">▸ Supports files up to 10MB in size</li>
+          <li class="zh">▸ 支持最大 10MB 的文件</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label data-en="Upload .docx File" data-zh="上传 .docx 文件">Upload .docx File</label>
-    <input type="file" id="upload" accept=".docx"/>
-
-    <button class="convert" onclick="convertToText()">Convert to TXT</button>
-
-    <textarea id="output" placeholder="Converted text will appear here..." readonly></textarea>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Add event listener for the toggle
+      toggle.addEventListener('change', function(e) {
+        toggleLang(e.target);
+      });
+      
+      // Initialize drag and drop
+      setupDragAndDrop();
+    });
+
+    // Language toggle
+    function toggleLang(checkbox) {
+      const isEnglish = checkbox.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+    
+    // Helper to check language
+    function isEnglish() {
+      return document.getElementById('langToggle').checked;
+    }
+
+    // Update file name display
+    function updateFileName() {
+      const fileInput = document.getElementById('upload');
+      const fileNameDisplay = document.querySelectorAll('.file-name');
+      const progressContainer = document.getElementById('progressContainer');
+      
+      if (fileInput.files.length > 0) {
+        const fileName = fileInput.files[0].name;
+        fileNameDisplay.forEach(el => {
+          el.textContent = fileName;
+          el.style.color = '#111827';
+        });
+        progressContainer.classList.remove('hidden');
+      } else {
+        fileNameDisplay.forEach(el => {
+          el.textContent = isEnglish() ? 'No file selected' : '未选择文件';
+          el.style.color = '#4b5563';
+        });
+        progressContainer.classList.add('hidden');
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('upload').value = '';
+      document.getElementById('output').textContent = '';
+      document.getElementById('charCount').textContent = '0';
+      updateFileName();
+    }
+
+    // Copy output to clipboard
+    function copyOutput() {
+      const output = document.getElementById('output').textContent;
+      
+      if (!output.trim()) {
+        showNotification('No text to copy', true);
+        return;
+      }
+      
+      navigator.clipboard.writeText(output)
+        .then(() => {
+          showNotification('Copied to clipboard!');
+        })
+        .catch(err => {
+          showNotification('Failed to copy: ' + err, true);
+        });
+    }
+
+    // Convert DOCX to Text
     function convertToText() {
       const fileInput = document.getElementById("upload");
       const output = document.getElementById("output");
+      const charCount = document.getElementById("charCount");
+      const progressBar = document.getElementById("progressBar");
       const file = fileInput.files[0];
 
       if (!file) {
-        alert("Please select a .docx file.");
+        showNotification('Please select a .docx file', true);
+        return;
+      }
+
+      // Check file size (10MB limit)
+      if (file.size > 10 * 1024 * 1024) {
+        showNotification('File is too large (max 10MB)', true);
         return;
       }
 
       const reader = new FileReader();
+      
+      // Show loading progress
+      progressBar.style.width = '0%';
+      
+      // Simulate progress (since FileReader doesn't provide progress for arrayBuffer)
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        progress += 5;
+        progressBar.style.width = `${progress}%`;
+        if (progress >= 95) clearInterval(progressInterval);
+      }, 100);
+      
       reader.onload = function(event) {
-        const arrayBuffer = event.target.result;
-        mammoth.extractRawText({ arrayBuffer: arrayBuffer })
-          .then(function(result) {
-            output.value = result.value;
-          })
-          .catch(function(err) {
-            output.value = "Error: " + err.message;
-          });
+        clearInterval(progressInterval);
+        progressBar.style.width = '100%';
+        
+        setTimeout(() => {
+          const arrayBuffer = event.target.result;
+          
+          // Show processing message
+          output.textContent = isEnglish() ? 'Processing... Please wait' : '处理中...请稍候';
+          
+          mammoth.extractRawText({ arrayBuffer: arrayBuffer })
+            .then(function(result) {
+              output.textContent = result.value;
+              charCount.textContent = result.value.length;
+              
+              // Hide progress bar after a delay
+              setTimeout(() => {
+                progressBar.style.width = '0%';
+              }, 500);
+            })
+            .catch(function(err) {
+              output.textContent = "Error: " + err.message;
+              charCount.textContent = '0';
+              showNotification('Conversion error: ' + err.message, true);
+            });
+        }, 500);
       };
       reader.readAsArrayBuffer(file);
     }
-
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+    
+    // Set up drag and drop
+    function setupDragAndDrop() {
+      const dropArea = document.querySelector('.file-upload-btn');
+      
+      // Prevent default drag behaviors
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+        document.body.addEventListener(eventName, preventDefaults, false);
       });
+      
+      // Highlight drop area when item is dragged over it
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      // Handle dropped files
+      dropArea.addEventListener('drop', handleDrop, false);
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      function highlight() {
+        dropArea.style.borderColor = '#4f46e5';
+        dropArea.style.backgroundColor = '#f0f9ff';
+      }
+      
+      function unhighlight() {
+        dropArea.style.borderColor = '#d1d5db';
+        dropArea.style.backgroundColor = '#f9fafb';
+      }
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const files = dt.files;
+        
+        if (files.length) {
+          const fileInput = document.getElementById('upload');
+          fileInput.files = files;
+          updateFileName();
+        }
+      }
     }
   </script>
 </body>

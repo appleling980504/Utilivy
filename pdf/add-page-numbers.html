@@ -3,193 +3,692 @@
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
   <title>Add Page Numbers to PDF - Free Online Tool | Utilivy</title>
-<meta name="description" content="Automatically insert page numbers into your PDF documents online. Simple and free." />
+  <meta name="description" content="Automatically insert page numbers into your PDF documents online. Simple and free." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
       color: white;
-      width: 42px;
-      height: 32px;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .adsense-banner,
-    .adsense-footer {
+    .file-upload {
+      border: 2px dashed #d1d5db;
+      border-radius: 0.75rem;
+      padding: 2rem;
       text-align: center;
-      margin: 1rem 0;
-      color: gray;
+      transition: all 0.3s ease;
+      background-color: #f9fafb;
+      cursor: pointer;
+      position: relative;
+    }
+    .file-upload:hover {
+      border-color: #4f46e5;
+      background-color: #f0f5ff;
+    }
+    .file-upload i {
+      font-size: 3rem;
+      color: #4f46e5;
+      margin-bottom: 1rem;
+    }
+    .file-upload input {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .file-info {
+      background-color: #f3f4f6;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .file-info.hidden {
       display: none;
     }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    input[type="file"] {
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
       border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 1rem;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-    button.calculate:hover {
-      background-color: #4338ca;
+    .notification.show {
+      transform: translateX(0);
     }
-    footer {
-      text-align: center;
+    .notification.error {
+      background: #ef4444;
+    }
+    .position-options {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    .position-option {
+      border: 2px solid #e5e7eb;
+      border-radius: 0.5rem;
       padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+    .position-option:hover {
+      border-color: #4f46e5;
+    }
+    .position-option.selected {
+      border-color: #4f46e5;
+      background-color: #f0f5ff;
+    }
+    .position-option i {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #4f46e5;
+    }
+    .customization-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .customization-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+    .customization-group label {
+      font-weight: 500;
+      font-size: 0.875rem;
+      color: #374151;
+    }
+    .customization-group input,
+    .customization-group select {
+      padding: 0.75rem;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      background-color: white;
+    }
+    .preview-container {
+      background-color: #f9fafb;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border: 1px solid #e5e7eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .preview-box {
+      width: 100%;
+      max-width: 300px;
+      height: 200px;
+      background-color: white;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .page-number-preview {
+      position: absolute;
+      padding: 0.25rem 0.75rem;
+      border-radius: 0.25rem;
+      background-color: rgba(79, 70, 229, 0.1);
+      color: #4f46e5;
+      font-size: 0.875rem;
+      font-weight: 500;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Add Page Numbers to PDF" data-zh="Utilivy - PDF 添加页码">Utilivy - Add Page Numbers to PDF</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Page Numbering Tool</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 页码添加工具</h1>
+      <p class="text-gray-500 text-sm en">Add professional page numbers to your PDF documents</p>
+      <p class="text-gray-500 text-sm zh">为您的 PDF 文档添加专业页码</p>
+    </div>
+
+    <!-- Converter Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <!-- File Upload -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Select PDF File</span>
+          <span class="zh">选择 PDF 文件</span>
+        </label>
+        <div class="file-upload" id="fileUploadArea">
+          <i class="fa-solid fa-file-pdf"></i>
+          <p class="font-medium text-gray-700 en">Click to upload or drag & drop</p>
+          <p class="font-medium text-gray-700 zh">点击上传或拖放文件</p>
+          <p class="text-gray-500 text-sm mt-1 en">PDF files only (max: 20MB)</p>
+          <p class="text-gray-500 text-sm mt-1 zh">仅支持 PDF 文件 (最大: 20MB)</p>
+          <input type="file" id="pdfFile" accept="application/pdf" onchange="handleFileSelect(event)" />
+        </div>
+        <div class="file-info hidden" id="fileInfo">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf text-red-500"></i>
+            <div>
+              <p class="font-medium text-gray-800" id="fileName">document.pdf</p>
+              <p class="text-xs text-gray-500" id="fileSize">0 KB</p>
+            </div>
+          </div>
+          <button class="text-red-500 hover:text-red-700" onclick="clearFile()">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Position Options -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Page Number Position</span>
+          <span class="zh">页码位置</span>
+        </label>
+        <div class="position-options">
+          <div class="position-option" data-position="bottom-right" onclick="selectPosition(this)">
+            <i class="fa-solid fa-arrow-down-right"></i>
+            <span class="en">Bottom Right</span>
+            <span class="zh">右下角</span>
+          </div>
+          <div class="position-option" data-position="bottom-center" onclick="selectPosition(this)">
+            <i class="fa-solid fa-arrow-down"></i>
+            <span class="en">Bottom Center</span>
+            <span class="zh">底部居中</span>
+          </div>
+          <div class="position-option" data-position="top-right" onclick="selectPosition(this)">
+            <i class="fa-solid fa-arrow-up-right"></i>
+            <span class="en">Top Right</span>
+            <span class="zh">右上角</span>
+          </div>
+          <div class="position-option" data-position="top-center" onclick="selectPosition(this)">
+            <i class="fa-solid fa-arrow-up"></i>
+            <span class="en">Top Center</span>
+            <span class="zh">顶部居中</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customization Options -->
+      <div class="customization-options">
+        <div class="customization-group">
+          <label>
+            <span class="en">Font Size</span>
+            <span class="zh">字体大小</span>
+          </label>
+          <select id="fontSize">
+            <option value="10">10 pt</option>
+            <option value="12" selected>12 pt</option>
+            <option value="14">14 pt</option>
+            <option value="16">16 pt</option>
+            <option value="18">18 pt</option>
+          </select>
+        </div>
+        <div class="customization-group">
+          <label>
+            <span class="en">Number Format</span>
+            <span class="zh">数字格式</span>
+          </label>
+          <select id="numberFormat">
+            <option value="1">1, 2, 3...</option>
+            <option value="i">i, ii, iii...</option>
+            <option value="I">I, II, III...</option>
+            <option value="a">a, b, c...</option>
+            <option value="A">A, B, C...</option>
+          </select>
+        </div>
+        <div class="customization-group">
+          <label>
+            <span class="en">Starting Page</span>
+            <span class="zh">起始页码</span>
+          </label>
+          <input type="number" id="startPage" value="1" min="1" max="1000">
+        </div>
+        <div class="customization-group">
+          <label>
+            <span class="en">Color</span>
+            <span class="zh">颜色</span>
+          </label>
+          <select id="numberColor">
+            <option value="black">Black</option>
+            <option value="blue">Blue</option>
+            <option value="red">Red</option>
+            <option value="green">Green</option>
+            <option value="gray">Gray</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Preview -->
+      <div class="preview-container">
+        <div class="text-sm font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-eye"></i>
+          <span class="en">Preview</span>
+          <span class="zh">预览效果</span>
+        </div>
+        <div class="preview-box">
+          <div class="page-number-preview" id="previewNumber" style="bottom: 20px; right: 20px;">Page 1</div>
+        </div>
+      </div>
+
+      <!-- Action Button -->
+      <div class="text-center pt-4">
+        <button id="processBtn" class="btn-primary" onclick="addPageNumbers()">
+          <i class="fa-solid fa-file-pen"></i>
+          <span class="en">Add Page Numbers</span>
+          <span class="zh">添加页码</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Upload your PDF document</li>
+          <li class="zh">1. 上传您的 PDF 文档</li>
+          <li class="en">2. Select page number position and style</li>
+          <li class="zh">2. 选择页码位置和样式</li>
+          <li class="en">3. Preview the page number placement</li>
+          <li class="zh">3. 预览页码位置</li>
+          <li class="en">4. Click "Add Page Numbers" to process</li>
+          <li class="zh">4. 点击"添加页码"进行处理</li>
+          <li class="en">5. Download your numbered PDF</li>
+          <li class="zh">5. 下载添加页码后的 PDF</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Benefits of Page Numbering</span>
+          <span class="zh">页码添加的好处</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Improves document navigation</li>
+          <li class="zh">▸ 改进文档导航</li>
+          <li class="en">▸ Essential for academic and legal documents</li>
+          <li class="zh">▸ 学术和法律文件必备</li>
+          <li class="en">▸ Professional appearance for reports</li>
+          <li class="zh">▸ 为报告提供专业外观</li>
+          <li class="en">▸ Ensures consistent referencing</li>
+          <li class="zh">▸ 确保引用一致性</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="pdfFile" data-en="Choose a PDF file:" data-zh="选择 PDF 文件：">Choose a PDF file:</label>
-    <input type="file" id="pdfFile" accept="application/pdf" />
-
-    <button class="calculate" onclick="addPageNumbers()">🧾 <span data-en="Add Page Numbers" data-zh="添加页码">Add Page Numbers</span></button>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span class="en">Processing completed!</span>
+    <span class="zh">处理完成！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set default position
+      selectPosition(document.querySelector('[data-position="bottom-right"]'));
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // File selection handler
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (file.type !== 'application/pdf') {
+        showNotification('Please select a PDF file', true);
+        return;
+      }
+      
+      if (file.size > 20 * 1024 * 1024) {
+        showNotification('File size exceeds 20MB limit', true);
+        return;
+      }
+      
+      // Show file info
+      document.getElementById('fileInfo').classList.remove('hidden');
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileSize').textContent = formatFileSize(file.size);
+    }
+    
+    function clearFile() {
+      document.getElementById('pdfFile').value = '';
+      document.getElementById('fileInfo').classList.add('hidden');
+    }
+    
+    function formatFileSize(bytes) {
+      if (bytes < 1024) return bytes + ' bytes';
+      else if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+      else return (bytes / 1048576).toFixed(1) + ' MB';
+    }
+    
+    // Position selection
+    function selectPosition(element) {
+      // Remove selected class from all
+      document.querySelectorAll('.position-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Add to clicked element
+      element.classList.add('selected');
+      
+      // Update preview
+      updatePreview(element.dataset.position);
+    }
+    
+    function updatePreview(position) {
+      const preview = document.getElementById('previewNumber');
+      preview.style.top = '';
+      preview.style.bottom = '';
+      preview.style.left = '';
+      preview.style.right = '';
+      
+      switch(position) {
+        case 'bottom-right':
+          preview.style.bottom = '20px';
+          preview.style.right = '20px';
+          break;
+        case 'bottom-center':
+          preview.style.bottom = '20px';
+          preview.style.left = '50%';
+          preview.style.transform = 'translateX(-50%)';
+          break;
+        case 'top-right':
+          preview.style.top = '20px';
+          preview.style.right = '20px';
+          break;
+        case 'top-center':
+          preview.style.top = '20px';
+          preview.style.left = '50%';
+          preview.style.transform = 'translateX(-50%)';
+          break;
+      }
+    }
+    
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('completed') ? '处理完成！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+    
+    // Main function to add page numbers
     async function addPageNumbers() {
       const fileInput = document.getElementById('pdfFile');
       if (!fileInput.files.length) {
-        alert('Please select a PDF file.');
+        showNotification('Please select a PDF file', true);
         return;
       }
 
-      const file = fileInput.files[0];
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const pages = pdfDoc.getPages();
+      // Get selected options
+      const position = document.querySelector('.position-option.selected').dataset.position;
+      const fontSize = parseInt(document.getElementById('fontSize').value);
+      const numberFormat = document.getElementById('numberFormat').value;
+      const startPage = parseInt(document.getElementById('startPage').value) || 1;
+      const color = document.getElementById('numberColor').value;
+      
+      // Disable button during processing
+      const processBtn = document.getElementById('processBtn');
+      processBtn.disabled = true;
+      processBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span class="en">Processing...</span><span class="zh">处理中...</span>';
+      
+      try {
+        const file = fileInput.files[0];
+        const arrayBuffer = await file.arrayBuffer();
+        const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+        const pages = pdfDoc.getPages();
+        
+        // Get color
+        const rgbColor = getRGBColor(color);
+        
+        // Process each page
+        for (let i = 0; i < pages.length; i++) {
+          const page = pages[i];
+          const { width, height } = page.getSize();
+          const pageNumber = formatPageNumber(startPage + i, numberFormat);
+          
+          // Set position
+          let x, y;
+          switch(position) {
+            case 'bottom-right':
+              x = width - 50;
+              y = 20;
+              break;
+            case 'bottom-center':
+              x = width / 2;
+              y = 20;
+              break;
+            case 'top-right':
+              x = width - 50;
+              y = height - 20;
+              break;
+            case 'top-center':
+              x = width / 2;
+              y = height - 20;
+              break;
+          }
+          
+          page.drawText(pageNumber, {
+            x: x,
+            y: y,
+            size: fontSize,
+            color: rgbColor
+          });
+        }
+        
+        // Save and download
+        const pdfBytes = await pdfDoc.save();
+        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
 
-      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.Helvetica);
-
-      pages.forEach((page, index) => {
-        const { width, height } = page.getSize();
-        page.drawText(`Page ${index + 1} of ${pages.length}`, {
-          x: width - 120,
-          y: 20,
-          size: 10,
-          font: font,
-          color: PDFLib.rgb(0.2, 0.2, 0.2)
-        });
-      });
-
-      const pdfBytes = await pdfDoc.save();
-      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'numbered.pdf';
-      link.click();
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'numbered-' + file.name;
+        link.click();
+        
+        showNotification('Page numbers added successfully!');
+      } catch (e) {
+        console.error(e);
+        showNotification('Error processing PDF: ' + e.message, true);
+      } finally {
+        // Re-enable button
+        processBtn.disabled = false;
+        processBtn.innerHTML = '<i class="fa-solid fa-file-pen"></i> <span class="en">Add Page Numbers</span><span class="zh">添加页码</span>';
+      }
     }
-
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    
+    function getRGBColor(colorName) {
+      switch(colorName) {
+        case 'blue': return PDFLib.rgb(0, 0.2, 0.8);
+        case 'red': return PDFLib.rgb(0.8, 0.1, 0.1);
+        case 'green': return PDFLib.rgb(0.1, 0.6, 0.2);
+        case 'gray': return PDFLib.rgb(0.4, 0.4, 0.4);
+        default: return PDFLib.rgb(0, 0, 0); // black
+      }
+    }
+    
+    function formatPageNumber(number, format) {
+      if (format === '1') return number.toString();
+      
+      // Roman numerals
+      if (format === 'i') return toRoman(number).toLowerCase();
+      if (format === 'I') return toRoman(number);
+      
+      // Alphabetic
+      if (format === 'a') return toAlphabetic(number).toLowerCase();
+      if (format === 'A') return toAlphabetic(number);
+      
+      return number.toString();
+    }
+    
+    function toRoman(num) {
+      const roman = {
+        M: 1000, CM: 900, D: 500, CD: 400,
+        C: 100, XC: 90, L: 50, XL: 40,
+        X: 10, IX: 9, V: 5, IV: 4, I: 1
+      };
+      let str = '';
+      
+      for (let i of Object.keys(roman)) {
+        const q = Math.floor(num / roman[i]);
+        num -= q * roman[i];
+        str += i.repeat(q);
+      }
+      
+      return str;
+    }
+    
+    function toAlphabetic(num) {
+      let result = '';
+      while (num > 0) {
+        const t = (num - 1) % 26;
+        result = String.fromCharCode(65 + t) + result;
+        num = Math.floor((num - 1) / 26);
+      }
+      return result || 'A';
     }
   </script>
 </body>

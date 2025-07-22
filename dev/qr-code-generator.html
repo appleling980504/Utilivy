@@ -1,196 +1,515 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>QR Code Generator - Create QR Codes Online | Utilivy</title>
-<meta name="description" content="Generate QR codes from text, links, or contact info for free." />
+  <meta name="description" content="Generate QR codes from text, links, or contact info for free." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      gap: 0.5rem;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    
+    .notification.show {
+      transform: translateX(0);
     }
-    .header-right {
+    
+    .notification.error {
+      background: #ef4444;
+    }
+    
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .color-preview {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      border: 1px solid #e5e7eb;
+      cursor: pointer;
+    }
+    
+    .color-option {
       display: flex;
       align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
+      gap: 8px;
+      padding: 6px 12px;
       border-radius: 6px;
       cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
+      transition: background 0.2s;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    
+    .color-option:hover {
+      background: #f3f4f6;
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
+    
+    .color-option.active {
+      background: #eef2ff;
+      border: 1px solid #4f46e5;
     }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    
+    .customization-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
     }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.generate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.generate:hover {
-      background-color: #4338ca;
-    }
-    .qr-output {
-      text-align: center;
-      margin-top: 1.5rem;
-    }
-    .qr-output img {
-      max-width: 100%;
-      height: auto;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    
+    .customization-panel.open {
+      max-height: 500px;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - QR Code Generator" data-zh="Utilivy - 二维码生成器">Utilivy - QR Code Generator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matched to Base64 Converter -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle - Same as Base64 Converter -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">QR Code Generator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">二维码生成器</h1>
+      <p class="text-gray-500 text-sm en">Create custom QR codes for URLs, text, and more</p>
+      <p class="text-gray-500 text-sm zh">为网址、文本等创建自定义二维码</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white card p-6 space-y-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Enter text, URL, or contact info</span>
+          <span class="zh">输入文本、网址或联系信息</span>
+        </label>
+        <input 
+          type="text" 
+          id="qrInput" 
+          class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-12" 
+          placeholder="https://example.com" 
+        />
+        <div class="text-xs text-gray-500 mt-1">
+          <span class="en">Supports URLs, plain text, and contact information</span>
+          <span class="zh">支持网址、纯文本和联系信息</span>
+        </div>
+      </div>
+
+      <!-- Customization Toggle -->
+      <div class="flex justify-center">
+        <button id="customizeToggle" class="text-blue-600 text-sm font-medium flex items-center gap-1" onclick="toggleCustomization()">
+          <i class="fa-solid fa-sliders"></i>
+          <span class="en">Customize QR Code</span>
+          <span class="zh">自定义二维码</span>
+          <i id="customizeArrow" class="fa-solid fa-chevron-down text-xs ml-1"></i>
+        </button>
+      </div>
+
+      <!-- Customization Panel -->
+      <div id="customizationPanel" class="customization-panel">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-gray-50 rounded-lg">
+          <!-- Color Options -->
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              <span class="en">QR Code Color</span>
+              <span class="zh">二维码颜色</span>
+            </label>
+            <div class="grid grid-cols-3 gap-2">
+              <div class="color-option active" data-color="#000000" onclick="selectColor(this, '#000000')">
+                <div class="color-preview" style="background-color: #000000"></div>
+                <span class="text-xs en">Black</span>
+                <span class="text-xs zh">黑色</span>
+              </div>
+              <div class="color-option" data-color="#4f46e5" onclick="selectColor(this, '#4f46e5')">
+                <div class="color-preview" style="background-color: #4f46e5"></div>
+                <span class="text-xs en">Purple</span>
+                <span class="text-xs zh">紫色</span>
+              </div>
+              <div class="color-option" data-color="#ef4444" onclick="selectColor(this, '#ef4444')">
+                <div class="color-preview" style="background-color: #ef4444"></div>
+                <span class="text-xs en">Red</span>
+                <span class="text-xs zh">红色</span>
+              </div>
+              <div class="color-option" data-color="#10b981" onclick="selectColor(this, '#10b981')">
+                <div class="color-preview" style="background-color: #10b981"></div>
+                <span class="text-xs en">Green</span>
+                <span class="text-xs zh">绿色</span>
+              </div>
+              <div class="color-option" data-color="#3b82f6" onclick="selectColor(this, '#3b82f6')">
+                <div class="color-preview" style="background-color: #3b82f6"></div>
+                <span class="text-xs en">Blue</span>
+                <span class="text-xs zh">蓝色</span>
+              </div>
+              <div class="color-option" data-color="#f59e0b" onclick="selectColor(this, '#f59e0b')">
+                <div class="color-preview" style="background-color: #f59e0b"></div>
+                <span class="text-xs en">Amber</span>
+                <span class="text-xs zh">琥珀色</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Size Options -->
+          <div>
+            <label class="block text-sm font-medium mb-2">
+              <span class="en">QR Code Size</span>
+              <span class="zh">二维码尺寸</span>
+            </label>
+            <div class="flex flex-wrap gap-2">
+              <button class="size-option px-3 py-1.5 text-xs rounded-md bg-gray-200 hover:bg-gray-300 active" data-size="300" onclick="selectSize(this, '300')">
+                <span class="en">Small</span>
+                <span class="zh">小</span>
+              </button>
+              <button class="size-option px-3 py-1.5 text-xs rounded-md bg-gray-200 hover:bg-gray-300" data-size="400" onclick="selectSize(this, '400')">
+                <span class="en">Medium</span>
+                <span class="zh">中</span>
+              </button>
+              <button class="size-option px-3 py-1.5 text-xs rounded-md bg-gray-200 hover:bg-gray-300" data-size="500" onclick="selectSize(this, '500')">
+                <span class="en">Large</span>
+                <span class="zh">大</span>
+              </button>
+              <button class="size-option px-3 py-1.5 text-xs rounded-md bg-gray-200 hover:bg-gray-300" data-size="600" onclick="selectSize(this, '600')">
+                <span class="en">X-Large</span>
+                <span class="zh">超大</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm font-medium flex items-center justify-center gap-2" onclick="generateQRCode()">
+          <i class="fa-solid fa-qrcode"></i>
+          <span class="en">Generate QR Code</span>
+          <span class="zh">生成二维码</span>
+        </button>
+        <button class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm font-medium flex items-center justify-center gap-2" id="downloadBtn" style="display: none" onclick="downloadQRCode()">
+          <i class="fa-solid fa-download"></i>
+          <span class="en">Download QR Code</span>
+          <span class="zh">下载二维码</span>
+        </button>
+      </div>
+
+      <!-- QR Output Section -->
+      <div id="qrOutput" class="result-box mt-4 min-h-[250px] flex flex-col items-center justify-center">
+        <div class="text-gray-500 text-center">
+          <i class="fa-solid fa-qrcode text-4xl mb-3 text-gray-300"></i>
+          <p class="en">Your QR code will appear here</p>
+          <p class="zh">您的二维码将显示在这里</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 gap-6 mt-8 mb-10">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter any text, URL, or contact information</li>
+          <li class="zh">1. 输入任何文本、网址或联系信息</li>
+          <li class="en">2. Customize your QR code (optional)</li>
+          <li class="zh">2. 自定义您的二维码（可选）</li>
+          <li class="en">3. Click "Generate QR Code" to create your code</li>
+          <li class="zh">3. 点击"生成二维码"创建您的代码</li>
+          <li class="en">4. Download the QR code image for use</li>
+          <li class="zh">4. 下载二维码图片供使用</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About QR Codes</span>
+          <span class="zh">关于二维码</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Quick Response (QR) codes store information readable by cameras</li>
+          <li class="zh">▸ 快速响应（QR）码存储可由相机读取的信息</li>
+          <li class="en">▸ Can contain URLs, text, contact info, and more</li>
+          <li class="zh">▸ 可包含网址、文本、联系信息等</li>
+          <li class="en">▸ Used for marketing, product labeling, and information sharing</li>
+          <li class="zh">▸ 用于营销、产品标签和信息共享</li>
+          <li class="en">▸ Scannable with most smartphone cameras without extra apps</li>
+          <li class="zh">▸ 大多数智能手机相机可直接扫描，无需额外应用</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="qrInput" data-en="Enter text or URL:" data-zh="输入文本或网址：">Enter text or URL:</label>
-    <input type="text" id="qrInput" placeholder="https://example.com" />
-
-    <button class="generate" onclick="generateQRCode()">Generate QR Code</button>
-
-    <div class="qr-output" id="qrOutput"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">QR Code generated successfully!</span>
+    <span class="zh">二维码生成成功！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    let currentQRImage = null;
+    let selectedColor = '#000000';
+    let selectedSize = '300';
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Add event listener for Enter key
+      document.getElementById('qrInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          generateQRCode();
+        }
+      });
+    });
+
+    // Language toggle - Same as Base64 Converter
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+      
+      // Update placeholder based on language
+      const input = document.getElementById('qrInput');
+      input.placeholder = isEnglish ? 'https://example.com' : '例如：https://example.com';
+    }
+
     function generateQRCode() {
       const input = document.getElementById('qrInput').value.trim();
       const output = document.getElementById('qrOutput');
+      const downloadBtn = document.getElementById('downloadBtn');
 
       if (input === "") {
-        output.innerHTML = '<p style="color: gray;" data-en="Please enter something." data-zh="请输入内容。">Please enter something.</p>';
+        showNotification('Please enter something', true);
         return;
       }
 
-      const encoded = encodeURIComponent(input);
-      const imageUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encoded}&size=200x200`;
-
-      output.innerHTML = `<img src="${imageUrl}" alt="QR Code" />`;
+      try {
+        // Remove the '#' from the color for the API
+        const colorWithoutHash = selectedColor.replace('#', '');
+        const encoded = encodeURIComponent(input);
+        const imageUrl = `https://api.qrserver.com/v1/create-qr-code/?data=${encoded}&size=${selectedSize}x${selectedSize}&color=${colorWithoutHash}&margin=10`;
+        
+        // Create QR container with image
+        output.innerHTML = `
+          <div class="qr-container w-full max-w-xs">
+            <img id="qrImage" src="${imageUrl}" alt="QR Code" class="mb-4 w-full h-auto" />
+            <p class="text-sm text-gray-500 en">Scan the QR code above</p>
+            <p class="text-sm text-gray-500 zh">扫描上方二维码</p>
+          </div>
+        `;
+        
+        currentQRImage = imageUrl;
+        downloadBtn.style.display = 'flex';
+        showNotification('QR Code generated successfully!');
+      } catch (error) {
+        showNotification('Error generating QR code', true);
+      }
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    function downloadQRCode() {
+      if (!currentQRImage) return;
+
+      // Create anchor element for download
+      const a = document.createElement('a');
+      a.href = currentQRImage;
+      a.download = 'qrcode.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      
+      showNotification('QR Code downloaded successfully!');
+    }
+
+    function toggleCustomization() {
+      const panel = document.getElementById('customizationPanel');
+      const arrow = document.getElementById('customizeArrow');
+      
+      panel.classList.toggle('open');
+      arrow.classList.toggle('fa-chevron-down');
+      arrow.classList.toggle('fa-chevron-up');
+    }
+
+    function selectColor(element, color) {
+      // Remove active class from all color options
+      document.querySelectorAll('.color-option').forEach(opt => {
+        opt.classList.remove('active');
       });
+      
+      // Add active class to selected option
+      element.classList.add('active');
+      
+      // Update selected color
+      selectedColor = color;
+    }
+
+    function selectSize(element, size) {
+      // Remove active class from all size options
+      document.querySelectorAll('.size-option').forEach(opt => {
+        opt.classList.remove('active');
+        opt.classList.remove('bg-blue-600');
+        opt.classList.remove('text-white');
+        opt.classList.add('bg-gray-200');
+      });
+      
+      // Add active class to selected option
+      element.classList.add('active');
+      element.classList.remove('bg-gray-200');
+      element.classList.add('bg-blue-600');
+      element.classList.add('text-white');
+      
+      // Update selected size
+      selectedSize = size;
+    }
+
+    // Show notification - Same as Base64 Converter
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.replace('QR Code', '二维码').replace('generated', '生成').replace('downloaded', '下载');
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>
 </html>
-

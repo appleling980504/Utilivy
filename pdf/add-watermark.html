@@ -1,295 +1,516 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+        crossorigin="anonymous"></script>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
+      <!-- Google tag (gtag.js) -->
+      <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+      <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YVL76JNY6V');
+      </script>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+      <title>Add Watermark to PDF - Free & Online | Utilivy</title>
+      <meta name="description" content="Easily add watermark text or image to your PDF files with our online tool." />
+      <link rel="icon" type="image/png" href="/assets/logo.png" />
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+      <script src="https://cdn.tailwindcss.com"></script>
+      <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+      <!-- 加载 PDF.js 的 UMD 版本 -->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
 
- <title>Add Watermark to PDF - Free & Online | Utilivy</title>
-<meta name="description" content="Easily add watermark text or image to your PDF files with our online tool." />
-  <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
-<!-- 加载 PDF.js 的 UMD 版本 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js"></script>
+      <script>
+        // 正确设置 worker
+        pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
+      </script>
 
-<script>
-  // 正确设置 worker
-  pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js";
-</script>
+      <style type="text/tailwindcss">
+        @layer utilities {
+          .content-auto {
+            content-visibility: auto;
+          }
+          .card-hover {
+            @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+          }
+          .btn-effect {
+            @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+          }
+          .gradient-bg {
+            @apply bg-gradient-to-br from-primary-500 to-primary-700;
+          }
+          .gradient-bg-secondary {
+            @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+          }
+          .notification-hidden {
+            @apply transform translate-x-full;
+          }
+          .notification-visible {
+            @apply transform translate-x-0;
+          }
+        }
+      </style>
 
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input[type="text"],
-    input[type="number"],
-    input[type="color"],
-    select {
-      width: 100%;
-      padding: 0.5rem;
-      font-size: 1rem;
-      margin-top: 0.25rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    input[type="file"] {
-      margin-bottom: 1rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      margin-right: 0.5rem;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    canvas {
-      width: 100%;
-      max-width: 100%;
-      margin-top: 20px;
-      border: 1px solid #ccc;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Add Watermark to PDF" data-zh="Utilivy - 添加 PDF 水印">Utilivy - Add Watermark to PDF</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+      <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                primary: {
+                  50: '#f5f3ff',
+                  100: '#ede9fe',
+                  200: '#ddd6fe',
+                  300: '#c4b5fd',
+                  400: '#a78bfa',
+                  500: '#8b5cf6',
+                  600: '#7c3aed',
+                  700: '#6d28d9',
+                  800: '#5b21b6',
+                  900: '#4c1d95',
+                },
+                secondary: {
+                  50: '#f8fafc',
+                  100: '#f1f5f9',
+                  200: '#e2e8f0',
+                  300: '#cbd5e1',
+                  400: '#94a3b8',
+                  500: '#64748b',
+                  600: '#475569',
+                  700: '#334155',
+                  800: '#1e293b',
+                  900: '#0f172a',
+                },
+                success: {
+                  500: '#10b981',
+                },
+                error: {
+                  500: '#ef4444',
+                },
+              },
+              fontFamily: {
+                inter: ['Inter', 'sans-serif'],
+              },
+              boxShadow: {
+                'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+                'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+              }
+            },
+          }
+        }
+      </script>
+    </head>
+    <body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+      <div class="max-w-3xl mx-auto">
+        <!-- Header - Matches Text Diff Checker -->
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <div class="text-xl font-bold text-blue-600">Utilivy</div>
+            <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+            <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+          </div>
+          <div class="flex items-center gap-4">
+            <!-- Language Toggle - Matches Text Diff Checker -->
+            <div class="flex items-center text-sm font-medium space-x-2">
+              <span class="zh text-gray-500">中</span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+                <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+                <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+              </label>
+              <span class="en text-gray-800">EN</span>
+            </div>
+
+            <!-- Home Icon -->
+            <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+              <i class="fa-solid fa-house"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Main Title -->
+        <div class="text-center mb-10">
+          <h1 class="text-3xl font-bold en mb-2">Add Watermark to PDF</h1>
+          <h1 class="text-3xl font-bold zh mb-2">PDF 添加水印</h1>
+          <p class="text-gray-500 text-sm en">Easily add watermark text or image to your PDF files</p>
+          <p class="text-gray-500 text-sm zh">轻松为您的 PDF 文件添加文本或图像水印</p>
+        </div>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+          <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+            <i class="fas fa-check-circle mr-2"></i>
+            <span class="en">Operation successful!</span>
+            <span class="zh">操作成功！</span>
+          </div>
+
+          <!-- Input Section -->
+          <div class="space-y-6">
+            <div class="space-y-3">
+              <label class="block text-sm font-medium text-secondary-700">
+                <span class="en">Upload PDF File</span>
+                <span class="zh">上传 PDF 文件</span>
+              </label>
+              <div class="relative">
+                <input type="file" id="pdfFile" accept="application/pdf" class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+              </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Watermark Text</span>
+                  <span class="zh">水印文本</span>
+                </label>
+                <input type="text" id="watermarkText" value="Confidential" class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Font Size</span>
+                  <span class="zh">字体大小</span>
+                </label>
+                <input type="number" id="fontSize" value="36" min="1" class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all" />
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Color</span>
+                  <span class="zh">颜色</span>
+                </label>
+                <div class="flex items-center gap-3">
+                  <input type="color" id="colorPicker" value="#d11a1a" class="w-10 h-10 rounded-lg cursor-pointer border-0 p-0" />
+                  <div class="flex-1">
+                    <div class="h-10 rounded-lg bg-red-600" id="colorPreview"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Opacity</span>
+                  <span class="zh">透明度</span>
+                </label>
+                <input type="range" id="opacity" value="0.2" min="0" max="1" step="0.05" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-primary-500" />
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span class="en">Transparent</span>
+                  <span class="zh">透明</span>
+                  <span id="opacityValue">0.2</span>
+                  <span class="en">Opaque</span>
+                  <span class="zh">不透明</span>
+                </div>
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Rotation (degrees)</span>
+                  <span class="zh">旋转角度 (度)</span>
+                </label>
+                <input type="number" id="angle" value="45" min="0" max="360" class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all" />
+              </div>
+
+              <div class="space-y-3">
+                <label class="block text-sm font-medium text-secondary-700">
+                  <span class="en">Position</span>
+                  <span class="zh">位置</span>
+                </label>
+                <select id="position" class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all">
+                  <option value="center">Center</option>
+                  <option value="topleft">Top Left</option>
+                  <option value="topright">Top Right</option>
+                  <option value="bottomleft">Bottom Left</option>
+                  <option value="bottomright">Bottom Right</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <button onclick="applyWatermark()" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+              <i class="fa-solid fa-file-pdf"></i>
+              <span class="en">Add Watermark</span>
+              <span class="zh">添加水印</span>
+            </button>
+            
+            <button onclick="previewWatermark()" class="bg-secondary-600 text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+              <i class="fa-solid fa-eye"></i>
+              <span class="en">Preview</span>
+              <span class="zh">预览</span>
+            </button>
+            
+            <button onclick="downloadPDF()" class="bg-green-600 text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+              <i class="fa-solid fa-download"></i>
+              <span class="en">Download</span>
+              <span class="zh">下载</span>
+            </button>
+          </div>
+
+          <!-- Preview Section -->
+          <div class="mt-6">
+            <h3 class="text-lg font-semibold mb-3">
+              <span class="en">Preview</span>
+              <span class="zh">预览</span>
+            </h3>
+            <div class="border border-gray-200 rounded-xl overflow-hidden bg-gray-50">
+              <canvas id="previewCanvas" class="w-full"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Info Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+          <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+            <h2 class="flex items-center gap-2 font-semibold text-primary-700 text-sm">
+              <i class="fa-solid fa-circle-question"></i>
+              <span class="en">How to Use</span>
+              <span class="zh">使用说明</span>
+            </h2>
+            <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+              <li class="en">1. Upload your PDF file</li>
+              <li class="zh">1. 上传您的 PDF 文件</li>
+              <li class="en">2. Customize watermark settings</li>
+              <li class="zh">2. 自定义水印设置</li>
+              <li class="en">3. Click "Add Watermark" button</li>
+              <li class="zh">3. 点击"添加水印"按钮</li>
+              <li class="en">4. Preview and download your watermarked PDF</li>
+              <li class="zh">4. 预览并下载添加了水印的 PDF</li>
+            </ol>
+          </div>
+
+          <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+            <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+              <i class="fa-solid fa-lightbulb"></i>
+              <span class="en">Features</span>
+              <span class="zh">功能特点</span>
+            </h2>
+            <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+              <li class="en">▸ 100% client-side processing</li>
+              <li class="zh">▸ 100% 客户端处理</li>
+              <li class="en">▸ Customize text, size, color and position</li>
+              <li class="zh">▸ 自定义文本、大小、颜色和位置</li>
+              <li class="en">▸ Preview before downloading</li>
+              <li class="zh">▸ 下载前预览</li>
+              <li class="en">▸ No file size limits</li>
+              <li class="zh">▸ 无文件大小限制</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center text-gray-500 text-sm mt-10">
+          <p class="en">© 2025 Utilivy. All rights reserved.</p>
+          <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+          <p class="mt-2 en">Designed for easy PDF watermarking.</p>
+          <p class="mt-2 zh">专为轻松添加 PDF 水印而设计。</p>
+        </footer>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
+      <script>
+        let watermarkedPdfBytes = null;
 
-  <div class="container">
-    <label>Upload PDF:</label>
-    <input type="file" id="pdfFile" accept="application/pdf" />
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', function() {
+          // Initialize language toggle
+          const toggle = document.getElementById('langToggle');
+          if (toggle) {
+            toggleLang(toggle);
+          }
+          
+          // Update color preview
+          const colorPicker = document.getElementById('colorPicker');
+          const colorPreview = document.getElementById('colorPreview');
+          colorPicker.addEventListener('input', function() {
+            colorPreview.style.backgroundColor = this.value;
+          });
+          
+          // Update opacity display
+          const opacitySlider = document.getElementById('opacity');
+          const opacityValue = document.getElementById('opacityValue');
+          opacitySlider.addEventListener('input', function() {
+            opacityValue.textContent = parseFloat(this.value).toFixed(2);
+          });
+        });
 
-    <label>Watermark Text:</label>
-    <input type="text" id="watermarkText" value="Confidential" />
+        // Language toggle
+        function toggleLang(toggle) {
+          const isEnglish = toggle.checked;
+          document.querySelectorAll('.en').forEach(el => {
+            el.style.display = isEnglish ? 'block' : 'none';
+          });
+          document.querySelectorAll('.zh').forEach(el => {
+            el.style.display = isEnglish ? 'none' : 'block';
+          });
+        }
 
-    <label>Font Size:</label>
-    <input type="number" id="fontSize" value="36" />
+        // Show notification
+        function showNotification(message, isError = false) {
+          const notification = document.getElementById('notification');
+          
+          // Reset and set appropriate class
+          notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+          if (isError) {
+            notification.classList.add('bg-error-500');
+            notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+          } else {
+            notification.classList.add('bg-success-500');
+            notification.querySelector('i').className = 'fas fa-check-circle mr-2';
+          }
+          
+          // Set message
+          const enSpan = notification.querySelector('.en');
+          const zhSpan = notification.querySelector('.zh');
+          enSpan.textContent = message;
+          zhSpan.textContent = isError ? '错误: ' + message : message;
+          
+          // Show notification
+          notification.classList.remove('notification-hidden');
+          notification.classList.add('notification-visible');
+          
+          // Hide after 3 seconds
+          setTimeout(() => {
+            notification.classList.remove('notification-visible');
+            notification.classList.add('notification-hidden');
+          }, 3000);
+        }
 
-    <label>Color:</label>
-    <input type="color" id="colorPicker" value="#d11a1a" />
+        // Convert hex color to RGB array
+        function hexToRgb(hex) {
+          const bigint = parseInt(hex.slice(1), 16);
+          const r = ((bigint >> 16) & 255) / 255;
+          const g = ((bigint >> 8) & 255) / 255;
+          const b = (bigint & 255) / 255;
+          return [r, g, b];
+        }
 
-    <label>Opacity (0-1):</label>
-    <input type="number" id="opacity" value="0.2" step="0.1" min="0" max="1" />
+        // Apply watermark to PDF
+        async function applyWatermark() {
+          const file = document.getElementById('pdfFile').files[0];
+          if (!file) {
+            showNotification('Please upload a PDF file first', true);
+            return;
+          }
+          
+          try {
+            // Read the PDF file
+            const arrayBuffer = await file.arrayBuffer();
+            const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+            const font = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRoman);
+            const pages = pdfDoc.getPages();
 
-    <label>Rotation (degrees):</label>
-    <input type="number" id="angle" value="45" />
+            // Get watermark settings
+            const text = document.getElementById("watermarkText").value;
+            const size = parseFloat(document.getElementById("fontSize").value);
+            const color = document.getElementById("colorPicker").value;
+            const angle = parseFloat(document.getElementById("angle").value);
+            const opacity = parseFloat(document.getElementById("opacity").value);
+            const position = document.getElementById("position").value;
+            const [r, g, b] = hexToRgb(color);
 
-    <label>Position:</label>
-    <select id="position">
-      <option value="center">Center</option>
-      <option value="topleft">Top Left</option>
-      <option value="topright">Top Right</option>
-      <option value="bottomleft">Bottom Left</option>
-      <option value="bottomright">Bottom Right</option>
-    </select>
+            // Add watermark to each page
+            pages.forEach(page => {
+              const { width, height } = page.getSize();
+              let x = width / 2, y = height / 2;
+              
+              // Calculate position based on selected option
+              if (position === "topleft") {
+                x = 50;
+                y = height - 50;
+              } else if (position === "topright") {
+                x = width - 150;
+                y = height - 50;
+              } else if (position === "bottomleft") {
+                x = 50;
+                y = 50;
+              } else if (position === "bottomright") {
+                x = width - 150;
+                y = 50;
+              }
 
-    <div>
-      <button class="calculate" onclick="applyWatermark()">Add Watermark</button>
-      <button class="calculate" onclick="previewWatermark()">Preview</button>
-      <button class="calculate" onclick="downloadPDF()">Download PDF</button>
-    </div>
+              // Draw watermark text
+              page.drawText(text, {
+                x,
+                y,
+                size: size,
+                rotate: PDFLib.degrees(angle),
+                font: font,
+                color: PDFLib.rgb(r, g, b),
+                opacity: opacity
+              });
+            });
 
-    <canvas id="previewCanvas"></canvas>
-  </div>
+            // Save the watermarked PDF
+            watermarkedPdfBytes = await pdfDoc.save();
+            showNotification('Watermark applied successfully');
+          } catch (error) {
+            showNotification('Error applying watermark: ' + error.message, true);
+            console.error(error);
+          }
+        }
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
+        // Preview the watermarked PDF
+        async function previewWatermark() {
+          if (!watermarkedPdfBytes) {
+            showNotification('Please apply watermark first', true);
+            return;
+          }
+          
+          try {
+            // Load the watermarked PDF using PDF.js
+            const { getDocument } = window['pdfjsLib'];
+            const loadingTask = getDocument({ data: watermarkedPdfBytes });
+            const pdf = await loadingTask.promise;
+            
+            // Get the first page for preview
+            const page = await pdf.getPage(1);
+            const viewport = page.getViewport({ scale: 1.0 });
+            
+            // Set up the canvas for rendering
+            const canvas = document.getElementById("previewCanvas");
+            const context = canvas.getContext("2d");
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            // Render the page
+            await page.render({ canvasContext: context, viewport }).promise;
+            showNotification('Preview generated successfully');
+          } catch (error) {
+            showNotification('Error generating preview: ' + error.message, true);
+            console.error(error);
+          }
+        }
 
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
-
-  <script>
-    let watermarkedPdfBytes = null;
-
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
-    }
-
-    function hexToRgb(hex) {
-      const bigint = parseInt(hex.slice(1), 16);
-      const r = ((bigint >> 16) & 255) / 255;
-      const g = ((bigint >> 8) & 255) / 255;
-      const b = (bigint & 255) / 255;
-      return [r, g, b];
-    }
-
-    async function applyWatermark() {
-      const file = document.getElementById('pdfFile').files[0];
-      if (!file) return alert("Upload a PDF first.");
-      const arrayBuffer = await file.arrayBuffer();
-      const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const font = await pdfDoc.embedFont(PDFLib.StandardFonts.TimesRoman);
-      const pages = pdfDoc.getPages();
-
-      const text = document.getElementById("watermarkText").value;
-      const size = parseFloat(document.getElementById("fontSize").value);
-      const color = document.getElementById("colorPicker").value;
-      const angle = parseFloat(document.getElementById("angle").value);
-      const opacity = parseFloat(document.getElementById("opacity").value);
-      const position = document.getElementById("position").value;
-      const [r, g, b] = hexToRgb(color);
-
-      pages.forEach(page => {
-        const { width, height } = page.getSize();
-        let x = width / 2, y = height / 2;
-        if (position === "topleft")     { x = 50; y = height - 50; }
-        if (position === "topright")    { x = width - 150; y = height - 50; }
-        if (position === "bottomleft")  { x = 50; y = 50; }
-        if (position === "bottomright") { x = width - 150; y = 50; }
-
-page.drawText(text, {
-  x, y,
-  size: 48,
-  rotate: PDFLib.degrees(angle),
-  font,
-  color: PDFLib.rgb(r, g, b),
-  opacity: 0.5,
-});
-      });
-
-      watermarkedPdfBytes = await pdfDoc.save();
-      alert("Watermark applied. You can now preview or download.");
-    }
-
-    async function previewWatermark() {
-      if (!watermarkedPdfBytes) return alert("Please apply watermark first.");
-      const { getDocument } = window['pdfjsLib'];
-      const loadingTask = getDocument({ data: watermarkedPdfBytes });
-      const pdf = await loadingTask.promise;
-      const page = await pdf.getPage(1);
-      const viewport = page.getViewport({ scale: 1.5 });
-      const canvas = document.getElementById("previewCanvas");
-      const context = canvas.getContext("2d");
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-      await page.render({ canvasContext: context, viewport }).promise;
-    }
-
-    function downloadPDF() {
-      if (!watermarkedPdfBytes) return alert("No watermarked PDF available.");
-      const blob = new Blob([watermarkedPdfBytes], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'watermarked.pdf';
-      link.click();
-    }
-  </script>
-</body>
-</html>
+        // Download the watermarked PDF
+        function downloadPDF() {
+          if (!watermarkedPdfBytes) {
+            showNotification('No watermarked PDF available. Please apply watermark first', true);
+            return;
+          }
+          
+          try {
+            // Create a blob from the PDF bytes
+            const blob = new Blob([watermarkedPdfBytes], { type: 'application/pdf' });
+            const link = document.createElement('a');
+            
+            // Create a download link
+            link.href = URL.createObjectURL(blob);
+            link.download = 'watermarked.pdf';
+            link.click();
+            
+            // Clean up
+            URL.revokeObjectURL(link.href);
+            showNotification('PDF downloaded successfully');
+          } catch (error) {
+            showNotification('Error downloading PDF: ' + error.message, true);
+            console.error(error);
+          }
+        }
+      </script>
+    </body>
+    </html>
+  

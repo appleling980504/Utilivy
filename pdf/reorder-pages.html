@@ -2,297 +2,677 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+    crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>View & Rotate PDF Online - No App Needed | Utilivy</title>
-<meta name="description" content="View and rotate your PDF pages online instantly. No account or software required." />
+  <meta name="description" content="View, rotate and reorder your PDF pages online instantly. No account or software required." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 960px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    #thumbnails {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    .thumb {
-      width: 223px;
-      text-align: center;
-      border: 2px dashed #ccc;
-      border-radius: 8px;
-      padding: 0.5rem;
-      background: #f9f9f9;
-      cursor: move;
-      position: relative;
-    }
-    .thumb img {
-      width: 100%;
-      border-radius: 4px;
-    }
-    .thumb .page-number {
-      position: absolute;
-      top: 2px;
-      left: 4px;
-      font-size: 12px;
-      background: rgba(0,0,0,0.5);
-      color: white;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .thumb .delete-btn {
-      position: absolute;
-      top: 2px;
-      right: 4px;
-      font-size: 14px;
-      background: red;
-      color: white;
-      padding: 0 6px;
-      border: none;
-      border-radius: 50%;
-      cursor: pointer;
-    }
-    input[type="file"] {
-      margin-bottom: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.2rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1rem;
-      margin-right: 0.5rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-effect {
+        @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary-500 to-primary-700;
+      }
+      .gradient-bg-secondary {
+        @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+      }
+      .notification-hidden {
+        @apply transform translate-x-full;
+      }
+      .notification-visible {
+        @apply transform translate-x-0;
+      }
+      .pdf-thumb {
+        @apply relative border-2 border-dashed border-gray-300 rounded-xl p-2 text-center cursor-move transition-all duration-200 bg-white shadow-sm;
+      }
+      .pdf-thumb:hover {
+        @apply border-primary-500 shadow-md;
+      }
+      .pdf-thumb.dragging {
+        @apply opacity-50 scale-95;
+      }
+      .rotate-controls {
+        @apply absolute top-2 right-2 flex gap-1;
+      }
+      .rotate-btn {
+        @apply bg-white/80 hover:bg-white text-primary-600 w-6 h-6 rounded-full flex items-center justify-center shadow-sm transition-all duration-200;
+      }
+      .reorder-hint {
+        @apply text-xs text-gray-500 mt-2;
+      }
     }
   </style>
-</head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Reorder PDF Pages" data-zh="Utilivy - PDF 页面重排">Utilivy - Reorder PDF Pages</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
-      </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
-
-  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
-
-  <div class="container">
-    <input type="file" id="pdfInput" accept="application/pdf" />
-    <div id="thumbnails"></div>
-    <div>
-      <button class="calculate" onclick="downloadReordered()">Download Reordered PDF</button>
-      <button class="calculate" onclick="resetToOriginal()">Reset to Original Order</button>
-    </div>
-  </div>
-
-  <div class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              500: '#10b981',
+            },
+            error: {
+              500: '#ef4444',
+            },
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches other tools -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Viewer & Rotator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 查看 & 旋转工具</h1>
+      <p class="text-gray-500 text-sm en">View, rotate and reorder PDF pages online</p>
+      <p class="text-gray-500 text-sm zh">在线查看、旋转和重新排序 PDF 页面</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+      <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">Operation successful!</span>
+        <span class="zh">操作成功！</span>
+      </div>
+
+      <!-- Drop Zone -->
+      <div class="drop-area" id="dropZone">
+        <div class="space-y-3">
+          <i class="fa-regular fa-file-pdf text-4xl text-gray-400"></i>
+          <h3 class="text-lg font-semibold en">Drag & Drop PDF File Here</h3>
+          <h3 class="text-lg font-semibold zh">将 PDF 文件拖放到此处</h3>
+          <p class="text-gray-500 text-sm en">or click to browse files</p>
+          <p class="text-gray-500 text-sm zh">或点击浏览文件</p>
+        </div>
+        <input type="file" id="pdfInput" accept="application/pdf" class="hidden" />
+      </div>
+
+      <!-- File Info -->
+      <div id="fileInfo" class="hidden">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-3">
+            <i class="fa-regular fa-file-pdf text-blue-500"></i>
+            <div>
+              <div class="font-medium" id="fileName">document.pdf</div>
+              <div class="text-xs text-gray-500" id="fileSize">2.4 MB</div>
+            </div>
+          </div>
+          <button onclick="clearPDF()" class="text-gray-400 hover:text-error-500 text-sm flex items-center gap-1">
+            <i class="fa-solid fa-xmark"></i>
+            <span class="en">Remove</span>
+            <span class="zh">移除</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Thumbnails Area -->
+      <div id="thumbnailsContainer" class="hidden">
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="text-lg font-semibold">
+            <span class="en">PDF Pages</span>
+            <span class="zh">PDF 页面</span>
+          </h3>
+          <p class="reorder-hint">
+            <span class="en"><i class="fa-solid fa-arrows-up-down-left-right mr-1"></i>Drag to reorder pages</span>
+            <span class="zh"><i class="fa-solid fa-arrows-up-down-left-right mr-1"></i>拖拽可重新排序页面</span>
+          </p>
+        </div>
+        <div id="thumbnails" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3"></div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div id="actionButtons" class="hidden grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button onclick="rotateAllPages(90)" class="gradient-bg-secondary text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-rotate-right"></i>
+          <span class="en">Rotate All Right</span>
+          <span class="zh">全部向右旋转</span>
+        </button>
+        <button onclick="rotateAllPages(270)" class="gradient-bg-secondary text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-rotate-left"></i>
+          <span class="en">Rotate All Left</span>
+          <span class="zh">全部向左旋转</span>
+        </button>
+        <button onclick="saveRotatedPDF()" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-download"></i>
+          <span class="en">Save Changes</span>
+          <span class="zh">保存更改</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">1. Upload a PDF file</li>
+          <li class="zh">1. 上传 PDF 文件</li>
+          <li class="en">2. View page thumbnails</li>
+          <li class="zh">2. 查看页面缩略图</li>
+          <li class="en">3. Rotate individual pages using the rotate buttons</li>
+          <li class="zh">3. 使用旋转按钮旋转单个页面</li>
+          <li class="en">4. Drag pages to reorder them</li>
+          <li class="zh">4. 拖拽页面重新排序</li>
+          <li class="en">5. Use 'Rotate All' buttons to rotate all pages</li>
+          <li class="zh">5. 使用"全部旋转"按钮旋转所有页面</li>
+          <li class="en">6. Save the modified PDF</li>
+          <li class="zh">6. 保存修改后的 PDF</li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Features</span>
+          <span class="zh">功能特点</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">▸ View PDF pages as thumbnails</li>
+          <li class="zh">▸ 以缩略图形式查看 PDF 页面</li>
+          <li class="en">▸ Rotate individual pages</li>
+          <li class="zh">▸ 旋转单个页面</li>
+          <li class="en">▸ Rotate all pages at once</li>
+          <li class="zh">▸ 一次性旋转所有页面</li>
+          <li class="en">▸ Drag and drop to reorder pages</li>
+          <li class="zh">▸ 拖拽重新排序页面</li>
+          <li class="en">▸ 100% client-side processing</li>
+          <li class="zh">▸ 100% 客户端处理</li>
+          <li class="en">▸ Preserves original PDF quality</li>
+          <li class="zh">▸ 保留原始 PDF 质量</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy PDF viewing, rotation and reordering.</p>
+      <p class="mt-2 zh">专为轻松查看、旋转和重新排序 PDF 而设计。</p>
+    </footer>
+  </div>
+
+  <script>
+    // Initialize PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    
+    // Global variables
+    let originalPdfDoc = null;
+    let modifiedPdfDoc = null;
+    let pageRotations = [];
+    let currentFile = null;
+    let pageOrder = []; // 新增：保存页面顺序的数组
+    
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Setup drag and drop
+      const dropZone = document.getElementById('dropZone');
+      const fileInput = document.getElementById('pdfInput');
+      
+      // Click to select files
+      dropZone.addEventListener('click', () => {
+        fileInput.click();
+      });
+      
+      // Handle file selection
+      fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+          loadPDF(e.target.files[0]);
+        }
+      });
+      
+      // Drag and drop handlers
+      dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+      });
+      
+      dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('dragover');
+      });
+      
+      dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        if (e.dataTransfer.files.length) {
+          loadPDF(e.dataTransfer.files[0]);
+        }
+      });
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
       });
     }
-    setLanguage('en');
 
-    let originalPdfDoc = null;
-    let originalOrder = [];
-    let pageOrder = [];
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      
+      // Reset and set appropriate class
+      notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+      if (isError) {
+        notification.classList.add('bg-error-500');
+        notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+      } else {
+        notification.classList.add('bg-success-500');
+        notification.querySelector('i').className = 'fas fa-check-circle mr-2';
+      }
+      
+      // Set message
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      enSpan.textContent = message;
+      zhSpan.textContent = isError ? '错误: ' + message : message;
+      
+      // Show notification
+      notification.classList.remove('notification-hidden');
+      notification.classList.add('notification-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('notification-visible');
+        notification.classList.add('notification-hidden');
+      }, 3000);
+    }
 
-    document.getElementById('pdfInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    // Load PDF file
+    async function loadPDF(file) {
+      try {
+        currentFile = file;
+        document.getElementById('fileName').textContent = file.name;
+        document.getElementById('fileSize').textContent = formatFileSize(file.size);
+        
+        const arrayBuffer = await file.arrayBuffer();
+        
+        // Load PDF with pdf-lib for modification
+        originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+        modifiedPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+        
+        // Load PDF with PDF.js for rendering thumbnails
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        // Initialize page rotations to 0
+        pageRotations = Array(pdf.numPages).fill(0);
+        
+        // 初始化页面顺序为默认顺序
+        pageOrder = Array.from({length: pdf.numPages}, (_, i) => i);
+        
+        // Render thumbnails using the initial page order
+        renderThumbnails(pdf);
+        
+        // Setup drag and drop for page reordering
+        setupPageReordering();
+        
+        // Show file info and thumbnails container
+        document.getElementById('fileInfo').classList.remove('hidden');
+        document.getElementById('thumbnailsContainer').classList.remove('hidden');
+        document.getElementById('actionButtons').classList.remove('hidden');
+        document.getElementById('dropZone').classList.add('hidden');
+        
+        showNotification('PDF loaded successfully');
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        showNotification('Error loading PDF: ' + error.message, true);
+      }
+    }
 
-      const arrayBuffer = await file.arrayBuffer();
-      originalPdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
-      const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
-      const pdf = await loadingTask.promise;
-
+    // Render page thumbnails with optional page order
+    async function renderThumbnails(pdf, customOrder = null) {
       const container = document.getElementById('thumbnails');
       container.innerHTML = '';
-      pageOrder = [];
-      originalOrder = [];
-
-      for (let i = 0; i < pdf.numPages; i++) {
-        const page = await pdf.getPage(i + 1);
-        const viewport = page.getViewport({ scale: 0.4 });
-
+      
+      // Determine the order to render pages
+      const renderOrder = customOrder || pageOrder;
+      
+      for (const index of renderOrder) {
+        const pageNumber = index + 1;
+        const page = await pdf.getPage(pageNumber);
+        
+        // Create thumbnail canvas
+        const viewport = page.getViewport({ scale: 0.4, rotation: pageRotations[index] });
         const canvas = document.createElement('canvas');
         canvas.width = viewport.width;
         canvas.height = viewport.height;
         const context = canvas.getContext('2d');
-        await page.render({ canvasContext: context, viewport }).promise;
-
+        
+        // Render page to canvas
+        await page.render({ 
+          canvasContext: context, 
+          viewport: viewport 
+        }).promise;
+        
+        // Create thumbnail element
         const div = document.createElement('div');
-        div.className = 'thumb';
+        div.className = 'pdf-thumb';
+        div.dataset.pageNumber = pageNumber;
+        div.dataset.originalPageNumber = pageNumber;
+        div.dataset.actualIndex = index; // 保存实际的页面索引
         div.draggable = true;
-        div.dataset.index = i;
-
+        
         div.innerHTML = `
-          <span class="page-number">${i + 1}</span>
-          <button class="delete-btn" onclick="deletePage(this)">×</button>
-          <img src="${canvas.toDataURL()}" />
+          <div class="absolute top-2 left-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+            ${renderOrder.indexOf(index) + 1}
+          </div>
+          <div class="rotate-controls">
+            <button onclick="rotatePage(${index + 1}, 90)" class="rotate-btn" title="Rotate right">
+              <i class="fa-solid fa-rotate-right"></i>
+            </button>
+            <button onclick="rotatePage(${index + 1}, 270)" class="rotate-btn" title="Rotate left">
+              <i class="fa-solid fa-rotate-left"></i>
+            </button>
+          </div>
+          <img src="${canvas.toDataURL()}" alt="Page ${pageNumber}" class="rounded-lg shadow-sm" />
         `;
-
+        
         container.appendChild(div);
-        pageOrder.push(i);
-        originalOrder.push(i);
       }
-
-      makeSortable();
-    });
-
-    function deletePage(btn) {
-      const thumb = btn.closest('.thumb');
-      thumb.remove();
-      updateOrder();
+      
+      // Re-setup drag and drop after rendering
+      setupPageReordering();
     }
 
-    function makeSortable() {
+    // Setup page reordering functionality
+    function setupPageReordering() {
       const container = document.getElementById('thumbnails');
-      let dragged = null;
-
-      container.querySelectorAll('.thumb').forEach(el => {
-        el.addEventListener('dragstart', () => dragged = el);
-        el.addEventListener('dragover', e => e.preventDefault());
-        el.addEventListener('drop', e => {
+      const thumbs = container.querySelectorAll('.pdf-thumb');
+      
+      thumbs.forEach(thumb => {
+        // Setup drag events
+        thumb.addEventListener('dragstart', (e) => {
+          thumb.classList.add('dragging');
+          e.dataTransfer.setData('text/plain', thumb.dataset.actualIndex);
+        });
+        
+        thumb.addEventListener('dragend', () => {
+          thumb.classList.remove('dragging');
+          
+          // Update page numbers after drag operation
+          updatePageNumbers();
+        });
+        
+        // Setup drop events
+        thumb.addEventListener('dragover', (e) => {
           e.preventDefault();
-          const target = e.target.closest('.thumb');
-          if (dragged && target && dragged !== target) {
-            container.insertBefore(dragged, target);
-            updateOrder();
+          
+          // Get the current thumbnail being dragged
+          const draggingThumb = document.querySelector('.pdf-thumb.dragging');
+          if (!draggingThumb) return;
+          
+          // Calculate position to insert
+          const rect = thumb.getBoundingClientRect();
+          const x = e.clientX - rect.left; // x position within the element
+          const y = e.clientY - rect.top;  // y position within the element
+          
+          // Determine if we should insert before or after
+          if (x < rect.width / 2 && y < rect.height / 2) {
+            container.insertBefore(draggingThumb, thumb);
+          } else {
+            container.insertBefore(draggingThumb, thumb.nextSibling);
           }
+        });
+        
+        thumb.addEventListener('dragenter', (e) => {
+          e.preventDefault();
+        });
+        
+        thumb.addEventListener('drop', (e) => {
+          e.preventDefault();
         });
       });
     }
 
-    function updateOrder() {
-      const thumbs = document.querySelectorAll('.thumb');
-      pageOrder = Array.from(thumbs).map(div => parseInt(div.dataset.index));
-    }
-
-    function resetToOriginal() {
+    // Update page numbers after reordering
+    function updatePageNumbers() {
       const container = document.getElementById('thumbnails');
-      const thumbs = Array.from(container.querySelectorAll('.thumb'));
-
-      const reordered = originalOrder.map(i => thumbs.find(t => parseInt(t.dataset.index) === i)).filter(Boolean);
-
-      container.innerHTML = '';
-      reordered.forEach(t => container.appendChild(t));
-      pageOrder = [...originalOrder];
+      const thumbs = container.querySelectorAll('.pdf-thumb');
+      
+      // 更新页面顺序数组
+      pageOrder = Array.from(thumbs).map(thumb => parseInt(thumb.dataset.actualIndex));
+      
+      // 更新显示的页码
+      thumbs.forEach((thumb, index) => {
+        thumb.querySelector('.absolute.top-2.left-2').textContent = index + 1;
+      });
+      
+      showNotification('Pages reordered');
     }
 
-    async function downloadReordered() {
-      if (!originalPdfDoc || pageOrder.length === 0) return alert('Please upload a PDF first.');
-      const newPdf = await PDFLib.PDFDocument.create();
-      const copiedPages = await newPdf.copyPages(originalPdfDoc, pageOrder);
-      copiedPages.forEach(p => newPdf.addPage(p));
-      const bytes = await newPdf.save();
+    // Rotate a single page
+    async function rotatePage(pageNumber, degrees) {
+      try {
+        // 转换为实际索引
+        const actualIndex = pageOrder.indexOf(pageNumber - 1);
+        if (actualIndex === -1) return;
+        
+        // Update rotation state
+        pageRotations[pageNumber - 1] = (pageRotations[pageNumber - 1] + degrees) % 360;
+        
+        // Update the page rotation in the modified PDF
+        const page = modifiedPdfDoc.getPages()[pageNumber - 1];
+        page.setRotation(PDFLib.degrees(pageRotations[pageNumber - 1]));
+        
+        // Reload PDF.js to get updated page
+        const arrayBuffer = await modifiedPdfDoc.save();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        // Re-render thumbnails using the current page order
+        renderThumbnails(pdf, pageOrder);
+        
+        showNotification(`Page ${pageNumber} rotated`);
+      } catch (error) {
+        console.error('Error rotating page:', error);
+        showNotification('Error rotating page: ' + error.message, true);
+      }
+    }
 
-      const blob = new Blob([bytes], { type: 'application/pdf' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'reordered.pdf';
-      link.click();
-      URL.revokeObjectURL(url);
+    // Rotate all pages
+    async function rotateAllPages(degrees) {
+      try {
+        // Update all rotation states
+        for (let i = 0; i < pageRotations.length; i++) {
+          pageRotations[i] = (pageRotations[i] + degrees) % 360;
+          
+          // Update the page rotation in the modified PDF
+          const page = modifiedPdfDoc.getPages()[i];
+          page.setRotation(PDFLib.degrees(pageRotations[i]));
+        }
+        
+        // Reload PDF.js to get updated pages
+        const arrayBuffer = await modifiedPdfDoc.save();
+        const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+        const pdf = await loadingTask.promise;
+        
+        // Re-render thumbnails using the current page order
+        renderThumbnails(pdf, pageOrder);
+        
+        showNotification('All pages rotated');
+      } catch (error) {
+        console.error('Error rotating all pages:', error);
+        showNotification('Error rotating pages: ' + error.message, true);
+      }
+    }
+
+async function saveRotatedPDF() {
+  try {
+    if (!modifiedPdfDoc || pageOrder.length === 0) {
+      showNotification('No PDF to save or page order is empty', true);
+      return;
+    }
+    
+    // Create a new PDF document for the output
+    const outputPdf = await PDFLib.PDFDocument.create();
+    
+    // Copy pages in the reordered sequence
+    for (const originalIndex of pageOrder) {
+      const validIndex = parseInt(originalIndex);
+      
+      // Skip invalid indices
+      if (isNaN(validIndex) || validIndex < 0 || validIndex >= modifiedPdfDoc.getPageCount()) {
+        console.error('Invalid page index:', originalIndex);
+        continue;
+      }
+      
+      // Copy the page from the modified PDF
+      const [copiedPage] = await outputPdf.copyPages(modifiedPdfDoc, [validIndex]);
+      
+      // Add the copied page directly to the output PDF (preserves all properties)
+      outputPdf.addPage(copiedPage);
+    }
+    
+    // Save the final PDF and trigger download
+    const pdfBytes = await outputPdf.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = currentFile ? currentFile.name.replace(/\.pdf$/i, '_modified.pdf') : 'modified.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    
+    showNotification('PDF saved successfully with changes');
+  } catch (error) {
+    console.error('Save error:', error);
+    showNotification('Failed to save PDF: ' + error.message, true);
+  }
+}
+    // Format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Clear PDF
+    function clearPDF() {
+      originalPdfDoc = null;
+      modifiedPdfDoc = null;
+      pageRotations = [];
+      currentFile = null;
+      pageOrder = [];
+      
+      document.getElementById('fileInfo').classList.add('hidden');
+      document.getElementById('thumbnailsContainer').classList.add('hidden');
+      document.getElementById('actionButtons').classList.add('hidden');
+      document.getElementById('dropZone').classList.remove('hidden');
+      
+      const thumbnails = document.getElementById('thumbnails');
+      if (thumbnails) {
+        thumbnails.innerHTML = '';
+      }
+      
+      showNotification('PDF cleared');
     }
   </script>
 </body>
-</html>
+</html>    

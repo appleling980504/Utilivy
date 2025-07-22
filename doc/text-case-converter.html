@@ -3,200 +3,366 @@
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Text Case Converter - Uppercase, Lowercase, Title Case | Utilivy</title>
-<meta name="description" content="Convert text between different cases: UPPERCASE, lowercase, Title Case, and more." />
+  <meta name="description" content="Convert text between different cases: UPPERCASE, lowercase, Title Case, and more." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    textarea {
-      width: 100%;
-      height: 150px;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      font-size: 1rem;
-      font-family: monospace;
-    }
-    .button-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Text Case Converter" data-zh="Utilivy - 大小写转换器">Utilivy - Text Case Converter</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
-      </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
-
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <label for="input" data-en="Input text:" data-zh="输入文本：">Input text:</label>
-    <textarea id="input" placeholder="Type or paste your text here..."></textarea>
-
-    <div class="button-group">
-      <button class="calculate" onclick="convert('upper')" data-en="UPPER CASE" data-zh="大写">UPPER CASE</button>
-      <button class="calculate" onclick="convert('lower')" data-en="lower case" data-zh="小写">lower case</button>
-      <button class="calculate" onclick="convert('title')" data-en="Title Case" data-zh="标题格式">Title Case</button>
-      <button class="calculate" onclick="convert('sentence')" data-en="Sentence case" data-zh="句子格式">Sentence case</button>
-      <button class="calculate" onclick="convert('capitalize')" data-en="Capitalize Each Word" data-zh="每词首字母大写">Capitalize Each Word</button>
-    </div>
-
-    <label for="output" data-en="Result:" data-zh="结果：">Result:</label>
-    <textarea id="output" readonly></textarea>
-  </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
-
-  <script>
-    function convert(type) {
-      let text = input.value;
-      switch (type) {
-        case 'upper':
-          output.value = text.toUpperCase();
-          break;
-        case 'lower':
-          output.value = text.toLowerCase();
-          break;
-        case 'title':
-          output.value = text.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
-          break;
-        case 'sentence':
-          output.value = text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, l => l.toUpperCase());
-          break;
-        case 'capitalize':
-          output.value = text.replace(/\b\w/g, l => l.toUpperCase());
-          break;
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-effect {
+        @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary-500 to-primary-700;
+      }
+      .gradient-bg-secondary {
+        @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+      }
+      .notification-hidden {
+        @apply transform translate-x-full;
+      }
+      .notification-visible {
+        @apply transform translate-x-0;
       }
     }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              500: '#10b981',
+            },
+            error: {
+              500: '#ef4444',
+            },
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches Special Character Map -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle - Matches Special Character Map -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Text Case Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">文本大小写转换器</h1>
+      <p class="text-gray-500 text-sm en">Convert text between different cases: UPPERCASE, lowercase, Title Case, and more.</p>
+      <p class="text-gray-500 text-sm zh">在不同大小写格式间转换文本：大写、小写、标题格式等。</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+      <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transform translate-x-full transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">Copied to clipboard!</span>
+        <span class="zh">已复制到剪贴板！</span>
+      </div>
+
+      <!-- Input Section -->
+      <div class="space-y-3">
+        <label class="block text-sm font-medium text-secondary-700">
+          <span class="en">Enter text to convert</span>
+          <span class="zh">输入要转换的文本</span>
+        </label>
+        <textarea id="inputText" class="w-full p-4 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all h-40 resize-none" placeholder="Type or paste your text here..."></textarea>
+      </div>
+
+      <!-- Conversion Buttons -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <button onclick="convertText('upper')" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-up text-white/80"></i>
+          <span class="en">UPPER CASE</span>
+          <span class="zh">大写</span>
+        </button>
+        <button onclick="convertText('lower')" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-arrow-down text-white/80"></i>
+          <span class="en">lower case</span>
+          <span class="zh">小写</span>
+        </button>
+        <button onclick="convertText('title')" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-heading text-white/80"></i>
+          <span class="en">Title Case</span>
+          <span class="zh">标题格式</span>
+        </button>
+        <button onclick="convertText('sentence')" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-paragraph text-white/80"></i>
+          <span class="en">Sentence case</span>
+          <span class="zh">句子格式</span>
+        </button>
+        <button onclick="convertText('capitalize')" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-font text-white/80"></i>
+          <span class="en">Capitalize Each Word</span>
+          <span class="zh">每词首字母大写</span>
+        </button>
+        <button onclick="clearAll()" class="gradient-bg-secondary text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-broom text-white/80"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清空</span>
+        </button>
+      </div>
+
+      <!-- Results -->
+      <div class="space-y-6 mt-4">
+        <div class="bg-gray-50 rounded-xl p-4 relative">
+          <div class="font-medium text-primary-700 flex items-center gap-2 mb-2">
+            <i class="fa-solid fa-clipboard-list"></i>
+            <span class="en">Result</span>
+            <span class="zh">转换结果</span>
+          </div>
+          <div id="outputText" class="bg-white p-4 rounded-lg border border-gray-200 min-h-24 whitespace-pre-wrap break-words"></div>
+          <button class="absolute top-4 right-4 bg-primary-600 hover:bg-primary-700 text-white rounded-lg px-3 py-1.5 text-sm flex items-center gap-1.5 transition-all" onclick="copyToClipboard()">
+            <i class="fa-regular fa-copy"></i>
+            <span class="en">Copy</span>
+            <span class="zh">复制</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-primary-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">1. Enter text in the input field</li>
+          <li class="zh">1. 在输入框中输入文本</li>
+          <li class="en">2. Select the desired case conversion</li>
+          <li class="zh">2. 选择需要的大小写转换方式</li>
+          <li class="en">3. View the converted text in the result area</li>
+          <li class="zh">3. 在结果区域查看转换后的文本</li>
+          <li class="en">4. Click "Copy" to copy the result to clipboard</li>
+          <li class="zh">4. 点击"复制"将结果复制到剪贴板</li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Conversion Types</span>
+          <span class="zh">转换类型</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">▸ UPPERCASE: Converts all characters to uppercase</li>
+          <li class="zh">▸ 大写: 将所有字符转换为大写</li>
+          <li class="en">▸ lowercase: Converts all characters to lowercase</li>
+          <li class="zh">▸ 小写: 将所有字符转换为小写</li>
+          <li class="en">▸ Title Case: Capitalizes the first letter of each word</li>
+          <li class="zh">▸ 标题格式: 每个单词的首字母大写</li>
+          <li class="en">▸ Sentence case: Capitalizes the first letter of each sentence</li>
+          <li class="zh">▸ 句子格式: 每个句子的首字母大写</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy text case conversions.</p>
+      <p class="mt-2 zh">专为轻松进行文本大小写转换而设计。</p>
+    </footer>
+  </div>
+
+  <script>
+  
+      // Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+  // 初始化语言切换
+  const toggle = document.getElementById('langToggle');
+  if (toggle) {
+    toggleLang(toggle); // 只切换语言，不显示通知
+  }
+});
+// 语言切换功能 - 修复后版本
+function toggleLang(checkbox) {
+  const enElements = document.querySelectorAll('.en');
+  const zhElements = document.querySelectorAll('.zh');
+  
+  if (checkbox.checked) {
+    // 显示英文，隐藏中文
+    enElements.forEach(el => el.style.display = 'block');
+    zhElements.forEach(el => el.style.display = 'none');
+  } else {
+    // 显示中文，隐藏英文
+    enElements.forEach(el => el.style.display = 'none');
+    zhElements.forEach(el => el.style.display = 'block');
+  }
+  
+
+}
+
+    // Convert text to selected case
+    function convertText(type) {
+      const inputText = document.getElementById('inputText').value;
+      let outputText = '';
+      
+      if (!inputText.trim()) {
+        showNotification('Please enter some text to convert', true);
+        return;
+      }
+      
+      switch (type) {
+        case 'upper':
+          outputText = inputText.toUpperCase();
+          break;
+        case 'lower':
+          outputText = inputText.toLowerCase();
+          break;
+        case 'title':
+          outputText = inputText.toLowerCase().replace(/\b\w/g, l => l.toUpperCase());
+          break;
+        case 'sentence':
+          outputText = inputText.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, l => l.toUpperCase());
+          break;
+        case 'capitalize':
+          outputText = inputText.replace(/\b\w/g, l => l.toUpperCase());
+          break;
+      }
+      
+      document.getElementById('outputText').textContent = outputText;
+    }
+
+    // Copy result to clipboard
+    function copyToClipboard() {
+      const outputText = document.getElementById('outputText').textContent;
+      
+      if (!outputText.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      navigator.clipboard.writeText(outputText)
+        .then(() => {
+          showNotification('Copied to clipboard!');
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+          showNotification('Failed to copy. Please try again.', true);
+        });
+    }
+
+     // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      
+      // Reset and set appropriate class
+      notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+      if (isError) {
+        notification.classList.add('bg-error-500');
+        notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+      } else {
+        notification.classList.add('bg-success-500');
+        notification.querySelector('i').className = 'fas fa-check-circle mr-2';
+      }
+      
+      // Set message
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      enSpan.textContent = message;
+      zhSpan.textContent = isError ? '错误: ' + message : message;
+      
+      // Show notification
+      notification.classList.remove('notification-hidden');
+      notification.classList.add('notification-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('notification-visible');
+        notification.classList.add('notification-hidden');
+      }, 3000);
+    }
+
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputText').textContent = '';
     }
   </script>
 </body>
 </html>
+  

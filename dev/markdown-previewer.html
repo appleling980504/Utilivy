@@ -1,174 +1,541 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Markdown Previewer - Real-Time Markdown Viewer | Utilivy</title>
-<meta name="description" content="Write Markdown and instantly preview the rendered HTML version online." />
+  <meta name="description" content="Write Markdown and instantly preview the rendered HTML version online." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: #4f46e5;
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .container {
-      max-width: 960px;
-      margin: 2rem auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-    textarea {
-      width: 100%;
-      padding: 1rem;
-      font-size: 1rem;
-      font-family: monospace;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      margin-bottom: 1rem;
-      resize: vertical;
-    }
-    .preview-box {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 6px;
-      background: #f9f9f9;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 300px;
+      max-height: 500px;
       overflow: auto;
     }
-    .label {
-      font-weight: bold;
-      margin-bottom: 0.5rem;
-      display: block;
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
     }
-    .adsense-banner, .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
+    .copy-btn:hover {
+      background: #4338ca;
     }
-    footer {
-      text-align: center;
-      font-size: 0.9rem;
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .btn-copy {
+      background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-copy:hover {
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .markdown-icon {
+      color: #3b82f6;
+      font-size: 1.5rem;
+    }
+    .input-textarea {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
       padding: 1rem;
-      color: #6b7280;
+      font-family: monospace;
+      font-size: 0.9rem;
+      min-height: 300px;
+      resize: vertical;
+      background: white;
+    }
+    .input-textarea:focus {
+      outline: none;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+    }
+    .preview-content {
+      padding: 1rem;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+    }
+    .preview-content h1, .preview-content h2, .preview-content h3 {
+      margin-top: 1.5em;
+      margin-bottom: 0.5em;
+      font-weight: 600;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 0.3em;
+    }
+    .preview-content h1 { font-size: 2em; }
+    .preview-content h2 { font-size: 1.5em; }
+    .preview-content h3 { font-size: 1.25em; }
+    .preview-content p { margin: 1em 0; }
+    .preview-content ul, .preview-content ol { padding-left: 2em; margin: 1em 0; }
+    .preview-content li { margin: 0.5em 0; }
+    .preview-content code {
+      background-color: #f3f4f6;
+      padding: 0.2em 0.4em;
+      border-radius: 0.25em;
+      font-family: monospace;
+    }
+    .preview-content pre {
+      background-color: #1f2937;
+      color: #f9fafb;
+      padding: 1em;
+      border-radius: 0.5em;
+      overflow: auto;
+      margin: 1em 0;
+    }
+    .preview-content blockquote {
+      border-left: 4px solid #d1d5db;
+      padding-left: 1em;
+      margin: 1em 0;
+      color: #4b5563;
+    }
+    .preview-content table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 1em 0;
+    }
+    .preview-content th, .preview-content td {
+      border: 1px solid #d1d5db;
+      padding: 0.5em;
+      text-align: left;
+    }
+    .preview-content th {
+      background-color: #f3f4f6;
+      font-weight: 600;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr 1fr;
+      }
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Markdown Previewer" data-zh="Utilivy - Markdown 预览工具">Utilivy - Markdown Previewer</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Markdown Previewer</h1>
+      <h1 class="text-3xl font-bold zh mb-2">Markdown 预览工具</h1>
+      <p class="text-gray-500 text-sm en">Write Markdown and preview the rendered HTML in real-time</p>
+      <p class="text-gray-500 text-sm zh">编写 Markdown 并实时预览渲染的 HTML</p>
+    </div>
+
+    <!-- Previewer Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div class="grid-layout">
+        <!-- Markdown Input -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium">
+              <span class="en">Markdown Input</span>
+              <span class="zh">Markdown 输入</span>
+            </label>
+            <div class="flex gap-2">
+              <button onclick="loadExample()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span class="en">Example</span>
+                <span class="zh">示例</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="markdownInput" class="input-textarea" placeholder="# Hello Markdown&#10;## Start writing here..." oninput="updatePreview()"></textarea>
+        </div>
+        
+        <!-- HTML Preview -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium">
+              <span class="en">HTML Preview</span>
+              <span class="zh">HTML 预览</span>
+            </label>
+            <button onclick="copyHTML()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i>
+              <span class="en">Copy HTML</span>
+              <span class="zh">复制 HTML</span>
+            </button>
+          </div>
+          <div class="result-box">
+            <div id="preview" class="preview-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-4">
+        <button onclick="updatePreview()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-rotate"></i>
+          <span class="en">Refresh Preview</span>
+          <span class="zh">刷新预览</span>
+        </button>
+        
+        <button onclick="copyMarkdown()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy Markdown</span>
+          <span class="zh">复制 Markdown</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除所有</span>
+        </button>
+        
+        <button onclick="downloadMarkdown()" class="btn-copy text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-download"></i>
+          <span class="en">Download</span>
+          <span class="zh">下载</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">1. Write Markdown in the input field</li>
+          <li class="zh">1. 在输入框中编写 Markdown</li>
+          <li class="en">2. Preview renders instantly as you type</li>
+          <li class="zh">2. 预览会在您输入时实时渲染</li>
+          <li class="en">3. Use buttons to copy or download content</li>
+          <li class="zh">3. 使用按钮复制或下载内容</li>
+          <li class="en">4. Click "Example" for sample Markdown</li>
+          <li class="zh">4. 点击"示例"获取 Markdown 示例</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Markdown Cheatsheet</span>
+          <span class="zh">Markdown 速查表</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Headers: # H1, ## H2, ### H3</li>
+          <li class="zh">▸ 标题: # H1, ## H2, ### H3</li>
+          <li class="en">▸ Lists: - item or 1. item</li>
+          <li class="zh">▸ 列表: - 项目 或 1. 项目</li>
+          <li class="en">▸ Links: [text](url)</li>
+          <li class="zh">▸ 链接: [文本](网址)</li>
+          <li class="en">▸ Code: `code` or ```code block```</li>
+          <li class="zh">▸ 代码: `代码` 或 ```代码块```</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Markdown Example</span>
+          <span class="zh">Markdown 示例</span>
+        </h2>
+        <div class="text-xs font-mono bg-gray-50 p-3 rounded">
+          # Heading<br>
+          **Bold text**<br>
+          - List item<br>
+          [Link](https://example.com)
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label class="label" for="markdownInput" data-en="Enter Markdown" data-zh="输入 Markdown 文本">Enter Markdown</label>
-    <textarea id="markdownInput" rows="10" placeholder="# Hello Markdown" oninput="updatePreview()"></textarea>
-
-    <label class="label" data-en="Preview" data-zh="预览效果">Preview</label>
-    <div class="preview-box" id="preview"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function updatePreview() {
-      const input = document.getElementById('markdownInput').value;
-      document.getElementById('preview').innerHTML = marked.parse(input);
-    }
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Load initial content
+      loadExample();
+    });
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
       });
     }
 
-    // Init
-    updatePreview();
+    // Update preview
+    function updatePreview() {
+      const input = document.getElementById('markdownInput').value;
+      document.getElementById('preview').innerHTML = marked.parse(input || '**Preview will appear here**');
+    }
+
+    // Load example Markdown
+    function loadExample() {
+      const example = `# Welcome to Markdown Previewer
+
+## This is a subheading
+
+Here's some **bold text** and *italic text*.
+
+### Features:
+- Real-time preview
+- Clean, responsive design
+- Copy and download options
+- Example Markdown
+
+### Code Example:
+\`\`\`javascript
+function helloWorld() {
+  console.log('Hello Markdown!');
+}
+\`\`\`
+
+### Links:
+[Utilivy Homepage](https://utilivy.com)
+
+> This is a blockquote. Markdown makes formatting easy!`;
+
+      document.getElementById('markdownInput').value = example;
+      updatePreview();
+      showNotification('Example Markdown loaded');
+    }
+
+    // Copy Markdown to clipboard
+    function copyMarkdown() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      const textArea = document.createElement('textarea');
+      textArea.value = input;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      showNotification('Markdown copied to clipboard!');
+    }
+
+    // Copy HTML to clipboard
+    function copyHTML() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      const html = marked.parse(input);
+      const textArea = document.createElement('textarea');
+      textArea.value = html;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      showNotification('HTML copied to clipboard!');
+    }
+
+    // Download Markdown
+    function downloadMarkdown() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to download', true);
+        return;
+      }
+      
+      const blob = new Blob([input], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'document.md';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showNotification('Markdown downloaded!');
+    }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('markdownInput').value = '';
+      updatePreview();
+      showNotification('All fields cleared');
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
   </script>
 </body>
 </html>

@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+     crossorigin="anonymous"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PDF Converter – Utilivy</title>
+  <meta name="description" content="Convert PDF files to JPG, PNG, and TXT formats online for free.">
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <!-- Added for zip functionality -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
+    }
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .format-option {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    .format-option:hover {
+      border-color: #4f46e5;
+    }
+    .format-option.selected {
+      border-color: #4f46e5;
+      background-color: rgba(79, 70, 229, 0.05);
+    }
+    .pdf-preview {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      margin: 1rem 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .preview-container {
+      overflow-y: auto;
+      max-height: 600px;
+      margin: 1rem 0;
+      padding: 1rem;
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    .page-preview-item {
+      margin-bottom: 2rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px dashed #e5e7eb;
+    }
+    .page-preview-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+    .progress-container {
+      height: 6px;
+      background-color: #e5e7eb;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #4f46e5 0%, #7c3aed 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+    .page-selection {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1rem 0;
+      flex-wrap: wrap;
+    }
+    .page-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .download-all-progress {
+      margin-top: 1rem;
+      font-size: 0.875rem;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">PDF Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">PDF 转换器</h1>
+      <p class="text-gray-500 text-sm en">Convert PDF files to JPG, PNG, and TXT formats</p>
+      <p class="text-gray-500 text-sm zh">将 PDF 文件转换为 JPG、PNG 和 TXT 格式</p>
+    </div>
+
+    <!-- Converter Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <!-- File Upload Area -->
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Upload PDF File</span>
+          <span class="zh">上传 PDF 文件</span>
+        </label>
+        <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-500 transition-colors cursor-pointer" onclick="document.getElementById('pdfFile').click()">
+          <i class="fa-regular fa-file-pdf text-5xl text-gray-400 mb-3"></i>
+          <p class="text-gray-500 en">Click to select PDF or drag and drop here</p>
+          <p class="text-gray-500 zh">点击选择 PDF 或拖放至此处</p>
+          <input type="file" id="pdfFile" accept="application/pdf" class="hidden" onchange="handleFileUpload(event)" />
+        </div>
+        
+        <!-- File Info (Hidden by default) -->
+        <div id="fileInfo" class="hidden mt-4 p-4 bg-gray-50 rounded-lg">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-3">
+              <i class="fa-regular fa-file-pdf text-blue-500 text-xl"></i>
+              <div>
+                <div id="fileName" class="font-medium"></div>
+                <div class="text-xs text-gray-500">
+                  <span id="fileSize"></span> · 
+                  <span id="filePages" class="en">pages</span>
+                  <span id="filePagesZh" class="zh">页</span>
+                </div>
+              </div>
+            </div>
+            <button onclick="removeFile()" class="text-gray-400 hover:text-red-500 transition-colors">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Format Selection -->
+      <div id="formatSelection" class="hidden">
+        <label class="block text-sm font-medium mb-3">
+          <span class="en">Output Format</span>
+          <span class="zh">输出格式</span>
+        </label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- JPG Format -->
+          <div class="format-option selected" onclick="selectFormat(this, 'jpg')">
+            <i class="fa-solid fa-file-image text-2xl text-blue-500 mb-2"></i>
+            <h3 class="font-medium">JPG</h3>
+            <p class="text-xs text-gray-500 en">Image format</p>
+            <p class="text-xs text-gray-500 zh">图像格式</p>
+          </div>
+          
+          <!-- PNG Format -->
+          <div class="format-option" onclick="selectFormat(this, 'png')">
+            <i class="fa-solid fa-file-image text-2xl text-blue-500 mb-2"></i>
+            <h3 class="font-medium">PNG</h3>
+            <p class="text-xs text-gray-500 en">Lossless image</p>
+            <p class="text-xs text-gray-500 zh">无损图像</p>
+          </div>
+          
+          <!-- TXT Format -->
+          <div class="format-option" onclick="selectFormat(this, 'txt')">
+            <i class="fa-solid fa-file-lines text-2xl text-blue-500 mb-2"></i>
+            <h3 class="font-medium">TXT</h3>
+            <p class="text-xs text-gray-500 en">Text format</p>
+            <p class="text-xs text-gray-500 zh">文本格式</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Page Selection -->
+      <div id="pageSelection" class="hidden">
+        <label class="block text-sm font-medium mb-3">
+          <span class="en">Pages to Convert</span>
+          <span class="zh">要转换的页面</span>
+        </label>
+        <div class="page-selection" id="pageSelectionContainer">
+          <!-- Page checkboxes will be generated here -->
+        </div>
+        <div class="flex gap-2 mt-2">
+          <button onclick="selectAllPages()" class="text-sm text-blue-600 hover:text-blue-800 transition-colors">
+            <span class="en">Select All</span>
+            <span class="zh">全选</span>
+          </button>
+          <button onclick="deselectAllPages()" class="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+            <span class="en">Deselect All</span>
+            <span class="zh">取消全选</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PDF Preview -->
+      <div id="pdfPreview" class="hidden">
+        <label class="block text-sm font-medium mb-3">
+          <span class="en">PDF Preview (All Pages)</span>
+          <span class="zh">PDF 预览（所有页面）</span>
+        </label>
+        <div class="preview-container" id="previewContainer">
+          <!-- Preview will be loaded here -->
+        </div>
+      </div>
+
+      <!-- Conversion Progress (Hidden by default) -->
+      <div id="conversionProgress" class="hidden">
+        <p class="text-sm text-gray-600 en">Converting PDF...</p>
+        <p class="text-sm text-gray-600 zh">正在转换 PDF...</p>
+        <div class="progress-container">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <!-- Results (Hidden by default) -->
+      <div id="conversionResult" class="hidden">
+        <div class="result-box">
+          <div class="font-medium text-green-600 flex items-center gap-2">
+            <i class="fa-solid fa-check-circle"></i>
+            <span class="en">Conversion Complete</span>
+            <span class="zh">转换完成</span>
+          </div>
+          
+          <div id="resultsContainer" class="mt-4 space-y-4">
+            <!-- Results will be added here -->
+          </div>
+          
+          <button id="downloadAllBtn" class="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors hidden" onclick="downloadAllFiles()">
+            <i class="fa-solid fa-download mr-2"></i>
+            <span class="en">Download All Files</span>
+            <span class="zh">下载所有文件</span>
+          </button>
+          <div id="downloadAllProgress" class="download-all-progress hidden">
+            <span class="en">Preparing download...</span>
+            <span class="zh">正在准备下载...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons (Persistent) -->
+      <div id="actionButtons" class="hidden">
+        <button onclick="convertPDF()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2 w-full">
+          <i class="fa-solid fa-exchange"></i>
+          <span class="en">Convert PDF</span>
+          <span class="zh">转换 PDF</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Upload your PDF file</li>
+          <li class="zh">1. 上传您的 PDF 文件</li>
+          <li class="en">2. Select output format</li>
+          <li class="zh">2. 选择输出格式</li>
+          <li class="en">3. Choose pages to convert</li>
+          <li class="zh">3. 选择要转换的页面</li>
+          <li class="en">4. Click "Convert PDF" button</li>
+          <li class="zh">4. 点击"转换 PDF"按钮</li>
+          <li class="en">5. Download converted files</li>
+          <li class="zh">5. 下载转换后的文件</li>
+          <li class="en">6. Repeat with new settings if needed</li>
+          <li class="zh">6. 如需可使用新设置重复转换</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About PDF Conversion</span>
+          <span class="zh">关于 PDF 转换</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Convert PDF pages to image formats (JPG/PNG)</li>
+          <li class="zh">▸ 将 PDF 页面转换为图像格式 (JPG/PNG)</li>
+          <li class="en">▸ Extract text content to plain text (TXT)</li>
+          <li class="zh">▸ 提取文本内容为纯文本 (TXT)</li>
+          <li class="en">▸ Convert specific pages or entire document</li>
+          <li class="zh">▸ 转换特定页面或整个文档</li>
+          <li class="en">▸ All processing happens in your browser</li>
+          <li class="zh">▸ 所有处理都在您的浏览器中进行</li>
+          <li class="en">▸ Your files are never uploaded to servers</li>
+          <li class="zh">▸ 您的文件绝不会上传到服务器</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Operation successful!</span>
+    <span class="zh">操作成功！</span>
+  </div>
+
+  <script>
+    // Global variables
+    let pdfFile = null;
+    let pdfDoc = null;
+    let totalPages = 0;
+    let selectedFormat = 'jpg';
+    let selectedPages = [];
+    let conversionResults = []; // Store results globally for download all
+    let pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Setup drag and drop
+      const dropArea = document.querySelector('.border-dashed');
+      
+      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, preventDefaults, false);
+      });
+      
+      function preventDefaults(e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      ['dragenter', 'dragover'].forEach(eventName => {
+        dropArea.addEventListener(eventName, highlight, false);
+      });
+      
+      ['dragleave', 'drop'].forEach(eventName => {
+        dropArea.addEventListener(eventName, unhighlight, false);
+      });
+      
+      function highlight() {
+        dropArea.classList.add('border-blue-500');
+        dropArea.classList.add('bg-blue-50');
+      }
+      
+      function unhighlight() {
+        dropArea.classList.remove('border-blue-500');
+        dropArea.classList.remove('bg-blue-50');
+      }
+      
+      dropArea.addEventListener('drop', handleDrop, false);
+      
+      function handleDrop(e) {
+        const dt = e.dataTransfer;
+        const file = dt.files[0];
+        
+        if (file && file.type === 'application/pdf') {
+          handleFileUpload({ target: { files: [file] } });
+        } else {
+          showNotification('Please upload a PDF file', true);
+        }
+      }
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Handle file upload
+    async function handleFileUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      if (file.type !== 'application/pdf') {
+        showNotification('Please upload a PDF file', true);
+        return;
+      }
+      
+      pdfFile = file;
+      
+      // Show file info
+      document.getElementById('fileName').textContent = file.name;
+      document.getElementById('fileSize').textContent = formatFileSize(file.size);
+      
+      try {
+        // Load PDF to get page count and preview
+        const arrayBuffer = await file.arrayBuffer();
+        pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        totalPages = pdfDoc.numPages;
+        
+        document.getElementById('filePages').textContent = totalPages;
+        document.getElementById('filePagesZh').textContent = totalPages;
+        
+        // Generate page selection checkboxes
+        generatePageSelection();
+        
+        // Load preview (ALL pages)
+        loadPDFPreview();
+        
+        // Show relevant UI elements
+        document.getElementById('fileInfo').classList.remove('hidden');
+        document.getElementById('formatSelection').classList.remove('hidden');
+        document.getElementById('pageSelection').classList.remove('hidden');
+        document.getElementById('pdfPreview').classList.remove('hidden');
+        document.getElementById('actionButtons').classList.remove('hidden');
+        document.getElementById('conversionResult').classList.add('hidden');
+        
+        showNotification('PDF loaded successfully');
+      } catch (error) {
+        console.error('Error loading PDF:', error);
+        showNotification('Error loading PDF: ' + error.message, true);
+      }
+    }
+
+    // Generate page selection checkboxes
+    function generatePageSelection() {
+      const container = document.getElementById('pageSelectionContainer');
+      container.innerHTML = '';
+      selectedPages = [];
+      
+      for (let i = 1; i <= totalPages; i++) {
+        const pageCheckbox = document.createElement('div');
+        pageCheckbox.className = 'page-checkbox';
+        pageCheckbox.innerHTML = `
+          <input type="checkbox" id="page-${i}" class="page-checkbox-input" checked>
+          <label for="page-${i}">${i}</label>
+        `;
+        
+        container.appendChild(pageCheckbox);
+        
+        // Add to selected pages
+        selectedPages.push(i);
+        
+        // Add event listener
+        document.getElementById(`page-${i}`).addEventListener('change', function() {
+          updateSelectedPages();
+        });
+      }
+    }
+
+    // Update selected pages array
+    function updateSelectedPages() {
+      selectedPages = [];
+      
+      for (let i = 1; i <= totalPages; i++) {
+        if (document.getElementById(`page-${i}`).checked) {
+          selectedPages.push(i);
+        }
+      }
+    }
+
+    // Select all pages
+    function selectAllPages() {
+      for (let i = 1; i <= totalPages; i++) {
+        document.getElementById(`page-${i}`).checked = true;
+      }
+      updateSelectedPages();
+    }
+
+    // Deselect all pages
+    function deselectAllPages() {
+      for (let i = 1; i <= totalPages; i++) {
+        document.getElementById(`page-${i}`).checked = false;
+      }
+      updateSelectedPages();
+    }
+
+    // Load PDF preview (ALL pages)
+    async function loadPDFPreview() {
+      const container = document.getElementById('previewContainer');
+      container.innerHTML = '';
+      
+      // Show loading state
+      container.innerHTML = `
+        <div class="text-center py-4">
+          <i class="fa-solid fa-spinner fa-spin text-blue-500"></i>
+          <p class="mt-2 text-sm text-gray-500 en">Loading all pages...</p>
+          <p class="mt-2 text-sm text-gray-500 zh">正在加载所有页面...</p>
+        </div>
+      `;
+      
+      // Render all pages
+      setTimeout(async () => {
+        container.innerHTML = ''; // Clear loading
+        
+        for (let i = 1; i <= totalPages; i++) {
+          try {
+            const page = await pdfDoc.getPage(i);
+            const viewport = page.getViewport({ scale: 0.8 });
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            canvas.className = 'pdf-preview mb-2';
+            canvas.title = `Page ${i}`;
+            
+            // Create page container
+            const pageContainer = document.createElement('div');
+            pageContainer.className = 'page-preview-item';
+            pageContainer.innerHTML = `<h4 class="text-sm font-medium mb-1 en">Page ${i}</h4><h4 class="text-sm font-medium mb-1 zh">第 ${i} 页</h4>`;
+            pageContainer.appendChild(canvas);
+            
+            container.appendChild(pageContainer);
+            
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            
+            // Wait for rendering to complete before proceeding
+            await page.render(renderContext).promise;
+          } catch (error) {
+            console.error(`Error rendering page ${i}:`, error);
+            const errorEl = document.createElement('div');
+            errorEl.className = 'text-red-500 text-sm py-4';
+            errorEl.innerHTML = `<span class="en">Error loading page ${i}</span><span class="zh">加载第 ${i} 页出错</span>`;
+            container.appendChild(errorEl);
+          }
+        }
+      }, 100);
+    }
+
+    // Remove selected file
+    function removeFile() {
+      pdfFile = null;
+      pdfDoc = null;
+      totalPages = 0;
+      selectedPages = [];
+      conversionResults = [];
+      
+      document.getElementById('pdfFile').value = '';
+      document.getElementById('fileInfo').classList.add('hidden');
+      document.getElementById('formatSelection').classList.add('hidden');
+      document.getElementById('pageSelection').classList.add('hidden');
+      document.getElementById('pdfPreview').classList.add('hidden');
+      document.getElementById('actionButtons').classList.add('hidden');
+      document.getElementById('conversionResult').classList.add('hidden');
+      
+      // Clear containers
+      document.getElementById('pageSelectionContainer').innerHTML = '';
+      document.getElementById('previewContainer').innerHTML = '';
+      document.getElementById('resultsContainer').innerHTML = '';
+      
+      showNotification('File removed');
+    }
+
+    // Select output format
+    function selectFormat(element, format) {
+      // Remove selected class from all options
+      document.querySelectorAll('.format-option').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Add selected class to clicked option
+      element.classList.add('selected');
+      
+      // Set selected format
+      selectedFormat = format;
+    }
+
+    // Convert PDF
+    async function convertPDF() {
+      if (!pdfFile || selectedPages.length === 0) {
+        showNotification(
+          document.querySelector('.en').style.display !== 'none' 
+            ? 'Please select a PDF file and at least one page' 
+            : '请选择PDF文件和至少一页', 
+          true
+        );
+        return;
+      }
+      
+      try {
+        // Show progress UI and reset results
+        document.getElementById('conversionProgress').classList.remove('hidden');
+        document.getElementById('progressBar').style.width = '0%';
+        document.getElementById('resultsContainer').innerHTML = '';
+        document.getElementById('downloadAllBtn').classList.add('hidden');
+        document.getElementById('conversionResult').classList.add('hidden');
+        
+        const totalConversions = selectedPages.length;
+        let completedConversions = 0;
+        conversionResults = []; // Reset global results array
+        
+        // Convert each selected page
+        for (const pageNum of selectedPages) {
+          if (selectedFormat === 'txt') {
+            // Extract text
+            const page = await pdfDoc.getPage(pageNum);
+            const content = await page.getTextContent();
+            const text = content.items.map(item => item.str).join(' ');
+            
+            conversionResults.push({
+              page: pageNum,
+              content: text,
+              type: 'text'
+            });
+          } else {
+            // Convert to image (JPG or PNG)
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: 2.0 });
+            
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+            
+            const renderContext = {
+              canvasContext: context,
+              viewport: viewport
+            };
+            
+            // Wait for rendering to complete
+            await page.render(renderContext).promise;
+            
+            // Get image data URL
+            const mimeType = selectedFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+            const imageQuality = selectedFormat === 'jpg' ? 0.9 : 1.0;
+            const dataUrl = canvas.toDataURL(mimeType, imageQuality);
+            
+            conversionResults.push({
+              page: pageNum,
+              content: dataUrl,
+              type: 'image',
+              mimeType: mimeType
+            });
+          }
+          
+          // Update progress
+          completedConversions++;
+          const progress = Math.round((completedConversions / totalConversions) * 100);
+          updateProgress(progress);
+        }
+        
+        // Display results
+        displayResults(conversionResults);
+        
+        // Show results and keep convert button accessible
+        setTimeout(() => {
+          document.getElementById('conversionProgress').classList.add('hidden');
+          document.getElementById('conversionResult').classList.remove('hidden');
+          
+          // Show download all button if multiple files
+          if (conversionResults.length > 1) {
+            document.getElementById('downloadAllBtn').classList.remove('hidden');
+          }
+          
+          // Keep action button visible for next conversion
+          document.getElementById('actionButtons').classList.remove('hidden');
+          
+          showNotification(
+            document.querySelector('.en').style.display !== 'none' 
+              ? 'PDF converted successfully' 
+              : 'PDF转换成功'
+          );
+        }, 500);
+        
+      } catch (error) {
+        console.error('Error converting PDF:', error);
+        showNotification('Error converting PDF: ' + error.message, true);
+        document.getElementById('conversionProgress').classList.add('hidden');
+        document.getElementById('actionButtons').classList.remove('hidden');
+      }
+    }
+
+    // Display conversion results
+    function displayResults(results) {
+      const container = document.getElementById('resultsContainer');
+      container.innerHTML = '';
+      
+      results.forEach(result => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'p-3 bg-white rounded-lg border border-gray-100';
+        
+        if (result.type === 'image') {
+          resultItem.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+              <div class="font-medium">
+                <span class="en">Page ${result.page}</span>
+                <span class="zh">第 ${result.page} 页</span>
+              </div>
+              <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">.${selectedFormat}</span>
+            </div>
+            <img src="${result.content}" alt="Page ${result.page} as ${selectedFormat}" class="w-full h-auto rounded-md mb-3">
+            <button onclick="downloadConvertedFile('${result.content}', 'page-${result.page}.${selectedFormat}', '${result.mimeType}')" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors text-sm">
+              <i class="fa-solid fa-download mr-2"></i>
+              <span class="en">Download Page ${result.page}</span>
+              <span class="zh">下载第 ${result.page} 页</span>
+            </button>
+          `;
+        } else {
+          resultItem.innerHTML = `
+            <div class="flex justify-between items-center mb-2">
+              <div class="font-medium">
+                <span class="en">Page ${result.page}</span>
+                <span class="zh">第 ${result.page} 页</span>
+              </div>
+              <span class="text-xs px-2 py-1 bg-blue-100 text-blue-800 rounded-full">.txt</span>
+            </div>
+            <div class="text-sm text-gray-700 p-3 bg-gray-50 rounded-md mb-3 max-h-40 overflow-auto">
+              ${result.content || '<span class="text-gray-400"><span class="en">No text content</span><span class="zh">无文本内容</span></span>'}
+            </div>
+            <button onclick="downloadTextFile('${encodeURIComponent(result.content)}', 'page-${result.page}.txt')" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors text-sm">
+              <i class="fa-solid fa-download mr-2"></i>
+              <span class="en">Download Text</span>
+              <span class="zh">下载文本</span>
+            </button>
+          `;
+        }
+        
+        container.appendChild(resultItem);
+      });
+    }
+
+    // Download converted file
+    function downloadConvertedFile(dataUrl, fileName, mimeType) {
+      fetch(dataUrl)
+        .then(res => res.blob())
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          
+          showNotification(
+            document.querySelector('.en').style.display !== 'none' 
+              ? 'File downloaded' 
+              : '文件已下载'
+          );
+        })
+        .catch(error => {
+          console.error('Download error:', error);
+          showNotification('Error downloading file', true);
+        });
+    }
+
+    // Download text file
+    function downloadTextFile(encodedText, fileName) {
+      const text = decodeURIComponent(encodedText);
+      const blob = new Blob([text], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showNotification(
+        document.querySelector('.en').style.display !== 'none' 
+          ? 'Text file downloaded' 
+          : '文本文件已下载'
+      );
+    }
+
+    // Download all converted files as a zip
+    async function downloadAllFiles() {
+      if (!conversionResults || conversionResults.length === 0) {
+        showNotification(
+          document.querySelector('.en').style.display !== 'none' 
+            ? 'No files to download' 
+            : '没有可下载的文件', 
+          true
+        );
+        return;
+      }
+      
+      try {
+        // Show progress indicator
+        document.getElementById('downloadAllBtn').classList.add('hidden');
+        document.getElementById('downloadAllProgress').classList.remove('hidden');
+        
+        // Create a new zip file
+        const zip = new JSZip();
+        const fileExtension = selectedFormat;
+        
+        // Add each file to the zip
+        for (let i = 0; i < conversionResults.length; i++) {
+          const result = conversionResults[i];
+          const fileName = `page-${result.page}.${fileExtension}`;
+          
+          if (result.type === 'image') {
+            // Handle image files
+            const response = await fetch(result.content);
+            const blob = await response.blob();
+            zip.file(fileName, blob);
+          } else {
+            // Handle text files
+            zip.file(fileName, result.content);
+          }
+          
+          // Update progress text
+          const progressText = document.querySelector('.download-all-progress .en');
+          const progressTextZh = document.querySelector('.download-all-progress .zh');
+          progressText.textContent = `Preparing download... (${i + 1}/${conversionResults.length})`;
+          progressTextZh.textContent = `正在准备下载... (${i + 1}/${conversionResults.length})`;
+        }
+        
+        // Generate the zip file and download it
+        zip.generateAsync({ type: 'blob' }, (metadata) => {
+          // Optional: Add progress callback if needed
+        }).then((content) => {
+          // Create download link
+          const url = URL.createObjectURL(content);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `pdf-converted-files.${fileExtension === 'txt' ? 'zip' : fileExtension === 'jpg' ? 'zip' : 'zip'}`;
+          document.body.appendChild(a);
+          a.click();
+          
+          // Cleanup
+          setTimeout(() => {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            document.getElementById('downloadAllBtn').classList.remove('hidden');
+            document.getElementById('downloadAllProgress').classList.add('hidden');
+          }, 100);
+          
+          showNotification(
+            document.querySelector('.en').style.display !== 'none' 
+              ? 'All files downloaded successfully' 
+              : '所有文件下载成功'
+          );
+        });
+        
+      } catch (error) {
+        console.error('Error downloading all files:', error);
+        showNotification('Error downloading all files: ' + error.message, true);
+        document.getElementById('downloadAllBtn').classList.remove('hidden');
+        document.getElementById('downloadAllProgress').classList.add('hidden');
+      }
+    }
+
+    // Update progress bar
+    function updateProgress(percent) {
+      document.getElementById('progressBar').style.width = `${percent}%`;
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

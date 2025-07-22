@@ -1,226 +1,506 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
-  <title>Rule of 72 Calculator - Estimate Investment Doubling Time | Utilivy</title>
-<meta name="description" content="Use the Rule of 72 to quickly estimate how long it will take for your investment to double at a given interest rate." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <title>Rule of 72 Calculator – Utilivy</title>
+  <meta name="description" content="Use the Rule of 72 to quickly estimate how long it will take for your investment to double at a given interest rate.">
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="极https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 10px;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .notification.show {
+      transform: translateX(0);
     }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
+    .notification.error {
+      background: #ef4444;
+    }
+    .input-field {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.75rem;
+      padding: 0.75rem 1.25rem;
+      font-size: 1rem;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    }
+    .loading {
       display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    footer {
       text-align: center;
-      padding: 1rem;
+      padding: 10px;
+    }
+    .loading-spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #4f46e5;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
       font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+      font-weight: bold;
+      color: #4f46e5;
+      font-size: 1.1rem;
+      text-align: center;
+    }
+    .info-card {
+      background-color: #f9fafb;
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      border: 1px solid #e5e7eb;
+    }
+    .result-highlight {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #4f46e5;
+      margin: 10px 0;
+    }
+    .chart-container {
+      height: 200px;
+      margin-top: 20px;
+      position: relative;
+      display: flex;
+      justify-content: space-around;
+      align-items: flex-end;
+    }
+    .chart-bar {
+      width: 40px;
+      background: linear-gradient(0deg, #4f46e5, #7c3aed);
+      border-radius: 4px 4px 0 0;
+      transition: height 0.8s ease;
+      position: relative;
+    }
+    .chart-label {
+      position: absolute;
+      bottom: -30px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.8rem;
       color: #6b7280;
+    }
+    .chart-value {
+      position: absolute;
+      top: -25px;
+      width: 100%;
+      text-align: center;
+      font-weight: bold;
+      color: #4f46e5;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Rule of 72 Calculator" data-zh="Utilivy - 72法则计算器">Utilivy - Rule of 72 Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Rule of 72 Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">72法则计算器</h1>
+      <p class="text-gray-500 text-sm en">Estimate investment doubling time</p>
+      <p class="text-gray-500 text-sm zh">估算投资翻倍时间</p>
+    </div>
+
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <div class="flex items-baseline justify-between">
+            <label class="block text-sm font-medium mb-2">
+              <span class="en">Annual Interest Rate (%)</span>
+              <span class="zh">年利率 (%)</span>
+            </label>
+            <span class="text-xs text-gray-500 en">(optional)</span>
+            <span class="text-xs text-gray-500 zh">(可选)</span>
+          </div>
+          <div class="relative">
+            <span class="absolute right-3 top-3 text-gray-400">%</span>
+            <input type="number" id="interest" class="input-field pr-8" placeholder="e.g. 6" min="0.1" max="100" step="0.1" value="6">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-baseline justify-between">
+            <label class="block text-sm font-medium mb-2">
+              <span class="en">Years to Double</span>
+              <span class="zh">资金翻倍所需年数</span>
+            </label>
+            <span class="text-xs text-gray-500 en">(optional)</span>
+            <span class="text-xs text-gray-500 zh">(可选)</span>
+          </div>
+          <input type="number" id="years" class="input-field" placeholder="e.g. 12" min="1" max="100" step="0.1">
+        </div>
+      </div>
+
+      <button onclick="calculate()" class="w-full btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+        <i class="fa-solid fa-calculator"></i>
+        <span class="en">Calculate</span>
+        <span class="zh">计算</span>
+      </button>
+      
+      <div class="loading" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        <span class="en">Calculating...</span>
+        <span class="zh">计算中...</span>
+      </div>
+
+      <!-- Results Section -->
+      <div id="result" class="pt-4 space-y-4">
+        <div class="result-box hidden" id="resultContainer">
+          <div class="font-medium text-green-600 flex items-center gap-2">
+            <i class="fa-solid fa-chart-line"></i>
+            <span class="en">Rule of 72 Result</span>
+            <span class="zh">72法则计算结果</span>
+          </div>
+          
+          <div id="resultDisplay" class="text-center">
+            <div id="resultText" class="result-value"></div>
+            <div id="resultDetails" class="text-sm text-gray-600 mt-2"></div>
+          </div>
+       <!--   <div class="chart-container" id="chartContainer"></div> -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <!-- How to Use -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter either interest rate or years to double</li>
+          <li class="zh">1. 输入利率或翻倍年数</li>
+          <li class="en">2. Click "Calculate" to see the result</li>
+          <li class="zh">2. 点击"计算"查看结果</li>
+          <li class="en">3. The calculator will show the missing value</li>
+          <li class="zh">3. 计算器将显示缺失的值</li>
+        </ol>
+      </div>
+
+      <!-- About Rule of 72 -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-flask"></i>
+          <span class="en">About Rule of 72</span>
+          <span class="zh">关于72法则</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Quick way to estimate investment doubling time</li>
+          <li class="zh">▸ 快速估算投资翻倍时间的方法</li>
+          <li class="en">▸ Formula: Years to Double = 72 ÷ Interest Rate</li>
+          <li class="zh">▸ 公式: 翻倍年数 = 72 ÷ 利率</li>
+          <li class="en">▸ Works best for interest rates between 6% and 10%</li>
+          <li class="zh">▸ 最适合6%到10%之间的利率</li>
+          <li class="en">▸ Also works in reverse to find required interest rate</li>
+          <li class="zh">▸ 也可以反向计算所需利率</li>
+        </ul>
+      </div>
+
+      <!-- Investment Tips -->
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Investment Tips</span>
+          <span class="zh">投资建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Higher returns usually mean higher risk</li>
+          <li class="zh">▸ 高回报通常意味着高风险</li>
+          <li class="en">▸ Consider diversifying your investments</li>
+          <li class="zh">▸ 考虑分散投资</li>
+          <li class="en">▸ Start early to benefit from compound interest</li>
+          <li class="zh">▸ 尽早开始以受益于复利</li>
+          <li class="en">▸ Review your investments regularly</li>
+          <li class="zh">▸ 定期审查您的投资</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label id="label-interest">Annual Interest Rate (%)</label>
-    <input type="number" id="interest" placeholder="e.g. 6" />
-
-    <label id="label-years">Years to Double</label>
-    <input type="number" id="years" placeholder="e.g. 12" />
-
-    <button class="calculate" onclick="calculate()" id="calcBtn">Calculate</button>
-
-    <div class="result" id="result"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span class="en">Calculation complete!</span>
+    <span class="zh">计算完成！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    let lang = 'en';
-    const labels = {
-      en: {
-        interest: "Annual Interest Rate (%)",
-        years: "Years to Double",
-        calcBtn: "Calculate",
-        resultByInterest: (rate, years) => `At ${rate}% interest, it will take approximately <strong>${years}</strong> years to double your money.`,
-        resultByYears: (years, rate) => `To double your money in ${years} years, you need approximately <strong>${rate}%</strong> annual interest rate.`,
-        resultError: "❗ Please enter either interest or years (not both or both empty)."
-      },
-      zh: {
-        interest: "年利率 (%)",
-        years: "资金翻倍所需年数",
-        calcBtn: "计算",
-        resultByInterest: (rate, years) => `在 ${rate}% 的利率下，大约需要 <strong>${years}</strong> 年让资金翻倍。`,
-        resultByYears: (years, rate) => `若想在 ${years} 年内资金翻倍，年利率需约为 <strong>${rate}%</strong>。`,
-        resultError: "❗ 请输入利率或年数（只能填一个）。"
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
       }
-    };
+    });
 
-    function setLanguage(l) {
-      lang = l;
-      const t = labels[lang];
-      document.querySelector("h1").innerText = document.querySelector("h1").dataset[lang];
-      document.querySelector("a span").innerText = document.querySelector("a span").dataset[lang];
-      document.getElementById("label-interest").innerText = t.interest;
-      document.getElementById("label-years").innerText = t.years;
-      document.getElementById("calcBtn").innerText = t.calcBtn;
-      document.querySelector("footer span").innerText = document.querySelector("footer span").dataset[lang];
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    function formatNumber(num, decimals = 2) {
+      return parseFloat(num.toFixed(decimals));
+    }
+
+    function createChart(interest, years, isEnglish) {
+      const container = document.getElementById('chartContainer');
+      container.innerHTML = '';
+      
+      // Create bars
+      const bar1 = document.createElement('div');
+      bar1.className = 'chart-bar';
+      bar1.style.height = '0px';
+      
+      const bar2 = document.createElement('div');
+      bar2.className = 'chart-bar';
+      bar2.style.height = '0px';
+      
+      // Create labels
+      const label1 = document.createElement('div');
+      label1.className = 'chart-label';
+      label1.textContent = isEnglish ? 'Interest Rate' : '利率';
+      
+      const label2 = document.createElement('div');
+      label2.className = 'chart-label';
+      label2.textContent = isEnglish ? 'Years to Double' : '翻倍年数';
+      
+      // Create values
+      const value1 = document.createElement('div');
+      value1.className = 'chart-value';
+      value1.textContent = `${interest}%`;
+      
+      const value2 = document.createElement('div');
+      value2.className = 'chart-value';
+      value2.textContent = `${years} ${isEnglish ? 'years' : '年'}`;
+      
+      // Append elements
+      bar1.appendChild(value1);
+      bar1.appendChild(label1);
+      bar2.appendChild(value2);
+      bar2.appendChild(label2);
+      
+      container.appendChild(bar1);
+      container.appendChild(bar2);
+      
+      // Animate bars
+      setTimeout(() => {
+        bar1.style.height = `${Math.min(100, interest * 1.5)}px`;
+        bar2.style.height = `${Math.min(100, years * 10)}px`;
+      }, 100);
     }
 
     function calculate() {
-      const interest = parseFloat(document.getElementById("interest").value);
-      const years = parseFloat(document.getElementById("years").value);
-      const t = labels[lang];
-      let result = "";
+      // Show loading indicator
+      const loading = document.getElementById('loadingIndicator');
+      const resultContainer = document.getElementById('resultContainer');
+      loading.style.display = 'flex';
+      resultContainer.classList.add('hidden');
+      
+      // Get input values
+      const interest = parseFloat(document.getElementById('interest').value);
+      const years = parseFloat(document.getElementById('years').value);
+      
+      const isEnglish = document.getElementById('langToggle').checked;
+      const l = {
+        error: isEnglish 
+          ? "Please enter either interest rate or years (not both or both empty)"
+          : "请输入利率或年数（只能填一个）",
+        byInterest: (rate, years) => isEnglish
+          ? `At <strong>${rate}%</strong> interest, it will take approximately <strong>${years}</strong> years to double your money.`
+          : `在 <strong>${rate}%</strong> 的利率下，大约需要 <strong>${years}</strong> 年让资金翻倍。`,
+        byYears: (years, rate) => isEnglish
+          ? `To double your money in <strong>${years}</strong> years, you need approximately <strong>${rate}%</strong> annual interest rate.`
+          : `若想在 <strong>${years}</strong> 年内资金翻倍，年利率需约为 <strong>${rate}%</strong>。`,
+        note: isEnglish
+          ? "Note: Rule of 72 is an approximation. Actual results may vary slightly."
+          : "注意：72法则是一个近似值。实际结果可能略有不同。"
+      };
 
+      // Validate inputs
+      let resultText = '';
+      let resultDetails = '';
+      let calculatedInterest = 0;
+      let calculatedYears = 0;
+      
       if (!isNaN(interest) && isNaN(years)) {
-        const y = (72 / interest).toFixed(1);
-        result = t.resultByInterest(interest, y);
+        calculatedYears = formatNumber(72 / interest, 1);
+        resultText = l.byInterest(interest, calculatedYears);
+        resultDetails = l.note;
+        calculatedInterest = interest;
       } else if (isNaN(interest) && !isNaN(years)) {
-        const r = (72 / years).toFixed(2);
-        result = t.resultByYears(years, r);
+        calculatedInterest = formatNumber(72 / years, 2);
+        resultText = l.byYears(years, calculatedInterest);
+        resultDetails = l.note;
+        calculatedYears = years;
       } else {
-        result = `<span style="color:red;">${t.resultError}</span>`;
+        showNotification(l.error, true);
+        loading.style.display = 'none';
+        return;
       }
 
-      document.getElementById("result").innerHTML = result;
+      // Update result display
+      document.getElementById('resultText').innerHTML = resultText;
+      document.getElementById('resultDetails').textContent = resultDetails;
+      
+      // Create chart
+     // createChart(calculatedInterest, calculatedYears, isEnglish);
+
+      // Display results with slight delay
+      setTimeout(() => {
+        resultContainer.classList.remove('hidden');
+        loading.style.display = 'none';
+        showNotification('Calculation complete!');
+      }, 600);
     }
 
-    setLanguage(lang);
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message === 'Calculation complete!' ? '计算完成！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
   </script>
 </body>
 </html>

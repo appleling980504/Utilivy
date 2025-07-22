@@ -2,193 +2,420 @@
 <html lang="en">
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+    crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Image to PDF Converter - Online & Free | Utilivy</title>
-<meta name="description" content="Convert your images (JPG, PNG, etc.) to PDF format online for free with Utilivy." />
+  <meta name="description" content="Convert your images (JPG, PNG, etc.) to PDF format online for free with Utilivy." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    input[type="file"] {
-      margin-bottom: 1rem;
-    }
-    img {
-      max-width: 100%;
-      margin: 10px 0;
-      border-radius: 8px;
-    }
-    button.calculate {
-      background-color: var(--primary-color);
-      color: white;
-      padding: 0.6rem 1.2rem;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .card-hover {
+        @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+      }
+      .btn-effect {
+        @apply transition-all duration-300 hover:shadow-md hover:-translate-y-0.5;
+      }
+      .gradient-bg {
+        @apply bg-gradient-to-br from-primary-500 to-primary-700;
+      }
+      .gradient-bg-secondary {
+        @apply bg-gradient-to-br from-secondary-500 to-secondary-700;
+      }
+      .notification-hidden {
+        @apply transform translate-x-full;
+      }
+      .notification-visible {
+        @apply transform translate-x-0;
+      }
+      .image-preview {
+        @apply w-full h-40 object-cover rounded-lg border border-gray-200 mb-4;
+      }
     }
   </style>
-</head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Images to PDF" data-zh="Utilivy - 图片转 PDF">Utilivy - Images to PDF</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
-      </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
-    </div>
-  </header>
-
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <label for="images">Upload Images:</label>
-    <input type="file" id="images" accept="image/*" multiple />
-    <button class="calculate" onclick="generatePDF()">Convert to PDF</button>
-    <div id="preview"></div>
-  </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: {
+              50: '#f5f3ff',
+              100: '#ede9fe',
+              200: '#ddd6fe',
+              300: '#c4b5fd',
+              400: '#a78bfa',
+              500: '#8b5cf6',
+              600: '#7c3aed',
+              700: '#6d28d9',
+              800: '#5b21b6',
+              900: '#4c1d95',
+            },
+            secondary: {
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              200: '#e2e8f0',
+              300: '#cbd5e1',
+              400: '#94a3b8',
+              500: '#64748b',
+              600: '#475569',
+              700: '#334155',
+              800: '#1e293b',
+              900: '#0f172a',
+            },
+            success: {
+              500: '#10b981',
+            },
+            error: {
+              500: '#ef4444',
+            },
+          },
+          fontFamily: {
+            inter: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'card': '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+          }
+        },
+      }
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-br from-gray-50 to-gray-100 text-secondary-800 min-h-screen font-inter px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches other tools -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Image to PDF Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">图片转PDF转换器</h1>
+      <p class="text-gray-500 text-sm en">Convert your images (JPG, PNG, etc.) to PDF format</p>
+      <p class="text-gray-500 text-sm zh">将您的图片（JPG、PNG等）转换为PDF格式</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-white rounded-2xl shadow-card card-hover p-6 space-y-6 mb-8">
+      <div id="notification" class="notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50 notification-hidden">
+        <i class="fas fa-check-circle mr-2"></i>
+        <span class="en">PDF generated successfully!</span>
+        <span class="zh">PDF生成成功！</span>
+      </div>
+
+      <!-- Input Section -->
+      <div class="space-y-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-secondary-700">
+            <span class="en">Select Images</span>
+            <span class="zh">选择图片</span>
+          </label>
+          <div class="relative">
+            <input type="file" id="images" accept="image/*" multiple class="w-full border border-gray-200 rounded-xl p-4 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all" />
+          </div>
+        </div>
+
+        <!-- Image Preview Section -->
+        <div class="space-y-3">
+          <h3 class="text-lg font-semibold">
+            <span class="en">Preview</span>
+            <span class="zh">预览</span>
+          </h3>
+          <div id="preview-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <!-- Image previews will be inserted here -->
+            <div class="text-center text-gray-400 p-8 border-2 border-dashed rounded-xl col-span-full">
+              <i class="fa-regular fa-image text-4xl mb-2"></i>
+              <p class="en">No images selected</p>
+              <p class="zh">未选择图片</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="grid grid-cols-2 gap-3">
+        <button onclick="generatePDF()" class="gradient-bg text-white py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span class="en">Generate PDF</span>
+          <span class="zh">生成PDF</span>
+        </button>
+        
+        <button onclick="clearImages()" class="bg-gray-200 text-gray-700 py-3 px-4 rounded-xl btn-effect flex items-center justify-center gap-2 text-sm font-medium">
+          <i class="fa-solid fa-eraser"></i>
+          <span class="en">Clear Images</span>
+          <span class="zh">清除图片</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-primary-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">1. Select one or more images</li>
+          <li class="zh">1. 选择一张或多张图片</li>
+          <li class="en">2. Preview your images</li>
+          <li class="zh">2. 预览您的图片</li>
+          <li class="en">3. Click "Generate PDF" button</li>
+          <li class="zh">3. 点击"生成PDF"按钮</li>
+          <li class="en">4. Download your PDF file</li>
+          <li class="zh">4. 下载您的PDF文件</li>
+        </ol>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-card card-hover p-5 space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600 text-sm">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Features</span>
+          <span class="zh">功能特点</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 pl-4 text-sm">
+          <li class="en">▸ Support for multiple image formats</li>
+          <li class="zh">▸ 支持多种图片格式</li>
+          <li class="en">▸ Maintain original image quality</li>
+          <li class="zh">▸ 保持原始图片质量</li>
+          <li class="en">▸ Customize PDF page size</li>
+          <li class="zh">▸ 自定义PDF页面大小</li>
+          <li class="en">▸ 100% client-side processing</li>
+          <li class="zh">▸ 100%客户端处理</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-gray-500 text-sm mt-10">
+      <p class="en">© 2025 Utilivy. All rights reserved.</p>
+      <p class="zh">© 2025 Utilivy. 保留所有权利。</p>
+      <p class="mt-2 en">Designed for easy image to PDF conversion.</p>
+      <p class="mt-2 zh">专为轻松图片转PDF而设计。</p>
+    </footer>
+  </div>
+
+  <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Handle image preview
+      const fileInput = document.getElementById('images');
+      fileInput.addEventListener('change', handleImageUpload);
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
       });
     }
 
-    async function generatePDF() {
-      const jsPDF = window.jspdf.jsPDF; 
-      const input = document.getElementById("images");
-      const preview = document.getElementById("preview");
-      preview.innerHTML = "";
-
-      if (!input.files.length) return alert("Please upload at least one image.");
-
-      const pdf = new jsPDF();
-      for (let i = 0; i < input.files.length; i++) {
-        const file = input.files[i];
-        const imgData = await readFileAsDataURL(file);
-        const img = new Image();
-        img.src = imgData;
-        await new Promise(res => img.onload = res);
-
-        const imgWidth = pdf.internal.pageSize.getWidth();
-        const ratio = img.height / img.width;
-        const imgHeight = imgWidth * ratio;
-
-        if (i > 0) pdf.addPage();
-        pdf.addImage(img, 'JPEG', 0, 0, imgWidth, imgHeight);
-
-        const imgPreview = document.createElement("img");
-        imgPreview.src = imgData;
-        preview.appendChild(imgPreview);
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      
+      // Reset and set appropriate class
+      notification.className = 'notification fixed top-6 right-6 px-5 py-3 rounded-lg shadow-lg transition-transform duration-300 flex items-center gap-2 z-50';
+      if (isError) {
+        notification.classList.add('bg-error-500');
+        notification.querySelector('i').className = 'fas fa-exclamation-circle mr-2';
+      } else {
+        notification.classList.add('bg-success-500');
+        notification.querySelector('i').className = 'fas fa-check-circle mr-2';
       }
-
-      pdf.save("converted.pdf");
+      
+      // Set message
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      enSpan.textContent = message;
+      zhSpan.textContent = isError ? '错误: ' + message : message;
+      
+      // Show notification
+      notification.classList.remove('notification-hidden');
+      notification.classList.add('notification-visible');
+      
+      // Hide after 3 seconds
+      setTimeout(() => {
+        notification.classList.remove('notification-visible');
+        notification.classList.add('notification-hidden');
+      }, 3000);
     }
 
+    // Handle image upload and preview
+    function handleImageUpload(event) {
+      const files = event.target.files;
+      const previewContainer = document.getElementById('preview-container');
+      
+      if (files.length === 0) {
+        previewContainer.innerHTML = `
+          <div class="text-center text-gray-400 p-8 border-2 border-dashed rounded-xl col-span-full">
+            <i class="fa-regular fa-image text-4xl mb-2"></i>
+            <p class="en">No images selected</p>
+            <p class="zh">未选择图片</p>
+          </div>
+        `;
+        return;
+      }
+      
+      previewContainer.innerHTML = '';
+      
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        
+        reader.onload = function(e) {
+          const previewCard = document.createElement('div');
+          previewCard.className = 'bg-white rounded-xl shadow-sm overflow-hidden card-hover';
+          
+          previewCard.innerHTML = `
+            <img src="${e.target.result}" class="image-preview" alt="Preview of ${file.name}">
+            <div class="p-3">
+              <div class="text-sm font-medium truncate">${file.name}</div>
+              <div class="text-xs text-gray-500">${formatFileSize(file.size)}</div>
+            </div>
+          `;
+          
+          previewContainer.appendChild(previewCard);
+        };
+        
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Clear selected images
+    function clearImages() {
+      document.getElementById('images').value = '';
+      document.getElementById('preview-container').innerHTML = `
+        <div class="text-center text-gray-400 p-8 border-2 border-dashed rounded-xl col-span-full">
+          <i class="fa-regular fa-image text-4xl mb-2"></i>
+          <p class="en">No images selected</p>
+          <p class="zh">未选择图片</p>
+        </div>
+      `;
+      showNotification('Images cleared');
+    }
+
+    // Generate PDF from images
+    async function generatePDF() {
+      const files = document.getElementById('images').files;
+      
+      if (files.length === 0) {
+        showNotification('Please select at least one image', true);
+        return;
+      }
+      
+      try {
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          const imgData = await readFileAsDataURL(file);
+          const img = new Image();
+          
+          // Wait for image to load
+          await new Promise(resolve => {
+            img.onload = resolve;
+            img.src = imgData;
+          });
+          
+          // Calculate image dimensions
+          const imgWidth = img.width;
+          const imgHeight = img.height;
+          const pdfWidth = pdf.internal.pageSize.getWidth();
+          const pdfHeight = pdf.internal.pageSize.getHeight();
+          
+          // Calculate scaling ratio to fit image on page
+          const ratio = Math.min(pdfWidth / imgWidth, pdfHeight / imgHeight);
+          const scaledWidth = imgWidth * ratio;
+          const scaledHeight = imgHeight * ratio;
+          
+          // Calculate position to center image
+          const x = (pdfWidth - scaledWidth) / 2;
+          const y = (pdfHeight - scaledHeight) / 2;
+          
+          // Add image to PDF
+          if (i > 0) pdf.addPage();
+          
+          // Determine image format
+          const format = file.type === 'image/png' ? 'PNG' : 'JPEG';
+          pdf.addImage(imgData, format, x, y, scaledWidth, scaledHeight);
+        }
+        
+        // Save the PDF
+        pdf.save('images-to-pdf.pdf');
+        showNotification('PDF generated successfully');
+      } catch (error) {
+        showNotification('Error generating PDF: ' + error.message, true);
+        console.error(error);
+      }
+    }
+
+    // Read file as DataURL
     function readFileAsDataURL(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -199,4 +426,4 @@
     }
   </script>
 </body>
-</html>
+</html>  

@@ -1,195 +1,536 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
-     crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409" crossorigin="anonymous"></script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Markdown to HTML Converter - Free Online Tool | Utilivy</title>
-<meta name="description" content="Convert Markdown syntax to clean HTML markup ready for websites or blogs." />
-<link rel="icon" type="image/png" href="/assets/logo.png" />
+  <meta name="description" content="Convert Markdown syntax to clean HTML markup ready for websites or blogs." />
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 800px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-top: 1rem;
-      font-weight: 500;
-    }
-    textarea {
-      width: 100%;
-      height: 200px;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-      font-family: monospace;
-    }
-    .output {
-      margin-top: 1.5rem;
-      padding: 1rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
       background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    button.convert {
-      background: var(--primary-color);
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 300px;
+      max-height: 500px;
+      overflow: auto;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
       color: white;
       border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
       cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .btn-copy {
+      background: linear-gradient(135deg, #374151 0%, #4b5563 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-copy:hover {
+      background: linear-gradient(135deg, #1f2937 0%, #374151 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .markdown-icon {
+      color: #3b82f6;
+      font-size: 1.5rem;
+    }
+    .input-textarea {
       width: 100%;
-    }
-    button.convert:hover {
-      background-color: #4338ca;
-    }
-    footer {
-      text-align: center;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
       padding: 1rem;
+      font-family: monospace;
       font-size: 0.9rem;
-      color: #6b7280;
+      min-height: 300px;
+      resize: vertical;
+      background: white;
     }
+    .input-textarea:focus {
+      outline: none;
+      border-color: #93c5fd;
+      box-shadow: 0 0 0 3px rgba(147, 197, 253, 0.5);
+    }
+    .html-output {
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+    }
+    .grid-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .grid-layout {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .html-key { color: #8b5cf6; }
+    .html-tag { color: #ef4444; }
+    .html-attr { color: #3b82f6; }
+    .html-string { color: #10b981; }
+    .html-comment { color: #6b7280; }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Markdown to HTML" data-zh="Utilivy - Markdown 转 HTML">Utilivy - Markdown to HTML</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-6xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Markdown to HTML Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">Markdown 转 HTML 工具</h1>
+      <p class="text-gray-500 text-sm en">Convert Markdown syntax to clean HTML markup</p>
+      <p class="text-gray-500 text-sm zh">将 Markdown 语法转换为干净的 HTML 标记</p>
+    </div>
+
+    <!-- Converter Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div class="grid-layout">
+        <!-- Markdown Input -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium">
+              <span class="en">Markdown Input</span>
+              <span class="zh">Markdown 输入</span>
+            </label>
+            <div class="flex gap-2">
+              <button onclick="loadExample()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                <i class="fa-solid fa-lightbulb"></i>
+                <span class="en">Example</span>
+                <span class="zh">示例</span>
+              </button>
+            </div>
+          </div>
+          <textarea id="markdownInput" class="input-textarea" placeholder="# Hello Markdown&#10;## Start writing here..." oninput="convertMarkdown()"></textarea>
+        </div>
+        
+        <!-- HTML Output -->
+        <div>
+          <div class="flex justify-between items-center mb-2">
+            <label class="block text-sm font-medium">
+              <span class="en">HTML Output</span>
+              <span class="zh">HTML 输出</span>
+            </label>
+            <button onclick="copyHTML()" class="text-xs text-blue-600 hover:text-blue-800 flex items-center gap-1">
+              <i class="fa-regular fa-copy"></i>
+              <span class="en">Copy HTML</span>
+              <span class="zh">复制 HTML</span>
+            </button>
+          </div>
+          <div class="result-box">
+            <div id="htmlOutput" class="html-output"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-3 pt-4">
+        <button onclick="convertMarkdown()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">Convert to HTML</span>
+          <span class="zh">转换为 HTML</span>
+        </button>
+        
+        <button onclick="copyMarkdown()" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy Markdown</span>
+          <span class="zh">复制 Markdown</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear All</span>
+          <span class="zh">清除所有</span>
+        </button>
+        
+        <button onclick="downloadHTML()" class="btn-copy text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-download"></i>
+          <span class="en">Download HTML</span>
+          <span class="zh">下载 HTML</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">1. Write Markdown in the input field</li>
+          <li class="zh">1. 在输入框中编写 Markdown</li>
+          <li class="en">2. HTML output updates automatically</li>
+          <li class="zh">2. HTML 输出会自动更新</li>
+          <li class="en">3. Use buttons to copy or download HTML</li>
+          <li class="zh">3. 使用按钮复制或下载 HTML</li>
+          <li class="en">4. Click "Example" for sample Markdown</li>
+          <li class="zh">4. 点击"示例"获取 Markdown 示例</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Markdown Cheatsheet</span>
+          <span class="zh">Markdown 速查表</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Headers: # H1, ## H2, ### H3</li>
+          <li class="zh">▸ 标题: # H1, ## H2, ### H3</li>
+          <li class="en">▸ Bold: **bold** or __bold__</li>
+          <li class="zh">▸ 粗体: **粗体** 或 __粗体__</li>
+          <li class="en">▸ Italic: *italic* or _italic_</li>
+          <li class="zh">▸ 斜体: *斜体* 或 _斜体_</li>
+          <li class="en">▸ Links: [text](url)</li>
+          <li class="zh">▸ 链接: [文本](网址)</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-code"></i>
+          <span class="en">HTML Output Example</span>
+          <span class="zh">HTML 输出示例</span>
+        </h2>
+        <div class="text-xs font-mono bg-gray-50 p-3 rounded">
+          &lt;h1&gt;Heading&lt;/h1&gt;<br>
+          &lt;p&gt;&lt;strong&gt;Bold text&lt;/strong&gt;&lt;/p&gt;<br>
+          &lt;ul&gt;<br>
+          &nbsp;&nbsp;&lt;li&gt;List item&lt;/li&gt;<br>
+          &lt;/ul&gt;
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="markdownInput" data-en="Enter Markdown:" data-zh="输入 Markdown：">Enter Markdown:</label>
-    <textarea id="markdownInput" placeholder="# Hello\n**Bold** and *italic*"></textarea>
-
-    <button class="convert" onclick="convertMarkdown()">Convert</button>
-
-    <div class="output" id="htmlOutput"></div>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    function convertMarkdown() {
-      const markdown = document.getElementById('markdownInput').value;
-      const html = markdown
-        .replace(/^### (.*$)/gim, '<h3>$1</h3>')
-        .replace(/^## (.*$)/gim, '<h2>$1</h2>')
-        .replace(/^# (.*$)/gim, '<h1>$1</h1>')
-        .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
-        .replace(/\*(.*?)\*/gim, '<em>$1</em>')
-        .replace(/`([^`]+)`/gim, '<code>$1</code>')
-        .replace(/\n$/gim, '')
-        .replace(/\n/gim, '<br />');
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Load initial content
+      loadExample();
+    });
 
-      document.getElementById('htmlOutput').innerHTML = html;
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    // Convert Markdown to HTML
+    function convertMarkdown() {
+      const markdown = document.getElementById('markdownInput').value;
+      if (!markdown.trim()) {
+        document.getElementById('htmlOutput').textContent = 'HTML output will appear here';
+        return;
+      }
+      
+      try {
+        const html = marked.parse(markdown);
+        document.getElementById('htmlOutput').innerHTML = syntaxHighlightHTML(html);
+      } catch (e) {
+        document.getElementById('htmlOutput').textContent = 'Error converting Markdown: ' + e.message;
+      }
+    }
+
+    // Syntax highlighting for HTML
+    function syntaxHighlightHTML(html) {
+      return html
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+          return match; // Placeholder for future enhancement
+        })
+        .replace(/(&lt;\/?)(\w+)([^&]*?)(&gt;)/g, function(match, p1, p2, p3, p4) {
+          return `<span class="html-tag">${p1}</span><span class="html-key">${p2}</span><span class="html-attr">${p3}</span><span class="html-tag">${p4}</span>`;
+        })
+        .replace(/&lt;!--[\s\S]*?--&gt;/g, function(match) {
+          return `<span class="html-comment">${match}</span>`;
+        })
+        .replace(/&lt;!DOCTYPE[^&]*&gt;/g, function(match) {
+          return `<span class="html-doctype">${match}</span>`;
+        });
+    }
+
+    // Load example Markdown
+    function loadExample() {
+      const example = `# Welcome to Markdown Converter
+
+## Convert Markdown to HTML
+
+This tool converts **Markdown syntax** to clean *HTML markup*.
+
+### Features:
+- Real-time conversion
+- Clean, responsive design
+- Copy and download options
+- Example Markdown
+
+### Code Example:
+\`\`\`html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Example</title>
+</head>
+<body>
+  <h1>Hello World</h1>
+</body>
+</html>
+\`\`\`
+
+### Links:
+[Utilivy Homepage](https://utilivy.com)
+
+> This is a blockquote. Markdown makes formatting easy!`;
+
+      document.getElementById('markdownInput').value = example;
+      convertMarkdown();
+      showNotification('Example Markdown loaded');
+    }
+
+    // Copy Markdown to clipboard
+    function copyMarkdown() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      const textArea = document.createElement('textarea');
+      textArea.value = input;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      showNotification('Markdown copied to clipboard!');
+    }
+
+    // Copy HTML to clipboard
+    function copyHTML() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      const html = marked.parse(input);
+      const textArea = document.createElement('textarea');
+      textArea.value = html;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      
+      showNotification('HTML copied to clipboard!');
+    }
+
+    // Download HTML
+    function downloadHTML() {
+      const input = document.getElementById('markdownInput').value;
+      if (!input.trim()) {
+        showNotification('Nothing to download', true);
+        return;
+      }
+      
+      const html = marked.parse(input);
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'document.html';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      showNotification('HTML downloaded!');
+    }
+
+    // Clear all fields
+    function clearAll() {
+      document.getElementById('markdownInput').value = '';
+      document.getElementById('htmlOutput').textContent = 'HTML output will appear here';
+      showNotification('All fields cleared');
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

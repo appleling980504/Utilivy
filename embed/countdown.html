@@ -1,90 +1,549 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
-  <title>Countdown Generator</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Countdown Generator – Utilivy</title>
+  <meta name="description" content="Create beautiful countdown timers for events and special occasions.">
+  <link rel="icon" type="image/png" href="/assets/logo.png" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
+    }
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background: white;
+      padding: 1.5rem;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .timer-entry {
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .timer-entry:last-child {
+      border-bottom: none;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: #4b5563;
+    }
+    .form-input {
+      width: 100%;
+      border: 1px solid #d1d5db;
+      border-radius: 0.5rem;
+      padding: 0.75rem;
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .countdown-box {
+      border-radius: 1rem;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      margin-bottom: 1.5rem;
+      transition: all 0.3s ease;
+    }
+    .countdown-box:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    .countdown-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .countdown-time {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .time-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 60px;
+    }
+    .time-value {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .time-label {
+      font-size: 0.875rem;
+      opacity: 0.8;
+      margin-top: 0.25rem;
+    }
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    @media (max-width: 640px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 text-gray-800 min-h-screen py-8 px-4">
-  <div class="bg-white max-w-3xl mx-auto p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-6 text-center">Countdown Generator / 倒计时生成器</h1>
-
-    <form id="countdownForm" class="space-y-4">
-      <div id="timersContainer">
-        <div class="timer-entry border-b pb-4 mb-4">
-          <label class="block mb-1 font-medium">Title / 标题</label>
-          <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., New Year / 跨年" required>
-          <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
-          <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
-        </div>
+<body class="min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <button type="button" id="addTimer" class="bg-gray-200 px-3 py-1 rounded text-sm">+ Add Countdown / 添加倒计时</button>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
 
-      <div class="grid grid-cols-2 gap-4 mt-4">
-        <div>
-          <label class="block mb-1 font-medium">Language / 语言</label>
-          <select id="lang" class="w-full border rounded px-3 py-2">
-            <option value="en">English</option>
-            <option value="zh">中文</option>
-          </select>
-        </div>
-        <div>
-          <label class="block mb-1 font-medium">Font Size / 字体大小 (px)</label>
-          <input type="number" id="fontSize" value="28" class="w-full border rounded px-3 py-2">
-        </div>
-        <div>
-          <label class="block mb-1 font-medium">Text Color / 文字颜色</label>
-          <input type="color" id="textColor" value="#ffffff" class="w-full h-10">
-        </div>
-        <div>
-          <label class="block mb-1 font-medium">Background / 背景颜色</label>
-          <input type="color" id="bgColor" value="#111111" class="w-full h-10">
-        </div>
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
       </div>
+    </div>
 
-      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded mt-4">
-        Generate Countdown / 生成倒计时
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Countdown Generator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">倒计时生成器</h1>
+      <p class="text-gray-500 text-sm en">Create beautiful countdown timers for your events</p>
+      <p class="text-gray-500 text-sm zh">为您的活动创建精美的倒计时器</p>
+    </div>
+
+    <!-- Generator Card -->
+    <div class="card mb-8">
+      <form id="countdownForm" class="space-y-6">
+        <div>
+          <h2 class="text-xl font-semibold text-blue-700 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-clock"></i>
+            <span class="en">Countdown Timers</span>
+            <span class="zh">倒计时器</span>
+          </h2>
+          
+          <div id="timersContainer">
+            <div class="timer-entry">
+              <label class="form-label">
+                <span class="en">Title</span>
+                <span class="zh">标题</span>
+              </label>
+              <input type="text" class="form-input" placeholder="e.g. New Year / 跨年" required>
+              
+              <label class="form-label mt-4">
+                <span class="en">Target Date & Time</span>
+                <span class="zh">目标日期时间</span>
+              </label>
+              <input type="datetime-local" class="form-input" required>
+            </div>
+          </div>
+          
+          <button type="button" id="addTimer" class="btn-secondary mt-2">
+            <i class="fa-solid fa-plus"></i>
+            <span class="en">Add Timer</span>
+            <span class="zh">添加计时器</span>
+          </button>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold text-blue-700 mb-4 flex items-center gap-2">
+            <i class="fa-solid fa-sliders"></i>
+            <span class="en">Customization</span>
+            <span class="zh">自定义选项</span>
+          </h2>
+          
+          <div class="controls-grid">
+            <div>
+              <label class="form-label">
+                <span class="en">Language</span>
+                <span class="zh">语言</span>
+              </label>
+              <select id="lang" class="form-input">
+                <option value="en">English</option>
+                <option value="zh">中文</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="form-label">
+                <span class="en">Font Size (px)</span>
+                <span class="zh">字体大小 (px)</span>
+              </label>
+              <input type="number" id="fontSize" value="28" min="12" max="100" class="form-input">
+            </div>
+            
+            <div>
+              <label class="form-label">
+                <span class="en">Text Color</span>
+                <span class="zh">文字颜色</span>
+              </label>
+              <input type="color" id="textColor" value="#ffffff" class="w-full h-12 rounded border">
+            </div>
+            
+            <div>
+              <label class="form-label">
+                <span class="en">Background Color</span>
+                <span class="zh">背景颜色</span>
+              </label>
+              <input type="color" id="bgColor" value="#111111" class="w-full h-12 rounded border">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary w-full">
+          <i class="fa-solid fa-wand-magic-sparkles"></i>
+          <span class="en">Generate Countdown</span>
+          <span class="zh">生成倒计时</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- Preview Section -->
+    <div class="card">
+      <h2 class="text-xl font-semibold text-green-600 mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-eye"></i>
+        <span class="en">Preview</span>
+        <span class="zh">预览</span>
+      </h2>
+      
+      <div id="previewContainer" class="space-y-6"></div>
+      
+      <button id="downloadImage" class="btn-primary w-full mt-6 hidden">
+        <i class="fa-solid fa-download"></i>
+        <span class="en">Download Countdown Image</span>
+        <span class="zh">下载倒计时图片</span>
       </button>
-    </form>
+    </div>
 
-    <div id="previewContainer" class="mt-6 space-y-4"></div>
-    <button id="downloadImage" class="hidden bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded mt-4">
-      Download Countdown Image / 下载图片
-    </button>
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="card">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4 mt-3">
+          <li class="en">1. Add countdown timers with titles and target dates</li>
+          <li class="zh">1. 添加带有标题和目标日期的倒计时器</li>
+          <li class="en">2. Customize appearance with colors and font size</li>
+          <li class="zh">2. 使用颜色和字体大小自定义外观</li>
+          <li class="en">3. Generate your countdown preview</li>
+          <li class="zh">3. 生成倒计时预览</li>
+          <li class="en">4. Download as an image to share</li>
+          <li class="zh">4. 下载为图片分享</li>
+        </ol>
+      </div>
+
+      <div class="card">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">Tips for Great Countdowns</span>
+          <span class="zh">创建精美倒计时的技巧</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2 mt-3">
+          <li class="en">▸ Use contrasting colors for text and background</li>
+          <li class="zh">▸ 为文本和背景使用对比色</li>
+          <li class="en">▸ Choose meaningful titles for your events</li>
+          <li class="zh">▸ 为活动选择有意义的标题</li>
+          <li class="en">▸ Set multiple timers for complex events</li>
+          <li class="zh">▸ 为复杂活动设置多个计时器</li>
+          <li class="en">▸ Experiment with different font sizes</li>
+          <li class="zh">▸ 尝试不同的字体大小</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
 
   <script>
+    // Language mapping
     const langMap = {
       en: { day: 'days', hour: 'hours', minute: 'minutes', second: 'seconds' },
       zh: { day: '天', hour: '小时', minute: '分钟', second: '秒' },
     };
 
-    document.getElementById('addTimer').addEventListener('click', () => {
-      const container = document.createElement('div');
-      container.className = 'timer-entry border-b pb-4 mb-4';
-      container.innerHTML = `
-        <label class="block mb-1 font-medium">Title / 标题</label>
-        <input type="text" class="name w-full border rounded px-3 py-2" placeholder="e.g., Holiday" required>
-        <label class="block mt-2 mb-1 font-medium">Target Date / 目标日期时间</label>
-        <input type="datetime-local" class="target w-full border rounded px-3 py-2" required>
-      `;
-      document.getElementById('timersContainer').appendChild(container);
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set min date for datetime-local inputs
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+      
+      document.querySelectorAll('input[type="datetime-local"]').forEach(input => {
+        input.min = minDateTime;
+      });
     });
 
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Add timer functionality
+    document.getElementById('addTimer').addEventListener('click', () => {
+      const container = document.createElement('div');
+      container.className = 'timer-entry';
+      
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      
+      const minDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+      
+      container.innerHTML = `
+        <label class="form-label">
+          <span class="en">Title</span>
+          <span class="zh">标题</span>
+        </label>
+        <input type="text" class="form-input" placeholder="e.g. Birthday / 生日" required>
+        
+        <label class="form-label mt-4">
+          <span class="en">Target Date & Time</span>
+          <span class="zh">目标日期时间</span>
+        </label>
+        <input type="datetime-local" class="form-input" min="${minDateTime}" required>
+        
+        <button type="button" class="btn-clear mt-3 w-full remove-timer">
+          <i class="fa-solid fa-trash"></i>
+          <span class="en">Remove Timer</span>
+          <span class="zh">删除计时器</span>
+        </button>
+      `;
+      
+      document.getElementById('timersContainer').appendChild(container);
+      
+      // Add event listener for the remove button
+      container.querySelector('.remove-timer').addEventListener('click', function() {
+        if (document.querySelectorAll('.timer-entry').length > 1) {
+          container.remove();
+        } else {
+          showNotification('You need at least one timer', true);
+        }
+      });
+    });
+
+    // Form submission
     document.getElementById('countdownForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const entries = Array.from(document.querySelectorAll('.timer-entry'));
@@ -95,18 +554,32 @@
 
       const timers = entries.map(entry => {
         return {
-          name: entry.querySelector('.name').value,
-          target: entry.querySelector('.target').value
+          name: entry.querySelector('input[type="text"]').value,
+          target: entry.querySelector('input[type="datetime-local"]').value
         };
       }).filter(t => t.name && t.target);
 
+      // Sort timers by date
       timers.sort((a, b) => new Date(a.target) - new Date(b.target));
 
       const preview = document.getElementById('previewContainer');
       preview.innerHTML = '';
 
+      if (timers.length === 0) {
+        showNotification('Please add at least one timer', true);
+        return;
+      }
+
       timers.forEach((t, i) => {
-        const diff = new Date(t.target) - new Date();
+        const targetDate = new Date(t.target);
+        const now = new Date();
+        
+        if (targetDate <= now) {
+          showNotification(`"${t.name}" target date is in the past`, true);
+          return;
+        }
+        
+        const diff = targetDate - now;
         const d = Math.floor(diff / (1000 * 60 * 60 * 24));
         const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const m = Math.floor((diff / (1000 * 60)) % 60);
@@ -114,27 +587,65 @@
 
         const unit = langMap[lang];
         const box = document.createElement('div');
-        box.className = 'rounded p-4 text-center shadow';
+        box.className = 'countdown-box';
         box.style.backgroundColor = bgColor;
         box.style.color = textColor;
         box.style.fontSize = fontSize;
+        
         box.innerHTML = `
-          <div class="font-bold text-xl mb-2">${t.name}</div>
-          <div>${d} ${unit.day} ${h} ${unit.hour} ${m} ${unit.minute} ${s} ${unit.second}</div>
+          <div class="countdown-title">${t.name}</div>
+          <div class="countdown-time">
+            <div class="time-unit">
+              <div class="time-value">${d}</div>
+              <div class="time-label">${unit.day}</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value">${h}</div>
+              <div class="time-label">${unit.hour}</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value">${m}</div>
+              <div class="time-label">${unit.minute}</div>
+            </div>
+            <div class="time-unit">
+              <div class="time-value">${s}</div>
+              <div class="time-label">${unit.second}</div>
+            </div>
+          </div>
         `;
+        
         preview.appendChild(box);
       });
 
       document.getElementById('downloadImage').classList.remove('hidden');
+      showNotification('Countdown generated successfully!');
     });
 
+    // Download image functionality
     document.getElementById('downloadImage').addEventListener('click', () => {
-      html2canvas(document.getElementById('previewContainer')).then(canvas => {
+      const previewContainer = document.getElementById('previewContainer');
+      
+      if (previewContainer.children.length === 0) {
+        showNotification('Please generate countdowns first', true);
+        return;
+      }
+      
+      html2canvas(previewContainer).then(canvas => {
         const link = document.createElement('a');
-        link.download = 'countdown.png';
+        link.download = 'countdown-timers.png';
         link.href = canvas.toDataURL();
         link.click();
+        showNotification('Image downloaded successfully!');
       });
+    });
+
+    // Add event listener for the first remove button
+    document.querySelector('.remove-timer')?.addEventListener('click', function() {
+      if (document.querySelectorAll('.timer-entry').length > 1) {
+        this.closest('.timer-entry').remove();
+      } else {
+        showNotification('You need at least one timer', true);
+      }
     });
   </script>
 </body>

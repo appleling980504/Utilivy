@@ -1,211 +1,511 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
   <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
 
   <title>Case & Word Counter - Count Text Stats | Utilivy</title>
-<meta name="description" content="Count words, characters, lines, and analyze uppercase/lowercase ratios in any text." />
+  <meta name="description" content="Count words, characters, lines, and analyze uppercase/lowercase ratios in any text." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
+    .en { display: block; }
+    .zh { display: none; }
+    
+    .card {
       background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    
+    .input-field {
+      border: 1px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .input-field:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    
+    .stats-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
+    }
+    
+    .stat-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f1f5f9;
     }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+    
+    .stat-item:last-child {
+      border-bottom: none;
     }
-    .header-right {
+    
+    .stat-label {
+      color: #64748b;
+    }
+    
+    .stat-value {
+      font-weight: 600;
+      color: #1e293b;
+    }
+    
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.5rem;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    
+    .notification.show {
+      transform: translateX(0);
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner,
-    .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: 500;
-    }
-    textarea {
-      width: 100%;
-      height: 200px;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: monospace;
-      margin-bottom: 1rem;
-    }
-    .stats {
-      background: #f9fafb;
-      padding: 1rem;
-      border: 1px solid #e5e7eb;
-      border-radius: 8px;
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    
+    .notification.error {
+      background: #ef4444;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Case & Word Counter" data-zh="Utilivy - 字符与单词统计">Utilivy - Case & Word Counter</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header - Matches Base64 Converter -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500 en">All-in-one tools for smart life</div>
+        <div class="text-xs text-gray-500 zh">智能生活全能工具</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle - Same as Base64 Converter -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
-  </div>
-
-  <div class="container">
-    <label for="inputText" data-en="Input your text:" data-zh="输入文本：">Input your text:</label>
-    <textarea id="inputText" placeholder="Type or paste your text here..."></textarea>
-
-    <button class="calculate" onclick="analyzeText()">🔍 <span data-en="Analyze" data-zh="分析">Analyze</span></button>
-
-    <div class="stats" id="statsOutput">
-      <p><em data-en="Stats will appear here." data-zh="结果将显示在此处。">Stats will appear here.</em></p>
+    <!-- Main Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Case & Word Counter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">字符与单词统计</h1>
+      <p class="text-gray-500 text-sm en">Count words, characters, and analyze text</p>
+      <p class="text-gray-500 text-sm zh">统计单词、字符并分析文本</p>
     </div>
+
+    <!-- Main Card -->
+    <div class="bg-white card p-6 space-y-6 mb-8">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Enter text to analyze</span>
+          <span class="zh">输入要分析的文本</span>
+        </label>
+        <textarea 
+          id="inputText" 
+          class="input-field w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400 h-40" 
+          placeholder="Type or paste your text here..."
+        ></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <!-- 修改：移除内联onclick属性 -->
+        <button id="analyzeBtn" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span class="en">Analyze</span>
+          <span class="zh">分析</span>
+        </button>
+        
+        <!-- 修改：移除内联onclick属性 -->
+        <button id="uppercaseBtn" class="btn-secondary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-arrow-up-a-z"></i>
+          <span class="en">UPPERCASE</span>
+          <span class="zh">大写</span>
+        </button>
+        
+        <!-- 修改：移除内联onclick属性 -->
+        <button id="clearBtn" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear</span>
+          <span class="zh">清除</span>
+        </button>
+      </div>
+
+      <!-- Statistics Results -->
+      <div class="stats-box mt-4">
+        <div class="font-medium text-blue-700 flex items-center gap-2 mb-4">
+          <i class="fa-solid fa-bar-chart"></i>
+          <span class="en">Text Statistics</span>
+          <span class="zh">文本统计</span>
+        </div>
+        
+        <div id="statsOutput" class="space-y-2">
+          <div class="text-center text-gray-500 py-4">
+            <span class="en">Enter text and click "Analyze"</span>
+            <span class="zh">输入文本并点击"分析"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 gap-6 mt-8 mb-10">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter or paste text in the input field</li>
+          <li class="zh">1. 在输入框中输入或粘贴文本</li>
+          <li class="en">2. Click "Analyze" to view text statistics</li>
+          <li class="zh">2. 点击"分析"查看文本统计数据</li>
+          <li class="en">3. Use "UPPERCASE" to convert text to uppercase</li>
+          <li class="zh">3. 使用"大写"将文本转换为大写</li>
+          <li class="en">4. Click "Clear" to reset the input field</li>
+          <li class="zh">4. 点击"清除"重置输入框</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About Text Analysis</span>
+          <span class="zh">关于文本分析</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Word count: Counts sequences of characters separated by whitespace</li>
+          <li class="zh">▸ 单词计数：统计由空格分隔的字符序列</li>
+          <li class="en">▸ Character count includes all characters, including spaces and punctuation</li>
+          <li class="zh">▸ 字符计数包括所有字符，包括空格和标点符号</li>
+          <li class="en">▸ Useful for writing, editing, and meeting content requirements</li>
+          <li class="zh">▸ 适用于写作、编辑和满足内容要求</li>
+          <li class="en">▸ All analysis is performed locally in your browser</li>
+          <li class="zh">▸ 所有分析均在您的浏览器中本地进行</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Text converted to uppercase!</span>
+    <span class="zh">文本已转换为大写！</span>
   </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing...'); // 添加日志确认
+      
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Auto-analyze when user types (with debounce)
+      const textarea = document.getElementById('inputText');
+      if (textarea) {
+        textarea.addEventListener('input', debounce(analyzeText, 500));
+      } else {
+        console.error('Textarea not found!');
+      }
+      
+      // 添加按钮事件监听器
+      const analyzeBtn = document.getElementById('analyzeBtn');
+      const uppercaseBtn = document.getElementById('uppercaseBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      
+      if (analyzeBtn) {
+        analyzeBtn.addEventListener('click', function() {
+          console.log('Analyze button clicked'); // 添加日志确认
+          analyzeText();
+        });
+      } else {
+        console.error('Analyze button not found!');
+      }
+      
+      if (uppercaseBtn) {
+        uppercaseBtn.addEventListener('click', function() {
+          console.log('Uppercase button clicked'); // 添加日志确认
+          convertToUppercase();
+        });
+      } else {
+        console.error('Uppercase button not found!');
+      }
+      
+      if (clearBtn) {
+        clearBtn.addEventListener('click', function() {
+          console.log('Clear button clicked'); // 添加日志确认
+          clearText();
+        });
+      } else {
+        console.error('Clear button not found!');
+      }
+    });
+
+    // Debounce function to prevent excessive function calls
+    function debounce(func, wait) {
+      let timeout;
+      return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+      };
+    }
+
+    // Language toggle - Same as Base64 Converter
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+      
+      // Update placeholder text based on language
+      const textarea = document.getElementById('inputText');
+      if (textarea) {
+        textarea.placeholder = isEnglish ? 'Type or paste your text here...' : '在此处输入或粘贴文本...';
+      }
+    }
+
+    // Analyze text and display statistics
     function analyzeText() {
+      console.log('Analyzing text...'); // 添加日志确认
       const text = document.getElementById("inputText").value;
+      
+      if (!text.trim()) {
+        document.getElementById("statsOutput").innerHTML = `
+          <div class="text-center text-gray-500 py-4">
+            <span class="en">Enter text and click "Analyze"</span>
+            <span class="zh">输入文本并点击"分析"</span>
+          </div>
+        `;
+        return;
+      }
+      
+      // Calculate comprehensive text statistics
       const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
       const charCount = text.length;
       const charNoSpace = text.replace(/\s/g, '').length;
+      const spaceCount = text.split(/\s/).length - 1;
       const upperCount = (text.match(/[A-Z]/g) || []).length;
       const lowerCount = (text.match(/[a-z]/g) || []).length;
       const digitCount = (text.match(/\d/g) || []).length;
-
-      const output = `
-        <strong data-en="Character count:" data-zh="字符总数：">Character count:</strong> ${charCount}<br>
-        <strong data-en="Characters (excluding spaces):" data-zh="字符（不含空格）：">Characters (excluding spaces):</strong> ${charNoSpace}<br>
-        <strong data-en="Word count:" data-zh="单词数：">Word count:</strong> ${wordCount}<br>
-        <strong data-en="Uppercase letters:" data-zh="大写字母：">Uppercase letters:</strong> ${upperCount}<br>
-        <strong data-en="Lowercase letters:" data-zh="小写字母：">Lowercase letters:</strong> ${lowerCount}<br>
-        <strong data-en="Digits:" data-zh="数字：">Digits:</strong> ${digitCount}
+      const punctuationCount = (text.match(/[^\w\s]/g) || []).length;
+      const lineCount = text.split('\n').length;
+      
+      // Calculate average word length
+      const words = text.trim().split(/\s+/).filter(Boolean);
+      const totalWordLength = words.reduce((sum, word) => sum + word.length, 0);
+      const avgWordLength = words.length > 0 ? (totalWordLength / words.length).toFixed(1) : 0;
+      
+      // Generate statistics HTML
+      const statsHtml = `
+        <div class="stat-item">
+          <span class="stat-label en">Word count</span>
+          <span class="stat-label zh">单词数</span>
+          <span class="stat-value">${wordCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Character count</span>
+          <span class="stat-label zh">字符总数</span>
+          <span class="stat-value">${charCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Characters (no spaces)</span>
+          <span class="stat-label zh">字符（不含空格）</span>
+          <span class="stat-value">${charNoSpace}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Spaces</span>
+          <span class="stat-label zh">空格数</span>
+          <span class="stat-value">${spaceCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Lines</span>
+          <span class="stat-label zh">行数</span>
+          <span class="stat-value">${lineCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Uppercase letters</span>
+          <span class="stat-label zh">大写字母</span>
+          <span class="stat-value">${upperCount}</span> <!-- 修复了变量名拼写错误 -->
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Lowercase letters</span>
+          <span class="stat-label zh">小写字母</span>
+          <span class="stat-value">${lowerCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Digits</span>
+          <span class="stat-label zh">数字</span>
+          <span class="stat-value">${digitCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Punctuation</span>
+          <span class="stat-label zh">标点符号</span>
+          <span class="stat-value">${punctuationCount}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label en">Avg word length</span>
+          <span class="stat-label zh">平均单词长度</span>
+          <span class="stat-value">${avgWordLength}</span>
+        </div>
       `;
-
-      const statsEl = document.getElementById("statsOutput");
-      statsEl.innerHTML = output;
-
-      // 支持多语言切换后的更新
-      setLanguage(currentLang);
+      
+      document.getElementById("statsOutput").innerHTML = statsHtml;
     }
 
-    let currentLang = 'en';
-    function setLanguage(lang) {
-      currentLang = lang;
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.innerHTML = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    // Convert text to uppercase
+    function convertToUppercase() {
+      const textarea = document.getElementById('inputText');
+      const text = textarea.value;
+      
+      if (!text.trim()) {
+        showNotification('Please enter some text first', true);
+        return;
+      }
+      
+      textarea.value = text.toUpperCase();
+      analyzeText();
+      showNotification('Text converted to uppercase!');
+    }
+
+    // Clear text input and results
+    function clearText() {
+      document.getElementById('inputText').value = '';
+      document.getElementById("statsOutput").innerHTML = `
+        <div class="text-center text-gray-500 py-4">
+          <span class="en">Enter text and click "Analyze"</span>
+          <span class="zh">输入文本并点击"分析"</span>
+        </div>
+      `;
+      showNotification('Text cleared!');
+    }
+
+    // Show notification (matches Base64 Converter functionality)
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('uppercase') ? '文本已转换为大写！' : 
+                          message.includes('cleared') ? '文本已清除！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>
-</html>
+</html>    

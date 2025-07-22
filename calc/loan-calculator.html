@@ -1,256 +1,565 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+  <!-- Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
-  <title>Loan Calculator - Estimate Repayment Amount | Utilivy</title>
-<meta name="description" content="Estimate your monthly and total loan repayment amounts using our loan calculator." />
+  <title>Loan Calculator – Utilivy</title>
+  <meta name="description" content="Estimate your monthly and total loan repayment amounts using our loan calculator.">
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * { box-sizing: border-box; }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
     }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
-      margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
-    }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
-    }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
-      color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
-    }
-    .adsense-banner, .adsense-footer {
-      text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
-    }
-    .container {
-      max-width: 600px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-    }
-    label {
-      display: block;
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
       margin-top: 1rem;
-      font-weight: 500;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-top: 0.5rem;
-      font-size: 1rem;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-top: 1.5rem;
-      width: 100%;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    .result {
-      margin-top: 1.5rem;
-      font-weight: bold;
-      font-size: 1.2rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 1.5rem;
-    }
-    table, th, td {
+      font-size: 0.9rem;
+      position: relative;
       border: 1px solid #e5e7eb;
     }
-    th, td {
-      padding: 0.5rem;
-      text-align: center;
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
     }
-    th {
-      background-color: #f9fafb;
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
     }
-    footer {
-      text-align: center;
-      padding: 1rem;
-      font-size: 0.9rem;
-      color: #6b7280;
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+      transform: translateY(-2px);
+    }
+    .btn-clear {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      transition: all 0.3s ease;
+    }
+    .btn-clear:hover {
+      background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+      transform: translateY(-2px);
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .summary-card {
+      background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+      border-radius: 0.75rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .summary-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1e40af;
+    }
+    thead th.en, thead th.zh {
+      display: table-cell;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Loan Calculator" data-zh="Utilivy - 贷款计算器">Utilivy - Loan Calculator</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="bg-gray-50 text-gray-800 min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner"><p>[Ad Placeholder - Top]</p></div>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Loan Calculator</h1>
+      <h1 class="text-3xl font-bold zh mb-2">贷款计算器</h1>
+      <p class="text-gray-500 text-sm en">Estimate your monthly and total loan repayment amounts</p>
+      <p class="text-gray-500 text-sm zh">估算您的每月和总贷款还款金额</p>
+    </div>
 
-  <div class="container">
-    <label data-en="Loan Amount (e.g. 100000):" data-zh="贷款金额（例如：100000）：">Loan Amount (e.g. 100000):</label>
-    <input type="number" id="amount" placeholder="100000" />
+    <!-- Calculator Card -->
+    <div class="bg-white card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Loan Amount</span>
+          <span class="zh">贷款金额</span>
+        </label>
+        <input type="number" id="amount" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="100000">
+      </div>
 
-    <label data-en="Annual Interest Rate (%):" data-zh="年利率（%）：">Annual Interest Rate (%):</label>
-    <input type="number" id="interest" step="0.01" placeholder="4.5" />
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Annual Interest Rate (%)</span>
+          <span class="zh">年利率 (%)</span>
+        </label>
+        <input type="number" id="interest" step="0.01" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="4.5">
+      </div>
 
-    <label data-en="Loan Term (Years):" data-zh="贷款期限（年）：">Loan Term (Years):</label>
-    <input type="number" id="years" placeholder="30" />
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Loan Term (Years)</span>
+          <span class="zh">贷款期限 (年)</span>
+        </label>
+        <input type="number" id="years" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="30">
+      </div>
 
-    <label data-en="Extra Monthly Repayment (Optional):" data-zh="每月额外还款（可选）：">Extra Monthly Repayment (Optional):</label>
-    <input type="number" id="extra" value="0" placeholder="0" />
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Extra Monthly Repayment (Optional)</span>
+          <span class="zh">每月额外还款 (可选)</span>
+        </label>
+        <input type="number" id="extra" value="0" class="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="0">
+      </div>
 
-    <button class="calculate" onclick="calculateLoan()" data-en="Calculate" data-zh="计算">Calculate</button>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <button onclick="calculateLoan()" class="btn-primary text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-calculator"></i>
+          <span class="en">Calculate</span>
+          <span class="zh">计算</span>
+        </button>
+        
+        <button onclick="clearAll()" class="btn-clear text-white py-3 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2">
+          <i class="fa-solid fa-broom"></i>
+          <span class="en">Clear</span>
+          <span class="zh">清除</span>
+        </button>
+      </div>
+    </div>
 
-    <div class="result" id="monthlyPayment"></div>
-    <div class="result" id="totalPayment"></div>
-    <div class="result" id="totalInterest"></div>
+    <!-- Results Section -->
+    <div id="resultsContainer" class="bg-white card p-6 space-y-6 mt-8" style="display: none;">
+      <h2 class="text-xl font-bold text-blue-700 flex items-center gap-2">
+        <i class="fa-solid fa-chart-pie"></i>
+        <span class="en">Loan Summary</span>
+        <span class="zh">贷款摘要</span>
+      </h2>
+      
+      <div class="summary-card">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="text-center">
+            <div class="text-sm font-medium text-gray-500 en">Monthly Payment</div>
+            <div class="text-sm font-medium text-gray-500 zh">每月还款</div>
+            <div id="monthlyPayment" class="summary-value">$0.00</div>
+          </div>
+          <div class="text-center">
+            <div class="text-sm font-medium text-gray-500 en">Total Payment</div>
+            <div class="text-sm font-medium text-gray-500 zh">总还款额</div>
+            <div id="totalPayment" class="summary-value">$0.00</div>
+          </div>
+          <div class="text-center">
+            <div class="text-sm font-medium text-gray-500 en">Total Interest</div>
+            <div class="text-sm font-medium text-gray-500 zh">总利息</div>
+            <div id="totalInterest" class="summary-value">$0.00</div>
+          </div>
+        </div>
+      </div>
+      
+      <h2 class="text-xl font-bold text-blue-700 flex items-center gap-2">
+        <i class="fa-solid fa-table"></i>
+        <span class="en">Repayment Schedule</span>
+        <span class="zh">还款计划表</span>
+      </h2>
+      
+      <div class="overflow-x-auto">
+        <table class="w-full border border-gray-200">
+          <thead>
+            <tr class="bg-gray-50">
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 en">Month</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 zh">期数</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 en">Principal</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 zh">本金</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 en">Interest</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 zh">利息</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 en">Extra</th>
+              <th class="p-2 border-b border-r border-gray-200 text-xs font-medium text-gray-500 zh">额外</th>
+              <th class="p-2 border-b border-gray-200 text-xs font-medium text-gray-500 en">Balance</th>
+              <th class="p-2 border-b border-gray-200 text-xs font-medium text-gray-500 zh">余额</th>
+            </tr>
+          </thead>
+          <tbody id="scheduleBody">
+            <!-- Rows will be inserted here by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      
+      <button onclick="copyScheduleToClipboard()" class="btn-secondary text-white py-2 rounded-lg hover:shadow-md transition text-sm flex items-center justify-center gap-2 w-full">
+        <i class="fa-regular fa-copy"></i>
+        <span class="en">Copy Schedule</span>
+        <span class="zh">复制还款计划</span>
+      </button>
+    </div>
 
-    <table id="schedule" style="display:none;">
-      <thead>
-        <tr>
-          <th data-en="Month" data-zh="期数">Month</th>
-          <th data-en="Principal" data-zh="本金">Principal</th>
-          <th data-en="Interest" data-zh="利息">Interest</th>
-          <th data-en="Extra Payment" data-zh="额外还款">Extra Payment</th>
-          <th data-en="Balance" data-zh="剩余余额">Balance</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700 text-sm">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">1. Enter the loan amount you want to borrow</li>
+          <li class="zh">1. 输入您想借的贷款金额</li>
+          <li class="en">2. Input the annual interest rate (percentage)</li>
+          <li class="zh">2. 输入年利率（百分比）</li>
+          <li class="en">3. Specify the loan term in years</li>
+          <li class="zh">3. 指定贷款期限（年）</li>
+          <li class="en">4. Optionally add any extra monthly repayment amount</li>
+          <li class="zh">4. 可选添加每月额外还款金额</li>
+          <li class="en">5. Click "Calculate" to see your repayment details</li>
+          <li class="zh">5. 点击「计算」查看还款详情</li>
+        </ol>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-yellow-600">
+          <i class="fa-solid fa-flask"></i>
+          <span class="en">About Loans</span>
+          <span class="zh">关于贷款</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Principal: The original loan amount borrowed</li>
+          <li class="zh">▸ 本金: 最初借入的贷款金额</li>
+          <li class="en">▸ Interest: Cost of borrowing the money</li>
+          <li class="zh">▸ 利息: 借款的成本</li>
+          <li class="en">▸ APR: Annual Percentage Rate including fees</li>
+          <li class="zh">▸ 年利率: 包含费用的年百分比利率</li>
+          <li class="en">▸ Amortization: Gradual repayment through installments</li>
+          <li class="zh">▸ 分期偿还: 通过分期付款逐步偿还</li>
+        </ul>
+      </div>
+
+      <div class="bg-white card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-piggy-bank"></i>
+          <span class="en">Loan Tips</span>
+          <span class="zh">贷款建议</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ Even small extra payments can significantly reduce total interest</li>
+          <li class="zh">▸ 即使少量额外还款也能显著减少总利息</li>
+          <li class="en">▸ Shorter loan terms usually have lower interest rates</li>
+          <li class="zh">▸ 较短的贷款期限通常利率较低</li>
+          <li class="en">▸ Consider your budget carefully before taking a loan</li>
+          <li class="zh">▸ 贷款前请仔细考虑您的预算</li>
+          <li class="en">▸ Compare offers from multiple lenders</li>
+          <li class="zh">▸ 比较多家贷款机构的报价</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <footer class="adsense-footer"><p>[Ad Placeholder - Bottom]</p></footer>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
+  </div>
 
   <script>
-    function calculateLoan() {
-      const amount = parseFloat(document.getElementById("amount").value);
-      const interestRate = parseFloat(document.getElementById("interest").value) / 100 / 12;
-      const years = parseInt(document.getElementById("years").value);
-      const extra = parseFloat(document.getElementById("extra").value || 0);
-      const months = years * 12;
-
-      const monthlyPayment = amount * interestRate / (1 - Math.pow(1 + interestRate, -months));
-      const totalMonthly = monthlyPayment + extra;
-
-      let balance = amount;
-      let totalInterest = 0;
-      let totalPrincipal = 0;
-      let scheduleRows = '';
-      let month = 1;
-
-      while (balance > 0 && month <= 1000) {
-        let interest = balance * interestRate;
-        let principal = totalMonthly - interest;
-
-        if (principal > balance) {
-          principal = balance;
-          interest = totalMonthly - principal;
-        }
-
-        balance -= principal;
-        totalInterest += interest;
-        totalPrincipal += principal;
-
-        scheduleRows += `
-          <tr>
-            <td>${month}</td>
-            <td>${principal.toFixed(2)}</td>
-            <td>${interest.toFixed(2)}</td>
-            <td>${extra.toFixed(2)}</td>
-            <td>${balance.toFixed(2)}</td>
-          </tr>
-        `;
-
-        month++;
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
       }
+    });
 
-      document.getElementById("monthlyPayment").innerText = `Monthly Payment (Excl. Extra): $${monthlyPayment.toFixed(2)}`;
-      document.getElementById("totalPayment").innerText = `Total Payment: $${(totalPrincipal + totalInterest).toFixed(2)}`;
-      document.getElementById("totalInterest").innerText = `Total Interest: $${totalInterest.toFixed(2)}`;
-
-      const scheduleTable = document.getElementById("schedule");
-      scheduleTable.style.display = "table";
-      scheduleTable.querySelector("tbody").innerHTML = scheduleRows;
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
+      updateTableHeaders();
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll("[data-en], [data-zh]").forEach(el => {
-        if (lang === 'en') el.textContent = el.getAttribute("data-en");
-        if (lang === 'zh') el.textContent = el.getAttribute("data-zh");
+    function updateTableHeaders() {
+      const isEnglish = document.getElementById('langToggle').checked;
+      const enHeaders = document.querySelectorAll('thead th.en');
+      const zhHeaders = document.querySelectorAll('thead th.zh');
+      
+      enHeaders.forEach(th => {
+        th.style.display = isEnglish ? 'table-cell' : 'none';
       });
+      zhHeaders.forEach(th => {
+        th.style.display = isEnglish ? 'none' : 'table-cell';
+      });
+    }
+
+    function calculateLoan() {
+      const amount = parseFloat(document.getElementById("amount").value);
+      const annualRate = parseFloat(document.getElementById("interest").value);
+      const years = parseInt(document.getElementById("years").value);
+      const extra = parseFloat(document.getElementById("extra").value || 0);
+      
+      // Validate inputs
+      if (isNaN(amount) || isNaN(annualRate) || isNaN(years)) {
+        showNotification('Please enter valid numbers', true);
+        return;
+      }
+      
+      const rateM = annualRate / 100 / 12;
+      const months = years * 12;
+      
+      // Calculate monthly payment
+      const monthlyPayment = rateM
+        ? amount * rateM * Math.pow(1 + rateM, months) / (Math.pow(1 + rateM, months) - 1)
+        : amount / months;
+
+      const totalMonthly = monthlyPayment + extra;
+      
+      let balance = amount;
+      let totalInterest = 0;
+      let totalPayment = 0;
+      const schedule = [];
+      let month = 0;
+
+      while (balance > 0 && month < 1000) {
+        month++;
+        const interest = balance * rateM;
+        let principal = totalMonthly - interest;
+        let extraPayment = extra;
+
+        // Adjust extra payment if it would overpay
+        if (principal + extraPayment > balance) {
+          extraPayment = balance - principal;
+        }
+
+        balance -= (principal + extraPayment);
+        if (balance < 0.01) balance = 0;
+
+        totalInterest += interest;
+        totalPayment += (monthlyPayment + extra);
+
+        schedule.push({
+          month,
+          principal,
+          interest,
+          extra: extraPayment,
+          balance
+        });
+
+        if (balance <= 0) break;
+      }
+
+      // Show results container
+      document.getElementById('resultsContainer').style.display = 'block';
+
+      // Update summary values
+      document.getElementById('monthlyPayment').textContent = `$${monthlyPayment.toFixed(2)}`;
+      document.getElementById('totalPayment').textContent = `$${(amount + totalInterest).toFixed(2)}`;
+      document.getElementById('totalInterest').textContent = `$${totalInterest.toFixed(2)}`;
+      
+      // Render schedule
+      renderSchedule(schedule);
+    }
+
+    function renderSchedule(rows) {
+      let html = '';
+      const isEnglish = document.getElementById('langToggle').checked;
+      
+      rows.forEach(r => {
+        html += `
+        <tr class="hover:bg-gray-50">
+          <td class="p-2 border-b border-r border-gray-200 text-xs text-gray-600 text-center">${r.month}</td>
+          <td class="p-2 border-b border-r border-gray-200 text-xs text-gray-600 text-right">${r.principal.toFixed(2)}</td>
+          <td class="p-2 border-b border-r border-gray-200 text-xs text-gray-600 text-right">${r.interest.toFixed(2)}</td>
+          <td class="p-2 border-b border-r border-gray-200 text-xs text-gray-600 text-right">${r.extra.toFixed(2)}</td>
+          <td class="p-2 border-b border-gray-200 text-xs text-gray-600 text-right">${r.balance.toFixed(2)}</td>
+        </tr>`;
+      });
+      
+      document.getElementById('scheduleBody').innerHTML = html;
+      updateTableHeaders();
+    }
+    
+    function clearAll() {
+      document.getElementById('amount').value = '';
+      document.getElementById('interest').value = '';
+      document.getElementById('years').value = '';
+      document.getElementById('extra').value = '0';
+      document.getElementById('resultsContainer').style.display = 'none';
+    }
+    
+    function copyScheduleToClipboard() {
+      const rows = document.querySelectorAll('#scheduleBody tr');
+      if (rows.length === 0) {
+        showNotification('No schedule to copy', true);
+        return;
+      }
+      
+      let csvContent = "Month,Principal,Interest,Extra,Balance\n";
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const rowData = [
+          cells[0].textContent,
+          cells[1].textContent,
+          cells[2].textContent,
+          cells[3].textContent,
+          cells[4].textContent
+        ];
+        csvContent += rowData.join(',') + '\n';
+      });
+      
+      // Create a temporary textarea for copying
+      const textArea = document.createElement('textarea');
+      textArea.value = csvContent;
+      textArea.style.position = 'fixed';
+      textArea.style.top = '0';
+      textArea.style.left = '0';
+      textArea.style.opacity = '0';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        // Execute the copy command
+        const successful = document.execCommand('copy');
+        if (successful) {
+          showNotification('Schedule copied to clipboard!');
+        } else {
+          showNotification('Copy failed. Please try again.', true);
+        }
+      } catch (err) {
+        showNotification('Error copying: ' + err, true);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
     }
   </script>
 </body>

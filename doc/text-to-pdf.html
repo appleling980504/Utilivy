@@ -3,174 +3,647 @@
 <head>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YVL76JNY6V');
+  </script>
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
-
   <title>Text to PDF Converter - Save Text as PDF | Utilivy</title>
-<meta name="description" content="Convert plain text to a downloadable PDF document in seconds." />
+  <meta name="description" content="Convert plain text to a downloadable PDF document in seconds." />
   <link rel="icon" type="image/png" href="/assets/logo.png" />
   <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --primary-color: #4f46e5;
-      --bg-color: #f3f4f6;
-      --text-color: #111827;
-    }
-    * {
-      box-sizing: border-box;
-    }
     body {
-      margin: 0;
       font-family: 'Inter', sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-    }
-    header {
-      background: white;
-      padding: 1rem 2rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    header h1 {
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+      min-height: 100vh;
       margin: 0;
-      font-size: 1.5rem;
-      line-height: 1;
+      color: #333;
     }
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+    .en { display: block; }
+    .zh { display: none; }
+    .result-box {
+      background-color: #f9fafb;
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      position: relative;
+      border: 1px solid #e5e7eb;
     }
-    .lang-switch {
-      display: flex;
-      gap: 0.4rem;
+    .result-value {
+      word-break: break-all;
+      white-space: pre-wrap;
+      margin-top: 0.5rem;
+      padding: 0.75rem;
+      background: white;
+      border-radius: 0.375rem;
+      border: 1px solid #e5e7eb;
+      min-height: 50px;
     }
-    .lang-switch button {
-      padding: 0.4rem 0.8rem;
-      font-size: 0.85rem;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      background-color: var(--primary-color);
+    .copy-btn {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: #4f46e5;
       color: white;
-      width: 42px;
-      height: 32px;
-      display: inline-flex;
+      border: none;
+      border-radius: 0.25rem;
+      padding: 0.25rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .copy-btn:hover {
+      background: #4338ca;
+    }
+    .copy-btn.copied {
+      background: #10b981;
+    }
+    .card {
+      border-radius: 1rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-color: white;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+      transition: all 0.3s ease;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      display: flex;
       align-items: center;
       justify-content: center;
+      gap: 0.5rem;
     }
-    header a {
-      text-decoration: none;
-      color: var(--primary-color);
-      font-weight: 500;
-      font-size: 0.95rem;
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #4338ca 0%, #6d28d9 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .adsense-banner,
-    .adsense-footer {
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 25px;
+      border-radius: 8px;
+      background: #10b981;
+      color: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transform: translateX(120%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+    }
+    .notification.show {
+      transform: translateX(0);
+    }
+    .notification.error {
+      background: #ef4444;
+    }
+    .max-w-3xl {
+      max-width: 48rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .px-4 {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .py-10 {
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
+    .mb-8 {
+      margin-bottom: 2rem;
+    }
+    .text-center {
       text-align: center;
-      margin: 1rem 0;
-      color: gray;
-      display: none;
     }
-    .container {
-      max-width: 700px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .mb-10 {
+      margin-bottom: 2.5rem;
+    }
+    .p-6 {
+      padding: 1.5rem;
+    }
+    .space-y-6 > * + * {
+      margin-top: 1.5rem;
+    }
+    .mt-4 {
+      margin-top: 1rem;
+    }
+    .gap-3 {
+      gap: 0.75rem;
+    }
+    .flex {
+      display: flex;
+    }
+    .items-center {
+      align-items: center;
+    }
+    .justify-between {
+      justify-content: space-between;
+    }
+    .text-xl {
+      font-size: 1.25rem;
+      line-height: 1.75rem;
+    }
+    .font-bold {
+      font-weight: 700;
+    }
+    .text-blue-600 {
+      color: #4f46e5;
+    }
+    .text-xs {
+      font-size: 0.75rem;
+      line-height: 1rem;
+    }
+    .text-gray-500 {
+      color: #6b7280;
+    }
+    .gap-4 {
+      gap: 1rem;
+    }
+    .text-sm {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+    .font-medium {
+      font-weight: 500;
+    }
+    .text-3xl {
+      font-size: 1.875rem;
+      line-height: 2.25rem;
+    }
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
     }
     textarea {
       width: 100%;
-      height: 300px;
-      padding: 0.75rem;
       border: 1px solid #d1d5db;
-      border-radius: 8px;
-      margin-bottom: 1rem;
-      margin-top: 1rem;
-      font-size: 1rem;
-      font-family: monospace;
-    }
-    button.calculate {
-      background: var(--primary-color);
-      color: white;
-      border: none;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-    }
-    button.calculate:hover {
-      background-color: #4338ca;
-    }
-    footer {
-      text-align: center;
+      border-radius: 0.5rem;
       padding: 1rem;
-      font-size: 0.9rem;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      min-height: 200px;
+      transition: border-color 0.2s;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #4f46e5;
+      box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+    .w-full {
+      width: 100%;
+    }
+    .grid {
+      display: grid;
+    }
+    .grid-cols-1 {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+    .mt-8 {
+      margin-top: 2rem;
+    }
+    .pt-10 {
+      padding-top: 2.5rem;
+    }
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border-width: 0;
+    }
+    .relative {
+      position: relative;
+    }
+    .inline-flex {
+      display: inline-flex;
+    }
+    .cursor-pointer {
+      cursor: pointer;
+    }
+    .peer:checked ~ .peer-checked\:bg-blue-600 {
+      background-color: #4f46e5;
+    }
+    .w-11 {
+      width: 2.75rem;
+    }
+    .h-6 {
+      height: 1.5rem;
+    }
+    .bg-gray-300 {
+      background-color: #d1d5db;
+    }
+    .rounded-full {
+      border-radius: 9999px;
+    }
+    .transition-colors {
+      transition-property: background-color, border-color, color, fill, stroke;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+    .absolute {
+      position: absolute;
+    }
+    .left-0\.5 {
+      left: 0.125rem;
+    }
+    .top-0\.5 {
+      top: 0.125rem;
+    }
+    .w-5 {
+      width: 1.25rem;
+    }
+    .h-5 {
+      height: 1.25rem;
+    }
+    .bg-white {
+      background-color: white;
+    }
+    .shadow-md {
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    .transition-transform {
+      transition-property: transform;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+      transition-duration: 150ms;
+    }
+    .peer-checked\:translate-x-full:checked ~ * {
+      transform: translateX(100%);
+    }
+    .text-blue-700 {
+      color: #1d4ed8;
+    }
+    .text-green-600 {
+      color: #059669;
+    }
+    .preview-container {
+      border: 1px solid #e5e7eb;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      background-color: white;
+      min-height: 200px;
+      max-height: 300px;
+      overflow-y: auto;
+      margin-top: 1rem;
+    }
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.5rem;
+      color: #4b5563;
+      font-size: 0.875rem;
+    }
+    .btn-icon {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .text-gray-800 {
+      color: #1f2937;
+    }
+    .text-gray-800.en {
+      color: #1f2937;
+    }
+    .text-gray-500.zh {
       color: #6b7280;
+    }
+    .text-gray-500.en {
+      color: #6b7280;
+    }
+    .text-gray-800.zh {
+      color: #1f2937;
     }
   </style>
 </head>
-<body>
-  <header>
-    <h1 data-en="Utilivy - Text to PDF" data-zh="Utilivy - 文本转 PDF">Utilivy - Text to PDF</h1>
-    <div class="header-right">
-      <div class="lang-switch">
-        <button onclick="setLanguage('en')">EN</button>
-        <button onclick="setLanguage('zh')">中</button>
+<body class="min-h-screen px-4 py-10">
+  <div class="max-w-3xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div>
+        <div class="text-xl font-bold text-blue-600">Utilivy</div>
+        <div class="text-xs text-gray-500">All-in-one tools for smart life</div>
       </div>
-      <a href="/">← <span data-en="Back to Home" data-zh="返回首页">Back to Home</span></a>
+      <div class="flex items-center gap-4">
+        <!-- Language Toggle -->
+        <div class="flex items-center text-sm font-medium space-x-2">
+          <span class="zh text-gray-500">中</span>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+            <div class="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-blue-600 transition-colors duration-300"></div>
+            <div id="toggleDot" class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 peer-checked:translate-x-full"></div>
+          </label>
+          <span class="en text-gray-800">EN</span>
+        </div>
+
+        <!-- Home Icon -->
+        <a href="/" class="text-blue-600 hover:text-blue-800 text-lg" title="Home">
+          <i class="fa-solid fa-house"></i>
+        </a>
+      </div>
     </div>
-  </header>
 
-  <div class="adsense-banner">
-    <p>[Ad Placeholder - Top]</p>
+    <!-- Title -->
+    <div class="text-center mb-10">
+      <h1 class="text-3xl font-bold en mb-2">Text to PDF Converter</h1>
+      <h1 class="text-3xl font-bold zh mb-2">文本转 PDF 转换器</h1>
+      <p class="text-gray-500 text-sm en">Convert plain text to downloadable PDF documents</p>
+      <p class="text-gray-500 text-sm zh">将纯文本转换为可下载的 PDF 文档</p>
+    </div>
+
+    <!-- Converter Card -->
+    <div class="card p-6 space-y-6">
+      <div>
+        <label class="block text-sm font-medium mb-2">
+          <span class="en">Enter your text</span>
+          <span class="zh">输入您的文本</span>
+        </label>
+        <textarea id="textInput" placeholder="Type or paste your text here..." class="w-full"></textarea>
+        
+        <div class="stats">
+          <div class="en">Characters: <span id="charCount">0</span></div>
+          <div class="zh">字符数: <span id="charCount">0</span></div>
+          <div class="en">Words: <span id="wordCount">0</span></div>
+          <div class="zh">单词数: <span id="wordCount">0</span></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 gap-3">
+        <button onclick="exportToPDF()" class="btn-primary">
+          <i class="fa-solid fa-file-pdf"></i>
+          <span class="en">Download as PDF</span>
+          <span class="zh">下载为 PDF</span>
+        </button>
+      </div>
+
+      <!-- Preview Section -->
+      <div class="result-box">
+        <div class="font-medium text-blue-700 flex items-center gap-2">
+          <i class="fa-solid fa-eye"></i>
+          <span class="en">Text Preview</span>
+          <span class="zh">文本预览</span>
+        </div>
+        <div class="preview-container">
+          <div id="textPreview" class="text-gray-700"></div>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard('textInput', this)">
+          <i class="fa-regular fa-copy"></i>
+          <span class="en">Copy Text</span>
+          <span class="zh">复制文本</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-1 gap-6 mt-8">
+      <div class="card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-blue-700">
+          <i class="fa-solid fa-circle-question"></i>
+          <span class="en">How to Use</span>
+          <span class="zh">使用说明</span>
+        </h2>
+        <ol class="list-decimal list-inside text-gray-600 space-y-2 pl-4">
+          <li class="en">Enter text in the input field above</li>
+          <li class="zh">在上方输入框中输入文本</li>
+          <li class="en">Click "Download as PDF" to convert your text to PDF</li>
+          <li class="zh">点击"下载为 PDF"将文本转换为 PDF</li>
+          <li class="en">Save the generated PDF to your device</li>
+          <li class="zh">将生成的 PDF 保存到您的设备</li>
+          <li class="en">Use the copy button to copy your text</li>
+          <li class="zh">使用复制按钮复制您的文本</li>
+        </ol>
+      </div>
+
+      <div class="card p-5 text-sm space-y-3">
+        <h2 class="flex items-center gap-2 font-semibold text-green-600">
+          <i class="fa-solid fa-lightbulb"></i>
+          <span class="en">About PDF Conversion</span>
+          <span class="zh">关于 PDF 转换</span>
+        </h2>
+        <ul class="list-disc list-inside text-gray-600 space-y-2">
+          <li class="en">▸ PDF is a universal document format</li>
+          <li class="zh">▸ PDF 是一种通用文档格式</li>
+          <li class="en">▸ Preserves text formatting across devices</li>
+          <li class="zh">▸ 在不同设备上保持文本格式</li>
+          <li class="en">▸ Ideal for sharing and printing documents</li>
+          <li class="zh">▸ 非常适合共享和打印文档</li>
+          <li class="en">▸ Secure and difficult to modify</li>
+          <li class="zh">▸ 安全且难以修改</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-xs text-gray-500 pt-10">
+      <div class="mb-2">
+        <span class="en">© 2025 Utilivy - All-in-one Tools for Smart Life</span>
+        <span class="zh">© 2025 Utilivy - 智能生活全能工具</span>
+      </div>
+      <div>
+        <span class="en">All rights reserved</span>
+        <span class="zh">保留所有权利</span>
+      </div>
+    </footer>
   </div>
 
-  <div class="container">
-    <label for="textInput" data-en="Input your text below:" data-zh="请输入要转换的文本：">Input your text below:</label>
-    <textarea id="textInput" placeholder="Type your text here..."></textarea>
-
-    <button class="calculate" onclick="exportToPDF()">📄 <span data-en="Download as PDF" data-zh="下载为 PDF">Download as PDF</span></button>
+  <!-- Notification Element -->
+  <div id="notification" class="notification">
+    <i class="fas fa-check-circle mr-2"></i>
+    <span class="en">Copied to clipboard!</span>
+    <span class="zh">已复制到剪贴板！</span>
   </div>
-
-  <div class="adsense-footer">
-    <p>[Ad Placeholder - Bottom]</p>
-  </div>
-
-  <footer>
-    &copy; 2025 Utilivy. <span data-en="All rights reserved." data-zh="保留所有权利。">All rights reserved.</span>
-  </footer>
 
   <script>
-    async function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const pdf = new jsPDF();
-      const text = document.getElementById("textInput").value;
-      const lines = pdf.splitTextToSize(text, 180);
-      pdf.text(lines, 10, 10);
-      pdf.save("text.pdf");
+    // Initialize on DOM load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize language toggle
+      const toggle = document.getElementById('langToggle');
+      if (toggle) {
+        toggleLang(toggle);
+      }
+      
+      // Set up text input listeners
+      const textInput = document.getElementById('textInput');
+      if (textInput) {
+        textInput.addEventListener('input', updateTextStats);
+        textInput.addEventListener('input', updatePreview);
+        updatePreview();
+      }
+    });
+
+    // Language toggle
+    function toggleLang(toggle) {
+      const isEnglish = toggle.checked;
+      document.querySelectorAll('.en').forEach(el => {
+        el.style.display = isEnglish ? 'block' : 'none';
+      });
+      document.querySelectorAll('.zh').forEach(el => {
+        el.style.display = isEnglish ? 'none' : 'block';
+      });
     }
 
-    function setLanguage(lang) {
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = lang === 'zh' ? el.getAttribute('data-zh') : el.getAttribute('data-en');
-      });
+    // Update text statistics
+    function updateTextStats() {
+      const text = document.getElementById('textInput').value;
+      const charCount = text.length;
+      const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+      
+      document.querySelectorAll('#charCount').forEach(el => el.textContent = charCount);
+      document.querySelectorAll('#wordCount').forEach(el => el.textContent = wordCount);
+    }
+
+    // Update text preview
+    function updatePreview() {
+      const text = document.getElementById('textInput').value;
+      const preview = document.getElementById('textPreview');
+      
+      if (text.trim() === '') {
+        preview.innerHTML = '<span class="text-gray-400 en">Your text will appear here...</span>' +
+                           '<span class="text-gray-400 zh">您的文本将在此处显示...</span>';
+      } else {
+        // Simple formatting: preserve line breaks
+        preview.textContent = text;
+      }
+    }
+
+    // Secure clipboard copy method
+    function copyToClipboard(elementId, button) {
+      const element = document.getElementById(elementId);
+      const text = element.value;
+      
+      if (!text.trim()) {
+        showNotification('Nothing to copy', true);
+        return;
+      }
+      
+      // Create a temporary textarea for copying
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.top = '0';
+      textArea.style.left = '0';
+      textArea.style.opacity = '0';
+      
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        // Execute the copy command
+        const successful = document.execCommand('copy');
+        if (successful) {
+          // Visual feedback
+          const originalHTML = button.innerHTML;
+          button.innerHTML = '<i class="fa-solid fa-check"></i> <span class="en">Copied!</span><span class="zh">已复制!</span>';
+          button.classList.add('copied');
+          
+          // Show notification
+          showNotification('Copied to clipboard!');
+          
+          setTimeout(() => {
+            button.innerHTML = originalHTML;
+            button.classList.remove('copied');
+          }, 2000);
+        } else {
+          showNotification('Copy failed. Please try again.', true);
+        }
+      } catch (err) {
+        showNotification('Error copying: ' + err, true);
+      } finally {
+        document.body.removeChild(textArea);
+      }
+    }
+
+    // Show notification
+    function showNotification(message, isError = false) {
+      const notification = document.getElementById('notification');
+      const enSpan = notification.querySelector('.en');
+      const zhSpan = notification.querySelector('.zh');
+      
+      if (isError) {
+        notification.classList.add('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = '错误: ' + message;
+      } else {
+        notification.classList.remove('error');
+        enSpan.textContent = message;
+        zhSpan.textContent = message.includes('clipboard') ? '已复制到剪贴板！' : message;
+      }
+      
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, 3000);
+    }
+
+    // Export to PDF
+    async function exportToPDF() {
+      const text = document.getElementById('textInput').value;
+      
+      if (!text.trim()) {
+        showNotification('Please enter some text to convert', true);
+        return;
+      }
+      
+      try {
+        // Get the jsPDF instance
+        const { jsPDF } = window.jspdf;
+        
+        // Create new PDF document
+        const doc = new jsPDF();
+        
+        // Set font
+        doc.setFont('helvetica');
+        
+        // Add text (split into multiple lines)
+        const lines = doc.splitTextToSize(text, 180);
+        doc.text(lines, 10, 10);
+        
+        // Save the PDF
+        doc.save('text-document.pdf');
+        
+        showNotification('PDF downloaded successfully!');
+      } catch (e) {
+        showNotification('Error creating PDF: ' + e.message, true);
+        console.error('PDF creation error:', e);
+      }
     }
   </script>
 </body>
