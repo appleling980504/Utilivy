@@ -408,17 +408,17 @@
         <!-- Desktop Navigation -->
         <nav class="hidden md:flex items-center gap-8">
           <ul class="flex space-x-8">
-            <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="nav-link">PDF Tools</a></li>
-            <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="nav-link">Document Tools</a></li>
-            <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="nav-link">Calculators</a></li>
-            <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="nav-link">Developer Tools</a></li>
+            <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="nav-link font-bold theme-gradient">PDF Tools</a></li>
+            <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="nav-link font-bold theme-gradient">Document Tools</a></li>
+            <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="nav-link font-bold theme-gradient">Calculators</a></li>
+            <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="nav-link font-bold theme-gradient">Developer Tools</a></li>
           </ul>
           
           <!-- Theme Controls -->
           <div class="theme-controls">
             <!-- Color Theme Toggle - New Split Design -->
             <div class="flex items-center gap-2">
-              <span data-en="Theme" data-zh="主题" class="text-sm font-medium">Theme</span>
+              
               <div class="split-theme-toggle active-blue" id="split-theme-toggle">
                 <div class="theme-half blue-half" data-theme="blue"></div>
                 <div class="theme-half pink-half" data-theme="pink"></div>
@@ -888,8 +888,210 @@
       <div class="max-w-2xl mx-auto">
         <h2 class="text-2xl md:text-3xl font-bold mb-4" data-en="Need a tool we don't have?" data-zh="需要我们没有的工具？">Need a tool we don't have?</h2>
         <p class="mb-8" data-en="Suggest a new tool and we'll work on adding it to our collection" data-zh="建议一个新工具，我们会努力将其添加到我们的集合中">Suggest a new tool and we'll work on adding it to our collection</p>
-         <button class="cta-button">
-          <span data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</span>
+         <button id="openSuggestModal" class="cta-button">
+             <!-- Suggest Tool Button - Add this where you want the trigger -->
+        <i class="fa-solid fa-lightbulb-o theme-icon"></i>
+        <span data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</span>
+    </button>
+
+
+    <!-- Suggestion Form Modal -->
+    <div id="suggestModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="max-w-2xl w-full mx-4 bg-white/10 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/20 dark:border-gray-700/30 transform transition-transform duration-300 scale-95">
+            <!-- Form Header -->
+            <div class="theme-gradient py-4 px-6 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-white" data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</h3>
+                <button id="closeSuggestModal" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Form Content -->
+            <form id="suggestForm" class="p-6 sm:p-8 space-y-6">
+                <!-- Name Field -->
+                <div class="relative group">
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer text-white"
+                        placeholder=" "
+                    >
+                    <label for="name" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Your Name" data-zh="您的姓名">Your Name</label>
+                </div>
+
+                <!-- Email Field -->
+                <div class="relative group">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer text-white"
+                        placeholder=" "
+                    >
+                    <label for="email" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Your Email" data-zh="您的邮箱">Your Email</label>
+                </div>
+
+                <!-- Tool Idea Textarea -->
+                <div class="relative group">
+                    <textarea 
+                        id="tool-idea" 
+                        name="tool-idea" 
+                        rows="4" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer resize-none text-white"
+                        placeholder=" "
+                    ></textarea>
+                    <label for="tool-idea" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Tool Idea" data-zh="工具想法">Tool Idea</label>
+                </div>
+
+                <!-- Hidden Fields -->
+                <input type="hidden" name="_subject" value="New Tool Suggestion!">
+                <input type="hidden" name="_autoresponse" value="Thanks for your suggestion! We'll review it soon.">
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-blueTheme hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium flex items-center justify-center gap-2 group"
+                >
+                    <span data-en="Send Suggestion" data-zh="发送建议">Send Suggestion</span>
+                    <i class="fa-solid fa-paper-plane transition-transform duration-300 group-hover:translate-x-1 theme-icon"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thank You Popup Modal -->
+    <div id="thankYouModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="max-w-md w-full mx-4 bg-white/10 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/20 dark:border-gray-700/30 transform transition-transform duration-300 scale-95 text-center">
+            <!-- Success Icon -->
+            <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mt-8 text-green-500 dark:text-green-400">
+                <i class="fa-solid fa-check text-4xl"></i>
+            </div>
+
+            <!-- Thank You Content -->
+            <div class="p-8">
+                <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" data-en="Thank You!" data-zh="谢谢！">Thank You!</h3>
+                
+                <p class="text-gray-200 mb-6" 
+                   data-en="We've received your tool suggestion. We appreciate your input!" 
+                   data-zh="我们已收到您的工具建议。感谢您的意见！">
+                   We've received your tool suggestion. We appreciate your input!
+                </p>
+
+                <button id="closeThankYouModal" class="w-full bg-blueTheme hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium">
+                    <span data-en="Continue" data-zh="继续">Continue</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Get elements
+        const suggestModal = document.getElementById('suggestModal');
+        const thankYouModal = document.getElementById('thankYouModal');
+        const openButton = document.getElementById('openSuggestModal');
+        const closeSuggestButton = document.getElementById('closeSuggestModal');
+        const closeThankYouButton = document.getElementById('closeThankYouModal');
+        const suggestForm = document.getElementById('suggestForm');
+
+        // Configure your Zoho email here
+        const zohoEmail = "support@utilivy.com";
+        suggestForm.action = `https://formsubmit.co/${zohoEmail}`;
+
+        // Open suggestion modal
+        openButton.addEventListener('click', () => {
+            suggestModal.classList.remove('opacity-0', 'pointer-events-none');
+            suggestModal.querySelector('div').classList.remove('scale-95');
+            suggestModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        });
+
+        // Close suggestion modal
+        function closeSuggestModal() {
+            suggestModal.classList.add('opacity-0', 'pointer-events-none');
+            suggestModal.querySelector('div').classList.remove('scale-100');
+            suggestModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        }
+
+        closeSuggestButton.addEventListener('click', closeSuggestModal);
+
+        // Close when clicking outside
+        suggestModal.addEventListener('click', (e) => {
+            if (e.target === suggestModal) closeSuggestModal();
+        });
+
+        // Form submission handling
+        suggestForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Show loading state on button
+            const submitButton = suggestForm.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending...';
+
+            try {
+                // Submit form data
+                const formData = new FormData(suggestForm);
+                const response = await fetch(suggestForm.action, {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                });
+
+                // Close form modal and show thank you modal
+                closeSuggestModal();
+                showThankYouModal();
+                
+                // Reset form
+                suggestForm.reset();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('There was an error sending your suggestion. Please try again.');
+            } finally {
+                // Reset button state
+                submitButton.disabled = false;
+                submitButton.innerHTML = originalText;
+            }
+        });
+
+        // Show thank you modal
+        function showThankYouModal() {
+            thankYouModal.classList.remove('opacity-0', 'pointer-events-none');
+            thankYouModal.querySelector('div').classList.remove('scale-95');
+            thankYouModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close thank you modal
+        function closeThankYouModal() {
+            thankYouModal.classList.add('opacity-0', 'pointer-events-none');
+            thankYouModal.querySelector('div').classList.remove('scale-100');
+            thankYouModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        }
+
+        closeThankYouButton.addEventListener('click', closeThankYouModal);
+
+        // Close with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!suggestModal.classList.contains('pointer-events-none')) {
+                    closeSuggestModal();
+                }
+                if (!thankYouModal.classList.contains('pointer-events-none')) {
+                    closeThankYouModal();
+                }
+            }
+        });
+            </script>
         </button>
       </div>
     </div>
@@ -905,7 +1107,7 @@
             <span class="text-xl font-bold theme-gradient">Utilivy</span>
           </div>
           <p class="mb-6" data-en="Your one-stop destination for free online tools" data-zh="您的一站式免费在线工具目的地">Your one-stop destination for free online tools</p>
-          <div class="flex space-x-4">
+          <div class="flex space-x-4 hidden">
             <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-twitter"></i></a>
             <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-facebook"></i></a>
             <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-instagram"></i></a>
@@ -926,25 +1128,55 @@
         <div>
           <h4 class="font-semibold mb-4 text-lg" data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
           <ul class="space-y-3">
-            <li><a href="#" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
-            <li><a href="#" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
-            <li><a href="#" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
-            <li><a href="#" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+            <li><a href="about.html" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
+            <li><a href="privacy.html" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
+            <li><a href="term.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
+            <li><a href="contact.html" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
           </ul>
         </div>
         
-        <div>
-          <h4 class="font-semibold mb-4 text-lg" data-en="Newsletter" data-zh="新闻通讯">Newsletter</h4>
-          <p class="mb-4" data-en="Subscribe to get updates on new tools" data-zh="订阅以获取新工具的更新">Subscribe to get updates on new tools</p>
-          <div class="flex flex-col sm:flex-row gap-2">
-            <input type="email" placeholder="Your email" class="px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:border-transparent flex-grow">
-            <button class="hover:bg-opacity-90 text-white px-4 py-3 rounded-lg transition-colors whitespace-nowrap theme-icon">
-              <i class="fa-solid fa-paper-plane mr-2"></i>
-              <span data-en="Subscribe" data-zh="订阅">Subscribe</span>
-            </button>
-          </div>
-        </div>
+<div>
+  <h4 class="font-semibold mb-4 text-lg" data-en="Recent Updates" data-zh="最新更新">Recent Updates</h4>
+  <p class="mb-4 text-gray-300" data-en="See what's new with our tools" data-zh="了解工具的最新动态">See what's new with our tools</p>
+  
+  <ul class="space-y-4">
+    <!-- Update 1 -->
+    <li class="flex gap-3 p-3 bg-white/5 dark:bg-gray-800/50 rounded-lg border border-gray-200/10 dark:border-gray-700/20">
+      <div class="min-w-[40px] h-[40px] bg-blue-500/20 rounded-lg flex items-center justify-center text-blueTheme flex-shrink-0">
+        <i class="fa-solid fa-rocket theme-icon"></i>
       </div>
+      <div>
+        <h5 class="text-white text-sm font-medium" data-en="New Tool: PDF Merger" data-zh="新工具：PDF合并器">New Tool: PDF Merger</h5>
+        <p class="text-gray-400 text-xs mt-1" data-en="Combine multiple PDFs in seconds" data-zh="瞬间合并多个PDF文件">Combine multiple PDFs in seconds</p>
+        <p class="text-gray-500 text-xs mt-1" data-en="Added 3 days ago" data-zh="3天前添加">Added 3 days ago</p>
+      </div>
+    </li>
+
+    <!-- Update 2 -->
+    <li class="flex gap-3 p-3 bg-white/5 dark:bg-gray-800/50 rounded-lg border border-gray-200/10 dark:border-gray-700/20">
+      <div class="min-w-[40px] h-[40px] bg-green-500/20 rounded-lg flex items-center justify-center text-green-400 flex-shrink-0">
+        <i class="fa-solid fa-bolt theme-icon"></i>
+      </div>
+      <div>
+        <h5 class="text-white text-sm font-medium" data-en="Image Tools: 2x Faster" data-zh="图片工具：速度提升2倍">Image Tools: 2x Faster</h5>
+        <p class="text-gray-400 text-xs mt-1" data-en="Resize and compress images in seconds" data-zh="瞬间完成图片缩放与压缩">Resize and compress images in seconds</p>
+        <p class="text-gray-500 text-xs mt-1" data-en="Updated 1 week ago" data-zh="1周前更新">Updated 1 week ago</p>
+      </div>
+    </li>
+
+    <!-- Update 3 -->
+    <li class="flex gap-3 p-3 bg-white/5 dark:bg-gray-800/50 rounded-lg border border-gray-200/10 dark:border-gray-700/20">
+      <div class="min-w-[40px] h-[40px] bg-purple-500/20 rounded-lg flex items-center justify-center text-purple-400 flex-shrink-0">
+        <i class="fa-solid fa-language theme-icon"></i>
+      </div>
+      <div>
+        <h5 class="text-white text-sm font-medium" data-en="Multilingual Support" data-zh="多语言支持">Multilingual Support</h5>
+        <p class="text-gray-400 text-xs mt-1" data-en="Now available in 2 new languages" data-zh="新增5种语言支持">Now available in 2 new languages</p>
+        <p class="text-gray-500 text-xs mt-1" data-en="Updated 2 weeks ago" data-zh="2周前更新">Updated 2 weeks ago</p>
+      </div>
+    </li>
+  </ul>
+</div>
       
       <div class="border-t pt-8 text-center text-sm">
         <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">© 2025 Utilivy.com — All rights reserved.</span>
@@ -1293,6 +1525,59 @@
     // Initialize everything when page loads
     window.addEventListener('DOMContentLoaded', initTheme);
   </script>
+  <script>
+// Initialize theme based on user preference or system setting
+document.addEventListener('DOMContentLoaded', () => {
+    const themeToggle = document.getElementById('theme-toggle');
+    const htmlElement = document.documentElement;
+
+    // Check for saved theme preference in localStorage
+    const savedTheme = localStorage.getItem('utilivyTheme');
+    // Check system preference
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // Set initial theme
+    if (savedTheme === 'light') {
+        htmlElement.setAttribute('data-theme', 'light');
+        updateToggleState('light');
+    } else if (savedTheme === 'dark') {
+        htmlElement.setAttribute('data-theme', 'dark');
+        updateToggleState('dark');
+    } else {
+        // Use system preference if no saved preference
+        if (prefersDark) {
+            htmlElement.setAttribute('data-theme', 'dark');
+            updateToggleState('dark');
+        } else {
+            htmlElement.setAttribute('data-theme', 'light');
+            updateToggleState('light');
+        }
+    }
+
+    // Update toggle appearance based on theme
+    function updateToggleState(theme) {
+        if (theme === 'dark') {
+            themeToggle.setAttribute('aria-label', 'Switch to light mode');
+            // For SVG toggle: no need to check checkbox, animation handles it
+        } else {
+            themeToggle.setAttribute('aria-label', 'Switch to dark mode');
+        }
+    }
+
+    // Handle theme toggle click
+    themeToggle.addEventListener('click', () => {
+        const currentTheme = htmlElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        
+        // Update attribute
+        htmlElement.setAttribute('data-theme', newTheme);
+        // Save to localStorage
+        localStorage.setItem('utilivyTheme', newTheme);
+        // Update toggle state
+        updateToggleState(newTheme);
+    });
+});
+</script>
 </body>
 </html>
 

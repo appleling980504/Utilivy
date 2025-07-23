@@ -16,8 +16,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-    <title data-en="About Us | Utilivy" data-zh="关于我们 | Utilivy">About Us | Utilivy</title>
-    <meta name="description" content="Learn about Utilivy, our mission to provide free, easy-to-use online tools for PDF, documents, calculations, and development tasks." />
+    <title data-en="Terms of Service | Utilivy" data-zh="服务条款 | Utilivy">Terms of Service | Utilivy</title>
+    <meta name="description" content="Read Utilivy's Terms of Service for using our free online tools including PDF, document, calculators, and developer tools." />
     <link rel="icon" type="image/png" href="/assets/logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -362,64 +362,38 @@
             background-color: #F07887; /* Darker pink on hover */
         }
 
-        /* About page specific styles */
-        .about-title-section {
-            margin-bottom: 8rem;
+        /* Terms of Service specific styles */
+        .terms-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
         
-        .about-section {
-            margin-bottom: 4rem;
+        .terms-section {
+            margin-bottom: 3rem;
         }
         
-        .about-image {
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.5s ease;
+        .terms-heading {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            margin-bottom: 2rem;
         }
         
-        .about-image:hover {
-            transform: translateY(-10px);
+        .terms-subheading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
         }
         
-        .feature-card {
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
-        }
-        
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-        
-        .team-member {
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-        
-        .team-member:hover {
-            transform: translateY(-10px);
-        }
-        
-        .team-photo {
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1.5rem;
-            border: 4px solid transparent;
-        }
-        
-        body.blue-theme .team-photo {
-            border-color: #AAB6FB;
-        }
-        
-        body.pink-theme .team-photo {
-            border-color: #FAA7B8;
+        .terms-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            display: block;
         }
     </style>
 </head>
+
 <body class="font-inter min-h-screen blue-theme light-theme">
     <!-- Header with Navigation -->
     <header class="sticky top-0 z-50 shadow-sm transition-all duration-300">
@@ -566,181 +540,103 @@
         </div>
     </header>
 
+    <!-- Search Section -->
+    <section class="gradient-bg py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto relative group">
+                <input 
+                    type="text" 
+                    placeholder="Search tools..." 
+                    data-en="Search tools..." 
+                    data-zh="搜索工具..." 
+                    class="w-full px-6 py-4 rounded-full shadow-md border focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                    id="search-input"
+                >
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-blueTheme transition-colors theme-icon">
+                    <i class="fa-solid fa-search text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- About Us Hero Section -->
-        <section class="about-title-section">
-            <div class="max-w-6xl mx-auto text-center">
-                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 theme-gradient">
-                    <span data-en="About Utilivy" data-zh="关于 Utilivy">About Utilivy</span>
-                </h1>
-                
-                <div class="grid md:grid-cols-1 gap-12 items-center">
-                    <div>
-                        <p class="text-lg mb-6" data-en="We're on a mission to make digital tools accessible to everyone, everywhere." data-zh="我们的使命是让数字工具触手可及，惠及全球每一个人。">
-                            We're on a mission to make digital tools accessible to everyone, everywhere.
-                        </p>
-                        
-                        <p class="mb-6" data-en="Founded in 2023, Utilivy started with a simple idea: everyday digital tasks should be easy, free, and accessible without installing complex software. Whether you need to edit a PDF, convert a document, calculate a formula, or simplify a development task, we've got you covered." data-zh="Utilivy 成立于 2025 年，其创立源于一个简单的想法：日常数字任务应当简单易用、免费且无需安装复杂软件即可使用。无论您需要编辑 PDF、转换文档、计算公式还是简化开发任务，我们都能满足您的需求。">
-                          Founded in 2025, Utilivy started with a simple idea: everyday digital tasks should be easy, free, and accessible without installing complex software. Whether you need to edit a PDF, convert a document, calculate a formula, or simplify a development task, we've got you covered.
-                        </p>
-                        
-                        <p data-en="Our team of developers and designers work tirelessly to create intuitive tools that solve real problems. We believe in privacy-first technology and never store your files longer than necessary to complete your task." data-zh="我们的开发人员和设计师团队不懈努力，打造直观易用的工具来解决实际问题。我们秉持隐私优先的技术理念，仅在完成您的任务所需的必要时间内存储您的文件，绝不超时保留。">
-                         Our team of developers and designers work tirelessly to create intuitive tools that solve real problems. We believe in privacy-first technology and never store your files longer than necessary to complete your task.   
-                        </p>
-                    </div>
-                    
-                   
-                </div>
-            </div>
-        </section>
-        
-        <!-- Our Mission Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-compass theme-icon"></i>
-                    <span data-en="Our Mission" data-zh="我们的使命">Our Mission</span>
-                </h2>
-                
-                <div class="feature-card border gradient-bg p-8 rounded-2xl">
-                    <p class="mb-6" data-en="To empower individuals and businesses by providing free, high-quality digital tools that simplify everyday tasks." data-zh="通过提供免费、高质量的数字工具简化日常任务，为个人和企业赋能。">
-                      To empower individuals and businesses by providing free, high-quality digital tools that simplify everyday tasks.
+        <div class="terms-container">
+            <h1 class="terms-heading theme-gradient">
+                <span data-en="Terms of Service" data-zh="服务条款">Terms of Service</span>
+            </h1>
+            
+            <span class="terms-date" data-en="Last updated: July 2025" data-zh="最后更新：2025年7月">Last updated: July 2025</span>
+            
+            <div class="space-y-6">
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="1. Acceptance of Terms" data-zh="1. 接受条款">1. Acceptance of Terms</h2>
+                    <p>
+                        <span data-en="By using Utilivy's tools and services, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform." data-zh="使用Utilivy的工具和服务，即表示您同意遵守本服务条款。如不同意，请不要使用我们的平台。">
+                            By using Utilivy's tools and services, you agree to be bound by these Terms of Service. If you do not agree, please do not use our platform.
+                        </span>
                     </p>
-                    <p data-en="We believe technology should work for you, not against you. That's why we've created a platform where powerful tools meet intuitive design, making even the most complex digital tasks simple and accessible to everyone." data-zh="我们相信技术应当为您服务，而非与您作对。这就是为什么我们打造了一个集强大功能与直观设计于一体的平台，让即便是最复杂的数字任务也能变得简单易懂，人人可用。">
-                       We believe technology should work for you, not against you. That's why we've created a platform where powerful tools meet intuitive design, making even the most complex digital tasks simple and accessible to everyone.
-                    </p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Our Values Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-heart theme-icon"></i>
-                    <span data-en="Our Values" data-zh="我们的价值观">Our Values</span>
-                </h2>
-                
-                <div class="grid md:grid-cols-3 gap-6">
-                    <!-- Value 1 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-gift text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Free Access" data-zh="免费使用">Free Access</h3>
-                        <p data-en="We believe essential digital tools should be available to everyone, regardless of their ability to pay." data-zh="我们相信，无论支付能力如何，每个人都应该能够使用基本的数字工具。">
-                            We believe essential digital tools should be available to everyone, regardless of their ability to pay.
-                        </p>
-                    </div>
-                    
-                    <!-- Value 2 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-lock text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Privacy First" data-zh="隐私优先">Privacy First</h3>
-                        <p data-en="Your data belongs to you. We never store your information longer than necessary and never share it with third parties." data-zh="您的数据属于您自己。我们绝不会将您的信息存储超过必要时间，也绝不会与第三方共享。">
-                            Your data belongs to you. We never store your information longer than necessary and never share it with third parties.
-                        </p>
-                    </div>
-                    
-                    <!-- Value 3 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-bolt text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Simplicity" data-zh="简洁易用">Simplicity</h3>
-                        <p data-en="We design our tools to be intuitive and easy to use, so you can get things done without learning complex software." data-zh="我们设计的工具直观易用，让您无需学习复杂软件就能完成工作。">
-                            We design our tools to be intuitive and easy to use, so you can get things done without learning complex software.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
+                </section>
 
-        <!-- Contact Us Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-envelope theme-icon"></i>
-                    <span data-en="Get In Touch" data-zh="联系我们">Get In Touch</span>
-                </h2>
-                
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div style="padding-right: 2.5rem;">
-                        <p class="mb-6" data-en="Have questions, suggestions, or just want to say hello? We'd love to hear from you!">
-                            Have questions, suggestions, or just want to say hello? We'd love to hear from you!
-                        </p>
-                        
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Email Us" data-zh="给我们发邮件">Email Us</h3>
-                                    <p><a href="mailto:hello@utilivy.com" class="hover:underline">hello@utilivy.com</a></p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-comment"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Feedback" data-zh="反馈建议">Feedback</h3>
-                                    <p data-en="Suggest a new tool or report an issue" data-zh="建议新工具或报告问题">
-                                        <a href="#" id="contactSuggestBtn" class="hover:underline">Suggest a new tool</a>
-                                    </p>
-                                </div>
-                            </div>
-                            
-                            <div class="flex items-start gap-4 hidden">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-share-alt"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Follow Us" data-zh="关注我们">Follow Us</h3>
-                                    <div class="flex space-x-4 mt-2">
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-twitter"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-facebook"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-instagram"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-github"></i></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div>
-                        <form class="space-y-6">
-                            <div>
-                                <label for="contact-name" class="block mb-2 font-medium" data-en="Your Name" data-zh="您的姓名">Your Name</label>
-                                <input type="text" id="contact-name" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all" required>
-                            </div>
-                            
-                            <div>
-                                <label for="contact-email" class="block mb-2 font-medium" data-en="Your Email" data-zh="您的邮箱">Your Email</label>
-                                <input type="email" id="contact-email" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all" required>
-                            </div>
-                            
-                            <div>
-                                <label for="contact-message" class="block mb-2 font-medium" data-en="Your Message" data-zh="您的留言">Your Message</label>
-                                <textarea id="contact-message" rows="5" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-none" required></textarea>
-                            </div>
-                            
-                            <button type="submit" class="cta-button w-full">
-                                <i class="fa-solid fa-paper-plane mr-2"></i>
-                                <span data-en="Send Message" data-zh="发送消息">Send Message</span>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="2. Use of Tools" data-zh="2. 工具使用">2. Use of Tools</h2>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>
+                            <span data-en="Our tools are provided for personal, non-commercial use unless otherwise stated." data-zh="我们的工具仅供个人非商业使用，除非另有说明。">
+                                Our tools are provided for personal, non-commercial use unless otherwise stated.
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="You may not use our tools to process illegal, harmful, or infringing content (e.g., copyrighted material without permission)." data-zh="您不得使用我们的工具处理非法、有害或侵权内容（如未经许可的受版权保护材料）。">
+                                You may not use our tools to process illegal, harmful, or infringing content (e.g., copyrighted material without permission).
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="Automated scraping or bulk usage of tools (e.g., via bots) is prohibited without prior approval." data-zh="未经事先批准，禁止自动抓取或批量使用工具（如通过机器人）。">
+                                Automated scraping or bulk usage of tools (e.g., via bots) is prohibited without prior approval.
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="3. Intellectual Property" data-zh="3. 知识产权">3. Intellectual Property</h2>
+                    <p>
+                        <span data-en="Utilivy retains all rights to the tools, code, and content on the platform. Your use of our tools does not grant you ownership of any intellectual property." data-zh="Utilivy保留对平台上工具、代码和内容的所有权利。您使用我们的工具并不授予您任何知识产权的所有权。">
+                            Utilivy retains all rights to the tools, code, and content on the platform. Your use of our tools does not grant you ownership of any intellectual property.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="4. Limitation of Liability" data-zh="4. 责任限制">4. Limitation of Liability</h2>
+                    <p>
+                        <span data-en="Utilivy is not liable for any damages resulting from the use or inability to use our tools. We provide tools 'as-is' without warranties of any kind." data-zh="Utilivy不对因使用或无法使用我们的工具而造成的任何损害承担责任。我们提供的工具按“现状”提供，不提供任何形式的担保。">
+                            Utilivy is not liable for any damages resulting from the use or inability to use our tools. We provide tools 'as-is' without warranties of any kind.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="5. Changes to Terms" data-zh="5. 条款变更">5. Changes to Terms</h2>
+                    <p>
+                        <span data-en="We may update these Terms of Service from time to time. Changes will be posted on this page, and your continued use of the platform constitutes acceptance of the new terms." data-zh="我们可能会不时更新本服务条款。变更将在本页面公布，您继续使用平台即表示接受新条款。">
+                            We may update these Terms of Service from time to time. Changes will be posted on this page, and your continued use of the platform constitutes acceptance of the new terms.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="terms-section">
+                    <h2 class="terms-subheading" data-en="6. Contact Us" data-zh="6. 联系我们">6. Contact Us</h2>
+                    <p>
+                        <span data-en="If you have questions about these terms, email us at: " data-zh="如对本条款有疑问，请发送电子邮件至：">
+                            If you have questions about these terms, email us at: 
+                        </span>
+                        <a href="mailto:terms@utilivy.com" class="text-blueTheme hover:underline">terms@utilivy.com</a>
+                    </p>
+                </section>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- Call to Action -->
@@ -874,7 +770,7 @@
                 <div>
                     <h4 class="font-semibold mb-4 text-lg" data-en="Tool Categories" data-zh="工具分类">Tool Categories</h4>
                     <ul class="space-y-3">
-                        <li><a href="#pdf" class="hover:text-white transition-colors" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
+                        <li><a href="index.html#pdf" class="hover:text-white transition-colors" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
                         <li><a href="#doc" class="hover:text-white transition-colors" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
                         <li><a href="#calc" class="hover:text-white transition-colors" data-en="Calculators" data-zh="计算器">Calculators</a></li>
                         <li><a href="#dev" class="hover:text-white transition-colors" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
@@ -886,8 +782,8 @@
                     <ul class="space-y-3">
                         <li><a href="about.html" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
                         <li><a href="privacy.html" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+                        <li><a href="term.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
                     </ul>
                 </div>
                 
@@ -1105,7 +1001,7 @@
             });
             
             // Update document title
-            document.title = isEnglish ? "About Us | Utilivy" : "关于我们 | Utilivy";
+            document.title = isEnglish ? "Terms of Service | Utilivy" : "服务条款 | Utilivy";
             
             // Sync both toggles
             if (toggle.id === 'langToggle' && mobileLangToggle) {
@@ -1127,7 +1023,6 @@
         const closeSuggestButton = document.getElementById('closeSuggestModal');
         const closeThankYouButton = document.getElementById('closeThankYouModal');
         const suggestForm = document.getElementById('suggestForm');
-        const contactSuggestBtn = document.getElementById('contactSuggestBtn');
 
         // Configure your email here
         const email = "support@utilivy.com";
@@ -1138,17 +1033,6 @@
         // Open suggestion modal
         if (openButton) {
             openButton.addEventListener('click', () => {
-                suggestModal.classList.remove('opacity-0', 'pointer-events-none');
-                suggestModal.querySelector('div').classList.remove('scale-95');
-                suggestModal.querySelector('div').classList.add('scale-100');
-                document.body.style.overflow = 'hidden';
-            });
-        }
-
-        // Open suggestion modal from contact section
-        if (contactSuggestBtn) {
-            contactSuggestBtn.addEventListener('click', (e) => {
-                e.preventDefault();
                 suggestModal.classList.remove('opacity-0', 'pointer-events-none');
                 suggestModal.querySelector('div').classList.remove('scale-95');
                 suggestModal.querySelector('div').classList.add('scale-100');
@@ -1268,7 +1152,7 @@
             });
             
             // Update document title
-            document.title = isEnglish ? "About Us | Utilivy" : "关于我们 | Utilivy";
+            document.title = isEnglish ? "Terms of Service | Utilivy" : "服务条款 | Utilivy";
             
             // Add search functionality
             const searchInput = document.getElementById('search-input');

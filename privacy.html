@@ -1,31 +1,1282 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
+    <!-- Google AdSense -->
+    <script async async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4373033423998409"
      crossorigin="anonymous"></script>
-<meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YVL76JNY6V');
-</script>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-YVL76JNY6V"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-YVL76JNY6V');
+    </script>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
+    <title data-en="Privacy Policy | Utilivy" data-zh="隐私政策 | Utilivy">Privacy Policy | Utilivy</title>
+    <meta name="description" content="Read Utilivy's Privacy Policy to understand how we collect, use, and protect your information when using our online tools." />
+    <link rel="icon" type="image/png" href="/assets/logo.png" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <title>Privacy Policy - Utilivy</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>body { font-family: 'Inter', sans-serif; }</style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        secondary: '#f97316',
+                        accent: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc',
+                        pdf: '#dc2626',      // Red for PDF tools
+                        doc: '#0ea5e9',      // Blue for document tools
+                        calc: '#10b981',     // Green for calculators
+                        dev: '#8b5cf6',      // Purple for developer tools
+                        blueTheme: '#AAB6FB', // New blue theme color
+                        pinkTheme: '#FAA7B8'  // New pink theme color
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .tool-card {
+                @apply rounded-xl p-6 border flex flex-col items-center text-center h-full w-full cursor-pointer transition-all duration-300 hover:shadow-md hover:-translate-y-1;
+            }
+            .tool-icon {
+                @apply text-3xl mb-4 transition-transform duration-300;
+            }
+            .tool-title {
+                @apply font-medium transition-colors duration-300 text-base mb-2;
+            }
+            .tool-desc {
+                @apply text-xs text-gray-500 dark:text-gray-400 text-center;
+            }
+            .category-card {
+                @apply rounded-2xl p-6 mb-10 transition-all duration-500 hover:shadow-xl;
+            }
+            .section-title {
+                @apply text-[clamp(1.5rem,3vw,2.25rem)] font-bold mb-6 flex items-center gap-3;
+            }
+            .nav-link {
+                @apply relative py-2 hover:text-primary transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-200 hover:after:w-full;
+            }
+            .gradient-bg {
+                @apply transition-all duration-700;
+            }
+            .tool-grid {
+                @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5;
+            }
+            .theme-gradient {
+                @apply bg-clip-text text-transparent transition-all duration-500;
+            }
+            .cta-gradient {
+                @apply transition-all duration-500;
+            }
+            .cta-button {
+                @apply font-medium px-8 py-4 rounded-full hover:bg-opacity-90 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1;
+                color: white; 
+            }
+            .theme-toggle {
+                @apply w-10 h-10 rounded-full cursor-pointer transition-all duration-300 flex items-center justify-center border-2 border-transparent hover:scale-110;
+            }
+            .theme-toggle.active {
+                @apply border-white shadow-md;
+            }
+            .mode-option {
+                @apply px-3 py-2 rounded-full text-sm cursor-pointer transition-all duration-200 hover:bg-opacity-20;
+            }
+            .mode-option.active {
+                @apply bg-opacity-30 font-medium;
+            }
+        }
+
+        /* Theme styles */
+        body.blue-theme .theme-gradient {
+            background-image: linear-gradient(to right, #AAB6FB, #7B8FFE);
+        }
+        body.blue-theme .cta-gradient {
+            background: linear-gradient(to right, #AAB6FB, #7B8FFE);
+        }
+        body.blue-theme .theme-icon {
+            color: #AAB6FB;
+        }
+        body.blue-theme .gradient-bg {
+            background: linear-gradient(to-br, #AAB6FB20, #7B8FFE10);
+        }
+        body.blue-theme.dark-theme .gradient-bg {
+            background: linear-gradient(to-br, #AAB6FB10, #7B8FFE05);
+        }
+
+        body.pink-theme .theme-gradient {
+            background-image: linear-gradient(to right, #FAA7B8, #F07887);
+        }
+        body.pink-theme .cta-gradient {
+            background: linear-gradient(to right, #FAA7B8, #F07887);
+        }
+        body.pink-theme .theme-icon {
+            color: #FAA7B8;
+        }
+        body.pink-theme .gradient-bg {
+            background: linear-gradient(to-br, #FAA7B820, #F0788710);
+        }
+        body.pink-theme.dark-theme .gradient-bg {
+            background: linear-gradient(to-br, #FAA7B810, #F0788705);
+        }
+
+        /* Light/Dark theme styles */
+        body.light-theme {
+            @apply bg-gray-50 text-gray-800;
+        }
+        body.light-theme .tool-card,
+        body.light-theme .category-card,
+        body.light-theme header {
+            @apply bg-white border-gray-100;
+        }
+        body.light-theme footer {
+            @apply bg-dark text-white;
+        }
+        body.light-theme .mode-option {
+            @apply bg-gray-200 dark:bg-gray-700;
+        }
+
+        body.dark-theme {
+            @apply bg-gray-900 text-gray-100;
+        }
+        body.dark-theme .tool-card,
+        body.dark-theme .category-card,
+        body.dark-theme header {
+            @apply bg-gray-800 border-gray-700;
+        }
+        body.dark-theme footer {
+            @apply bg-gray-950 text-gray-300;
+        }
+        body.dark-theme .section-title {
+            @apply text-white;
+        }
+        body.dark-theme input[type="text"],
+        body.dark-theme input[type="email"] {
+            @apply bg-gray-700 border-gray-600;
+        }
+        body.dark-theme .mode-option {
+            @apply bg-gray-700;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Footer link hover effects */
+        footer a:hover {
+            color: var(--footer-hover-color, #AAB6FB);
+        }
+        body.pink-theme footer a:hover {
+            --footer-hover-color: #FAA7B8;
+        }
+        
+        /* New theme toggle styles */
+        .theme-toggle-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: currentColor;
+            width: 40px;
+            height: 40px;
+        }
+        
+        .sun-and-moon {
+            transition: transform 0.5s ease;
+        }
+        
+        .sun-and-moon .sun {
+            transform-origin: center center;
+            transition: transform 0.5s ease;
+        }
+        
+        .sun-and-moon .sun-beams {
+            stroke-linecap: round;
+            transform-origin: center center;
+            transition: opacity 0.5s ease;
+        }
+        
+        .dark-theme .sun-and-moon .sun {
+            transform: scale(1.75);
+        }
+        
+        .dark-theme .sun-and-moon .sun-beams {
+            opacity: 0;
+        }
+        
+        .dark-theme .sun-and-moon .moon circle {
+            transform: translateX(-7px);
+        }
+        
+        .sun-and-moon > .moon circle {
+            transition: transform 0.25s ease;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            .sun-and-moon > .moon circle {
+                transition: none;
+            }
+        }
+        
+        /* Adjust header layout */
+        .theme-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* Mobile menu adjustments */
+        #mobile-menu .theme-controls {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 15px;
+        }
+        
+        /* Language toggle active color (matches theme) */
+        body.blue-theme #langToggle:checked + div,
+        body.blue-theme #mobile-langToggle:checked + div {
+            background-color: #AAB6FB; /* Blue theme color */
+        }
+
+        body.pink-theme #langToggle:checked + div,
+        body.pink-theme #mobile-langToggle:checked + div {
+            background-color: #FAA7B8; /* Pink theme color */
+        }
+
+        /* New split color theme toggle */
+        .split-theme-toggle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .split-theme-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        .theme-half {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            transition: all 0.3s ease;
+        }
+        
+        .blue-half {
+            left: 0;
+            background: linear-gradient(to bottom right, #AAB6FB, #7B8FFE);
+        }
+        
+        .pink-half {
+            right: 0;
+            background: linear-gradient(to bottom left, #FAA7B8, #F07887);
+        }
+        
+        .split-theme-toggle.active-blue .blue-half,
+        .split-theme-toggle.active-pink .pink-half {
+            box-shadow: inset 0 0 0 2px white;
+        }
+        
+        .split-theme-toggle.active-blue .blue-half::after,
+        .split-theme-toggle.active-pink .pink-half::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: white;
+            opacity: 0.8;
+        }
+        
+        .split-theme-toggle.active-blue .blue-half::after {
+            left: 30%;
+        }
+        
+        .split-theme-toggle.active-pink .pink-half::after {
+            left: 70%;
+        }
+        
+        /* Tooltip for theme toggle */
+        .theme-tooltip {
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+        }
+        
+        .split-theme-toggle:hover .theme-tooltip {
+            opacity: 1;
+        }
+        
+        /* Match blue theme */
+        body.blue-theme .cta-button {
+            background-color: #AAB6FB; /* Blue theme color */
+        }
+        body.blue-theme .cta-button:hover {
+            background-color: #7B8FFE; /* Darker blue on hover */
+        }
+
+        /* Match pink theme */
+        body.pink-theme .cta-button {
+            background-color: #FAA7B8; /* Pink theme color */
+        }
+        body.pink-theme .cta-button:hover {
+            background-color: #F07887; /* Darker pink on hover */
+        }
+
+        /* Privacy Policy specific styles */
+        .privacy-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .privacy-section {
+            margin-bottom: 3rem;
+        }
+        
+        .privacy-heading {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-subheading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+        }
+        
+        .privacy-date {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+    </style>
 </head>
-<body class="bg-blue-50 text-blue-900">
-  <div class="max-w-3xl mx-auto p-8">
-    <h1 class="text-3xl font-bold mb-4">Privacy Policy</h1>
-    <p class="mb-4">Utilivy does not collect or store your personal data. All operations are performed locally in your browser. We do not upload your files or track your activity beyond anonymous analytics (e.g., page visits).</p>
-    <p class="mb-4">We use Google AdSense to support our free tools. Google may use cookies to personalize ads. You can review and manage your preferences via <a href="https://adssettings.google.com" class="underline text-blue-700" target="_blank">Google Ad Settings</a>.</p>
-    <p>If you have any questions about our policy, please contact us at: <strong>support@utilivy.com</strong></p>
-  </div>
+
+<body class="font-inter min-h-screen blue-theme light-theme">
+    <!-- Header with Navigation -->
+    <header class="sticky top-0 z-50 shadow-sm transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-2">
+                    <img src="/assets/logo.png" alt="Utilivy Logo" class="h-9 w-9 rounded-md shadow-sm">
+                    <span class="text-xl font-bold theme-gradient">Utilivy</span>
+                </a>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center gap-8">
+                    <ul class="flex space-x-8">
+                        <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="nav-link font-bold theme-gradient">PDF Tools</a></li>
+                        <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="nav-link font-bold theme-gradient">Document Tools</a></li>
+                        <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="nav-link font-bold theme-gradient">Calculators</a></li>
+                        <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="nav-link font-bold theme-gradient">Developer Tools</a></li>
+                    </ul>
+                    
+                    <!-- Theme Controls -->
+                    <div class="theme-controls">
+                        <!-- Color Theme Toggle - New Split Design -->
+                        <div class="flex items-center gap-2">
+                            
+                            <div class="split-theme-toggle active-blue" id="split-theme-toggle">
+                                <div class="theme-half blue-half" data-theme="blue"></div>
+                                <div class="theme-half pink-half" data-theme="pink"></div>
+                                <div class="theme-tooltip">Switch theme color</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Dark/Light Mode Toggle -->
+                        <button class="theme-toggle-btn" id="theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                            <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                                <mask class="moon" id="moon-mask">
+                                    <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                                    <circle cx="24" cy="10" r="6" fill="black" />
+                                </mask>
+                                <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor" />
+                                <g class="sun-beams" stroke="currentColor">
+                                    <line x1="12" y1="1" x2="12" y2="3" />
+                                    <line x1="12" y1="21" x2="12" y2="23" />
+                                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                    <line x1="1" y1="12" x2="3" y2="12" />
+                                    <line x1="21" y1="12" x2="23" y2="12" />
+                                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                                </g>
+                            </svg>
+                        </button>
+                        
+                        <!-- Language Toggle -->
+                        <div class="flex items-center text-sm font-medium space-x-2">
+                            <span class="zh text-gray-500 dark:text-gray-400">中</span>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input id="langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+                                <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors duration-300"></div>
+                                <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 peer-checked:translate-x-full"></div>
+                            </label>
+                            <span class="en">EN</span>
+                        </div>
+                    </div>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden text-gray-700 dark:text-gray-200 focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="hidden md:hidden border-t">
+            <div class="container mx-auto px-4 py-3 space-y-4">
+                <!-- Mobile Theme Controls -->
+                <div class="theme-controls">
+                    <div class="flex justify-between items-center w-full">
+                        <span data-en="Theme Settings" data-zh="主题设置" class="font-medium">Theme Settings</span>
+                    </div>
+                    
+                    <!-- Color Theme -->
+                    <div class="mb-3 w-full">
+                        <div class="flex justify-between items-center mb-2">
+                            <span data-en="Primary Color" data-zh="主色调" class="text-sm">Primary Color</span>
+                            <div class="split-theme-toggle active-blue" id="mobile-split-theme-toggle">
+                                <div class="theme-half blue-half" data-theme="blue"></div>
+                                <div class="theme-half pink-half" data-theme="pink"></div>
+                                <div class="theme-tooltip">Switch theme color</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Mode Selection -->
+                    <div class="w-full">
+                        <div class="flex justify-between items-center">
+                            <span data-en="Display Mode" data-zh="显示模式" class="text-sm">Display Mode</span>
+                            <button class="theme-toggle-btn" id="mobile-theme-toggle" title="Toggles light & dark" aria-label="auto" aria-live="polite">
+                                <svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+                                    <mask class="moon" id="moon-mask-mobile">
+                                        <rect x="0" y="0" width="100%" height="100%" fill="white" />
+                                        <circle cx="24" cy="10" r="6" fill="black" />
+                                    </mask>
+                                    <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask-mobile)" fill="currentColor" />
+                                    <g class="sun-beams" stroke="currentColor">
+                                        <line x1="12" y1="1" x2="12" y2="3" />
+                                        <line x1="12" y1="21" x2="12" y2="23" />
+                                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                                        <line x1="1" y1="12" x2="3" y2="12" />
+                                        <line x1="21" y1="12" x2="23" y2="12" />
+                                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                                    </g>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mobile Language Toggle -->
+                <div class="flex items-center justify-between p-3 rounded-lg">
+                    <span data-en="Language" data-zh="语言" class="font-medium">Language</span>
+                    <div class="flex items-center text-sm font-medium space-x-2">
+                        <span class="zh text-gray-500 dark:text-gray-400">中</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input id="mobile-langToggle" type="checkbox" class="sr-only peer" checked onchange="toggleLang(this)">
+                            <div class="w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-primary transition-colors duration-300"></div>
+                            <div class="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform duration-300 peer-checked:translate-x-full"></div>
+                        </label>
+                        <span class="en">EN</span>
+                    </div>
+                </div>
+                
+                <!-- Mobile Navigation Links -->
+                <ul class="space-y-2">
+                    <li><a href="#pdf" data-en="PDF Tools" data-zh="PDF 工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">PDF Tools</a></li>
+                    <li><a href="#doc" data-en="Document Tools" data-zh="文档工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Document Tools</a></li>
+                    <li><a href="#calc" data-en="Calculators" data-zh="计算器" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Calculators</a></li>
+                    <li><a href="#dev" data-en="Developer Tools" data-zh="开发者工具" class="block py-2 px-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700">Developer Tools</a></li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Section -->
+    <section class="gradient-bg py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto relative group">
+                <input 
+                    type="text" 
+                    placeholder="Search tools..." 
+                    data-en="Search tools..." 
+                    data-zh="搜索工具..." 
+                    class="w-full px-6 py-4 rounded-full shadow-md border focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                    id="search-input"
+                >
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-blueTheme transition-colors theme-icon">
+                    <i class="fa-solid fa-search text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="privacy-container">
+            <h1 class="privacy-heading theme-gradient">
+                <span data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</span>
+            </h1>
+            
+            <span class="privacy-date" data-en="Last updated: July 2025" data-zh="最后更新：2025年7月">Last updated: July 2025</span>
+            
+            <div class="space-y-6">
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="1. Introduction" data-zh="1. 介绍">1. Introduction</h2>
+                    <p>
+                        <span data-en="Utilivy ('we', 'us', or 'our') respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and tools." data-zh="Utilivy（'我们'）尊重您的隐私，并致力于保护您的个人数据。本隐私政策解释了当您使用我们的网站和工具时，我们如何收集、使用、披露和保护您的信息。">
+                            Utilivy ('we', 'us', or 'our') respects your privacy and is committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website and tools.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="2. Information We Collect" data-zh="2. 我们收集的信息">2. Information We Collect</h2>
+                    <p>
+                        <span data-en="We may collect the following types of information:" data-zh="我们可能收集以下类型的信息：">
+                            We may collect the following types of information:
+                        </span>
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>
+                            <span data-en="Personal Information: When you contact us or submit a tool suggestion, we may collect your name, email address, and any other information you voluntarily provide." data-zh="个人信息：当您联系我们或提交工具建议时，我们可能会收集您的姓名、电子邮件地址以及您自愿提供的任何其他信息。">
+                                Personal Information: When you contact us or submit a tool suggestion, we may collect your name, email address, and any other information you voluntarily provide.
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="Usage Data: We automatically collect information about how you interact with our website, including your IP address, browser type, operating system, referring URLs, and pages visited." data-zh="使用数据：我们自动收集关于您如何与我们网站交互的信息，包括您的IP地址、浏览器类型、操作系统、引用URL和访问的页面。">
+                                Usage Data: We automatically collect information about how you interact with our website, including your IP address, browser type, operating system, referring URLs, and pages visited.
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="Tool Data: Files processed through our tools are temporarily stored in memory only for processing purposes and are not permanently stored unless explicitly stated for specific tools." data-zh="工具数据：通过我们的工具处理的文件仅为处理目的临时存储在内存中，除非特定工具明确说明，否则不会永久存储。">
+                                Tool Data: Files processed through our tools are temporarily stored in memory only for processing purposes and are not permanently stored unless explicitly stated for specific tools.
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="3. How We Use Your Information" data-zh="3. 我们如何使用您的信息">3. How We Use Your Information</h2>
+                    <p>
+                        <span data-en="We use the collected information for the following purposes:" data-zh="我们将收集的信息用于以下目的：">
+                            We use the collected information for the following purposes:
+                        </span>
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>
+                            <span data-en="To provide and maintain our services" data-zh="提供和维护我们的服务">
+                                To provide and maintain our services
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="To improve, personalize, and expand our website and tools" data-zh="改进、个性化和扩展我们的网站和工具">
+                                To improve, personalize, and expand our website and tools
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="To understand and analyze how you use our services" data-zh="了解和分析您如何使用我们的服务">
+                                To understand and analyze how you use our services
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="To respond to your comments, questions, and support requests" data-zh="回应您的评论、问题和支持请求">
+                                To respond to your comments, questions, and support requests
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="To send you updates, newsletters, and marketing communications (if you opt in)" data-zh="向您发送更新、新闻通讯和营销通讯（如果您选择加入）">
+                                To send you updates, newsletters, and marketing communications (if you opt in)
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="4. How We Share Your Information" data-zh="4. 我们如何共享您的信息">4. How We Share Your Information</h2>
+                    <p>
+                        <span data-en="We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following cases:" data-zh="未经您的同意，我们不会出售、交易或以其他方式向第三方转让您的个人信息，除非在以下情况下：">
+                            We do not sell, trade, or otherwise transfer your personal information to third parties without your consent, except in the following cases:
+                        </span>
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>
+                            <span data-en="Service Providers: We may share information with third-party service providers who assist us in operating our website and providing our services." data-zh="服务提供商：我们可能与协助我们运营网站和提供服务的第三方服务提供商共享信息。">
+                                Service Providers: We may share information with third-party service providers who assist us in operating our website and providing our services.
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="Legal Requirements: We may disclose your information if required to do so by law or in response to valid requests by public authorities." data-zh="法律要求：如果法律要求或应公共当局的有效请求，我们可能会披露您的信息。">
+                                Legal Requirements: We may disclose your information if required to do so by law or in response to valid requests by public authorities.
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="Protection of Rights: We may disclose your information to protect our rights, privacy, safety, or property, and that of our users or others." data-zh="权利保护：我们可能会披露您的信息以保护我们以及我们的用户或其他人的权利、隐私、安全或财产。">
+                                Protection of Rights: We may disclose your information to protect our rights, privacy, safety, or property, and that of our users or others.
+                            </span>
+                        </li>
+                    </ul>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="5. Cookies and Tracking Technologies" data-zh="5. Cookie 和跟踪技术">5. Cookies and Tracking Technologies</h2>
+                    <p>
+                        <span data-en="We use cookies and similar tracking technologies to track activity on our website and store certain information. Cookies are files with small amounts of data that are sent to your browser and stored on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our website." data-zh="我们使用Cookie和类似的跟踪技术来跟踪我们网站上的活动并存储某些信息。Cookie是包含少量数据的文件，发送到您的浏览器并存储在您的设备上。您可以指示您的浏览器拒绝所有Cookie或在发送Cookie时发出指示。但是，如果您不接受Cookie，您可能无法使用我们网站的某些部分。">
+                            We use cookies and similar tracking technologies to track activity on our website and store certain information. Cookies are files with small amounts of data that are sent to your browser and stored on your device. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our website.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="6. Data Security" data-zh="6. 数据安全">6. Data Security</h2>
+                    <p>
+                        <span data-en="We use reasonable security measures to protect the information we collect from unauthorized access, use, or disclosure. However, no method of transmission over the Internet or electronic storage is 100% secure, so we cannot guarantee absolute security." data-zh="我们使用合理的安全措施来保护我们收集的信息免受未经授权的访问、使用或披露。但是，通过互联网传输或电子存储的方法都不是100%安全的，因此我们不能保证绝对安全。">
+                            We use reasonable security measures to protect the information we collect from unauthorized access, use, or disclosure. However, no method of transmission over the Internet or electronic storage is 100% secure, so we cannot guarantee absolute security.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="7. Your Data Rights" data-zh="7. 您的数据权利">7. Your Data Rights</h2>
+                    <p>
+                        <span data-en="Depending on your location, you may have the following rights regarding your personal data:" data-zh="根据您所在的位置，您可能对您的个人数据拥有以下权利：">
+                            Depending on your location, you may have the following rights regarding your personal data:
+                        </span>
+                    </p>
+                    <ul class="list-disc pl-6 space-y-2">
+                        <li>
+                            <span data-en="The right to access and receive a copy of your personal data" data-zh="访问和接收您的个人数据副本的权利">
+                                The right to access and receive a copy of your personal data
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="The right to rectify or update your personal data" data-zh="更正或更新您的个人数据的权利">
+                                The right to rectify or update your personal data
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="The right to request deletion of your personal data" data-zh="要求删除您的个人数据的权利">
+                                The right to request deletion of your personal data
+                            </span>
+                        </li>
+                        <li>
+                            <span data-en="The right to restrict or object to our processing of your personal data" data-zh="限制或反对我们处理您的个人数据的权利">
+                                The right to restrict or object to our processing of your personal data
+                            </span>
+                        </li>
+                    </ul>
+                    <p class="mt-3">
+                        <span data-en="To exercise these rights, please contact us at privacy@utilivy.com." data-zh="要行使这些权利，请通过privacy@utilivy.com与我们联系。">
+                            To exercise these rights, please contact us at privacy@utilivy.com.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="8. Children's Privacy" data-zh="8. 儿童隐私">8. Children's Privacy</h2>
+                    <p>
+                        <span data-en="Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13 without verification of parental consent, we will take steps to remove that information from our servers." data-zh="我们的服务不面向13岁以下的儿童。我们不会故意收集13岁以下儿童的个人信息。如果我们发现未经父母同意验证而收集了13岁以下儿童的个人信息，我们将采取措施从我们的服务器中删除该信息。">
+                            Our services are not intended for children under the age of 13. We do not knowingly collect personal information from children under 13. If we become aware that we have collected personal information from a child under 13 without verification of parental consent, we will take steps to remove that information from our servers.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="9. Changes to This Privacy Policy" data-zh="9. 本隐私政策的变更">9. Changes to This Privacy Policy</h2>
+                    <p>
+                        <span data-en="We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page." data-zh="我们可能会不时更新我们的隐私政策。我们将通过在本页面发布新的隐私政策来通知您任何变更。建议您定期查看本隐私政策以了解任何变更。本隐私政策的变更在本页面发布时生效。">
+                            We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page. You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
+                        </span>
+                    </p>
+                </section>
+
+                <section class="privacy-section">
+                    <h2 class="privacy-subheading" data-en="10. Contact Us" data-zh="10. 联系我们">10. Contact Us</h2>
+                    <p>
+                        <span data-en="If you have any questions about this Privacy Policy, please contact us at: " data-zh="如果您对本隐私政策有任何疑问，请通过以下方式联系我们：">
+                            If you have any questions about this Privacy Policy, please contact us at: 
+                        </span>
+                        <a href="mailto:privacy@utilivy.com" class="text-blueTheme hover:underline">privacy@utilivy.com</a>
+                    </p>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Call to Action -->
+    <section class="cta-gradient py-16 text-white">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-2xl md:text-3xl font-bold mb-4" data-en="Need a tool we don't have?" data-zh="需要我们没有的工具？">Need a tool we don't have?</h2>
+                <p class="mb-8" data-en="Suggest a new tool and we'll work on adding it to our collection" data-zh="建议一个新工具，我们会努力将其添加到我们的集合中">Suggest a new tool and we'll work on adding it to our collection</p>
+                <button id="openSuggestModal" class="cta-button">
+                    <i class="fa-solid fa-lightbulb-o theme-icon"></i>
+                    <span data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Suggestion Form Modal -->
+    <div id="suggestModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="max-w-2xl w-full mx-4 bg-white/10 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/20 dark:border-gray-700/30 transform transition-transform duration-300 scale-95">
+            <!-- Form Header -->
+            <div class="theme-gradient py-4 px-6 flex justify-between items-center">
+                <h3 class="text-2xl font-bold text-white" data-en="Suggest a Tool" data-zh="建议工具">Suggest a Tool</h3>
+                <button id="closeSuggestModal" class="text-white hover:text-gray-200 transition-colors">
+                    <i class="fa-solid fa-times text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Form Content -->
+            <form id="suggestForm" class="p-6 sm:p-8 space-y-6">
+                <!-- Name Field -->
+                <div class="relative group">
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer text-white"
+                        placeholder=" "
+                    >
+                    <label for="name" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Your Name" data-zh="您的姓名">Your Name</label>
+                </div>
+
+                <!-- Email Field -->
+                <div class="relative group">
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer text-white"
+                        placeholder=" "
+                    >
+                    <label for="email" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Your Email" data-zh="您的邮箱">Your Email</label>
+                </div>
+
+                <!-- Tool Idea Textarea -->
+                <div class="relative group">
+                    <textarea 
+                        id="tool-idea" 
+                        name="tool-idea" 
+                        rows="4" 
+                        required 
+                        class="w-full px-4 py-3 rounded-lg border border-gray-300/50 dark:border-gray-600/50 bg-white/5 dark:bg-gray-700/20 focus:outline-none focus:ring-2 focus:ring-blueTheme transition-all peer resize-none text-white"
+                        placeholder=" "
+                    ></textarea>
+                    <label for="tool-idea" class="absolute left-4 -top-2.5 bg-white/10 dark:bg-gray-800/80 px-1 text-sm text-gray-200 dark:text-gray-300 transition-all peer-placeholder-shown:top-3.5 peer-placeholder-shown:text-base backdrop-blur-sm" 
+                           data-en="Tool Idea" data-zh="工具想法">Tool Idea</label>
+                </div>
+
+                <!-- Hidden Fields -->
+                <input type="hidden" name="_subject" value="New Tool Suggestion!">
+                <input type="hidden" name="_autoresponse" value="Thanks for your suggestion! We'll review it soon.">
+
+                <!-- Submit Button -->
+                <button 
+                    type="submit" 
+                    class="w-full bg-blueTheme hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium flex items-center justify-center gap-2 group"
+                >
+                    <span data-en="Send Suggestion" data-zh="发送建议">Send Suggestion</span>
+                    <i class="fa-solid fa-paper-plane transition-transform duration-300 group-hover:translate-x-1 theme-icon"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thank You Popup Modal -->
+    <div id="thankYouModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="max-w-md w-full mx-4 bg-white/10 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200/20 dark:border-gray-700/30 transform transition-transform duration-300 scale-95 text-center">
+            <!-- Success Icon -->
+            <div class="w-20 h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mt-8 text-green-500 dark:text-green-400">
+                <i class="fa-solid fa-check text-4xl"></i>
+            </div>
+
+            <!-- Thank You Content -->
+            <div class="p-8">
+                <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" data-en="Thank You!" data-zh="谢谢！">Thank You!</h3>
+                
+                <p class="text-gray-200 mb-6" 
+                   data-en="We've received your tool suggestion. We appreciate your input!" 
+                   data-zh="我们已收到您的工具建议。感谢您的意见！">
+                   We've received your tool suggestion. We appreciate your input!
+                </p>
+
+                <button id="closeThankYouModal" class="w-full bg-blueTheme hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium">
+                    <span data-en="Continue" data-zh="继续">Continue</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="pt-16 pb-8 transition-all duration-500">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-2 mb-4">
+                        <img src="/assets/logo.png" alt="Utilivy Logo" class="h-8 w-8 rounded-md">
+                        <span class="text-xl font-bold theme-gradient">Utilivy</span>
+                    </div>
+                    <p class="mb-6" data-en="Your one-stop destination for free online tools" data-zh="您的一站式免费在线工具目的地">Your one-stop destination for free online tools</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-github"></i></a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg" data-en="Tool Categories" data-zh="工具分类">Tool Categories</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#pdf" class="hover:text-white transition-colors" data-en="PDF Tools" data-zh="PDF 工具">PDF Tools</a></li>
+                        <li><a href="#doc" class="hover:text-white transition-colors" data-en="Document Tools" data-zh="文档工具">Document Tools</a></li>
+                        <li><a href="#calc" class="hover:text-white transition-colors" data-en="Calculators" data-zh="计算器">Calculators</a></li>
+                        <li><a href="#dev" class="hover:text-white transition-colors" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg" data-en="Quick Links" data-zh="快速链接">Quick Links</h4>
+                    <ul class="space-y-3">
+                        <li><a href="about.html" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
+                        <li><a href="privacy.html" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
+                        <li><a href="terms.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold mb-4 text-lg" data-en="Recent Updates" data-zh="最新更新">Recent Updates</h4>
+                    <p class="mb-4 text-gray-300" data-en="See what's new with our tools" data-zh="了解工具的最新动态">See what's new with our tools</p>
+                    
+                    <ul class="space-y-4">
+                        <!-- Update 1 -->
+                        <li class="flex gap-3 p-3 bg-white/5 dark:bg-gray-800/50 rounded-lg border border-gray-200/10 dark:border-gray-700/20">
+                            <div class="min-w-[40px] h-[40px] bg-blue-500/20 rounded-lg flex items-center justify-center text-blueTheme flex-shrink-0">
+                                <i class="fa-solid fa-rocket theme-icon"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white text-sm font-medium" data-en="New Tool: PDF Merger" data-zh="新工具：PDF合并器">New Tool: PDF Merger</h5>
+                                <p class="text-gray-400 text-xs mt-1" data-en="Combine multiple PDFs in seconds" data-zh="瞬间合并多个PDF文件">Combine multiple PDFs in seconds</p>
+                                <p class="text-gray-500 text-xs mt-1" data-en="Added 3 days ago" data-zh="3天前添加">Added 3 days ago</p>
+                            </div>
+                        </li>
+
+                        <!-- Update 2 -->
+                        <li class="flex gap-3 p-3 bg-white/5 dark:bg-gray-800/50 rounded-lg border border-gray-200/10 dark:border-gray-700/20">
+                            <div class="min-w-[40px] h-[40px] bg-green-500/20 rounded-lg flex items-center justify-center text-green-400 flex-shrink-0">
+                                <i class="fa-solid fa-bolt theme-icon"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-white text-sm font-medium" data-en="Image Tools: 2x Faster" data-zh="图片工具：速度提升2倍">Image Tools: 2x Faster</h5>
+                                <p class="text-gray-400 text-xs mt-1" data-en="Resize and compress images in seconds" data-zh="瞬间完成图片缩放与压缩">Resize and compress images in seconds</p>
+                                <p class="text-gray-500 text-xs mt-1" data-en="Updated 1 week ago" data-zh="1周前更新">Updated 1 week ago</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t pt-8 text-center text-sm">
+                <span data-en="© 2025 Utilivy.com — All rights reserved." data-zh="© 2025 Utilivy.com — 保留所有权利。">© 2025 Utilivy.com — All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            const icon = mobileMenuButton.querySelector('i');
+            if (mobileMenu.classList.contains('hidden')) {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            } else {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            }
+        });
+
+        // Theme mode functions
+        function setThemeMode(mode) {
+            const body = document.body;
+            
+            // Remove all theme modes
+            body.classList.remove('light-theme', 'dark-theme');
+            
+            // Apply the selected mode or auto-detect
+            if (mode === 'auto') {
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                body.classList.add(prefersDark ? 'dark-theme' : 'light-theme');
+                localStorage.setItem('themeMode', 'auto');
+            } else {
+                body.classList.add(`${mode}-theme`);
+                localStorage.setItem('themeMode', mode);
+            }
+            
+            // Update toggle UI
+            updateThemeToggle(mode === 'auto' ? 
+                (body.classList.contains('dark-theme') ? 'dark' : 'light') : 
+                mode
+            );
+            
+            updateUIForTheme();
+        }
+        
+        // Primary color functions
+        function setPrimaryColor(color) {
+            const body = document.body;
+            
+            // Remove all primary color classes
+            body.classList.remove('blue-theme', 'pink-theme');
+            
+            // Apply the selected color
+            body.classList.add(`${color}-theme`);
+            localStorage.setItem('primaryColor', color);
+            
+            // Update active color indicator
+            const desktopToggle = document.getElementById('split-theme-toggle');
+            const mobileToggle = document.getElementById('mobile-split-theme-toggle');
+            
+            if (desktopToggle) {
+                desktopToggle.classList.remove('active-blue', 'active-pink');
+                desktopToggle.classList.add(`active-${color}`);
+            }
+            
+            if (mobileToggle) {
+                mobileToggle.classList.remove('active-blue', 'active-pink');
+                mobileToggle.classList.add(`active-${color}`);
+            }
+            
+            updateUIForTheme();
+        }
+        
+        // Update UI elements based on current theme
+        function updateUIForTheme() {
+            const body = document.body;
+            const searchInput = document.getElementById('search-input');
+            const subscribeBtn = document.querySelector('footer button');
+            const footer = document.querySelector('footer');
+            
+            // Update search input border and focus ring
+            searchInput.classList.remove('border-gray-200', 'border-gray-700', 'focus:ring-blueTheme', 'focus:ring-pinkTheme');
+            
+            if (body.classList.contains('dark-theme')) {
+                searchInput.classList.add('border-gray-700');
+                footer.classList.add('bg-gray-950');
+                footer.classList.remove('bg-dark');
+            } else {
+                searchInput.classList.add('border-gray-200');
+                footer.classList.add('bg-dark');
+                footer.classList.remove('bg-gray-950');
+            }
+            
+            if (body.classList.contains('pink-theme')) {
+                searchInput.classList.add('focus:ring-pinkTheme');
+            } else {
+                searchInput.classList.add('focus:ring-blueTheme');
+            }
+            
+            // Update subscribe button
+            if (subscribeBtn) {
+                subscribeBtn.classList.remove('bg-blueTheme', 'bg-pinkTheme');
+                
+                if (body.classList.contains('pink-theme')) {
+                    subscribeBtn.classList.add('bg-pinkTheme');
+                } else {
+                    subscribeBtn.classList.add('bg-blueTheme');
+                }
+            }
+        }
+
+        // Updated theme toggle functionality
+        const themeToggle = document.getElementById('theme-toggle');
+        const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+        
+        function updateThemeToggle(mode) {
+            const isDark = mode === 'dark';
+            themeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            themeToggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            
+            if (mobileThemeToggle) {
+                mobileThemeToggle.setAttribute('aria-label', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+                mobileThemeToggle.setAttribute('title', isDark ? 'Switch to light mode' : 'Switch to dark mode');
+            }
+        }
+        
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentMode = localStorage.getItem('themeMode') || 'auto';
+            let newMode;
+            
+            if (currentMode === 'auto') {
+                // If in auto mode, toggle between light and dark
+                const isDark = body.classList.contains('dark-theme');
+                newMode = isDark ? 'light' : 'dark';
+            } else {
+                // Toggle between light and dark modes
+                newMode = body.classList.contains('dark-theme') ? 'light' : 'dark';
+            }
+            
+            setThemeMode(newMode);
+        }
+        
+        themeToggle.addEventListener('click', toggleDarkMode);
+        if (mobileThemeToggle) {
+            mobileThemeToggle.addEventListener('click', toggleDarkMode);
+        }
+        
+        // Color theme toggle functionality
+        const splitThemeToggle = document.getElementById('split-theme-toggle');
+        const mobileSplitThemeToggle = document.getElementById('mobile-split-theme-toggle');
+        
+        function handleColorThemeClick(e) {
+            const theme = e.target.closest('.theme-half')?.dataset.theme;
+            if (theme) {
+                setPrimaryColor(theme);
+            }
+        }
+        
+        splitThemeToggle.addEventListener('click', handleColorThemeClick);
+        if (mobileSplitThemeToggle) {
+            mobileSplitThemeToggle.addEventListener('click', handleColorThemeClick);
+        }
+        
+        // Language toggle functionality
+        function toggleLang(toggle) {
+            const isEnglish = toggle.checked;
+            
+            // Update all language elements
+            document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+                if (isEnglish) {
+                    el.textContent = el.dataset.en || el.textContent;
+                } else {
+                    el.textContent = el.dataset.zh || el.textContent;
+                }
+            });
+            
+            // Update document title
+            document.title = isEnglish ? "Privacy Policy | Utilivy" : "隐私政策 | Utilivy";
+            
+            // Sync both toggles
+            if (toggle.id === 'langToggle' && mobileLangToggle) {
+                mobileLangToggle.checked = isEnglish;
+            } else if (toggle.id === 'mobile-langToggle' && desktopLangToggle) {
+                desktopLangToggle.checked = isEnglish;
+            }
+            
+            localStorage.setItem('preferredLanguage', isEnglish ? 'en' : 'zh');
+        }
+        
+        const desktopLangToggle = document.getElementById('langToggle');
+        const mobileLangToggle = document.getElementById('mobile-langToggle');
+        
+        // Initialize suggestion modal
+        const suggestModal = document.getElementById('suggestModal');
+        const thankYouModal = document.getElementById('thankYouModal');
+        const openButton = document.getElementById('openSuggestModal');
+        const closeSuggestButton = document.getElementById('closeSuggestModal');
+        const closeThankYouButton = document.getElementById('closeThankYouModal');
+        const suggestForm = document.getElementById('suggestForm');
+
+        // Configure your email here
+        const email = "support@utilivy.com";
+        if (suggestForm) {
+            suggestForm.action = `https://formsubmit.co/${email}`;
+        }
+
+        // Open suggestion modal
+        if (openButton) {
+            openButton.addEventListener('click', () => {
+                suggestModal.classList.remove('opacity-0', 'pointer-events-none');
+                suggestModal.querySelector('div').classList.remove('scale-95');
+                suggestModal.querySelector('div').classList.add('scale-100');
+                document.body.style.overflow = 'hidden';
+            });
+        }
+
+        // Close suggestion modal
+        function closeSuggestModal() {
+            suggestModal.classList.add('opacity-0', 'pointer-events-none');
+            suggestModal.querySelector('div').classList.remove('scale-100');
+            suggestModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        }
+
+        if (closeSuggestButton) {
+            closeSuggestButton.addEventListener('click', closeSuggestModal);
+        }
+
+        // Close when clicking outside
+        suggestModal.addEventListener('click', (e) => {
+            if (e.target === suggestModal) closeSuggestModal();
+        });
+
+        // Form submission handling
+        if (suggestForm) {
+            suggestForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state on button
+                const submitButton = suggestForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span data-en="Sending..." data-zh="发送中...">Sending...</span>';
+
+                try {
+                    // Submit form data
+                    const formData = new FormData(suggestForm);
+                    const response = await fetch(suggestForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        mode: 'no-cors'
+                    });
+
+                    // Close form modal and show thank you modal
+                    closeSuggestModal();
+                    showThankYouModal();
+                    
+                    // Reset form
+                    suggestForm.reset();
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('There was an error sending your suggestion. Please try again.');
+                } finally {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                }
+            });
+        }
+
+        // Show thank you modal
+        function showThankYouModal() {
+            thankYouModal.classList.remove('opacity-0', 'pointer-events-none');
+            thankYouModal.querySelector('div').classList.remove('scale-95');
+            thankYouModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close thank you modal
+        function closeThankYouModal() {
+            thankYouModal.classList.add('opacity-0', 'pointer-events-none');
+            thankYouModal.querySelector('div').classList.remove('scale-100');
+            thankYouModal.querySelector('div').classList.add('scale-95');
+            document.body.style.overflow = '';
+        }
+
+        if (closeThankYouButton) {
+            closeThankYouButton.addEventListener('click', closeThankYouModal);
+        }
+
+        // Close with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (!suggestModal.classList.contains('pointer-events-none')) {
+                    closeSuggestModal();
+                }
+                if (!thankYouModal.classList.contains('pointer-events-none')) {
+                    closeThankYouModal();
+                }
+            }
+        });
+        
+        // Initialize theme and language preferences
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial theme based on saved preference or system preference
+            const savedColor = localStorage.getItem('primaryColor') || 'blue';
+            setPrimaryColor(savedColor);
+            
+            const savedMode = localStorage.getItem('themeMode') || 'auto';
+            setThemeMode(savedMode);
+            
+            // Set initial language based on saved preference
+            const savedLang = localStorage.getItem('preferredLanguage') || 'en';
+            const isEnglish = savedLang === 'en';
+            
+            if (desktopLangToggle) desktopLangToggle.checked = isEnglish;
+            if (mobileLangToggle) mobileLangToggle.checked = isEnglish;
+            
+            // Apply language
+            document.querySelectorAll('[data-en], [data-zh]').forEach(el => {
+                if (isEnglish) {
+                    el.textContent = el.dataset.en || el.textContent;
+                } else {
+                    el.textContent = el.dataset.zh || el.textContent;
+                }
+            });
+            
+            // Update document title
+            document.title = isEnglish ? "Privacy Policy | Utilivy" : "隐私政策 | Utilivy";
+            
+            // Add search functionality
+            const searchInput = document.getElementById('search-input');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        // In a real implementation, you would perform a search
+                        alert(`Searching for: ${this.value}`);
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>

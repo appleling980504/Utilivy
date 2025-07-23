@@ -16,8 +16,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="l-l-tcTIjwE2KGhUJkeB7T9gQvGm_sSbwBpUROGKkXk" />
-    <title data-en="About Us | Utilivy" data-zh="关于我们 | Utilivy">About Us | Utilivy</title>
-    <meta name="description" content="Learn about Utilivy, our mission to provide free, easy-to-use online tools for PDF, documents, calculations, and development tasks." />
+    <title data-en="Contact Us | Utilivy" data-zh="联系我们 | Utilivy">Contact Us | Utilivy</title>
+    <meta name="description" content="Get in touch with Utilivy's support team for questions, feedback, or assistance with our tools." />
     <link rel="icon" type="image/png" href="/assets/logo.png" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -168,7 +168,8 @@
             @apply text-white;
         }
         body.dark-theme input[type="text"],
-        body.dark-theme input[type="email"] {
+        body.dark-theme input[type="email"],
+        body.dark-theme textarea {
             @apply bg-gray-700 border-gray-600;
         }
         body.dark-theme .mode-option {
@@ -362,64 +363,141 @@
             background-color: #F07887; /* Darker pink on hover */
         }
 
-        /* About page specific styles */
-        .about-title-section {
-            margin-bottom: 8rem;
+        /* Contact page specific styles */
+        .contact-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
         }
         
-        .about-section {
-            margin-bottom: 4rem;
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
         
-        .about-image {
-            border-radius: 1.5rem;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.5s ease;
+        @media (min-width: 768px) {
+            .contact-grid {
+                grid-template-columns: 1fr 1fr;
+            }
         }
         
-        .about-image:hover {
-            transform: translateY(-10px);
+        .contact-info {
+            padding: 2rem;
+            border-radius: 1rem;
         }
         
-        .feature-card {
-            border-radius: 1.5rem;
-            padding: 2.5rem;
-            transition: all 0.3s ease;
+        .contact-form-container {
+            padding: 2rem;
+            border-radius: 1rem;
         }
         
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        .contact-heading {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: bold;
+            margin-bottom: 2rem;
         }
         
-        .team-member {
-            text-align: center;
-            transition: transform 0.3s ease;
+        .contact-subheading {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
         }
         
-        .team-member:hover {
-            transform: translateY(-10px);
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
         }
         
-        .team-photo {
-            width: 160px;
-            height: 160px;
+        .contact-icon {
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            object-fit: cover;
-            margin: 0 auto 1.5rem;
-            border: 4px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
         
-        body.blue-theme .team-photo {
-            border-color: #AAB6FB;
+        .form-group {
+            margin-bottom: 1.5rem;
         }
         
-        body.pink-theme .team-photo {
-            border-color: #FAA7B8;
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #ddd;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--focus-color, #AAB6FB);
+            box-shadow: 0 0 0 2px rgba(170, 182, 251, 0.2);
+        }
+        
+        body.pink-theme .form-control:focus {
+            --focus-color: #FAA7B8;
+            box-shadow: 0 0 0 2px rgba(250, 167, 184, 0.2);
+        }
+        
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .social-link {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-3px);
+        }
+        
+        .form-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+        
+        .form-message.success {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #059669;
+            display: block;
+        }
+        
+        .form-message.error {
+            background-color: rgba(220, 38, 38, 0.1);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            color: #dc2626;
+            display: block;
         }
     </style>
 </head>
+
 <body class="font-inter min-h-screen blue-theme light-theme">
     <!-- Header with Navigation -->
     <header class="sticky top-0 z-50 shadow-sm transition-all duration-300">
@@ -566,181 +644,136 @@
         </div>
     </header>
 
+    <!-- Search Section -->
+    <section class="gradient-bg py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-2xl mx-auto relative group">
+                <input 
+                    type="text" 
+                    placeholder="Search tools..." 
+                    data-en="Search tools..." 
+                    data-zh="搜索工具..." 
+                    class="w-full px-6 py-4 rounded-full shadow-md border focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-300 group-hover:shadow-lg"
+                    id="search-input"
+                >
+                <button class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-blueTheme transition-colors theme-icon">
+                    <i class="fa-solid fa-search text-xl"></i>
+                </button>
+            </div>
+        </div>
+    </section>
 
     <!-- Main Content -->
     <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- About Us Hero Section -->
-        <section class="about-title-section">
-            <div class="max-w-6xl mx-auto text-center">
-                <h1 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-6 theme-gradient">
-                    <span data-en="About Utilivy" data-zh="关于 Utilivy">About Utilivy</span>
-                </h1>
-                
-                <div class="grid md:grid-cols-1 gap-12 items-center">
-                    <div>
-                        <p class="text-lg mb-6" data-en="We're on a mission to make digital tools accessible to everyone, everywhere." data-zh="我们的使命是让数字工具触手可及，惠及全球每一个人。">
-                            We're on a mission to make digital tools accessible to everyone, everywhere.
-                        </p>
-                        
-                        <p class="mb-6" data-en="Founded in 2023, Utilivy started with a simple idea: everyday digital tasks should be easy, free, and accessible without installing complex software. Whether you need to edit a PDF, convert a document, calculate a formula, or simplify a development task, we've got you covered." data-zh="Utilivy 成立于 2025 年，其创立源于一个简单的想法：日常数字任务应当简单易用、免费且无需安装复杂软件即可使用。无论您需要编辑 PDF、转换文档、计算公式还是简化开发任务，我们都能满足您的需求。">
-                          Founded in 2025, Utilivy started with a simple idea: everyday digital tasks should be easy, free, and accessible without installing complex software. Whether you need to edit a PDF, convert a document, calculate a formula, or simplify a development task, we've got you covered.
-                        </p>
-                        
-                        <p data-en="Our team of developers and designers work tirelessly to create intuitive tools that solve real problems. We believe in privacy-first technology and never store your files longer than necessary to complete your task." data-zh="我们的开发人员和设计师团队不懈努力，打造直观易用的工具来解决实际问题。我们秉持隐私优先的技术理念，仅在完成您的任务所需的必要时间内存储您的文件，绝不超时保留。">
-                         Our team of developers and designers work tirelessly to create intuitive tools that solve real problems. We believe in privacy-first technology and never store your files longer than necessary to complete your task.   
-                        </p>
-                    </div>
+        <div class="contact-container">
+            <h1 class="contact-heading theme-gradient">
+                <span data-en="Contact Us" data-zh="联系我们">Contact Us</span>
+            </h1>
+            
+            <div class="contact-grid">
+                <!-- Contact Information -->
+                <div class="contact-info gradient-bg">
+                    <h2 class="contact-subheading" data-en="Get In Touch" data-zh="保持联系">Get In Touch</h2>
                     
-                   
-                </div>
-            </div>
-        </section>
-        
-        <!-- Our Mission Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-compass theme-icon"></i>
-                    <span data-en="Our Mission" data-zh="我们的使命">Our Mission</span>
-                </h2>
-                
-                <div class="feature-card border gradient-bg p-8 rounded-2xl">
-                    <p class="mb-6" data-en="To empower individuals and businesses by providing free, high-quality digital tools that simplify everyday tasks." data-zh="通过提供免费、高质量的数字工具简化日常任务，为个人和企业赋能。">
-                      To empower individuals and businesses by providing free, high-quality digital tools that simplify everyday tasks.
+                    <p data-en="Have questions, feedback, or need assistance with our tools? We're here to help!" data-zh="有问题、反馈或需要工具方面的帮助？我们随时为您服务！">
+                        Have questions, feedback, or need assistance with our tools? We're here to help!
                     </p>
-                    <p data-en="We believe technology should work for you, not against you. That's why we've created a platform where powerful tools meet intuitive design, making even the most complex digital tasks simple and accessible to everyone." data-zh="我们相信技术应当为您服务，而非与您作对。这就是为什么我们打造了一个集强大功能与直观设计于一体的平台，让即便是最复杂的数字任务也能变得简单易懂，人人可用。">
-                       We believe technology should work for you, not against you. That's why we've created a platform where powerful tools meet intuitive design, making even the most complex digital tasks simple and accessible to everyone.
-                    </p>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Our Values Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-heart theme-icon"></i>
-                    <span data-en="Our Values" data-zh="我们的价值观">Our Values</span>
-                </h2>
-                
-                <div class="grid md:grid-cols-3 gap-6">
-                    <!-- Value 1 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-gift text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Free Access" data-zh="免费使用">Free Access</h3>
-                        <p data-en="We believe essential digital tools should be available to everyone, regardless of their ability to pay." data-zh="我们相信，无论支付能力如何，每个人都应该能够使用基本的数字工具。">
-                            We believe essential digital tools should be available to everyone, regardless of their ability to pay.
-                        </p>
-                    </div>
                     
-                    <!-- Value 2 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-lock text-2xl"></i>
+                    <div class="mt-8">
+                        <div class="contact-item">
+                            <div class="contact-icon bg-blueTheme/20 text-blueTheme">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium" data-en="Email Us" data-zh="给我们发邮件">Email Us</h3>
+                                <p data-en="We typically respond within 24-48 hours" data-zh="我们通常会在24-48小时内回复">We typically respond within 24-48 hours</p>
+                                <a href="mailto:support@utilivy.com" class="text-blueTheme hover:underline mt-1 block">support@utilivy.com</a>
+                            </div>
                         </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Privacy First" data-zh="隐私优先">Privacy First</h3>
-                        <p data-en="Your data belongs to you. We never store your information longer than necessary and never share it with third parties." data-zh="您的数据属于您自己。我们绝不会将您的信息存储超过必要时间，也绝不会与第三方共享。">
-                            Your data belongs to you. We never store your information longer than necessary and never share it with third parties.
-                        </p>
-                    </div>
-                    
-                    <!-- Value 3 -->
-                    <div class="feature-card border">
-                        <div class="w-14 h-14 rounded-full flex items-center justify-center mb-6 theme-icon">
-                            <i class="fa-solid fa-bolt text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold mb-3" data-en="Simplicity" data-zh="简洁易用">Simplicity</h3>
-                        <p data-en="We design our tools to be intuitive and easy to use, so you can get things done without learning complex software." data-zh="我们设计的工具直观易用，让您无需学习复杂软件就能完成工作。">
-                            We design our tools to be intuitive and easy to use, so you can get things done without learning complex software.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-
-        <!-- Contact Us Section -->
-        <section class="about-section">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="section-title">
-                    <i class="fa-solid fa-envelope theme-icon"></i>
-                    <span data-en="Get In Touch" data-zh="联系我们">Get In Touch</span>
-                </h2>
-                
-                <div class="grid md:grid-cols-2 gap-12">
-                    <div style="padding-right: 2.5rem;">
-                        <p class="mb-6" data-en="Have questions, suggestions, or just want to say hello? We'd love to hear from you!">
-                            Have questions, suggestions, or just want to say hello? We'd love to hear from you!
-                        </p>
                         
-                        <div class="space-y-4">
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-envelope"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Email Us" data-zh="给我们发邮件">Email Us</h3>
-                                    <p><a href="mailto:hello@utilivy.com" class="hover:underline">hello@utilivy.com</a></p>
-                                </div>
+                        <div class="contact-item">
+                            <div class="contact-icon bg-blueTheme/20 text-blueTheme">
+                                <i class="fa-solid fa-comment"></i>
                             </div>
-                            
-                            <div class="flex items-start gap-4">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-comment"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Feedback" data-zh="反馈建议">Feedback</h3>
-                                    <p data-en="Suggest a new tool or report an issue" data-zh="建议新工具或报告问题">
-                                        <a href="#" id="contactSuggestBtn" class="hover:underline">Suggest a new tool</a>
-                                    </p>
-                                </div>
+                            <div>
+                                <h3 class="font-medium" data-en="Tool Suggestions" data-zh="工具建议">Tool Suggestions</h3>
+                                <p data-en="Have an idea for a new tool?" data-zh="有新工具的想法吗？">Have an idea for a new tool?</p>
+                                <a href="#" id="suggestToolLink" class="text-blueTheme hover:underline mt-1 block" data-en="Submit Suggestion" data-zh="提交建议">Submit Suggestion</a>
                             </div>
-                            
-                            <div class="flex items-start gap-4 hidden">
-                                <div class="w-10 h-10 rounded-full flex items-center justify-center shrink-0 theme-icon">
-                                    <i class="fa-solid fa-share-alt"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-medium mb-1" data-en="Follow Us" data-zh="关注我们">Follow Us</h3>
-                                    <div class="flex space-x-4 mt-2">
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-twitter"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-facebook"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-instagram"></i></a>
-                                        <a href="#" class="hover:text-blueTheme transition-colors text-xl theme-icon"><i class="fa-brands fa-github"></i></a>
-                                    </div>
-                                </div>
+                        </div>
+                        
+                        <div class="contact-item">
+                            <div class="contact-icon bg-blueTheme/20 text-blueTheme">
+                                <i class="fa-solid fa-bug"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium" data-en="Report Issues" data-zh="报告问题">Report Issues</h3>
+                                <p data-en="Found a bug? Let us know!" data-zh="发现错误？告诉我们！">Found a bug? Let us know!</p>
+                                <a href="mailto:bugs@utilivy.com" class="text-blueTheme hover:underline mt-1 block">bugs@utilivy.com</a>
                             </div>
                         </div>
                     </div>
                     
-                    <div>
-                        <form class="space-y-6">
-                            <div>
-                                <label for="contact-name" class="block mb-2 font-medium" data-en="Your Name" data-zh="您的姓名">Your Name</label>
-                                <input type="text" id="contact-name" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all" required>
-                            </div>
-                            
-                            <div>
-                                <label for="contact-email" class="block mb-2 font-medium" data-en="Your Email" data-zh="您的邮箱">Your Email</label>
-                                <input type="email" id="contact-email" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all" required>
-                            </div>
-                            
-                            <div>
-                                <label for="contact-message" class="block mb-2 font-medium" data-en="Your Message" data-zh="您的留言">Your Message</label>
-                                <textarea id="contact-message" rows="5" class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:border-transparent transition-all resize-none" required></textarea>
-                            </div>
-                            
-                            <button type="submit" class="cta-button w-full">
-                                <i class="fa-solid fa-paper-plane mr-2"></i>
-                                <span data-en="Send Message" data-zh="发送消息">Send Message</span>
-                            </button>
-                        </form>
+                    <h3 class="contact-subheading mt-8" data-en="Follow Us" data-zh="关注我们">Follow Us</h3>
+                    <p data-en="Stay updated with new tools and features" data-zh="随时了解新工具和功能">Stay updated with new tools and features</p>
+                    
+                    <div class="social-links">
+                        <a href="#" class="social-link bg-blueTheme/20 text-blueTheme hover:bg-blueTheme hover:text-white" aria-label="Twitter">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="social-link bg-blueTheme/20 text-blueTheme hover:bg-blueTheme hover:text-white" aria-label="Facebook">
+                            <i class="fa-brands fa-facebook"></i>
+                        </a>
+                        <a href="#" class="social-link bg-blueTheme/20 text-blueTheme hover:bg-blueTheme hover:text-white" aria-label="Instagram">
+                            <i class="fa-brands fa-instagram"></i>
+                        </a>
+                        <a href="#" class="social-link bg-blueTheme/20 text-blueTheme hover:bg-blueTheme hover:text-white" aria-label="GitHub">
+                            <i class="fa-brands fa-github"></i>
+                        </a>
                     </div>
                 </div>
+                
+                <!-- Contact Form -->
+                <div class="contact-form-container tool-card">
+                    <h2 class="contact-subheading" data-en="Send Us a Message" data-zh="给我们发消息">Send Us a Message</h2>
+                    
+                    <form id="contactForm" class="space-y-4">
+                        <div class="form-group">
+                            <label for="contactName" class="form-label" data-en="Your Name" data-zh="您的姓名">Your Name</label>
+                            <input type="text" id="contactName" name="name" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactEmail" class="form-label" data-en="Your Email" data-zh="您的邮箱">Your Email</label>
+                            <input type="email" id="contactEmail" name="email" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactSubject" class="form-label" data-en="Subject" data-zh="主题">Subject</label>
+                            <select id="contactSubject" name="subject" class="form-control" required>
+                                <option value="" data-en="Select a subject" data-zh="选择主题">Select a subject</option>
+                                <option value="general" data-en="General Inquiry" data-zh="一般咨询">General Inquiry</option>
+                                <option value="support" data-en="Technical Support" data-zh="技术支持">Technical Support</option>
+                                <option value="feedback" data-en="Feedback" data-zh="反馈">Feedback</option>
+                                <option value="other" data-en="Other" data-zh="其他">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="contactMessage" class="form-label" data-en="Message" data-zh="消息">Message</label>
+                            <textarea id="contactMessage" name="message" class="form-control" required></textarea>
+                        </div>
+                        
+                        <div id="formMessage" class="form-message"></div>
+                        
+                        <button type="submit" class="cta-button w-full">
+                            <i class="fa-solid fa-paper-plane mr-2"></i>
+                            <span data-en="Send Message" data-zh="发送消息">Send Message</span>
+                        </button>
+                    </form>
+                </div>
             </div>
-        </section>
+        </div>
     </main>
 
     <!-- Call to Action -->
@@ -841,9 +874,9 @@
                 <h3 class="text-2xl md:text-3xl font-bold mb-4 text-white" data-en="Thank You!" data-zh="谢谢！">Thank You!</h3>
                 
                 <p class="text-gray-200 mb-6" 
-                   data-en="We've received your tool suggestion. We appreciate your input!" 
-                   data-zh="我们已收到您的工具建议。感谢您的意见！">
-                   We've received your tool suggestion. We appreciate your input!
+                   data-en="We've received your message and will get back to you soon!" 
+                   data-zh="我们已收到您的消息，将尽快回复您！">
+                   We've received your message and will get back to you soon!
                 </p>
 
                 <button id="closeThankYouModal" class="w-full bg-blueTheme hover:bg-blue-700 text-white py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] font-medium">
@@ -886,8 +919,8 @@
                     <ul class="space-y-3">
                         <li><a href="about.html" class="hover:text-white transition-colors" data-en="About Us" data-zh="关于我们">About Us</a></li>
                         <li><a href="privacy.html" class="hover:text-white transition-colors" data-en="Privacy Policy" data-zh="隐私政策">Privacy Policy</a></li>
-                        <li><a href="terms.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
-                        <li><a href="#" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
+                        <li><a href="term.html" class="hover:text-white transition-colors" data-en="Terms of Service" data-zh="服务条款">Terms of Service</a></li>
+                        <li><a href="contact.html" class="hover:text-white transition-colors" data-en="Contact Us" data-zh="联系我们">Contact Us</a></li>
                     </ul>
                 </div>
                 
@@ -1105,7 +1138,7 @@
             });
             
             // Update document title
-            document.title = isEnglish ? "About Us | Utilivy" : "关于我们 | Utilivy";
+            document.title = isEnglish ? "Contact Us | Utilivy" : "联系我们 | Utilivy";
             
             // Sync both toggles
             if (toggle.id === 'langToggle' && mobileLangToggle) {
@@ -1127,7 +1160,7 @@
         const closeSuggestButton = document.getElementById('closeSuggestModal');
         const closeThankYouButton = document.getElementById('closeThankYouModal');
         const suggestForm = document.getElementById('suggestForm');
-        const contactSuggestBtn = document.getElementById('contactSuggestBtn');
+        const suggestToolLink = document.getElementById('suggestToolLink');
 
         // Configure your email here
         const email = "support@utilivy.com";
@@ -1136,23 +1169,21 @@
         }
 
         // Open suggestion modal
-        if (openButton) {
-            openButton.addEventListener('click', () => {
-                suggestModal.classList.remove('opacity-0', 'pointer-events-none');
-                suggestModal.querySelector('div').classList.remove('scale-95');
-                suggestModal.querySelector('div').classList.add('scale-100');
-                document.body.style.overflow = 'hidden';
-            });
+        function openSuggestionModal() {
+            suggestModal.classList.remove('opacity-0', 'pointer-events-none');
+            suggestModal.querySelector('div').classList.remove('scale-95');
+            suggestModal.querySelector('div').classList.add('scale-100');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Open suggestion modal from contact section
-        if (contactSuggestBtn) {
-            contactSuggestBtn.addEventListener('click', (e) => {
+        if (openButton) {
+            openButton.addEventListener('click', openSuggestionModal);
+        }
+        
+        if (suggestToolLink) {
+            suggestToolLink.addEventListener('click', function(e) {
                 e.preventDefault();
-                suggestModal.classList.remove('opacity-0', 'pointer-events-none');
-                suggestModal.querySelector('div').classList.remove('scale-95');
-                suggestModal.querySelector('div').classList.add('scale-100');
-                document.body.style.overflow = 'hidden';
+                openSuggestionModal();
             });
         }
 
@@ -1173,7 +1204,58 @@
             if (e.target === suggestModal) closeSuggestModal();
         });
 
-        // Form submission handling
+        // Contact form handling
+        const contactForm = document.getElementById('contactForm');
+        const formMessage = document.getElementById('formMessage');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                // Show loading state on button
+                const submitButton = contactForm.querySelector('button[type="submit"]');
+                const originalText = submitButton.innerHTML;
+                submitButton.disabled = true;
+                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span data-en="Sending..." data-zh="发送中...">Sending...</span>';
+                
+                // Clear previous messages
+                formMessage.classList.remove('success', 'error');
+                formMessage.textContent = '';
+
+                try {
+                    // In a real implementation, you would send the form data to your server
+                    // For demo purposes, we'll simulate a successful submission
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+                    
+                    // Show success message
+                    formMessage.classList.add('success');
+                    formMessage.textContent = document.documentElement.lang === 'zh' ? 
+                        '您的消息已发送成功！我们会尽快回复您。' : 
+                        'Your message has been sent successfully! We will get back to you soon.';
+                    
+                    // Reset form
+                    contactForm.reset();
+                    
+                    // Show thank you modal after a short delay
+                    setTimeout(() => {
+                        showThankYouModal();
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    formMessage.classList.add('error');
+                    formMessage.textContent = document.documentElement.lang === 'zh' ? 
+                        '发送消息时出错。请再试一次。' : 
+                        'There was an error sending your message. Please try again.';
+                } finally {
+                    // Reset button state
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = originalText;
+                }
+            });
+        }
+
+        // Form submission handling for suggestion form
         if (suggestForm) {
             suggestForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -1201,7 +1283,9 @@
                     suggestForm.reset();
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('There was an error sending your suggestion. Please try again.');
+                    alert(document.documentElement.lang === 'zh' ? 
+                        '发送建议时出错。请再试一次。' : 
+                        'There was an error sending your suggestion. Please try again.');
                 } finally {
                     // Reset button state
                     submitButton.disabled = false;
@@ -1268,7 +1352,7 @@
             });
             
             // Update document title
-            document.title = isEnglish ? "About Us | Utilivy" : "关于我们 | Utilivy";
+            document.title = isEnglish ? "Contact Us | Utilivy" : "联系我们 | Utilivy";
             
             // Add search functionality
             const searchInput = document.getElementById('search-input');
@@ -1276,7 +1360,7 @@
                 searchInput.addEventListener('keypress', function(e) {
                     if (e.key === 'Enter') {
                         // In a real implementation, you would perform a search
-                        alert(`Searching for: ${this.value}`);
+                        alert(`${isEnglish ? 'Searching for:' : '搜索内容：'} ${this.value}`);
                     }
                 });
             }
