@@ -287,7 +287,7 @@
       </a>
 
       <div class="header-actions">
-        <button class="lang-switch" id="langToggle">中文</button>
+        <button class="lang-switch" id="langToggle" type="button">中文</button>
         <a href="/" class="home-btn">
           <span data-en="Back to Home" data-zh="返回首页">Back to Home</span>
         </a>
@@ -317,8 +317,8 @@
       </div>
 
       <div class="button-row">
-        <button class="primary-btn" onclick="calculateRatio()" data-en="Calculate" data-zh="计算">Calculate</button>
-        <button class="secondary-btn" onclick="resetCalculator()" data-en="Reset" data-zh="重置">Reset</button>
+        <button class="primary-btn" type="button" onclick="calculateRatio()" data-en="Calculate" data-zh="计算">Calculate</button>
+        <button class="secondary-btn" type="button" onclick="resetCalculator()" data-en="Reset" data-zh="重置">Reset</button>
       </div>
 
       <div class="results-grid">
@@ -411,8 +411,9 @@
       currentLang = lang;
       document.documentElement.lang = lang;
 
-      document.querySelectorAll('[data-en]').forEach(el => {
-        el.textContent = el.getAttribute(`data-${lang}`);
+      document.querySelectorAll('[data-en]').forEach((el) => {
+        const text = el.getAttribute('data-' + lang);
+        if (text) el.textContent = text;
       });
 
       const totalInput = document.getElementById('totalInput');
@@ -421,6 +422,33 @@
       document.getElementById('langToggle').textContent = lang === 'en' ? '中文' : 'EN';
 
       const helperText = document.getElementById('helperText');
-      if (helperText.textContent === 'You can enter decimals too.' || helperText.textContent === '也可以输入小数。') {
-        helperText.textContent = lang === 'en' ? 'You can enter decimals too.' : '也可以输入小数。';
+      if (
+        helperText.textContent === 'You can enter decimals too.' ||
+        helperText.textContent === '也可以输入小数。' ||
+        helperText.textContent === 'Calculation completed.' ||
+        helperText.textContent === '计算完成。' ||
+        helperText.textContent === 'Please enter a valid total number.' ||
+        helperText.textContent === '请输入有效的总数量。'
+      ) {
+        if (document.getElementById('totalInput').value.trim() === '') {
+          helperText.textContent = lang === 'en' ? 'You can enter decimals too.' : '也可以输入小数。';
+        }
       }
+    }
+
+    document.getElementById('langToggle').addEventListener('click', function () {
+      updateLanguage(currentLang === 'en' ? 'zh' : 'en');
+    });
+
+    document.getElementById('totalInput').addEventListener('input', function () {
+      if (this.value.trim() === '') {
+        resetCalculator();
+        return;
+      }
+      calculateRatio();
+    });
+
+    updateLanguage('en');
+  </script>
+</body>
+</html>
