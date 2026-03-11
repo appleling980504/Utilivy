@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>70:30 Calculator - Utilivy</title>
+  <meta name="description" content="Calculate 70% and 30% from a total number instantly with this free 70:30 calculator by Utilivy." />
+  <meta name="keywords" content="70 30 calculator, percentage calculator, ratio calculator, utilivy" />
+  <meta name="author" content="Utilivy" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f7f9fc;
+      color: #1f2937;
+      line-height: 1.6;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .site-header {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .lang-switch,
+    .home-btn {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #111827;
+      padding: 10px 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: 0.2s ease;
+    }
+
+    .lang-switch:hover,
+    .home-btn:hover {
+      background: #f3f4f6;
+    }
+
+    .main-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 24px 20px 48px;
+    }
+
+    .adsense-banner,
+    .adsense-footer {
+      display: none;
+      background: #e5e7eb;
+      color: #6b7280;
+      text-align: center;
+      padding: 16px;
+      border-radius: 12px;
+      margin: 20px 0;
+      font-size: 0.95rem;
+    }
+
+    .tool-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+      padding: 32px 24px;
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .tool-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .tool-subtitle {
+      color: #6b7280;
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 1rem;
+    }
+
+    .input-group {
+      margin-bottom: 22px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 0.98rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: #374151;
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .input-field:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px 18px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.2s ease;
+    }
+
+    .primary-btn {
+      background: #2563eb;
+      color: #ffffff;
+    }
+
+    .primary-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .secondary-btn {
+      background: #eef2ff;
+      color: #1e3a8a;
+    }
+
+    .secondary-btn:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .result-box {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .result-label {
+      font-size: 0.95rem;
+      color: #6b7280;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    .result-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #111827;
+      word-break: break-word;
+    }
+
+    .helper-text {
+      color: #6b7280;
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    .info-section {
+      margin-top: 28px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .info-section h2 {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #111827;
+    }
+
+    .info-section p {
+      color: #4b5563;
+      font-size: 0.97rem;
+      margin-bottom: 10px;
+    }
+
+    .site-footer {
+      margin-top: 36px;
+      border-top: 1px solid #e5e7eb;
+      background: #ffffff;
+    }
+
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 22px 20px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 640px) {
+      .tool-card {
+        padding: 24px 18px;
+      }
+
+      .tool-title {
+        font-size: 1.6rem;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .header-inner {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="/" class="logo">
+        <span data-en="Utilivy" data-zh="Utilivy">Utilivy</span>
+      </a>
+
+      <div class="header-actions">
+        <button class="lang-switch" id="langToggle">中文</button>
+        <a href="/" class="home-btn">
+          <span data-en="Back to Home" data-zh="返回首页">Back to Home</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="main-wrapper">
+    <div class="adsense-banner">AdSense Banner</div>
+
+    <section class="tool-card">
+      <h1 class="tool-title" data-en="70:30 Calculator" data-zh="70:30 计算器">70:30 Calculator</h1>
+      <p class="tool-subtitle" data-en="Enter the total product quantity to instantly calculate the 70% and 30% values." data-zh="输入产品总数量，即可立即计算 70% 和 30% 的数量。">
+        Enter the total product quantity to instantly calculate the 70% and 30% values.
+      </p>
+
+      <div class="input-group">
+        <label for="totalInput" class="input-label" data-en="Total Number of Products" data-zh="产品总数量">Total Number of Products</label>
+        <input
+          type="number"
+          id="totalInput"
+          class="input-field"
+          placeholder="e.g. 1000"
+          min="0"
+          step="any"
+        />
+      </div>
+
+      <div class="button-row">
+        <button class="primary-btn" onclick="calculateRatio()" data-en="Calculate" data-zh="计算">Calculate</button>
+        <button class="secondary-btn" onclick="resetCalculator()" data-en="Reset" data-zh="重置">Reset</button>
+      </div>
+
+      <div class="results-grid">
+        <div class="result-box">
+          <div class="result-label" data-en="70% Value" data-zh="70% 数量">70% Value</div>
+          <div class="result-value" id="result70">0</div>
+        </div>
+
+        <div class="result-box">
+          <div class="result-label" data-en="30% Value" data-zh="30% 数量">30% Value</div>
+          <div class="result-value" id="result30">0</div>
+        </div>
+      </div>
+
+      <p class="helper-text" id="helperText" data-en="You can enter decimals too." data-zh="也可以输入小数。">
+        You can enter decimals too.
+      </p>
+
+      <div class="info-section">
+        <h2 data-en="How it works" data-zh="使用说明">How it works</h2>
+        <p data-en="This tool divides your total quantity into a 70% portion and a 30% portion." data-zh="这个工具会把你的总数量拆分成 70% 和 30% 两个部分。">
+          This tool divides your total quantity into a 70% portion and a 30% portion.
+        </p>
+        <p data-en="Example: if the total is 100, the result will be 70 and 30." data-zh="例如：如果总数是 100，结果就是 70 和 30。">
+          Example: if the total is 100, the result will be 70 and 30.
+        </p>
+      </div>
+    </section>
+
+    <div class="adsense-footer">AdSense Footer</div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span data-en="© 2025 Utilivy. All rights reserved." data-zh="© 2025 Utilivy. 版权所有。">
+        © 2025 Utilivy. All rights reserved.
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    let currentLang = 'en';
+
+    function formatNumber(num) {
+      if (!isFinite(num)) return '0';
+      return parseFloat(num.toFixed(2)).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function calculateRatio() {
+      const totalInput = document.getElementById('totalInput');
+      const result70 = document.getElementById('result70');
+      const result30 = document.getElementById('result30');
+      const helperText = document.getElementById('helperText');
+
+      const total = parseFloat(totalInput.value);
+
+      if (isNaN(total) || total < 0) {
+        helperText.textContent = currentLang === 'en'
+          ? 'Please enter a valid total number.'
+          : '请输入有效的总数量。';
+        result70.textContent = '0';
+        result30.textContent = '0';
+        return;
+      }
+
+      const seventy = total * 0.7;
+      const thirty = total * 0.3;
+
+      result70.textContent = formatNumber(seventy);
+      result30.textContent = formatNumber(thirty);
+
+      helperText.textContent = currentLang === 'en'
+        ? 'Calculation completed.'
+        : '计算完成。';
+    }
+
+    function resetCalculator() {
+      document.getElementById('totalInput').value = '';
+      document.getElementById('result70').textContent = '0';
+      document.getElementById('result30').textContent = '0';
+      document.getElementById('helperText').textContent = currentLang === 'en'
+        ? 'You can enter decimals too.'
+        : '也可以输入小数。';
+    }
+
+    function updateLanguage(lang) {
+      currentLang = lang;
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll('[data-en]').forEach(el => {
+        el.textContent = el.getAttribute(`data-${lang}`);
+      });
+
+      const totalInput = document.getElementById('totalInput');
+      totalInput.placeholder = lang === 'en' ? 'e.g. 1000' : '例如：1000';
+
+      document.getElementById('langToggle').textContent = lang === 'en' ? '中文' : 'EN';
+
+      const helperText = document.getElementById('helperText');
+      if (helperText.textContent === 'You can enter decimals too.' || helperText.textContent === '也可以输入小数。') {
+        helperText.textContent = lang === 'en' ? 'You can enter decimals too.' : '也可以输入小数。';
+      }
