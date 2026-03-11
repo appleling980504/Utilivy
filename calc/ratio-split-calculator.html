@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>70:30 Calculator - Utilivy</title>
-  <meta name="description" content="Calculate 70% and 30% from a total number instantly with this free 70:30 calculator by Utilivy." />
-  <meta name="keywords" content="70 30 calculator, percentage calculator, ratio calculator, utilivy" />
+  <title>Ratio Split Calculator - Utilivy</title>
+  <meta name="description" content="Split a total number into preset ratios like 70:30, 60:40, 80:20, and more with this free calculator by Utilivy." />
+  <meta name="keywords" content="ratio split calculator, 70 30 calculator, 60 40 calculator, 80 20 calculator, utilivy" />
   <meta name="author" content="Utilivy" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -104,7 +104,7 @@
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
       padding: 32px 24px;
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
     }
 
@@ -150,6 +150,35 @@
       box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
     }
 
+    .ratio-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .ratio-tab {
+      border: 1px solid #d1d5db;
+      background: #fff;
+      color: #111827;
+      padding: 12px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      font-weight: 600;
+      transition: 0.2s ease;
+    }
+
+    .ratio-tab:hover {
+      background: #f3f4f6;
+    }
+
+    .ratio-tab.active {
+      background: #2563eb;
+      color: #fff;
+      border-color: #2563eb;
+    }
+
     .button-row {
       display: flex;
       gap: 12px;
@@ -175,26 +204,30 @@
       color: #ffffff;
     }
 
-    .primary-btn:hover {
-      opacity: 0.95;
-      transform: translateY(-1px);
-    }
-
     .secondary-btn {
       background: #eef2ff;
       color: #1e3a8a;
     }
 
+    .primary-btn:hover,
     .secondary-btn:hover {
       opacity: 0.95;
       transform: translateY(-1px);
+    }
+
+    .selected-ratio {
+      text-align: center;
+      margin-bottom: 22px;
+      color: #4b5563;
+      font-size: 0.98rem;
+      font-weight: 600;
     }
 
     .results-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
-      margin-bottom: 22px;
+      margin-bottom: 18px;
     }
 
     .result-box {
@@ -269,12 +302,9 @@
         font-size: 1.6rem;
       }
 
-      .results-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .header-inner {
-        align-items: flex-start;
+      .results-grid,
+      .ratio-tabs {
+        grid-template-columns: 1fr 1fr;
       }
     }
   </style>
@@ -299,51 +329,56 @@
     <div class="adsense-banner">AdSense Banner</div>
 
     <section class="tool-card">
-      <h1 class="tool-title" data-en="70:30 Calculator" data-zh="70:30 计算器">70:30 Calculator</h1>
-      <p class="tool-subtitle" data-en="Enter the total product quantity to instantly calculate the 70% and 30% values." data-zh="输入产品总数量，即可立即计算 70% 和 30% 的数量。">
-        Enter the total product quantity to instantly calculate the 70% and 30% values.
+      <h1 class="tool-title" data-en="Ratio Split Calculator" data-zh="比例拆分计算器">Ratio Split Calculator</h1>
+      <p class="tool-subtitle" data-en="Select a ratio and enter the total value to split it instantly." data-zh="选择比例后输入总数，即可立即完成拆分。">
+        Select a ratio and enter the total value to split it instantly.
       </p>
 
       <div class="input-group">
-        <label for="totalInput" class="input-label" data-en="Total Number of Products" data-zh="产品总数量">Total Number of Products</label>
-        <input
-          type="number"
-          id="totalInput"
-          class="input-field"
-          placeholder="e.g. 1000"
-          min="0"
-          step="any"
-        />
+        <label for="totalInput" class="input-label" data-en="Total Value" data-zh="总数">Total Value</label>
+        <input type="number" id="totalInput" class="input-field" placeholder="e.g. 1000" min="0" step="any" />
       </div>
 
+      <div class="input-group">
+        <label class="input-label" data-en="Choose Ratio" data-zh="选择比例">Choose Ratio</label>
+        <div class="ratio-tabs">
+          <button class="ratio-tab active" type="button" data-a="70" data-b="30">70:30</button>
+          <button class="ratio-tab" type="button" data-a="60" data-b="40">60:40</button>
+          <button class="ratio-tab" type="button" data-a="80" data-b="20">80:20</button>
+          <button class="ratio-tab" type="button" data-a="50" data-b="50">50:50</button>
+        </div>
+      </div>
+
+      <div class="selected-ratio" id="selectedRatioText">Selected Ratio: 70:30</div>
+
       <div class="button-row">
-        <button class="primary-btn" type="button" onclick="calculateRatio()" data-en="Calculate" data-zh="计算">Calculate</button>
+        <button class="primary-btn" type="button" onclick="calculateSplit()" data-en="Calculate" data-zh="计算">Calculate</button>
         <button class="secondary-btn" type="button" onclick="resetCalculator()" data-en="Reset" data-zh="重置">Reset</button>
       </div>
 
       <div class="results-grid">
         <div class="result-box">
-          <div class="result-label" data-en="70% Value" data-zh="70% 数量">70% Value</div>
-          <div class="result-value" id="result70">0</div>
+          <div class="result-label" id="label1">70%</div>
+          <div class="result-value" id="result1">0</div>
         </div>
 
         <div class="result-box">
-          <div class="result-label" data-en="30% Value" data-zh="30% 数量">30% Value</div>
-          <div class="result-value" id="result30">0</div>
+          <div class="result-label" id="label2">30%</div>
+          <div class="result-value" id="result2">0</div>
         </div>
       </div>
 
-      <p class="helper-text" id="helperText" data-en="You can enter decimals too." data-zh="也可以输入小数。">
-        You can enter decimals too.
+      <p class="helper-text" id="helperText" data-en="Enter the total value and choose a preset ratio." data-zh="输入总数并选择预设比例。">
+        Enter the total value and choose a preset ratio.
       </p>
 
       <div class="info-section">
         <h2 data-en="How it works" data-zh="使用说明">How it works</h2>
-        <p data-en="This tool divides your total quantity into a 70% portion and a 30% portion." data-zh="这个工具会把你的总数量拆分成 70% 和 30% 两个部分。">
-          This tool divides your total quantity into a 70% portion and a 30% portion.
+        <p data-en="This tool lets you choose a preset ratio and automatically splits the total value into two parts." data-zh="这个工具让你选择一个预设比例，并自动把总数拆分成两个部分。">
+          This tool lets you choose a preset ratio and automatically splits the total value into two parts.
         </p>
-        <p data-en="Example: if the total is 100, the result will be 70 and 30." data-zh="例如：如果总数是 100，结果就是 70 和 30。">
-          Example: if the total is 100, the result will be 70 and 30.
+        <p data-en="Example: if the total is 1000 and you choose 60:40, the result will be 600 and 400." data-zh="例如：如果总数是 1000，选择 60:40，结果就是 600 和 400。">
+          Example: if the total is 1000 and you choose 60:40, the result will be 600 and 400.
         </p>
       </div>
     </section>
@@ -361,6 +396,8 @@
 
   <script>
     let currentLang = 'en';
+    let selectedA = 70;
+    let selectedB = 30;
 
     function formatNumber(num) {
       if (!isFinite(num)) return '0';
@@ -370,28 +407,34 @@
       });
     }
 
-    function calculateRatio() {
-      const totalInput = document.getElementById('totalInput');
-      const result70 = document.getElementById('result70');
-      const result30 = document.getElementById('result30');
+    function updateRatioLabels() {
+      document.getElementById('label1').textContent = selectedA + '%';
+      document.getElementById('label2').textContent = selectedB + '%';
+
+      document.getElementById('selectedRatioText').textContent =
+        currentLang === 'en'
+          ? 'Selected Ratio: ' + selectedA + ':' + selectedB
+          : '已选择比例：' + selectedA + ':' + selectedB;
+    }
+
+    function calculateSplit() {
+      const total = parseFloat(document.getElementById('totalInput').value);
       const helperText = document.getElementById('helperText');
 
-      const total = parseFloat(totalInput.value);
-
       if (isNaN(total) || total < 0) {
+        document.getElementById('result1').textContent = '0';
+        document.getElementById('result2').textContent = '0';
         helperText.textContent = currentLang === 'en'
-          ? 'Please enter a valid total number.'
-          : '请输入有效的总数量。';
-        result70.textContent = '0';
-        result30.textContent = '0';
+          ? 'Please enter a valid total value.'
+          : '请输入有效的总数。';
         return;
       }
 
-      const seventy = total * 0.7;
-      const thirty = total * 0.3;
+      const value1 = total * (selectedA / 100);
+      const value2 = total * (selectedB / 100);
 
-      result70.textContent = formatNumber(seventy);
-      result30.textContent = formatNumber(thirty);
+      document.getElementById('result1').textContent = formatNumber(value1);
+      document.getElementById('result2').textContent = formatNumber(value2);
 
       helperText.textContent = currentLang === 'en'
         ? 'Calculation completed.'
@@ -400,11 +443,11 @@
 
     function resetCalculator() {
       document.getElementById('totalInput').value = '';
-      document.getElementById('result70').textContent = '0';
-      document.getElementById('result30').textContent = '0';
+      document.getElementById('result1').textContent = '0';
+      document.getElementById('result2').textContent = '0';
       document.getElementById('helperText').textContent = currentLang === 'en'
-        ? 'You can enter decimals too.'
-        : '也可以输入小数。';
+        ? 'Enter the total value and choose a preset ratio.'
+        : '输入总数并选择预设比例。';
     }
 
     function updateLanguage(lang) {
@@ -416,28 +459,32 @@
         if (text) el.textContent = text;
       });
 
-      const totalInput = document.getElementById('totalInput');
-      totalInput.placeholder = lang === 'en' ? 'e.g. 1000' : '例如：1000';
-
+      document.getElementById('totalInput').placeholder = lang === 'en' ? 'e.g. 1000' : '例如：1000';
       document.getElementById('langToggle').textContent = lang === 'en' ? '中文' : 'EN';
 
-      const helperText = document.getElementById('helperText');
-      if (
-        helperText.textContent === 'You can enter decimals too.' ||
-        helperText.textContent === '也可以输入小数。' ||
-        helperText.textContent === 'Calculation completed.' ||
-        helperText.textContent === '计算完成。' ||
-        helperText.textContent === 'Please enter a valid total number.' ||
-        helperText.textContent === '请输入有效的总数量。'
-      ) {
-        if (document.getElementById('totalInput').value.trim() === '') {
-          helperText.textContent = lang === 'en' ? 'You can enter decimals too.' : '也可以输入小数。';
-        }
+      updateRatioLabels();
+
+      if (document.getElementById('totalInput').value.trim() === '') {
+        document.getElementById('helperText').textContent = lang === 'en'
+          ? 'Enter the total value and choose a preset ratio.'
+          : '输入总数并选择预设比例。';
       }
     }
 
-    document.getElementById('langToggle').addEventListener('click', function () {
-      updateLanguage(currentLang === 'en' ? 'zh' : 'en');
+    document.querySelectorAll('.ratio-tab').forEach((tab) => {
+      tab.addEventListener('click', function () {
+        document.querySelectorAll('.ratio-tab').forEach((btn) => btn.classList.remove('active'));
+        this.classList.add('active');
+
+        selectedA = parseFloat(this.dataset.a);
+        selectedB = parseFloat(this.dataset.b);
+
+        updateRatioLabels();
+
+        if (document.getElementById('totalInput').value.trim() !== '') {
+          calculateSplit();
+        }
+      });
     });
 
     document.getElementById('totalInput').addEventListener('input', function () {
@@ -445,9 +492,14 @@
         resetCalculator();
         return;
       }
-      calculateRatio();
+      calculateSplit();
     });
 
+    document.getElementById('langToggle').addEventListener('click', function () {
+      updateLanguage(currentLang === 'en' ? 'zh' : 'en');
+    });
+
+    updateRatioLabels();
     updateLanguage('en');
   </script>
 </body>
